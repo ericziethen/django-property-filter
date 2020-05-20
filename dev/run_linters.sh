@@ -8,7 +8,7 @@ run_linter () {
     local linter_script=$2
 
     echo "### LINTER START - '$linter_script' ###"
-    . "$linter_script"
+    . $linter_script
     local return_code=$?
 
     if [[ $return_code -eq  0 ]];
