@@ -31,15 +31,15 @@ install:
 script:
 # Run Tests
 - if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/run_tests.bat travis-ci; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then . ./dev/run_tests.sh travis-ci; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/run_tests.sh travis-ci; fi
 
 # Run Linting
 - if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/run_linters.bat; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then . ./dev/run_linters.sh; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/run_linters.sh; fi
 
 # Run Package Safety Checks
 - if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/check_package_safety_bare.bat; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then . ./dev/check_package_safety.sh; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/check_package_safety.sh; fi
 
 after_success:
 - codecov
