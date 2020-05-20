@@ -1,3 +1,5 @@
+# Project specific
+.eric
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -57,6 +59,7 @@ coverage.xml
 
 # Django stuff:
 *.log
+*.log.[0-9]*
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
