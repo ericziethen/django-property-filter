@@ -3,7 +3,7 @@
 setlocal
 
 set PROJ_MAIN_DIR=%~dp0../..
-set PACKAGE_ROOT=django_filter_property
+set PACKAGE_ROOT=django_property_filter
 
 set PYTHONPATH=%PYTHONPATH%;%PACKAGE_ROOT%
 pushd "%PROJ_MAIN_DIR%"

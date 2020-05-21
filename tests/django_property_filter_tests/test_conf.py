@@ -3,7 +3,7 @@ import pytest
 
 from django_filters.conf import DEFAULTS as django_filters_DEFAULTS
 
-from django_filter_property.conf import SUPPORTED_LOOKUPS
+from django_property_filter.conf import SUPPORTED_LOOKUPS
 
 @pytest.mark.parametrize('lookup', SUPPORTED_LOOKUPS)
 def test_all_supported_expressions_in_django_filter(lookup):
