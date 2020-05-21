@@ -4,7 +4,7 @@ setlocal
 
 set PROJ_MAIN_DIR=%~dp0..\..
 
-set PKG_NAME=django-filter-property
+set PKG_NAME=django-property-filter
 
 pushd "%PROJ_MAIN_DIR%"
 
