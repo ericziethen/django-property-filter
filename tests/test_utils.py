@@ -6,30 +6,27 @@ from django_property_filter.utils import (
 )
 
 from tests.models import (
-    Product,
+    DeliveryLine,
+    Product
 )
 
 
 class GerAttributeTests(TestCase):
 
     def setUp(self):
-        self.prod1 = Product.objects.create(name='Sun Rice', price='20.0')
-
+        self.line1 = DeliveryLine.objects.create(line_no=1)
+        self.prod1 = Product.objects.create(name='Sun Rice', price='20.0', del_line=self.line1)
 
     def test_get_attribute_1_level(self):
         self.assertEqual(get_attr_val_recursive(self.prod1, ['name']), 'Sun Rice')
+        self.assertEqual(get_attr_val_recursive(self.prod1, ['prop_name']), 'Sun Rice')
+
+    def test_get_attribute_2_level(self):
+        self.assertEqual(get_attr_val_recursive(self.prod1, ['del_line', 'line_no']), 1)
+        self.assertEqual(get_attr_val_recursive(self.prod1, ['del_line', 'prop_line_no']), 1)
 
     '''
-    def test_get_attribute_2_level(self):
-        assert False
-
     def test_get_attribute_3_level(self):
-        assert False
-
-    def test_get_attribute_field_value(self):
-        assert False
-
-    def test_get_attribute_property_value(self):
         assert False
 
     def test_get_attribute_invalid_object(self):
