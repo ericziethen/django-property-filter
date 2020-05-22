@@ -13,11 +13,11 @@ from tests.models import (
 class GerAttributeTests(TestCase):
 
     def setUp(self):
-        Product.objects.create(name='Sun Rice', price='20.0')
+        self.prod1 = Product.objects.create(name='Sun Rice', price='20.0')
 
 
     def test_get_attribute_1_level(self):
-        assert False
+        self.assertEqual(get_attr_val_recursive(self.prod1, ['name']), 'Sun Rice')
 
     '''
     def test_get_attribute_2_level(self):
