@@ -1,4 +1,6 @@
  
+from django_filters import FilterSet
+
 
 # https://stackoverflow.com/questions/34439/finding-what-methods-a-python-object-has
 def get_function_dic_for_class(obj, ignore):
@@ -41,3 +43,15 @@ def class_functions_diff_dic(class1, class2, *, ignore=None):
         diff_dic['Different Address'] = sorted(different_sig)
 
     return diff_dic
+
+
+def get_django_filter_test_filterset(my_class, my_model, field_name, lookup_expr):
+
+    class GenericFilterSet(FilterSet):
+        field = my_class(field_name=field_name, lookup_expr=lookup_expr)
+
+        class Meta:
+            model = my_model
+            fields = ['field']
+
+    return GenericFilterSet
