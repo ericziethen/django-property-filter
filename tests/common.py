@@ -1,19 +1,20 @@
  
 
 # https://stackoverflow.com/questions/34439/finding-what-methods-a-python-object-has
-def get_function_dic_for_class(obj):
+def get_function_dic_for_class(obj, ignore):
     # Some functions are unique for all classes
     ignore_funcs = ['__init_subclass__', '__subclasshook__']
 
     return {name: getattr(obj, name) for name in dir(obj)
-            if callable(getattr(obj, name)) and name not in ignore_funcs}
+            if callable(getattr(obj, name)) and name not in ignore_funcs and
+            (ignore is None or name not in ignore)}
 
 
-def class_functions_diff_dic(class1, class2):
+def class_functions_diff_dic(class1, class2, *, ignore=None):
     diff_dic = {}
 
-    funcs1 = get_function_dic_for_class(class1)
-    funcs2 = get_function_dic_for_class(class2)
+    funcs1 = get_function_dic_for_class(class1, ignore)
+    funcs2 = get_function_dic_for_class(class2, ignore)
     combined_names = set(list(funcs1.keys()) + list(funcs2.keys()))
 
     in1_not2 = []

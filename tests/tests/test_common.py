@@ -45,6 +45,18 @@ class ClassComparisonTests(TestCase):
 
         self.assertNotEqual(class_functions_diff_dic(Test, SubTest), {})
 
+    def test_sub_class_different_but_allow_ignore(self):
+        class Test():
+            def name(self):
+                return 'Test'
+
+        class SubTest(Test):
+            def name(self):
+                return 'Test'
+
+        self.assertEqual(class_functions_diff_dic(Test, SubTest, ignore=['name']), {})
+
+
 
 # TODO - Implement Tests for Filterset Generators to ensure the function generator works
 
