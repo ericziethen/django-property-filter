@@ -2,10 +2,11 @@
 from django.test import TestCase
 
 from django_property_filter.utils import (
-    get_attr_val_recursive
+    get_value_for_db_field
 )
 
 from tests.models import (
+    Delivery,
     DeliveryLine,
     Product
 )
@@ -14,38 +15,32 @@ from tests.models import (
 class GerAttributeTests(TestCase):
 
     def setUp(self):
-        self.line1 = DeliveryLine.objects.create(line_no=1)
+        self.delivery1 = Delivery.objects.create(address='My Home')
+        self.line1 = DeliveryLine.objects.create(line_no=1, delivery=self.delivery1)
         self.prod1 = Product.objects.create(name='Sun Rice', price='20.0', del_line=self.line1)
 
     def test_get_attribute_1_level(self):
-        self.assertEqual(get_attr_val_recursive(self.prod1, ['name']), 'Sun Rice')
-        self.assertEqual(get_attr_val_recursive(self.prod1, ['prop_name']), 'Sun Rice')
+        self.assertEqual(get_value_for_db_field(self.prod1, 'name'), 'Sun Rice')
+        self.assertEqual(get_value_for_db_field(self.prod1, 'prop_name'), 'Sun Rice')
 
     def test_get_attribute_2_level(self):
-        self.assertEqual(get_attr_val_recursive(self.prod1, ['del_line', 'line_no']), 1)
-        self.assertEqual(get_attr_val_recursive(self.prod1, ['del_line', 'prop_line_no']), 1)
+        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line.line_no'), 1)
+        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line.prop_line_no'), 1)
 
-    '''
     def test_get_attribute_3_level(self):
-        assert False
+        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line.delivery.address'), 'My Home')
+        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line.delivery.prop_address'), 'My Home')
 
     def test_get_attribute_invalid_object(self):
-        assert False
+        self.assertRaises(AttributeError, get_value_for_db_field, 'None', 'id')
 
     def test_get_attribute_invalid_field(self):
-        assert False
+        self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'invalid_field')
 
     def test_get_attribute_invalid_related_field(self):
-        assert False
-    '''
+        self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'del_line.delivery.invalid_field')
 
 
 
-
-
-# TODO - Test get_attr_val_recursive
-# TODO - Test compare_by_lookup_expression (Test all Supported Ones)
 
 # TODO - Test PropertyBaseFilterMixin
-
-

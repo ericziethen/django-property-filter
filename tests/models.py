@@ -4,9 +4,20 @@
 from django.db import models
 
 
+
+class Delivery(models.Model):
+
+    address = models.CharField(max_length=32)
+
+    @property
+    def prop_address(self):
+        return self.address
+
+
 class DeliveryLine(models.Model):
 
     line_no = models.PositiveIntegerField()
+    delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE, related_name='delivery_lines')
 
     @property
     def prop_line_no(self):
@@ -28,9 +39,6 @@ class Product(models.Model):
         return self.del_line.line_no
 
 '''
-class Delivery(models.Model):
-
-    fields and properties
 '''
 
 
