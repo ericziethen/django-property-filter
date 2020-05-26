@@ -3,9 +3,12 @@ from django.test import TestCase
 
 from django_filters.filters import NumberFilter
 
+from django_property_filter.filters import PropertyNumberFilter
+
 from tests.common import (
     class_functions_diff_dic,
-    get_django_filter_test_filterset
+    get_django_filter_test_filterset,
+    get_django_property_filter_test_filterset
 )
 
 from tests.models import (
@@ -66,14 +69,11 @@ class ClassComparisonTests(TestCase):
         self.assertEqual(class_functions_diff_dic(Test, SubTest, ignore=['name']), {})
 
 
-
-
-# TODO - Implement Tests for Filterset Generators to ensure the function generator works
-
 class FiltersetGeneratorTests(TestCase):
 
-    def test_get_valid_django_filter(self):
-        filterset = get_django_filter_test_filterset(NumberFilter, Product, 'name', 'gte')
+    def test_get_valid_django_filterset(self):
+        filterset = get_django_filter_test_filterset(
+            filter_class=NumberFilter, filter_model=Product, field_name='name', lookup_expr='gte')
 
         my_filter = list(filterset.base_filters.values())[0]
         self.assertEqual(len(filterset.base_filters), 1)
@@ -87,13 +87,17 @@ class FiltersetGeneratorTests(TestCase):
 
 
 class PropertyFiltersetGeneratorTests(TestCase):
-    pass
 
-'''
-def test_get_valid_django_filter(Class, Expression, query_field)
+    def test_get_valid_django_property_filterset(self):
+        filterset = get_django_property_filter_test_filterset(
+            filter_class=PropertyNumberFilter, filter_model=Product, property_field='name.field', lookup_expr='lte')
 
-def test_get_valid_django_filter_propert(Class, Expression, query_field)
-'''
+        my_filter = list(filterset.base_filters.values())[0]
+        self.assertEqual(len(filterset.base_filters), 1)
+        self.assertEqual(type(my_filter), PropertyNumberFilter)
+        self.assertEqual(my_filter.property_fld_name, 'name.field')
+        self.assertEqual(my_filter.lookup_expr, 'lte')
 
-
-
+        f1 = filterset({'name': 'Tom'}, queryset=Product.objects.all())
+        fs_options = f1._meta
+        self.assertEqual(fs_options.model, Product)

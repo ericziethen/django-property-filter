@@ -45,13 +45,27 @@ def class_functions_diff_dic(class1, class2, *, ignore=None):
     return diff_dic
 
 
-def get_django_filter_test_filterset(my_class, my_model, field_name, lookup_expr):
+def get_django_filter_test_filterset(*, filter_class, filter_model, field_name, lookup_expr):
 
     class GenericFilterSet(FilterSet):
-        field = my_class(field_name=field_name, lookup_expr=lookup_expr)
+        field = filter_class(field_name=field_name, lookup_expr=lookup_expr)
 
         class Meta:
-            model = my_model
+            model = filter_model
             fields = ['field']
 
     return GenericFilterSet
+
+
+def get_django_property_filter_test_filterset(*, filter_class, filter_model, property_field, lookup_expr):
+
+    class GenericFilterSet(FilterSet):
+        field = filter_class(property_fld_name=property_field, lookup_expr=lookup_expr)
+
+        class Meta:
+            model = filter_model
+            fields = ['field']
+
+    return GenericFilterSet
+
+
