@@ -3,8 +3,6 @@
 
 from django.db import models
 
-
-
 class Delivery(models.Model):
 
     address = models.CharField(max_length=32)
@@ -38,8 +36,12 @@ class Product(models.Model):
     def prop_line_no(self):
         return self.del_line.line_no
 
-'''
-'''
 
+class NumberClass(models.Model):
+    number = models.IntegerField()
+
+    @property
+    def prop_number(self):
+        return self.number
 
 

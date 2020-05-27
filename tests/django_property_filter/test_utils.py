@@ -2,7 +2,8 @@
 from django.test import TestCase
 
 from django_property_filter.utils import (
-    get_value_for_db_field
+    get_value_for_db_field,
+    compare_by_lookup_expression
 )
 
 from tests.models import (
@@ -12,7 +13,7 @@ from tests.models import (
 )
 
 
-class GerAttributeTests(TestCase):
+class GetAttributeTests(TestCase):
 
     def setUp(self):
         self.delivery1 = Delivery.objects.create(address='My Home')
@@ -41,6 +42,9 @@ class GerAttributeTests(TestCase):
         self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'del_line.delivery.invalid_field')
 
 
+def test_compare_by_lookup_expression():
+    # TODO - Test All Expressions, Parametrized, compare_by_lookup_expression
+    assert False
 
 
 # TODO - Test PropertyBaseFilterMixin

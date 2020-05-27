@@ -1,6 +1,8 @@
  
 from django_filters import FilterSet
 
+from django_property_filter.conf import SUPPORTED_LOOKUPS
+
 
 # https://stackoverflow.com/questions/34439/finding-what-methods-a-python-object-has
 def get_function_dic_for_class(obj, ignore):
@@ -52,20 +54,20 @@ def get_django_filter_test_filterset(*, filter_class, filter_model, field_name, 
 
         class Meta:
             model = filter_model
-            fields = ['field']
+            # Including field directly doesn't work so workaround by excluding id
+            exclude = ('id')
 
     return GenericFilterSet
 
 
 def get_django_property_filter_test_filterset(*, filter_class, filter_model, property_field, lookup_expr):
 
-    class GenericFilterSet(FilterSet):
+    class GenericPropertyFilterSet(FilterSet):
         field = filter_class(property_fld_name=property_field, lookup_expr=lookup_expr)
 
         class Meta:
             model = filter_model
-            fields = ['field']
+            # Including field directly doesn't work so workaround by excluding id
+            exclude = ('id')
 
-    return GenericFilterSet
-
-
+    return GenericPropertyFilterSet
