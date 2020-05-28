@@ -111,3 +111,8 @@ LOOKUP_FAILED = [
 @pytest.mark.parametrize('lookup_xpr, lookup_val, compare_val', LOOKUP_FAILED)
 def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, compare_val):
     assert not compare_by_lookup_expression(lookup_xpr, lookup_val, compare_val)
+
+
+def test_invalid_lookup():
+    with pytest.raises(ValueError):
+        compare_by_lookup_expression('INVALID_LOOKUP_EXPRESSION', 1, 1)

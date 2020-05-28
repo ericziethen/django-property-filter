@@ -55,4 +55,4 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):
     elif lookup_expr == 'in':
         return compare_value in lookup_value
 
-    return False
+    raise ValueError(F'Invalid Lookup Expression "{lookup_expr}"')

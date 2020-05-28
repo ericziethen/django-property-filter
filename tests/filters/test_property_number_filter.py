@@ -38,6 +38,7 @@ def fixture_property_number_filter():
     NumberClass.objects.create(id=14)
 
 TEST_LOOKUPS = [
+    ('exact', None, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
     ('exact', 15, []),
     ('exact', 5, [8, 9, 10, 11]),
     ('iexact', 15, []),
