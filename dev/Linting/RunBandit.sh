@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MODULE_NAME=django_filter_property
+MODULE_NAME=django_property_filter
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PROJ_MAIN_DIR=$SCRIPT_PATH/../..
 MODULE_PATH=$MODULE_NAME

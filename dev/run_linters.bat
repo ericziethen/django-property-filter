@@ -10,7 +10,7 @@ set ERROR_LIST=
 
 echo ### Start Linting ###
 call:run_linter "Bandit"        "%LINTER_DIR%\RunBandit.bat"
-call:run_linter "MyPy"          "%LINTER_DIR%\RunMyPy.bat"
+rem call:run_linter "MyPy"          "%LINTER_DIR%\RunMyPy.bat"
 call:run_linter "Pycodestyle"   "%LINTER_DIR%\RunPycodestyle.bat"
 call:run_linter "Pydocstyle"    "%LINTER_DIR%\RunPydocstyle.bat"
 call:run_linter "Pylint"        "%LINTER_DIR%\RunPylint.bat"

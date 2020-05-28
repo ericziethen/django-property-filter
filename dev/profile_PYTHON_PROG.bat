@@ -18,7 +18,7 @@ set Sec=%DateTime:~12,2%
 set datetimef=%Yr%.%Mon%.%Day%_%Hr%-%Min%-%Sec%
 
 !!! CONFIGURE SOURCE ROOT HERE !!!
-set SOURCE_ROOT=django_filter_property
+set SOURCE_ROOT=django_property_filter
 set PYTHON_PROG=#PYTHON_PROG_NAME#
 set ARGS=
 set PROFILE_DIR=%PROJ_MAIN_DIR%\profiling
