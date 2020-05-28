@@ -38,7 +38,7 @@ class Product(models.Model):
 
 
 class NumberClass(models.Model):
-    number = models.IntegerField()
+    number = models.IntegerField(null=True)
 
     @property
     def prop_number(self):

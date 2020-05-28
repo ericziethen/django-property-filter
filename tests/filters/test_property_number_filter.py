@@ -10,6 +10,17 @@ from django_property_filter.filters import PropertyNumberFilter
 
 from tests.models import NumberClass, Delivery
 
+UNSUPPORTED_LOOKUPS = ['range', 'isnull']
+
+@pytest.mark.parametrize('lookup', SUPPORTED_LOOKUPS)
+def test_supported_lookups(lookup):
+    if lookup in UNSUPPORTED_LOOKUPS:
+        with pytest.raises(ValueError):
+            PropertyNumberFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    else:
+        PropertyNumberFilter(property_fld_name='fake_field', lookup_expr=lookup)
+
+
 @pytest.fixture
 def fixture_property_number_filter():
     NumberClass.objects.create(id=1, number=1)
@@ -25,6 +36,7 @@ def fixture_property_number_filter():
     NumberClass.objects.create(id=11, number=5)
     NumberClass.objects.create(id=12, number=10)
     NumberClass.objects.create(id=13, number=20)
+    NumberClass.objects.create(id=14)
 
 TEST_LOOKUPS = [
     ('exact', 15, []),
@@ -53,10 +65,6 @@ TEST_LOOKUPS = [
     ('endswith', 3, [5]),
     ('iendswith', 7, []),
     ('iendswith', 3, [5]),
-    #('range', , []),
-    #('range', , []),
-    #('isnull', , []),
-    #('isnull', , []),
     #('in', , []),
     #('in', , []),
 ]
@@ -92,4 +100,4 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
 
 def test_all_expressions_tested():
     tested_expressions = [x[0] for x in TEST_LOOKUPS]
-    #assert set(tested_expressions) == set(SUPPORTED_LOOKUPS)
+    assert set(tested_expressions) == set(SUPPORTED_LOOKUPS) - set(PropertyNumberFilter._unsupported_lookups)

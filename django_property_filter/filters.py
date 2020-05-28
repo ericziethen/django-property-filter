@@ -5,17 +5,31 @@ from django_filters.filters import (
 
 from django_filters.utils import verbose_lookup_expr
 
+from django_property_filter.conf import SUPPORTED_LOOKUPS
 from django_property_filter.utils import (
     get_value_for_db_field,
     compare_by_lookup_expression
 )
 
 
-class PropertyBaseFilterMixin():
+class MixinBase():
+    _unsupported_lookups = []
+
+    @property
+    def supported_lookups(self):
+        return list(set(SUPPORTED_LOOKUPS) - set(self._unsupported_lookups))
+
+    def verify_lookup(self, lookup_expr):
+        if lookup_expr not in self.supported_lookups:
+            raise ValueError(F'Lookup "{lookup_expr}" not supported"')
+
+class PropertyBaseFilterMixin(MixinBase):
+
     def __init__(self, field_name=None, lookup_expr=None, *, label=None,
                  method=None, distinct=False, exclude=False, property_fld_name, **kwargs):
         label = F'{label} {verbose_lookup_expr(lookup_expr)}'
         self.property_fld_name = property_fld_name
+        self.verify_lookup(lookup_expr)
         super().__init__(field_name=field_name, lookup_expr=lookup_expr, label=label,
                          method=method, distinct=distinct, exclude=exclude, **kwargs)
 
@@ -37,8 +51,9 @@ class PropertyBaseFilterMixin():
         print('ERIC - End Property Filter - No Value')
         return qs
 
+
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
-    pass
+    _unsupported_lookups = ['range', 'isnull']
 
 
 
