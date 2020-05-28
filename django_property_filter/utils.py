@@ -12,30 +12,43 @@ def get_value_for_db_field(obj, field_str):
     return get_attr_val_recursive(obj, field_str.split('.'))
 
 
-def compare_by_lookup_expression(lookup_expr, candidate_value, lookup_value):
+def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):
+    # Handle Special case if only 1 case of range given
+    if lookup_expr == 'range':
+        if lookup_value[0] is None:
+            lookup_expr = 'lte'
+            lookup_value = lookup_value[1]
+        elif lookup_value[1] is None:
+            lookup_expr = 'gte'
+            lookup_value = lookup_value[0]
+
     if lookup_expr == 'exact':
-        return str(lookup_value) == str(candidate_value)
+        return str(compare_value) == str(lookup_value)
     elif lookup_expr == 'iexact':
-        return str(lookup_value).lower() == str(candidate_value).lower()
+        return str(compare_value).lower() == str(lookup_value).lower()
     elif lookup_expr == 'contains':
-        return str(candidate_value) in str(lookup_value)
+        return str(lookup_value) in str(compare_value)
     elif lookup_expr == 'icontains':
-        return str(candidate_value).lower() in str(lookup_value).lower()
+        return str(lookup_value).lower() in str(compare_value).lower()
     elif lookup_expr == 'gt':
-        return candidate_value > lookup_value
+        return compare_value > lookup_value
     elif lookup_expr == 'gte':
-        return candidate_value >= lookup_value
+        return compare_value >= lookup_value
     elif lookup_expr == 'lt':
-        return candidate_value < lookup_value
+        return compare_value < lookup_value
     elif lookup_expr == 'lte':
-        return candidate_value <= lookup_value
+        return compare_value <= lookup_value
     elif lookup_expr == 'startswith':
-        return str(lookup_value).startswith(str(candidate_value))
+        return str(compare_value).startswith(str(lookup_value))
     elif lookup_expr == 'istartswith':
-        return str(lookup_value).lower().startswith(str(candidate_value).lower())
+        return str(compare_value).lower().startswith(str(lookup_value).lower())
     elif lookup_expr == 'endswith':
-        return str(lookup_value).endswith(str(candidate_value))
+        return str(compare_value).endswith(str(lookup_value))
     elif lookup_expr == 'iendswith':
-        return str(lookup_value).lower().endswith(str(candidate_value).lower())
+        return str(compare_value).lower().endswith(str(lookup_value).lower())
+    elif lookup_expr == 'isnull':
+        return lookup_value is None
+    elif lookup_expr == 'range':
+        return lookup_value[0] <= compare_value <= lookup_value[1]
 
     return False
