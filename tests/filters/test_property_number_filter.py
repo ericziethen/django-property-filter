@@ -1,16 +1,15 @@
 
 
 import pytest
-from django.test import TestCase
 
 from django_filters.filters import NumberFilter
 
 from django_property_filter.conf import SUPPORTED_LOOKUPS
 from django_property_filter.filters import PropertyNumberFilter
 
-from tests.models import NumberClass, Delivery
+from tests.models import NumberClass
 
-UNSUPPORTED_LOOKUPS = ['range', 'isnull']
+UNSUPPORTED_LOOKUPS = ['range', 'isnull', 'in']
 
 @pytest.mark.parametrize('lookup', SUPPORTED_LOOKUPS)
 def test_supported_lookups(lookup):

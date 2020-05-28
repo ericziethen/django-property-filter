@@ -13,8 +13,6 @@ def get_value_for_db_field(obj, field_str):
 
 
 def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):
-    # TODO - REMOVE LOG COMMENTS
-    print('ERIC - compare_by_lookup_expression', lookup_expr, lookup_value, compare_value)
 
     # Handle Special case if only 1 case of range given
     if lookup_expr == 'range':

@@ -34,8 +34,6 @@ class PropertyBaseFilterMixin(MixinBase):
                          method=method, distinct=distinct, exclude=exclude, **kwargs)
 
     def filter(self, qs, value):
-        # TODO - REMOVE LOG COMMENTS
-        print('ERIC - Start Property Filter, Value:', value)
         # Carefull, a filter value of 0 will be Valid so can't just do 'if value:'
         if value is not None and value != '':
             wanted_ids = set()
@@ -43,24 +41,11 @@ class PropertyBaseFilterMixin(MixinBase):
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
                 if property_value:
                     if compare_by_lookup_expression(self.lookup_expr, value, property_value):
-                        print('ERIC - Add', obj.pk)
                         wanted_ids.add(obj.pk)
-            print('ERIC - End Property Filter')
             return qs.filter(pk__in=wanted_ids)
 
-        print('ERIC - End Property Filter - No Value')
         return qs
 
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
-    _unsupported_lookups = ['range', 'isnull']
-
-
-
-
-
-
-
-
-
-
+    _unsupported_lookups = ['range', 'isnull', 'in']
