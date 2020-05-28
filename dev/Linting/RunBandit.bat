@@ -4,11 +4,11 @@ setlocal
 
 set BATCH_DIR=%~dp0
 set PROJ_MAIN_DIR=%BATCH_DIR%..\..
-set MODULE_PATH=%PROJ_MAIN_DIR%\django_filter_property
+set MODULE_PATH=%PROJ_MAIN_DIR%\django_property_filter
 
 pushd "%PROJ_MAIN_DIR%"
 rem Exclusion via config file currently not working in bandit 1.6.2
-bandit -r "%MODULE_PATH%" --exclude "django_filter_property/tests/,django_filter_property/pricefinderapp/tests/"
+bandit -r "%MODULE_PATH%" --exclude "django_property_filter/tests/,django_property_filter/pricefinderapp/tests/"
 set return_code=%errorlevel%
 if %return_code% equ 0 (
     echo *** No Issues Found

@@ -4,7 +4,7 @@ setlocal
 
 set BATCH_DIR=%~dp0
 set PROJ_MAIN_DIR=%BATCH_DIR%..\..
-set MODULE_PATH=%PROJ_MAIN_DIR%\django_filter_property
+set MODULE_PATH=%PROJ_MAIN_DIR%\django_property_filter
 
 set MYPYPATH=%MYPYPATH%;%MODULE_PATH%
 

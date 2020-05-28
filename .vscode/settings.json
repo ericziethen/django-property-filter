@@ -1,7 +1,7 @@
 {
     "python.pythonPath": ".venv\\Scripts\\python.exe",
     "python.autoComplete.extraPaths": [
-        "${workspaceFolder}\\django_filter_property"
+        "${workspaceFolder}\\django_property_filter"
     ],
 
     "editor.tabSize": 4,
@@ -22,6 +22,6 @@
 
     "python.linting.banditEnabled": true,
 
-    "python.linting.mypyEnabled": true,
+    "python.linting.mypyEnabled": false,
     "python.envFile": "${workspaceFolder}/.env_vars"
 }

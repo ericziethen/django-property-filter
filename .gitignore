@@ -1,5 +1,7 @@
 # Project specific
 .eric
+django_property_filter/logs/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
