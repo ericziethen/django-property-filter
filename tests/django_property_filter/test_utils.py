@@ -69,6 +69,9 @@ LOOKUP_SUCCEED = [
     ('range', (2.9, None), 3),
     ('range', (None, 7), 7),
     ('range', (None, 7.1), 7),
+    ('in', [1, 3, 5], 1),
+    ('in', [1, 3, 5], 3),
+    ('in', [1, 3, 5], 5),
 ]
 @pytest.mark.parametrize('lookup_xpr, lookup_val, compare_val', LOOKUP_SUCCEED)
 def test_compare_by_lookup_expression_succeed(lookup_xpr, lookup_val, compare_val):
@@ -103,6 +106,7 @@ LOOKUP_FAILED = [
     ('range', (3, 7), 7.1),
     ('range', (3, None), 2.9),
     ('range', (None, 7), 7.1),
+    ('in', [1, 3, 5], 4),
 ]
 @pytest.mark.parametrize('lookup_xpr, lookup_val, compare_val', LOOKUP_FAILED)
 def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, compare_val):

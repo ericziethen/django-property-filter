@@ -22,6 +22,8 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):
             lookup_expr = 'gte'
             lookup_value = lookup_value[0]
 
+
+    # Do the Comparison
     if lookup_expr == 'exact':
         return str(compare_value) == str(lookup_value)
     elif lookup_expr == 'iexact':
@@ -50,5 +52,7 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):
         return lookup_value is None
     elif lookup_expr == 'range':
         return lookup_value[0] <= compare_value <= lookup_value[1]
+    elif lookup_expr == 'in':
+        return compare_value in lookup_value
 
     return False
