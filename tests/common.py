@@ -45,29 +45,3 @@ def class_functions_diff_dic(class1, class2, *, ignore=None):
         diff_dic['Different Address'] = sorted(different_sig)
 
     return diff_dic
-
-
-def get_django_filter_test_filterset(*, filter_class, filter_model, field_name, lookup_expr):
-
-    class GenericFilterSet(FilterSet):
-        field = filter_class(field_name=field_name, lookup_expr=lookup_expr)
-
-        class Meta:
-            model = filter_model
-            # Including field directly doesn't work so workaround by excluding id
-            exclude = ('id')
-
-    return GenericFilterSet
-
-
-def get_django_property_filter_test_filterset(*, filter_class, filter_model, property_field, lookup_expr):
-
-    class GenericPropertyFilterSet(FilterSet):
-        field = filter_class(property_fld_name=property_field, lookup_expr=lookup_expr)
-
-        class Meta:
-            model = filter_model
-            # Including field directly doesn't work so workaround by excluding id
-            exclude = ('id')
-
-    return GenericPropertyFilterSet
