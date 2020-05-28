@@ -1,3 +1,4 @@
+"""Filters to extend Django-FIlter filters to support property filtering."""
 
 from django_filters.filters import (
     NumberFilter,
@@ -12,28 +13,27 @@ from django_property_filter.utils import (
 )
 
 
-class MixinBase():
+class PropertyBaseFilterMixin():
+    """Mixin for Property Filters."""
+
     _unsupported_lookups = []
 
     @property
     def supported_lookups(self):
+        """List supported lookups."""
         return list(set(SUPPORTED_LOOKUPS) - set(self._unsupported_lookups))
-
-    def verify_lookup(self, lookup_expr):
-        if lookup_expr not in self.supported_lookups:
-            raise ValueError(F'Lookup "{lookup_expr}" not supported"')
-
-class PropertyBaseFilterMixin(MixinBase):
 
     def __init__(self, field_name=None, lookup_expr=None, *, label=None,
                  method=None, distinct=False, exclude=False, property_fld_name, **kwargs):
+        """Shared Constructor for Property Filters."""
         label = F'{label} {verbose_lookup_expr(lookup_expr)}'
         self.property_fld_name = property_fld_name
         self.verify_lookup(lookup_expr)
         super().__init__(field_name=field_name, lookup_expr=lookup_expr, label=label,
                          method=method, distinct=distinct, exclude=exclude, **kwargs)
 
-    def filter(self, qs, value):
+    def filter(self, qs, value):  # pylint: disable=invalid-name
+        """Filter the queryset by property."""
         # Carefull, a filter value of 0 will be Valid so can't just do 'if value:'
         if value is not None and value != '':
             wanted_ids = set()
@@ -46,6 +46,13 @@ class PropertyBaseFilterMixin(MixinBase):
 
         return qs
 
+    def verify_lookup(self, lookup_expr):
+        """Check if lookup_expr is supported."""
+        if lookup_expr not in self.supported_lookups:
+            raise ValueError(F'Lookup "{lookup_expr}" not supported"')
+
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
+    """Adding Property Support to NumberFilter."""
+
     _unsupported_lookups = ['range', 'isnull', 'in']
