@@ -13,6 +13,9 @@ def get_value_for_db_field(obj, field_str):
 
 
 def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):
+    # TODO - REMOVE LOG COMMENTS
+    print('ERIC - compare_by_lookup_expression', lookup_expr, lookup_value, compare_value)
+
     # Handle Special case if only 1 case of range given
     if lookup_expr == 'range':
         if lookup_value[0] is None:
@@ -21,7 +24,6 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):
         elif lookup_value[1] is None:
             lookup_expr = 'gte'
             lookup_value = lookup_value[0]
-
 
     # Do the Comparison
     if lookup_expr == 'exact':
