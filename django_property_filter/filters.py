@@ -20,6 +20,7 @@ class PropertyBaseFilterMixin():
                          method=method, distinct=distinct, exclude=exclude, **kwargs)
 
     def filter(self, qs, value):
+        print('ERIC - Start Property Filter, Value:', value)
         # Carefull, a filter value of 0 will be Valid so can't just do 'if value:'
         if value is not None and value != '':
             wanted_ids = set()
@@ -28,8 +29,10 @@ class PropertyBaseFilterMixin():
                 if property_value:
                     if compare_by_lookup_expression(self.lookup_expr, property_value, value):
                         wanted_ids.add(obj.pk)
+            print('ERIC - End Property Filter')
             return qs.filter(pk__in=wanted_ids)
 
+        print('ERIC - End Property Filter - No Value')
         return qs
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):

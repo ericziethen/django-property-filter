@@ -52,24 +52,22 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
 
     # Test using Normal Django Filter
     class NumberFilterSet(FilterSet):
-        field = NumberFilter(field_name='number', lookup_expr=lookup_xpr)
+        number = NumberFilter(field_name='number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = NumberClass
-            # Including field directly doesn't work so workaround by excluding id
-            exclude = ('id')
+            fields = ['number']
 
     filter_fs = NumberFilterSet({'number': lookup_val}, queryset=NumberClass.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Property Filter
     class PropertyNumberFilterSet(FilterSet):
-        field = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = NumberClass
-            # Including field directly doesn't work so workaround by excluding id
-            exclude = ('id')
+            fields = ['prop_number']
 
     prop_filter_fs = PropertyNumberFilterSet({'prop_number': lookup_val}, queryset=NumberClass.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
