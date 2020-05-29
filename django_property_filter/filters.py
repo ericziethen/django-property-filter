@@ -4,8 +4,6 @@ from django_filters.filters import (
     NumberFilter,
 )
 
-from django_filters.utils import verbose_lookup_expr
-
 from django_property_filter.conf import SUPPORTED_LOOKUPS
 from django_property_filter.utils import (
     get_value_for_db_field,
