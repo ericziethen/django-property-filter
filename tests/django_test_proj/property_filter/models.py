@@ -23,7 +23,7 @@ class DeliveryLine(models.Model):
 class Product(models.Model):
 
     name = models.CharField(max_length=32)
-    price = models.DecimalField()
+    price = models.DecimalField(decimal_places=2, max_digits=10)
     del_line = models.ForeignKey(DeliveryLine, on_delete=models.CASCADE, related_name='products')
 
     @property

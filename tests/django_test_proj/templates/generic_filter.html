@@ -3,10 +3,23 @@
 
 {% block content %}
     <form action="" method="get">
-        {{ filter.form.as_p }}
+        <!--{{ filter.form.as_p }}-->
+
+        <div class="row">
+            {% for filt in filter.form %}
+            <div class="col-md-3">{{ filt.label }}{{ filt }}</div>
+                <!-- if last column in row -->
+                {% if forloop.counter|divisibleby:"3" and not forloop.last %}
+                </div><div class="row">
+                {% endif %}
+            {% endfor %}
+        </div>
+
         <input type="submit" />
     </form>
+    <br/><br/><br/>
     {% for obj in filter.qs %}
-        {{ obj.name }} - {{ obj }}<br />
+        {{ obj }}
+            <br/>
     {% endfor %}
 {% endblock %}
