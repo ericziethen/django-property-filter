@@ -38,7 +38,3 @@ class PropertyNumberFilterSet(FilterSet):
     def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
         super().__init__(data, queryset, request=request, prefix=prefix)
         add_supported_filters(self.filters, PropertyNumberFilter, 'prop_number')
-        #add_property_filter(self.filters, PropertyNumberFilter, 'prop_number', 'gte')
-        #add_property_filter(self.filters, PropertyNumberFilter, 'prop_number', 'lte')
-        #self.filters['prop_number_gte'] = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr='gte')
-

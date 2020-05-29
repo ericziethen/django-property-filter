@@ -7,7 +7,7 @@ from django_property_filter.filters import PropertyNumberFilter
 
 from tests.common import class_functions_diff_dic
 
-from tests.models import (
+from tests.django_test_proj.property_filter.models import (
     Product
 )
 

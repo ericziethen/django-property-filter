@@ -7,7 +7,7 @@ from django_filters.filters import NumberFilter
 from django_property_filter.conf import SUPPORTED_LOOKUPS
 from django_property_filter.filters import PropertyNumberFilter
 
-from tests.models import NumberClass
+from tests.django_test_proj.property_filter.models import NumberClass
 
 UNSUPPORTED_LOOKUPS = ['range', 'isnull', 'in']
 
