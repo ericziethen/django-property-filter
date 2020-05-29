@@ -1,11 +1,10 @@
 
 
 import pytest
-
-from django_filters.filters import NumberFilter
+from django_filters import FilterSet, NumberFilter
 
 from django_property_filter.conf import SUPPORTED_LOOKUPS
-from django_property_filter.filters import PropertyNumberFilter
+from django_property_filter import PropertyFilterSet, PropertyNumberFilter
 
 from tests.django_test_proj.property_filter.models import NumberClass
 
@@ -78,7 +77,6 @@ TEST_LOOKUPS = [
 ]
 
 
-from django_filters import FilterSet
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, result_list):
@@ -95,7 +93,7 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Property Filter
-    class PropertyNumberFilterSet(FilterSet):
+    class PropertyNumberFilterSet(PropertyFilterSet):
         prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
