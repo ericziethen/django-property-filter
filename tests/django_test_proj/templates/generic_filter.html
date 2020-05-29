@@ -1,0 +1,39 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+    <form action="" method="get">
+        <!--{{ filter.form.as_p }}-->
+
+        <div class="row">
+            {% for filt in filter.form %}
+            <div class="col-md-3">{{ filt.label }}{{ filt }}</div>
+                <!-- if last column in row -->
+                {% if forloop.counter|divisibleby:"3" and not forloop.last %}
+                </div><div class="row">
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <input type="submit" />
+    </form>
+    <br/><br/>
+
+    <h1>Data</h1>
+    <br/>
+
+    <div class="row">
+        {% for obj in filter.qs %}
+        <div class="col-md-3">{{ obj }}</div>
+            <!-- if last column in row -->
+            {% if forloop.counter|divisibleby:"3" and not forloop.last %}
+            </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
+
+
+
+{% endblock %}

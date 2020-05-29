@@ -7,9 +7,17 @@ from django_filters.filters import NumberFilter
 from django_property_filter.conf import SUPPORTED_LOOKUPS
 from django_property_filter.filters import PropertyNumberFilter
 
-from tests.models import NumberClass
+from tests.django_test_proj.property_filter.models import NumberClass
 
 UNSUPPORTED_LOOKUPS = ['range', 'isnull', 'in']
+
+def test_label_set():
+    my_filter_label = PropertyNumberFilter(label='test label', property_fld_name='field_name', lookup_expr='gte')
+    assert my_filter_label.label == 'test label'
+
+    my_filter_no_label = PropertyNumberFilter(property_fld_name='field_name', lookup_expr='gte')
+    assert my_filter_no_label.label == 'field_name [gte]'
+
 
 @pytest.mark.parametrize('lookup', SUPPORTED_LOOKUPS)
 def test_supported_lookups(lookup):
