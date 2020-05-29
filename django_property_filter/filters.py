@@ -26,7 +26,11 @@ class PropertyBaseFilterMixin():
     def __init__(self, field_name=None, lookup_expr=None, *, label=None,
                  method=None, distinct=False, exclude=False, property_fld_name, **kwargs):
         """Shared Constructor for Property Filters."""
-        label = F'{label} {verbose_lookup_expr(lookup_expr)}'
+        if label is None:
+            label = F'{property_fld_name} [{lookup_expr}]'
+        else:
+            label = F'{label} {verbose_lookup_expr(lookup_expr)}'
+
         self.property_fld_name = property_fld_name
         self.verify_lookup(lookup_expr)
         super().__init__(field_name=field_name, lookup_expr=lookup_expr, label=label,

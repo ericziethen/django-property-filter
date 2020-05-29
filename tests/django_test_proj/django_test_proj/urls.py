@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from property_filter import models, views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.NumberClassList.as_view(), name='numberclass-list'),
 ]
