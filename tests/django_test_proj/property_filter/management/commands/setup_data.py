@@ -9,5 +9,5 @@ from property_filter.models import (
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        for num in range(5, 21):
+        for num in range(21):
             NumberClass.objects.update_or_create(number=num)

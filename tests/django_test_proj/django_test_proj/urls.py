@@ -20,5 +20,6 @@ from property_filter import models, views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.NumberClassList.as_view(), name='numberclass-list'),
+    path('', views.HomePageView.as_view(), name='home'),
+    path('numberclasses/', views.NumberClassList.as_view(), name='numberclass_list'),
 ]

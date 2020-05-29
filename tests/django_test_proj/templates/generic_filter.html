@@ -17,9 +17,23 @@
 
         <input type="submit" />
     </form>
-    <br/><br/><br/>
-    {% for obj in filter.qs %}
-        {{ obj }}
-            <br/>
-    {% endfor %}
+    <br/><br/>
+
+    <h1>Data</h1>
+    <br/>
+
+    <div class="row">
+        {% for obj in filter.qs %}
+        <div class="col-md-3">{{ obj }}</div>
+            <!-- if last column in row -->
+            {% if forloop.counter|divisibleby:"3" and not forloop.last %}
+            </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+
+
+
+
+
 {% endblock %}

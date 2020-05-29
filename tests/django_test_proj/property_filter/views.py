@@ -1,6 +1,6 @@
 
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 
 from django_filters.views import FilterView
 
@@ -9,6 +9,10 @@ from property_filter.models import (
 )
 
 from . import filters
+
+class HomePageView(TemplateView):
+    template_name = 'home.html'
+
 
 # Create your views here.
 class NumberClassList(FilterView):
