@@ -4,7 +4,6 @@ from django_filters.filters import (
     NumberFilter,
 )
 
-from django_property_filter.conf import SUPPORTED_LOOKUPS
 from django_property_filter.utils import (
     get_value_for_db_field,
     compare_by_lookup_expression
@@ -14,12 +13,10 @@ from django_property_filter.utils import (
 class PropertyBaseFilterMixin():
     """Mixin for Property Filters."""
 
-    _unsupported_lookups = []
-
-    @property
-    def supported_lookups(self):
-        """List supported lookups."""
-        return list(set(SUPPORTED_LOOKUPS) - set(self._unsupported_lookups))
+    supported_lookups = [
+        'exact', 'iexact', 'contains', 'icontains', 'gt', 'gte',
+        'lt', 'lte', 'startswith', 'istartswith', 'endswith', 'iendswith',
+    ]
 
     def __init__(self, field_name=None, lookup_expr=None, *, label=None,
                  method=None, distinct=False, exclude=False, property_fld_name, **kwargs):
@@ -54,5 +51,3 @@ class PropertyBaseFilterMixin():
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
     """Adding Property Support to NumberFilter."""
-
-    _unsupported_lookups = ['range', 'isnull', 'in']

@@ -1,11 +1,21 @@
 
-
-# TODO - Test to compare field creation or normal and property filterset
-# TODO - Test Creating Filters explicitly vs implicitly create the same Filters
-
-# TODO - Test normal Filterset functionality still working
+from django_property_filter import PropertyFilterSet
 
 
-# TODO - Test Error when creating invalid expression for type
+def test_declare_implicit_filter():
+    assert False
 
-# TODO - Change FIlterset used for Properties
+
+def test_implicit_and_explicit_filters_equal():
+    assert False
+
+
+def test_invalid_explicit_lookup():
+    assert False
+
+
+def test_invalid_implicit_lookup():
+    assert False
+
+
+
