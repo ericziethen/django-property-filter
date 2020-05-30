@@ -4,12 +4,12 @@ import sys
 
 sys.path.append(os.path.abspath(R'..\..'))
 
-from django_filters import FilterSet
 from django_filters.filters import (
     NumberFilter,
 )
 
-from django_property_filter.filters import (
+from django_property_filter import (
+    PropertyFilterSet,
     PropertyNumberFilter,
 )
 
@@ -36,7 +36,7 @@ def add_supported_filters(filter_list, filter_class, field_name, expression_list
         add_filter(filter_list, filter_class, field_name, lookup)
 
 
-class PropertyNumberFilterSet(FilterSet):
+class PropertyNumberFilterSet(PropertyFilterSet):
 
     class Meta:
         model = models.NumberClass
