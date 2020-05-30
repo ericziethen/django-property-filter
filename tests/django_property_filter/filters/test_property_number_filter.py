@@ -70,9 +70,7 @@ TEST_LOOKUPS = [
     ('endswith', 0, [12, 13]),
     ('endswith', 3, [5]),
     ('iendswith', 7, []),
-    ('iendswith', 3, [5]),
-    #('in', , []),
-    #('in', , []),
+    ('iendswith', 3, [5])
 ]
 
 
@@ -102,6 +100,17 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
     prop_filter_fs = PropertyNumberFilterSet({'prop_number': lookup_val}, queryset=NumberClass.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
+    # Compare with Implicit Setup
+    class ImplicitFilterSet(PropertyFilterSet):
+        prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+
+        class Meta:
+            model = NumberClass
+            exclude = ['number']
+            property_fields = [('prop_number', PropertyNumberFilter, [lookup_xpr])]
+
+    implicit_filter_fs = ImplicitFilterSet({'prop_number': lookup_val}, queryset=NumberClass.objects.all())
+    assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 def test_all_expressions_tested():
     tested_expressions = [x[0] for x in TEST_LOOKUPS]
