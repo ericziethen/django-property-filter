@@ -1,10 +1,14 @@
+"""Filterstest for Property Filtering."""
+
 
 from django_filters import Filter, FilterSet
 
 
 class PropertyFilterSet(FilterSet):
+    """Generic Filterset for Property Filters."""
 
     def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+        """Construct a PropertyFilterSet."""
         super().__init__(data, queryset, request=request, prefix=prefix)
         self._setup_property_filters()
 
@@ -14,9 +18,9 @@ class PropertyFilterSet(FilterSet):
         self.filters[filter_name] = filter_class(property_fld_name=property_fld_name, lookup_expr=lookup_expr)
 
     def _setup_property_filters(self):
-        """Setup implicit filters."""
-        if 'property_fields' in self.__class__.Meta.__dict__:
-            prop_fields = self.__class__.Meta.__dict__['property_fields']
+        """Set up implicit filters."""
+        if 'property_fields' in self.__class__.Meta.__dict__:  # pylint: disable=no-member
+            prop_fields = self.__class__.Meta.__dict__['property_fields']  # pylint: disable=no-member
 
             for field in prop_fields:
                 prop_fld_name = field[0]
