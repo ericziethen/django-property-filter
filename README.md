@@ -1,5 +1,8 @@
-# RUN "FIND_PROJ_REPLACES.bat" to find settings that need replacing
+# Django Property Filter
 
+Django-property-filter is an extension to [django-filter](https://pypi.org/projhttps://pypi.org/project/django-filter/ect/django-filter/) and provides functionality to filter querysets by class properties.
+
+It does so by providing sub-classes for Filters and Filtersets to keep existing django-filter functionality.
 
 <table>
     <tr>
@@ -31,4 +34,37 @@
         <td><img src='https://img.shields.io/pypi/pyversions/django-property-filter.svg'></td>
     </tr>
 </table>
+
+## Requirements
+
+* Python 3.8
+* Django-filter 2.20
+
+## Installation
+
+Install using pip:
+
+```python
+pip install django-property-filter
+```
+
+Then add 'django_property_filter' to your INSTALLED_APPS.
+
+```python
+INSTALLED_APPS = [
+    ...
+    'django_property_filter',
+]
+```
+
+## Usage
+
+**TBC**
+
+## Development
+
+# Run the Django Test Project to see the filters in action
+
+* go to "tests\django_test_proj"
+* run "python manage.py runserver"
 
