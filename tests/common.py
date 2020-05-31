@@ -1,8 +1,6 @@
  
 from django_filters import FilterSet
 
-from django_property_filter.conf import SUPPORTED_LOOKUPS
-
 
 # https://stackoverflow.com/questions/34439/finding-what-methods-a-python-object-has
 def get_function_dic_for_class(obj, ignore):

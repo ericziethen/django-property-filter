@@ -42,5 +42,9 @@ class NumberClass(models.Model):
     def prop_number(self):
         return self.number
 
+    @property
+    def prop_number_2(self):
+        return self.number
+
     def __str__(self):
         return F'{self.number}'
