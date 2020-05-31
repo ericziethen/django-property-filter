@@ -12,11 +12,13 @@ Installation
 Install using pip:
 
 .. code-block:: python
+
     pip install django-property-filter
 
 Then add 'django_property_filter' to your INSTALLED_APPS.
 
 .. code-block:: python
+
     INSTALLED_APPS = [
         ...
         'django_property_filter',
