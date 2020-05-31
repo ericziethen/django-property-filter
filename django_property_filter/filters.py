@@ -48,6 +48,5 @@ class PropertyBaseFilterMixin():
         if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
-
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
     """Adding Property Support to NumberFilter."""

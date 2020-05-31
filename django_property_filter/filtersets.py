@@ -1,5 +1,5 @@
 
-from django_filters import FilterSet
+from django_filters import Filter, FilterSet
 
 
 class PropertyFilterSet(FilterSet):
@@ -23,5 +23,16 @@ class PropertyFilterSet(FilterSet):
                 prop_filter_class = field[1]
                 lookup_xpr_list = field[2]
 
+                # Validate the attributes
+                if not issubclass(prop_filter_class, Filter):
+                    raise ValueError(F'{prop_filter_class} is not a subclass of {Filter}')
+
+                if not isinstance(prop_fld_name, str):
+                    raise ValueError(F'Property field "{prop_fld_name}" is not a str')
+
+                if not isinstance(lookup_xpr_list, list) or not lookup_xpr_list:
+                    raise ValueError(F'Lookup list "{lookup_xpr_list}" is not a valid list of lookups')
+
+                # Create all Filters
                 for lookup in lookup_xpr_list:
                     self._add_filter(prop_filter_class, prop_fld_name, lookup)
