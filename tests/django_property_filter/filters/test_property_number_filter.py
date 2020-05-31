@@ -1,15 +1,11 @@
 
 
 import pytest
+from django_filters import FilterSet, NumberFilter
 
-from django_filters.filters import NumberFilter
-
-from django_property_filter.conf import SUPPORTED_LOOKUPS
-from django_property_filter.filters import PropertyNumberFilter
+from django_property_filter import PropertyFilterSet, PropertyNumberFilter
 
 from tests.django_test_proj.property_filter.models import NumberClass
-
-UNSUPPORTED_LOOKUPS = ['range', 'isnull', 'in']
 
 def test_label_set():
     my_filter_label = PropertyNumberFilter(label='test label', property_fld_name='field_name', lookup_expr='gte')
@@ -19,13 +15,15 @@ def test_label_set():
     assert my_filter_no_label.label == 'field_name [gte]'
 
 
-@pytest.mark.parametrize('lookup', SUPPORTED_LOOKUPS)
+@pytest.mark.parametrize('lookup', PropertyNumberFilter.supported_lookups)
 def test_supported_lookups(lookup):
-    if lookup in UNSUPPORTED_LOOKUPS:
-        with pytest.raises(ValueError):
-            PropertyNumberFilter(property_fld_name='fake_field', lookup_expr=lookup)
-    else:
-        PropertyNumberFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    # Test expression not raises exception
+    PropertyNumberFilter(property_fld_name='fake_field', lookup_expr=lookup)
+
+
+def test_unsupported_lookup():
+    with pytest.raises(ValueError):
+        PropertyNumberFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -72,13 +70,10 @@ TEST_LOOKUPS = [
     ('endswith', 0, [12, 13]),
     ('endswith', 3, [5]),
     ('iendswith', 7, []),
-    ('iendswith', 3, [5]),
-    #('in', , []),
-    #('in', , []),
+    ('iendswith', 3, [5])
 ]
 
 
-from django_filters import FilterSet
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, result_list):
@@ -95,7 +90,7 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Property Filter
-    class PropertyNumberFilterSet(FilterSet):
+    class PropertyNumberFilterSet(PropertyFilterSet):
         prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
@@ -105,7 +100,17 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
     prop_filter_fs = PropertyNumberFilterSet({'prop_number': lookup_val}, queryset=NumberClass.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
+    # Compare with Implicit Setup
+    class ImplicitFilterSet(PropertyFilterSet):
+
+        class Meta:
+            model = NumberClass
+            exclude = ['number']
+            property_fields = [('prop_number', PropertyNumberFilter, [lookup_xpr])]
+
+    implicit_filter_fs = ImplicitFilterSet({F'prop_number__{lookup_xpr}': lookup_val}, queryset=NumberClass.objects.all())
+    assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 def test_all_expressions_tested():
     tested_expressions = [x[0] for x in TEST_LOOKUPS]
-    assert set(tested_expressions) == set(SUPPORTED_LOOKUPS) - set(PropertyNumberFilter._unsupported_lookups)
+    assert sorted(list(set(tested_expressions))) == sorted(PropertyNumberFilter.supported_lookups)
