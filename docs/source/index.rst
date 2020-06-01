@@ -14,14 +14,12 @@ Welcome to Django Property Filter's documentation!
    guide/usage
 
 .. toctree::
-    :maxdepth: 1
     :caption: Reference Documentation:
 
    ref/filters
    ref/filterset
 
 .. toctree::
-    :maxdepth: 1
     :caption: Development and Testing:
 
    dev/dev_testing
