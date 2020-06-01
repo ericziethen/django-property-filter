@@ -28,6 +28,8 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_number_filter():
+    NumberClass.objects.create(id=-1, number=-1)
+    NumberClass.objects.create(id=0, number=0)
     NumberClass.objects.create(id=1, number=1)
     NumberClass.objects.create(id=2, number=2)
     NumberClass.objects.create(id=3, number=2)
@@ -44,7 +46,9 @@ def fixture_property_number_filter():
     NumberClass.objects.create(id=14)
 
 TEST_LOOKUPS = [
-    ('exact', None, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
+    ('exact', -1, [-1]),
+    ('exact', 0, [0]),
+    ('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
     ('exact', 15, []),
     ('exact', 5, [8, 9, 10, 11]),
     ('iexact', 15, []),
@@ -57,17 +61,17 @@ TEST_LOOKUPS = [
     ('gt', 4, [8, 9, 10, 11, 12, 13]),
     ('gte', 4, [6, 7, 8, 9, 10, 11, 12, 13]),
     ('gte', 21, []),
-    ('lt', 1, []),
-    ('lt', 4, [1, 2, 3, 4, 5]),
-    ('lte', 0.9, []),
-    ('lte', 4, [1, 2, 3, 4, 5, 6, 7]),
+    ('lt', 1, [-1, 0]),
+    ('lt', 4, [-1, 0, 1, 2, 3, 4, 5]),
+    ('lte', 0.9, [-1, 0]),
+    ('lte', 4, [-1, 0, 1, 2, 3, 4, 5, 6, 7]),
     ('startswith', 7, []),
     ('startswith', 2, [2, 3, 4, 13]),
     ('startswith', 3, [5]),
     ('istartswith', 7, []),
     ('istartswith', 3, [5]),
     ('endswith', 7, []),
-    ('endswith', 0, [12, 13]),
+    ('endswith', 0, [0, 12, 13]),
     ('endswith', 3, [5]),
     ('iendswith', 7, []),
     ('iendswith', 3, [5])

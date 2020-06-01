@@ -2,12 +2,14 @@
 Installation
 ============
 
-## Requirements
+Requirements
+------------
 
 * Python 3.8
 * Django-filter 2.20
 
-## Installation
+Installation
+------------
 
 Install using pip:
 

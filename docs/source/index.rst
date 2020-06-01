@@ -11,7 +11,20 @@ Welcome to Django Property Filter's documentation!
    :caption: Contents:
 
    guide/install
+   guide/usage
 
+.. toctree::
+    :maxdepth: 1
+    :caption: Reference Documentation:
+
+   ref/filters
+   ref/filterset
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Development and Testing:
+
+   dev/dev_testing
 
 Indices and tables
 ==================
