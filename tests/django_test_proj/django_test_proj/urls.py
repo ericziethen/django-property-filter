@@ -23,4 +23,5 @@ urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
     path('numberclasses/', views.NumberClassList.as_view(), name='numberclass_list'),
     path('booleanclasses/', views.BooleanClassList.as_view(), name='booleanclass_list'),
+    path('charclasses/', views.CharClassList.as_view(), name='charclass_list'),
 ]

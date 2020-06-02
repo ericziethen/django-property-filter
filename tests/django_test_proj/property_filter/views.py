@@ -7,6 +7,7 @@ from django_filters.views import FilterView
 from property_filter.models import (
     BooleanClass,
     NumberClass,
+    TextClass,
 )
 
 from . import filters
@@ -26,3 +27,9 @@ class BooleanClassList(FilterView):
     model = BooleanClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyBooleanFilterSet
+
+
+class CharClassList(FilterView):
+    model = TextClass
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyCharFilterSet
