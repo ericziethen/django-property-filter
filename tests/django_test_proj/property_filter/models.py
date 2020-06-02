@@ -48,3 +48,14 @@ class NumberClass(models.Model):
 
     def __str__(self):
         return F'{self.number}'
+
+
+class BooleanClass(models.Model):
+    is_true = models.BooleanField(null=True)
+
+    @property
+    def prop_is_true(self):
+        return self.is_true
+
+    def __str__(self):
+        return F'{self.is_true}'

@@ -54,7 +54,7 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # p
     elif lookup_expr == 'iendswith':
         result = str(compare_value).lower().endswith(str(lookup_value).lower())
     elif lookup_expr == 'isnull':
-        result = lookup_value is None
+        result = compare_value is None
     elif lookup_expr == 'range' and compare_value is not None and lookup_value is not None:
         result = lookup_value[0] <= compare_value <= lookup_value[1]
     elif lookup_expr == 'in':

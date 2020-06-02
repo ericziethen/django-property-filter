@@ -1,6 +1,7 @@
 """Filters to extend Django-FIlter filters to support property filtering."""
 
 from django_filters.filters import (
+    BooleanFilter,
     NumberFilter,
 )
 
@@ -36,9 +37,8 @@ class PropertyBaseFilterMixin():
             wanted_ids = set()
             for obj in qs:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
-                if property_value is not None:
-                    if compare_by_lookup_expression(self.lookup_expr, value, property_value):
-                        wanted_ids.add(obj.pk)
+                if compare_by_lookup_expression(self.lookup_expr, value, property_value):
+                    wanted_ids.add(obj.pk)
             return qs.filter(pk__in=wanted_ids)
 
         return qs
@@ -51,3 +51,9 @@ class PropertyBaseFilterMixin():
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
     """Adding Property Support to NumberFilter."""
+
+
+class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
+    """Adding Property Support to BooleanFilter."""
+
+    supported_lookups = ['exact', 'isnull']
