@@ -24,6 +24,8 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # p
             lookup_expr = 'gte'
             lookup_value = lookup_value[0]
 
+    result = False
+
     # Do the Comparison
     if lookup_expr == 'exact':
         result = str(compare_value) == str(lookup_value)
@@ -33,13 +35,13 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # p
         result = str(lookup_value) in str(compare_value)
     elif lookup_expr == 'icontains':
         result = str(lookup_value).lower() in str(compare_value).lower()
-    elif lookup_expr == 'gt':
+    elif lookup_expr == 'gt' and compare_value is not None and lookup_value is not None:
         result = compare_value > lookup_value
-    elif lookup_expr == 'gte':
+    elif lookup_expr == 'gte' and compare_value is not None and lookup_value is not None:
         result = compare_value >= lookup_value
-    elif lookup_expr == 'lt':
+    elif lookup_expr == 'lt' and compare_value is not None and lookup_value is not None:
         result = compare_value < lookup_value
-    elif lookup_expr == 'lte':
+    elif lookup_expr == 'lte' and compare_value is not None and lookup_value is not None:
         result = compare_value <= lookup_value
     elif lookup_expr == 'startswith':
         result = str(compare_value).startswith(str(lookup_value))
@@ -50,12 +52,10 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # p
     elif lookup_expr == 'iendswith':
         result = str(compare_value).lower().endswith(str(lookup_value).lower())
     elif lookup_expr == 'isnull':
-        result = lookup_value is None
-    elif lookup_expr == 'range':
+        result = (lookup_value and compare_value is None) or (not lookup_value and compare_value is not None)
+    elif lookup_expr == 'range' and compare_value is not None and lookup_value is not None:
         result = lookup_value[0] <= compare_value <= lookup_value[1]
     elif lookup_expr == 'in':
         result = compare_value in lookup_value
-    else:
-        raise ValueError(F'Invalid Lookup Expression "{lookup_expr}"')
 
     return result
