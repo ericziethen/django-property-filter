@@ -2,11 +2,27 @@
 Development and Testing
 =======================
 
+Run the Test Suite
+------------------
 
-# TODO
-  - Clone
-  - Setun Dev Environment
-  - Install Requirements
-  - Running Tests
-  - Running Linting
-  - Test Django Project, Models, Views, Run Server
+.. code-block:: batch
+
+    $ dev\run_tests.bat
+
+Run the Linters
+---------------
+
+.. code-block:: batch
+
+    $ dev\run_linters.bat
+
+
+Run the Django Test Project
+---------------------------
+
+Change to the test project directory and run the django project
+
+.. code-block:: batch
+
+    $ cd tests\django_test_proj
+    $ python manage.py runserver

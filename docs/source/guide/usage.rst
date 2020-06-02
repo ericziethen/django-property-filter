@@ -66,6 +66,7 @@ Since PropertyFilterSet is and extension to django-filter's Filterset which
 requires either the Meta attribute "fields" or "exclude" to be set we excluded
 the "price" field. If we had instead used::
     fields = ['price']
+
 It would also have created an "exact" filter for the book price.
 
 The only difference to using a normal FilterSet from django-filter is the
@@ -79,7 +80,6 @@ The "property_fields" is a list of tuples with 3 values.
         This is necessary since it can't be determined what the return type
         of the property will be in all cases
     3.) The list of lookup expressions.
-
 
 Explicit Filter Creation
 ------------------------
