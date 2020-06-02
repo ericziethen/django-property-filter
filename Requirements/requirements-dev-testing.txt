@@ -16,6 +16,9 @@ pytest-django
 codecov
 safety
 
+# Documentation
+sphinx
+
 # Packaging
 twine
 wheel
