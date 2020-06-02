@@ -5,11 +5,13 @@ import sys
 sys.path.append(os.path.abspath(R'..\..'))
 
 from django_filters.filters import (
+    BooleanFilter,
     NumberFilter,
 )
 
 from django_property_filter import (
     PropertyFilterSet,
+    PropertyBooleanFilter,
     PropertyNumberFilter,
 )
 
@@ -36,3 +38,15 @@ class PropertyNumberFilterSet(PropertyFilterSet):
     def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
         super().__init__(data, queryset, request=request, prefix=prefix)
         add_supported_filters(self.filters, NumberFilter, 'number', PropertyNumberFilter.supported_lookups)
+
+
+class PropertyBooleanFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.BooleanClass
+        exclude = ['is_true']
+        property_fields = [('prop_is_true', PropertyBooleanFilter, PropertyBooleanFilter.supported_lookups)]
+
+    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+        super().__init__(data, queryset, request=request, prefix=prefix)
+        add_supported_filters(self.filters, BooleanFilter, 'is_true', PropertyBooleanFilter.supported_lookups)

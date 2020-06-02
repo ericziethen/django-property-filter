@@ -58,4 +58,4 @@ class BooleanClass(models.Model):
         return self.is_true
 
     def __str__(self):
-        return F'{self.is_true}'
+        return F'{self.is_true} ({self.id})'
