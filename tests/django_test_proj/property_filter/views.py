@@ -5,6 +5,7 @@ from django.views.generic import ListView, TemplateView
 from django_filters.views import FilterView
 
 from property_filter.models import (
+    BooleanClass,
     NumberClass,
 )
 
@@ -19,3 +20,9 @@ class NumberClassList(FilterView):
     model = NumberClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyNumberFilterSet
+
+
+class BooleanClassList(FilterView):
+    model = BooleanClass
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyBooleanFilterSet

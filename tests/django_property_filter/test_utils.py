@@ -61,7 +61,8 @@ LOOKUP_SUCCEED = [
     ('endswith', 'ello', 'Hello'),
     ('endswith', 'Hello', 'Hello'),
     ('iendswith', 'hello', 'Hello'),
-    ('isnull', None, None),
+    ('isnull', True, None),
+    ('isnull', False, 1),
     ('range', (3, 7), 3),
     ('range', (3, 7), 5),
     ('range', (3, 7), 7),
@@ -87,10 +88,18 @@ LOOKUP_FAILED = [
     ('contains', 'Ell', 'Hello'),
     ('icontains', 'Elo', 'Hello'),
     ('gt', 5, 5.00000),
+    ('gt', 5, None),
+    ('gt', None, 5),
     ('gte', 5, 4.999999),
+    ('gte', None, 4.999999),
+    ('gte', 5, None),
     ('lt', 5, 6),
     ('lt', 5.0, 5),
+    ('lt', None, 5),
+    ('lt', 5.0, None),
     ('lte', 5.000000, 5.000001),
+    ('lte', None, 5.000001),
+    ('lte', 5.000000, None),
     ('startswith', ' Hel', 'Hello'),
     ('startswith', 'ello', 'Hello'),
     ('startswith', 'hello', 'Hello'),
@@ -98,10 +107,8 @@ LOOKUP_FAILED = [
     ('endswith', 'Hell', 'Hello'),
     ('endswith', 'hello', 'Hello'),
     ('iendswith', 'hell', 'Hello'),
-    ('isnull', 'a', None),
-    ('isnull', ' ', None),
-    ('isnull', [''], None),
-    ('isnull', 0, None),
+    ('isnull', True, 1),
+    ('isnull', False, None),
     ('range', (3, 7), 2.9),
     ('range', (3, 7), 7.1),
     ('range', (3, None), 2.9),
@@ -111,8 +118,3 @@ LOOKUP_FAILED = [
 @pytest.mark.parametrize('lookup_xpr, lookup_val, compare_val', LOOKUP_FAILED)
 def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, compare_val):
     assert not compare_by_lookup_expression(lookup_xpr, lookup_val, compare_val)
-
-
-def test_invalid_lookup():
-    with pytest.raises(ValueError):
-        compare_by_lookup_expression('INVALID_LOOKUP_EXPRESSION', 1, 1)

@@ -6,7 +6,9 @@ Filter Reference
 This is a reference document with a list of the filters and their property
 specific arguments specific for property filters.
 
-Base Supported Lookup Expressions
+.. _base_lookups:
+
+Supported Base Lookup Expressions
 ---------------------------------
 
 This is a list lookup expressions supported by all Property Filters unless
@@ -48,4 +50,13 @@ Property Filter Classes
 ``PropertyNumberFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Used instead of NumberFilter
+Used instead of NumberFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
+``PropertyBooleanFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of BooleanFilter for property filtering
+
+Supported lookups are "exact" and "isnull"
