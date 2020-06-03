@@ -31,3 +31,22 @@ class Command(BaseCommand):
         TextClass.objects.update_or_create(id=6, name='Tom')
         TextClass.objects.update_or_create(id=7)
         TextClass.objects.update_or_create(id=8)
+
+
+
+        print('BEFORE PRAGMA')
+        qs = TextClass.objects.filter(name__contains='Tom')
+        print('  contains "Tom"', qs.query, qs)
+        qs = TextClass.objects.filter(name__icontains='Tom')
+        print('  icontains "Tom"', qs.query, qs)
+
+        from django.db import connection
+
+        with connection.cursor() as cursor:
+            cursor.execute('PRAGMA case_sensitive_like = true;')
+
+        print('AFTER PRAGMA')
+        qs = TextClass.objects.filter(name__contains='Tom')
+        print('  contains "Tom"', qs.query, qs)
+        qs = TextClass.objects.filter(name__icontains='Tom')
+        print('  icontains "Tom"', qs.query, qs)

@@ -31,73 +31,44 @@ def fixture_property_char_filter():
     TextClass.objects.create(id=6)
     TextClass.objects.create(id=7)
 
-
+# Sqlite will use the same for e.g. contains and icontains. oth are either case
+# sensitive or not depending on 'case_sensitive_like' pragma setting
 TEST_LOOKUPS = [
-    ('exact', 'No Name', []),
-    ('exact', 'Tom', [-1, 2, 3]),
-    ('exact', 'TOM', [1]),
-    ('iexact', 'Tom', [-1, 0, 1, 2, 3]),
-    ('iexact', 'TOM', [-1, 0, 1, 2, 3]),
-    ('contains', 'OM', [1]),
-    ('contains', 'o', [-1, 0, 2, 3, 4]),
-    ('icontains', 'rR', [5]),
-    ('icontains', 'o', [-1, 0, 1, 2, 3, 4]),
-    ('gt', 'Tom', [0, 1, 4, 5, 6, 7]),
-    ('gte', 'Tom', [0, 1, 4, 5, 6, 7]),
-    ('lt', 'Tom', [0, 1, 4, 5, 6, 7]),
-    ('lte', 'Tom', [0, 1, 4, 5, 6, 7]),
-    ('startswith', 'T', [-1, 1, 2, 3, 4]),
-    ('startswith', 'To', [-1, 2, 3, 4]),
-    ('istartswith', 'T', [-1, 0, 1, 2, 3, 4]),
-    ('istartswith', 'To', [-1, 0, 1, 2, 3, 4]),
-    ('endswith', 'm', [-1, 0, 2, 3, 4]),
-    ('endswith', 'om', [-1, 0, 2, 3]),
-    ('iendswith', 'm', [-1, 0, 1, 2, 3, 4]),
-    ('iendswith', 'om', [-1, 0, 1, 2, 3]),
+    ('exact', 'No Name', [], []),
+    ('exact', 'Tom', [-1, 2, 3], [-1, 2, 3]),
+    ('exact', 'TOM', [1], [1]),
+    ('iexact', 'Tom', [-1, 0, 1, 2, 3], [-1, 0, 1, 2, 3]),
+    ('iexact', 'TOM', [-1, 0, 1, 2, 3], [-1, 0, 1, 2, 3]),
+    ('contains', 'OM', [1], [-1, 0, 1, 2, 3, 4]),
+    ('contains', 'o', [-1, 0, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
+    ('contains', 'rR', [], [5]),
+    ('icontains', 'rR', [5], [5]),
+    ('icontains', 'o', [-1, 0, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
+    ('startswith', 'T', [-1, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
+    ('istartswith', 'T', [-1, 0, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
+    ('endswith', 'om', [-1, 0, 2, 3], [-1, 0, 1, 2, 3]),
+    ('iendswith', 'om', [-1, 0, 1, 2, 3], [-1, 0, 1, 2, 3]),
+    ('gt', 'Harry', [-1, 0, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
+    ('gte', 'Harry', [-1, 0, 1, 2, 3, 4, 5], [-1, 0, 1, 2, 3, 4, 5]),
+    ('lt', 'TOM', [5, 6, 7], [5, 6, 7]),
+    ('lte', 'TOM', [1, 5, 6, 7], [1, 5, 6, 7]),
 ]
 
 
-@pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
+@pytest.mark.parametrize('lookup_xpr, lookup_val, property_result_list, filter_result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
-def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, result_list):
-
-
-
-    class EricCharFilter(CharFilter):
-        def filter(self, qs, value):
-            print('EricCharFilter.filter()', value, self.field_name, self.lookup_expr, qs)
-            return super().filter(qs, value)
-
-
-
-
-
+def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, property_result_list, filter_result_list):
 
     # Test using Normal Django Filter
     class CharFilterSet(FilterSet):
-        #name = CharFilter(field_name='name', lookup_expr=lookup_xpr)
-        name = EricCharFilter(field_name='name', lookup_expr=lookup_xpr)
-
-
-
-
-        def filter_queryset(self, queryset):
-            print('FILTER FORM', self.form)
-            return super().filter_queryset(queryset)
-
-
-
-
-
-
-
+        name = CharFilter(field_name='name', lookup_expr=lookup_xpr)
 
         class Meta:
             model = TextClass
             fields = ['name']
 
     filter_fs = CharFilterSet({'name': lookup_val}, queryset=TextClass.objects.all())
-    assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
+    assert set(filter_fs.qs.values_list('id', flat=True)) == set(filter_result_list)
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyCharFilterSet(FilterSet):
@@ -108,7 +79,7 @@ def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, result
             fields = ['prop_name']
 
     prop_filter_fs = PropertyCharFilterSet({'prop_name': lookup_val}, queryset=TextClass.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs.qs.values_list('id', flat=True)) == set(property_result_list)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
@@ -119,7 +90,7 @@ def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, result
             property_fields = [('prop_name', PropertyCharFilter, [lookup_xpr])]
 
     implicit_filter_fs = ImplicitFilterSet({F'prop_name__{lookup_xpr}': lookup_val}, queryset=TextClass.objects.all())
-    assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
+    assert set(implicit_filter_fs.qs) == set(prop_filter_fs.qs)
 
 def test_all_expressions_tested():
     tested_expressions = [x[0] for x in TEST_LOOKUPS]
