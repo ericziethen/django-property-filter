@@ -59,3 +59,14 @@ class BooleanClass(models.Model):
 
     def __str__(self):
         return F'{self.is_true} ({self.id})'
+
+
+class TextClass(models.Model):
+    name = models.CharField(max_length=32)
+
+    @property
+    def prop_name(self):
+        return self.name
+
+    def __str__(self):
+        return F'{self.name} ({self.id})'
