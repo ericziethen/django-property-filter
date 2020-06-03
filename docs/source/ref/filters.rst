@@ -27,6 +27,16 @@ excludes specifically.
 * 'endswith'        -> Ends with value (case sensitive)
 * 'iendswith'       -> Ends with value (case sensitive)
 
+.. warning::
+    Sqlite by default uses case insensitive text comparison, so e.g.
+    'exact' and 'iexact' will giv the same result.
+    Even if turning on case sensitivity with PRAGMA case_sensitive_like,
+    both still result in the same result.
+
+    Django-property-filter will behave as normally expected in this case and
+    will correctly check for case sensitivity.
+
+
 .. _core-arguments:
 
 Core Arguments
