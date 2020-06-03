@@ -70,3 +70,10 @@ For supported lookups see :ref:`base_lookups`
 Used instead of BooleanFilter for property filtering
 
 Supported lookups are "exact" and "isnull"
+
+``PropertyCharFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of CharFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`

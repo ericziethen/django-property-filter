@@ -58,7 +58,4 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # p
     elif lookup_expr == 'in':
         result = compare_value in lookup_value
 
-
-    print('compare_by_lookup_expression', lookup_expr, lookup_value, compare_value, result)
-
     return result
