@@ -29,3 +29,5 @@ class Command(BaseCommand):
         TextClass.objects.update_or_create(id=4, name='Tom')
         TextClass.objects.update_or_create(id=5, name='TOM')
         TextClass.objects.update_or_create(id=6, name='Tom')
+        TextClass.objects.update_or_create(id=7)
+        TextClass.objects.update_or_create(id=8)
