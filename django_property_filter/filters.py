@@ -2,6 +2,7 @@
 
 from django_filters.filters import (
     BooleanFilter,
+    CharFilter,
     NumberFilter,
 )
 
@@ -57,3 +58,7 @@ class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
     """Adding Property Support to BooleanFilter."""
 
     supported_lookups = ['exact', 'isnull']
+
+
+class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
+    """Adding Property Support to BooleanFilter."""
