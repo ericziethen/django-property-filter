@@ -5,7 +5,7 @@ from django_filters import FilterSet, CharFilter
 
 from django_property_filter import PropertyFilterSet, PropertyCharFilter
 
-from tests.django_test_proj.property_filter.models import TextClass
+from property_filter.models import TextClass
 
 
 @pytest.mark.parametrize('lookup', PropertyCharFilter.supported_lookups)

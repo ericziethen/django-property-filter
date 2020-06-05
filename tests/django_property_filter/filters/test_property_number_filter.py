@@ -5,7 +5,7 @@ from django_filters import FilterSet, NumberFilter
 
 from django_property_filter import PropertyFilterSet, PropertyNumberFilter
 
-from tests.django_test_proj.property_filter.models import NumberClass
+from property_filter.models import NumberClass
 
 
 @pytest.mark.parametrize('lookup', PropertyNumberFilter.supported_lookups)
