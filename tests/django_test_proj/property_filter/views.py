@@ -6,6 +6,7 @@ from django_filters.views import FilterView
 
 from property_filter.models import (
     BooleanClass,
+    DateClass,
     NumberClass,
     TextClass,
 )
@@ -33,3 +34,9 @@ class CharClassList(FilterView):
     model = TextClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyCharFilterSet
+
+
+class DateClassList(FilterView):
+    model = DateClass
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyDateFilterSet

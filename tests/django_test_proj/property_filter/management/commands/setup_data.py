@@ -40,15 +40,15 @@ class Command(BaseCommand):
 
         # DateClass Data
         print('Setup DateClass')
-        DateClass.objects.update_or_create(id=1, date=datetime.date(2019, 2, 1))
-        DateClass.objects.update_or_create(id=2, date=datetime.date(2019, 2, 2))
-        DateClass.objects.update_or_create(id=3, date=datetime.date(2019, 2, 3))
-        DateClass.objects.update_or_create(id=4, date=datetime.date(2019, 2, 4))
-        DateClass.objects.update_or_create(id=5, date=datetime.date(2019, 2, 5))
-        DateClass.objects.update_or_create(id=6, date=datetime.date(2019, 2, 6))
-        DateClass.objects.update_or_create(id=7, date=datetime.date(2019, 2, 7))
-        DateClass.objects.update_or_create(id=8, date=datetime.date(2019, 2, 8))
-        DateClass.objects.update_or_create(id=9, date=datetime.date(2019, 2, 9))
+        DateClass.objects.update_or_create(id=1, date=datetime.date(2018, 2, 1))
+        DateClass.objects.update_or_create(id=2, date=datetime.date(2019, 3, 2))
+        DateClass.objects.update_or_create(id=3, date=datetime.date(2019, 3, 2))
+        DateClass.objects.update_or_create(id=4, date=datetime.date(2019, 3, 4))
+        DateClass.objects.update_or_create(id=5, date=datetime.date(2020, 2, 5))
+        DateClass.objects.update_or_create(id=6, date=datetime.date(2020, 2, 6))
+        DateClass.objects.update_or_create(id=7, date=datetime.date(2020, 2, 6))
+        DateClass.objects.update_or_create(id=8, date=datetime.date(2020, 2, 6))
+        DateClass.objects.update_or_create(id=9, date=datetime.date(2020, 2, 9))
 
         # Finished
         print('Setup Finished')

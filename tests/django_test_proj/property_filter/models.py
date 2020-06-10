@@ -76,7 +76,7 @@ class DateClass(models.Model):
     date = models.DateField()
 
     @property
-    def prop_name(self):
+    def prop_date(self):
         return self.date
 
     def __str__(self):
