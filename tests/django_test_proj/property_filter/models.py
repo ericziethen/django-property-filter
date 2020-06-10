@@ -70,3 +70,14 @@ class TextClass(models.Model):
 
     def __str__(self):
         return F'{self.name} ({self.id})'
+
+
+class DateClass(models.Model):
+    date = models.DateField()
+
+    @property
+    def prop_name(self):
+        return self.date
+
+    def __str__(self):
+        return F'{self.date} ({self.id})'
