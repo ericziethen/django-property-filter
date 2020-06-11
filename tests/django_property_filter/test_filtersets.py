@@ -3,7 +3,7 @@ import pytest
 
 from django_property_filter import PropertyFilterSet, PropertyNumberFilter
 
-from tests.django_test_proj.property_filter.models import NumberClass
+from property_filter.models import NumberClass
 
 
 def test_declare_implicit_filter():
