@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath(R'..\..'))
 from django_filters.filters import (
     BooleanFilter,
     CharFilter,
+    DateFilter,
     NumberFilter,
 )
 
@@ -14,6 +15,7 @@ from django_property_filter import (
     PropertyFilterSet,
     PropertyBooleanFilter,
     PropertyCharFilter,
+    PropertyDateFilter,
     PropertyNumberFilter,
 )
 
@@ -64,3 +66,15 @@ class PropertyCharFilterSet(PropertyFilterSet):
     def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
         super().__init__(data, queryset, request=request, prefix=prefix)
         add_supported_filters(self.filters, CharFilter, 'name', PropertyCharFilter.supported_lookups)
+
+
+class PropertyDateFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.DateClass
+        exclude = ['date']
+        property_fields = [('prop_date', PropertyDateFilter, PropertyDateFilter.supported_lookups)]
+
+    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+        super().__init__(data, queryset, request=request, prefix=prefix)
+        add_supported_filters(self.filters, DateFilter, 'date', PropertyDateFilter.supported_lookups)

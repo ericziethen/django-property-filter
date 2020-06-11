@@ -5,7 +5,7 @@ setlocal
 set PROJ_MAIN_DIR=%~dp0../..
 set PACKAGE_ROOT=django_property_filter
 
-set PYTHONPATH=%PYTHONPATH%;%PACKAGE_ROOT%
+set PYTHONPATH=%PYTHONPATH%;%PACKAGE_ROOT%;tests\django_test_proj
 pushd "%PROJ_MAIN_DIR%"
 
 rem To see how to loop through multiple Command Line Arguments: https://www.robvanderwoude.com/parameters.php
