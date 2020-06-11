@@ -5,7 +5,7 @@ from django_filters import FilterSet, BooleanFilter
 
 from django_property_filter import PropertyFilterSet, PropertyBooleanFilter
 
-from tests.django_test_proj.property_filter.models import BooleanClass
+from property_filter.models import BooleanClass
 
 
 @pytest.mark.parametrize('lookup', PropertyBooleanFilter.supported_lookups)

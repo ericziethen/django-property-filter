@@ -8,7 +8,7 @@ from django_property_filter.utils import (
     compare_by_lookup_expression
 )
 
-from tests.django_test_proj.property_filter.models import (
+from property_filter.models import (
     Delivery,
     DeliveryLine,
     Product

@@ -3,6 +3,7 @@
 from django_filters.filters import (
     BooleanFilter,
     CharFilter,
+    DateFilter,
     NumberFilter,
 )
 
@@ -62,3 +63,9 @@ class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
 
 class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
     """Adding Property Support to BooleanFilter."""
+
+
+class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
+    """Adding Property Support to DateFilter."""
+
+    supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
