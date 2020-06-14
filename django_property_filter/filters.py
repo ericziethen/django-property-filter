@@ -5,6 +5,7 @@ from django_filters.filters import (
     CharFilter,
     DateFilter,
     NumberFilter,
+    TimeFilter,
 )
 
 from django_property_filter.utils import (
@@ -67,5 +68,11 @@ class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
 
 class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
     """Adding Property Support to DateFilter."""
+
+    supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyTimeFilter(PropertyBaseFilterMixin, TimeFilter):
+    """Adding Property Support to TimeFilter."""
 
     supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
