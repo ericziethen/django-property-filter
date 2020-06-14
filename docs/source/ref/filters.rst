@@ -84,3 +84,10 @@ Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
 Used instead of NumberFilter for property filtering.
 
 For supported lookups see :ref:`base_lookups`
+
+``PropertyTimeFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of TimeFilter for property filtering
+
+Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
