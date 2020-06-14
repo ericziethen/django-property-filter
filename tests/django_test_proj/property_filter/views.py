@@ -9,6 +9,7 @@ from property_filter.models import (
     DateClass,
     NumberClass,
     TextClass,
+    TimeClass,
 )
 
 from . import filters
@@ -40,3 +41,9 @@ class DateClassList(FilterView):
     model = DateClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateFilterSet
+
+
+class TimeClassList(FilterView):
+    model = TimeClass
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyTimeFilterSet
