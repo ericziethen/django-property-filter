@@ -92,3 +92,14 @@ class TimeClass(models.Model):
 
     def __str__(self):
         return F'{self.time} ({self.id})'
+
+
+class DurationClass(models.Model):
+    duration = models.DurationField()
+
+    @property
+    def prop_duration(self):
+        return self.duration
+
+    def __str__(self):
+        return F'{self.duration} ({self.id})'
