@@ -4,6 +4,7 @@ from django_filters.filters import (
     BooleanFilter,
     CharFilter,
     DateFilter,
+    DurationFilter,
     NumberFilter,
     TimeFilter,
 )
@@ -76,3 +77,9 @@ class PropertyTimeFilter(PropertyBaseFilterMixin, TimeFilter):
     """Adding Property Support to TimeFilter."""
 
     supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyDurationFilter(PropertyBaseFilterMixin, DurationFilter):
+    """Adding Property Support to DurationFilter."""
+
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
