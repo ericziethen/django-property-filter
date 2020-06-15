@@ -8,6 +8,7 @@ from django_filters.filters import (
     BooleanFilter,
     CharFilter,
     DateFilter,
+    DurationFilter,
     NumberFilter,
     TimeFilter,
 )
@@ -17,6 +18,7 @@ from django_property_filter import (
     PropertyBooleanFilter,
     PropertyCharFilter,
     PropertyDateFilter,
+    PropertyDurationFilter,
     PropertyNumberFilter,
     PropertyTimeFilter,
 )
@@ -92,3 +94,15 @@ class PropertyTimeFilterSet(PropertyFilterSet):
     def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
         super().__init__(data, queryset, request=request, prefix=prefix)
         add_supported_filters(self.filters, TimeFilter, 'time', PropertyTimeFilter.supported_lookups)
+
+
+class PropertyDurationFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.DurationClass
+        exclude = ['duration']
+        property_fields = [('prop_duration', PropertyDurationFilter, PropertyDurationFilter.supported_lookups)]
+
+    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+        super().__init__(data, queryset, request=request, prefix=prefix)
+        add_supported_filters(self.filters, DurationFilter, 'duration', PropertyDurationFilter.supported_lookups)
