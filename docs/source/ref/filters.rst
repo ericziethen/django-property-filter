@@ -78,6 +78,13 @@ Used instead of DateFilter for property filtering
 
 Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
 
+``PropertyDurationFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of DurationFilter for property filtering
+
+Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
+
 ``PropertyNumberFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
