@@ -82,4 +82,4 @@ class PropertyTimeFilter(PropertyBaseFilterMixin, TimeFilter):
 class PropertyDurationFilter(PropertyBaseFilterMixin, DurationFilter):
     """Adding Property Support to DurationFilter."""
 
-    supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']

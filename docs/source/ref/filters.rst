@@ -83,7 +83,7 @@ Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
 
 Used instead of DurationFilter for property filtering
 
-Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
+Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
 
 ``PropertyNumberFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~
