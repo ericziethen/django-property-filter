@@ -13,6 +13,14 @@ branches:
 
 matrix:
   include:
+  - name: "Linux, Python 3.6"
+    os: linux
+    dist: xenial
+    python: "3.6"
+  - name: "Linux, Python 3.7"
+    os: linux
+    dist: xenial
+    python: "3.7"
   - name: "Linux, Python 3.8"
     os: linux
     dist: xenial
@@ -20,13 +28,15 @@ matrix:
 
 install:
 - python --version --version
-- python -m pip install --upgrade pip pipenv setuptools wheel
+- pip list
+
+- python -m pip install --upgrade pip pipenv setuptools wheel numpy
+- pip list
 
 # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
 - pip install -r requirements.txt
-
-# Capture some information
 - pip list
+
 
 script:
 # Run Tests
