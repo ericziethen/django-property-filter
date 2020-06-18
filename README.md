@@ -35,6 +35,8 @@ It does so by providing sub-classes for Filters and Filtersets to keep existing 
     </tr>
 </table>
 
+For more details and examples check the [documentation](https://django-property-filter.readthedocs.io/en/latest/).
+
 ## Requirements
 
 * Python 3.8
