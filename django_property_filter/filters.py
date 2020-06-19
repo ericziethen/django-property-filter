@@ -23,29 +23,37 @@ class PropertyBaseFilterMixin():
         'lt', 'lte', 'startswith', 'istartswith', 'endswith', 'iendswith',
     ]
 
-    def __init__(self, field_name=None, lookup_expr=None, *, label=None,
-                 method=None, distinct=False, exclude=False, property_fld_name, **kwargs):
+    def __init__(self, *args, property_fld_name, **kwargs):
         """Shared Constructor for Property Filters."""
+        label = kwargs.get('label')
+        lookup_expr = kwargs.get('lookup_expr')
+
         if label is None:
             label = F'{property_fld_name} [{lookup_expr}]'
+            kwargs['label'] = label
 
         self.property_fld_name = property_fld_name
         self.verify_lookup(lookup_expr)
-        super().__init__(field_name=field_name, lookup_expr=lookup_expr, label=label,
-                         method=method, distinct=distinct, exclude=exclude, **kwargs)
+        super().__init__(*args, **kwargs)
 
-    def filter(self, qs, value):  # pylint: disable=invalid-name
+    def filter(self, *args):  # pylint: disable=invalid-name
         """Filter the queryset by property."""
+        # Looks a bit Ugly, but this way we don't have to worry about arguments
+        # being added to the signature at the end, in the front will break
+        # functionality anyway
+        q_set = args[0]
+        value = args[1]
+
         # Carefull, a filter value of 0 will be Valid so can't just do 'if value:'
         if value is not None and value != '':
             wanted_ids = set()
-            for obj in qs:
+            for obj in q_set:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
                 if compare_by_lookup_expression(self.lookup_expr, value, property_value):
                     wanted_ids.add(obj.pk)
-            return qs.filter(pk__in=wanted_ids)
+            return q_set.filter(pk__in=wanted_ids)
 
-        return qs
+        return q_set
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
