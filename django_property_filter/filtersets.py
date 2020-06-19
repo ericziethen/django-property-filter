@@ -7,9 +7,9 @@ from django_filters import Filter, FilterSet
 class PropertyFilterSet(FilterSet):
     """Generic Filterset for Property Filters."""
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+    def __init__(self, *args, **kwargs):
         """Construct a PropertyFilterSet."""
-        super().__init__(data, queryset, request=request, prefix=prefix)
+        super().__init__(*args, **kwargs)
         self._setup_property_filters()
 
     def _add_filter(self, filter_class, property_fld_name, lookup_expr):
