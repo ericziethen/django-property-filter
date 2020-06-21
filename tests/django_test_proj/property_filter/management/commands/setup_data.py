@@ -2,10 +2,12 @@
 import datetime
 
 from django.core.management.base import BaseCommand
+from django.utils.timezone import make_aware
 
 from property_filter.models import (
     BooleanClass,
     DateClass,
+    DateTimeClass,
     DurationClass,
     NumberClass,
     TextClass,
@@ -52,7 +54,7 @@ class Command(BaseCommand):
         DateClass.objects.update_or_create(id=8, date=datetime.date(2020, 2, 6))
         DateClass.objects.update_or_create(id=9, date=datetime.date(2020, 2, 9))
 
-        # DateClass Data
+        # TimeClass Data
         print('Setup TimeClass')
         TimeClass.objects.update_or_create(id=1, time=datetime.time(7, 30, 15))
         TimeClass.objects.update_or_create(id=2, time=datetime.time(7, 30, 15))
@@ -62,7 +64,7 @@ class Command(BaseCommand):
         TimeClass.objects.update_or_create(id=6, time=datetime.time(15, 15, 15))
         TimeClass.objects.update_or_create(id=7, time=datetime.time(18, 30))
 
-        # DateClass Data
+        # DurationClass Data
         print('Setup DurationClass')
         DurationClass.objects.update_or_create(id=1, duration=datetime.timedelta(hours=5))
         DurationClass.objects.update_or_create(id=2, duration=datetime.timedelta(hours=5))
@@ -73,6 +75,17 @@ class Command(BaseCommand):
         DurationClass.objects.update_or_create(id=7, duration=datetime.timedelta(days=15))
         DurationClass.objects.update_or_create(id=8, duration=datetime.timedelta(days=30))
         DurationClass.objects.update_or_create(id=9, duration=datetime.timedelta(days=200))
+
+        # DateTimeClass Data
+        print('Setup DateTimeClass')
+        DateTimeClass.objects.update_or_create(id=1, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
+        DateTimeClass.objects.update_or_create(id=2, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
+        DateTimeClass.objects.update_or_create(id=3, date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
+        DateTimeClass.objects.update_or_create(id=4, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
+        DateTimeClass.objects.update_or_create(id=5, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
+        DateTimeClass.objects.update_or_create(id=6, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        DateTimeClass.objects.update_or_create(id=7, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        DateTimeClass.objects.update_or_create(id=8, date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
 
         # Finished
         print('Setup Finished')

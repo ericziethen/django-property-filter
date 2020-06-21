@@ -83,6 +83,17 @@ class DateClass(models.Model):
         return F'{self.date} ({self.id})'
 
 
+class DateTimeClass(models.Model):
+    date_time = models.DateTimeField()
+
+    @property
+    def prop_date_time(self):
+        return self.date_time
+
+    def __str__(self):
+        return F'{self.date_time} ({self.id})'
+
+
 class TimeClass(models.Model):
     time = models.TimeField()
 
