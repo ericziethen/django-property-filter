@@ -20,13 +20,6 @@ class HomePageView(TemplateView):
     template_name = 'home.html'
 
 
-# Create your views here.
-class NumberClassList(FilterView):
-    model = NumberClass
-    template_name = 'generic_filter.html'
-    filterset_class = filters.PropertyNumberFilterSet
-
-
 class BooleanClassList(FilterView):
     model = BooleanClass
     template_name = 'generic_filter.html'
@@ -55,6 +48,19 @@ class DurationClassList(FilterView):
     model = DurationClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDurationFilterSet
+
+
+# Create your views here.
+class NumberClassList(FilterView):
+    model = NumberClass
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyNumberFilterSet
+
+
+class NumberClassRangeList(FilterView):
+    model = NumberClass
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyRangeFilterSet
 
 
 class TimeClassList(FilterView):
