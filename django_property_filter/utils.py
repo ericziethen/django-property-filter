@@ -15,9 +15,6 @@ def get_value_for_db_field(obj, field_str):
 
 def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # pylint: disable=too-many-branches
     """Compare Lookup Expressions."""
-
-
-    print('compare_by_lookup_expression(lookup_expr, lookup_value, compare_value,)', lookup_expr, lookup_value, compare_value)
     # Handle Special case if only 1 case of range given
     if lookup_expr == 'range':
         if lookup_value.start is None:
@@ -60,7 +57,5 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # p
         result = lookup_value.start <= compare_value <= lookup_value.stop
     elif lookup_expr == 'in':
         result = compare_value in lookup_value
-
-    print('compare_by_lookup_expression(lookup_expr, lookup_value, compare_value, result)', lookup_expr, lookup_value, compare_value, result)
 
     return result
