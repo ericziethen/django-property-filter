@@ -99,6 +99,13 @@ Used instead of NumberFilter for property filtering.
 
 For supported lookups see :ref:`base_lookups`
 
+``PropertyRangeFilter``
+~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of RangeFilter for property filtering
+
+Supported lookup is 'range'
+
 ``PropertyTimeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~
 
