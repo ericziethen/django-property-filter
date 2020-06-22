@@ -11,6 +11,7 @@ from django_filters.filters import (
     DateTimeFilter,
     DurationFilter,
     NumberFilter,
+    RangeFilter,
     TimeFilter,
 )
 
@@ -22,6 +23,7 @@ from django_property_filter import (
     PropertyDateTimeFilter,
     PropertyDurationFilter,
     PropertyNumberFilter,
+    PropertyRangeFilter,
     PropertyTimeFilter,
 )
 
@@ -98,18 +100,6 @@ class PropertyDateTimeFilterSet(PropertyFilterSet):
         add_supported_filters(self.filters, DateTimeFilter, 'date_time', PropertyDateTimeFilter.supported_lookups)
 
 
-class PropertyTimeFilterSet(PropertyFilterSet):
-
-    class Meta:
-        model = models.TimeClass
-        exclude = ['time']
-        property_fields = [('prop_time', PropertyTimeFilter, PropertyTimeFilter.supported_lookups)]
-
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
-        add_supported_filters(self.filters, TimeFilter, 'time', PropertyTimeFilter.supported_lookups)
-
-
 class PropertyDurationFilterSet(PropertyFilterSet):
 
     class Meta:
@@ -120,3 +110,27 @@ class PropertyDurationFilterSet(PropertyFilterSet):
     def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
         super().__init__(data, queryset, request=request, prefix=prefix)
         add_supported_filters(self.filters, DurationFilter, 'duration', PropertyDurationFilter.supported_lookups)
+
+
+class PropertyRangeFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.NumberClass
+        exclude = ['number']
+        property_fields = [('prop_number', PropertyRangeFilter, PropertyRangeFilter.supported_lookups)]
+
+    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+        super().__init__(data, queryset, request=request, prefix=prefix)
+        add_supported_filters(self.filters, RangeFilter, 'number', PropertyRangeFilter.supported_lookups)
+
+
+class PropertyTimeFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.TimeClass
+        exclude = ['time']
+        property_fields = [('prop_time', PropertyTimeFilter, PropertyTimeFilter.supported_lookups)]
+
+    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+        super().__init__(data, queryset, request=request, prefix=prefix)
+        add_supported_filters(self.filters, TimeFilter, 'time', PropertyTimeFilter.supported_lookups)

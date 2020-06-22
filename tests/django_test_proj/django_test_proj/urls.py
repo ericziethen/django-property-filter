@@ -27,5 +27,6 @@ urlpatterns = [
     path('datetimeclasses/', views.DateTimeClassList.as_view(), name='datetimeclass_list'),
     path('durationclasses/', views.DurationClassList.as_view(), name='durationclass_list'),
     path('numberclasses/', views.NumberClassList.as_view(), name='numberclass_list'),
+    path('numberclassesrange/', views.NumberClassRangeList.as_view(), name='numberclassrange_list'),
     path('timeclasses/', views.TimeClassList.as_view(), name='timeclass_list'),
 ]
