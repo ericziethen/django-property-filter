@@ -15,14 +15,17 @@ def get_value_for_db_field(obj, field_str):
 
 def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # pylint: disable=too-many-branches
     """Compare Lookup Expressions."""
+
+
+    print('compare_by_lookup_expression(lookup_expr, lookup_value, compare_value,)', lookup_expr, lookup_value, compare_value)
     # Handle Special case if only 1 case of range given
     if lookup_expr == 'range':
-        if lookup_value[0] is None:
+        if lookup_value.start is None:
             lookup_expr = 'lte'
-            lookup_value = lookup_value[1]
-        elif lookup_value[1] is None:
+            lookup_value = lookup_value.stop
+        elif lookup_value.stop is None:
             lookup_expr = 'gte'
-            lookup_value = lookup_value[0]
+            lookup_value = lookup_value.start
 
     result = False
 
@@ -54,8 +57,10 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, compare_value):  # p
     elif lookup_expr == 'isnull':
         result = (lookup_value and compare_value is None) or (not lookup_value and compare_value is not None)
     elif lookup_expr == 'range' and compare_value is not None and lookup_value is not None:
-        result = lookup_value[0] <= compare_value <= lookup_value[1]
+        result = lookup_value.start <= compare_value <= lookup_value.stop
     elif lookup_expr == 'in':
         result = compare_value in lookup_value
+
+    print('compare_by_lookup_expression(lookup_expr, lookup_value, compare_value, result)', lookup_expr, lookup_value, compare_value, result)
 
     return result
