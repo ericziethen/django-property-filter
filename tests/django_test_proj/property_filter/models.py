@@ -118,4 +118,17 @@ class DurationClass(models.Model):
 
 ##### FILTER SPECIFIC CLASSES #####
 
+class DateFromToRangeFilterModel(models.Model):
+    date = models.DateField()
+    date_time = models.DateTimeField()
 
+    @property
+    def prop_date(self):
+        return self.date
+
+    @property
+    def prop_date_time(self):
+        return self.date_time
+
+    def __str__(self):
+        return F'Date: "{self.date}" --- DateTime: "{self.date_time}"  --- ID: ({self.id})'

@@ -12,6 +12,8 @@ from property_filter.models import (
     NumberClass,
     TextClass,
     TimeClass,
+
+    DateFromToRangeFilterModel,
 )
 
 
@@ -87,5 +89,46 @@ class Command(BaseCommand):
         DateTimeClass.objects.update_or_create(id=7, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
         DateTimeClass.objects.update_or_create(id=8, date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
 
+        ##### FILTER SPECIFIC CLASSES #####
+
+        # DateFromToRangeFilterModel Data
+        self.setup_date_from_to_range_model()
+
         # Finished
         print('Setup Finished')
+
+    def setup_date_from_to_range_model(self):
+        print('Setup DateFromToRangeFilterModel')
+
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=1,
+            date=datetime.date(2018, 2, 1),
+            date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=2,
+            date=datetime.date(2019, 3, 2),
+            date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=3,
+            date=datetime.date(2019, 3, 2),
+            date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=4,
+            date=datetime.date(2019, 3, 4),
+            date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=5,
+            date=datetime.date(2020, 2, 5),
+            date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=6,
+            date=datetime.date(2020, 2, 6),
+            date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=7,
+            date=datetime.date(2020, 2, 6),
+            date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=8,
+            date=datetime.date(2020, 2, 6),
+            date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
