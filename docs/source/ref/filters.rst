@@ -100,7 +100,7 @@ Used instead of NumberFilter for property filtering.
 For supported lookups see :ref:`base_lookups`
 
 ``PropertyRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Used instead of RangeFilter for property filtering
 
@@ -112,3 +112,10 @@ Supported lookup is 'range'
 Used instead of TimeFilter for property filtering
 
 Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
+
+``PropertyTimeRangeFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of TimeRangeFilter for property filtering
+
+Supported lookup is 'range'

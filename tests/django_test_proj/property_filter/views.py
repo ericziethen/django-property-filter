@@ -67,3 +67,9 @@ class TimeClassList(FilterView):
     model = TimeClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyTimeFilterSet
+
+
+class TimeClassRangeList(FilterView):
+    model = TimeClass
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyTimeRangeFilterSet

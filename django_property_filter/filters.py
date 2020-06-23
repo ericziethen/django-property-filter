@@ -9,6 +9,7 @@ from django_filters.filters import (
     NumberFilter,
     RangeFilter,
     TimeFilter,
+    TimeRangeFilter,
 )
 
 from django_property_filter.utils import (
@@ -105,3 +106,9 @@ class PropertyTimeFilter(PropertyBaseFilterMixin, TimeFilter):
     """Adding Property Support to TimeFilter."""
 
     supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
+    """Adding Property Support to TimeRangeFilter."""
+
+    supported_lookups = ['range']
