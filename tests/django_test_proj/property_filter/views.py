@@ -38,6 +38,12 @@ class DateClassList(FilterView):
     filterset_class = filters.PropertyDateFilterSet
 
 
+class DateFromToRangeList(FilterView):
+    model = DateClass
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyDateFromToRangeFilterSet
+
+
 class DateTimeClassList(FilterView):
     model = DateTimeClass
     template_name = 'generic_filter.html'
