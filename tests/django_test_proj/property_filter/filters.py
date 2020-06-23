@@ -13,6 +13,7 @@ from django_filters.filters import (
     NumberFilter,
     RangeFilter,
     TimeFilter,
+    TimeRangeFilter,
 )
 
 from django_property_filter import (
@@ -25,6 +26,7 @@ from django_property_filter import (
     PropertyNumberFilter,
     PropertyRangeFilter,
     PropertyTimeFilter,
+    PropertyTimeRangeFilter,
 )
 
 from property_filter import models
@@ -134,3 +136,15 @@ class PropertyTimeFilterSet(PropertyFilterSet):
     def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
         super().__init__(data, queryset, request=request, prefix=prefix)
         add_supported_filters(self.filters, TimeFilter, 'time', PropertyTimeFilter.supported_lookups)
+
+
+class PropertyTimeRangeFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.TimeClass
+        exclude = ['time']
+        property_fields = [('prop_time', PropertyTimeRangeFilter, PropertyTimeRangeFilter.supported_lookups)]
+
+    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
+        super().__init__(data, queryset, request=request, prefix=prefix)
+        add_supported_filters(self.filters, TimeRangeFilter, 'time', PropertyTimeRangeFilter.supported_lookups)
