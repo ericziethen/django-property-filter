@@ -114,3 +114,8 @@ class DurationClass(models.Model):
 
     def __str__(self):
         return F'{self.duration} ({self.id})'
+
+
+##### FILTER SPECIFIC CLASSES #####
+
+
