@@ -8,7 +8,7 @@ from property_filter.models import (
     BooleanFilterModel,
     DateFilterModel,
     DateTimeFilterModel,
-    DurationClass,
+    DurationFilterModel,
     NumberClass,
     CharFilterModel,
     TimeClass,
@@ -52,7 +52,7 @@ class DateTimeFilterView(FilterView):
 
 
 class DurationFilterView(FilterView):
-    model = DurationClass
+    model = DurationFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDurationFilterSet
 

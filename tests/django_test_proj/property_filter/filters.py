@@ -123,7 +123,7 @@ class PropertyDateTimeFilterSet(PropertyFilterSet):
 class PropertyDurationFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.DurationClass
+        model = models.DurationFilterModel
         exclude = ['duration']
         property_fields = [('prop_duration', PropertyDurationFilter, PropertyDurationFilter.supported_lookups)]
 

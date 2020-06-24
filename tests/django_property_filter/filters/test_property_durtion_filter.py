@@ -6,7 +6,7 @@ from django_filters import FilterSet, DurationFilter
 
 from django_property_filter import PropertyFilterSet, PropertyDurationFilter
 
-from property_filter.models import DurationClass
+from property_filter.models import DurationFilterModel
 
 
 @pytest.mark.parametrize('lookup', PropertyDurationFilter.supported_lookups)
@@ -22,15 +22,15 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_duration_filter():
-    DurationClass.objects.update_or_create(id=-1, duration=datetime.timedelta(hours=5))
-    DurationClass.objects.update_or_create(id=0, duration=datetime.timedelta(hours=5))
-    DurationClass.objects.update_or_create(id=1, duration=datetime.timedelta(days=1, hours=10))
-    DurationClass.objects.update_or_create(id=2, duration=datetime.timedelta(days=2, hours=10))
-    DurationClass.objects.update_or_create(id=3, duration=datetime.timedelta(days=2, hours=10))
-    DurationClass.objects.update_or_create(id=4, duration=datetime.timedelta(days=15))
-    DurationClass.objects.update_or_create(id=5, duration=datetime.timedelta(days=15))
-    DurationClass.objects.update_or_create(id=6, duration=datetime.timedelta(days=30))
-    DurationClass.objects.update_or_create(id=7, duration=datetime.timedelta(days=200))
+    DurationFilterModel.objects.update_or_create(id=-1, duration=datetime.timedelta(hours=5))
+    DurationFilterModel.objects.update_or_create(id=0, duration=datetime.timedelta(hours=5))
+    DurationFilterModel.objects.update_or_create(id=1, duration=datetime.timedelta(days=1, hours=10))
+    DurationFilterModel.objects.update_or_create(id=2, duration=datetime.timedelta(days=2, hours=10))
+    DurationFilterModel.objects.update_or_create(id=3, duration=datetime.timedelta(days=2, hours=10))
+    DurationFilterModel.objects.update_or_create(id=4, duration=datetime.timedelta(days=15))
+    DurationFilterModel.objects.update_or_create(id=5, duration=datetime.timedelta(days=15))
+    DurationFilterModel.objects.update_or_create(id=6, duration=datetime.timedelta(days=30))
+    DurationFilterModel.objects.update_or_create(id=7, duration=datetime.timedelta(days=200))
 
 
 TEST_LOOKUPS = [
@@ -53,10 +53,10 @@ def test_lookup_xpr(fixture_property_duration_filter, lookup_xpr, lookup_val, re
         duration = DurationFilter(field_name='duration', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = DurationClass
+            model = DurationFilterModel
             fields = ['duration']
 
-    filter_fs = DurationFilterSet({'duration': lookup_val}, queryset=DurationClass.objects.all())
+    filter_fs = DurationFilterSet({'duration': lookup_val}, queryset=DurationFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Explicit Filter using a normal Filterset
@@ -64,21 +64,21 @@ def test_lookup_xpr(fixture_property_duration_filter, lookup_xpr, lookup_val, re
         prop_duration = PropertyDurationFilter(property_fld_name='prop_duration', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = DurationClass
+            model = DurationFilterModel
             fields = ['prop_duration']
 
-    prop_filter_fs = PropertyDurationFilterSet({'prop_duration': lookup_val}, queryset=DurationClass.objects.all())
+    prop_filter_fs = PropertyDurationFilterSet({'prop_duration': lookup_val}, queryset=DurationFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
         class Meta:
-            model = DurationClass
+            model = DurationFilterModel
             exclude = ['duration']
             property_fields = [('prop_duration', PropertyDurationFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({F'prop_duration__{lookup_xpr}': lookup_val}, queryset=DurationClass.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({F'prop_duration__{lookup_xpr}': lookup_val}, queryset=DurationFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 

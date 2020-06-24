@@ -9,7 +9,7 @@ from property_filter.models import (
     BooleanFilterModel,
     DateFilterModel,
     DateTimeFilterModel,
-    DurationClass,
+    DurationFilterModel,
     NumberClass,
     CharFilterModel,
     TimeClass,
@@ -67,17 +67,17 @@ class Command(BaseCommand):
         TimeClass.objects.update_or_create(id=6, time=datetime.time(15, 15, 15))
         TimeClass.objects.update_or_create(id=7, time=datetime.time(18, 30))
 
-        # DurationClass Data
-        print('Setup DurationClass')
-        DurationClass.objects.update_or_create(id=1, duration=datetime.timedelta(hours=5))
-        DurationClass.objects.update_or_create(id=2, duration=datetime.timedelta(hours=5))
-        DurationClass.objects.update_or_create(id=3, duration=datetime.timedelta(days=1, hours=10))
-        DurationClass.objects.update_or_create(id=4, duration=datetime.timedelta(days=2, hours=10))
-        DurationClass.objects.update_or_create(id=5, duration=datetime.timedelta(days=2, hours=10))
-        DurationClass.objects.update_or_create(id=6, duration=datetime.timedelta(days=15))
-        DurationClass.objects.update_or_create(id=7, duration=datetime.timedelta(days=15))
-        DurationClass.objects.update_or_create(id=8, duration=datetime.timedelta(days=30))
-        DurationClass.objects.update_or_create(id=9, duration=datetime.timedelta(days=200))
+        # DurationFilterModel Data
+        print('Setup DurationFilterModel')
+        DurationFilterModel.objects.update_or_create(id=1, duration=datetime.timedelta(hours=5))
+        DurationFilterModel.objects.update_or_create(id=2, duration=datetime.timedelta(hours=5))
+        DurationFilterModel.objects.update_or_create(id=3, duration=datetime.timedelta(days=1, hours=10))
+        DurationFilterModel.objects.update_or_create(id=4, duration=datetime.timedelta(days=2, hours=10))
+        DurationFilterModel.objects.update_or_create(id=5, duration=datetime.timedelta(days=2, hours=10))
+        DurationFilterModel.objects.update_or_create(id=6, duration=datetime.timedelta(days=15))
+        DurationFilterModel.objects.update_or_create(id=7, duration=datetime.timedelta(days=15))
+        DurationFilterModel.objects.update_or_create(id=8, duration=datetime.timedelta(days=30))
+        DurationFilterModel.objects.update_or_create(id=9, duration=datetime.timedelta(days=200))
 
         # DateTimeFilterModel Data
         print('Setup DateTimeFilterModel')

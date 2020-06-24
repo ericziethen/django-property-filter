@@ -105,7 +105,7 @@ class TimeClass(models.Model):
         return F'{self.time} ({self.id})'
 
 
-class DurationClass(models.Model):
+class DurationFilterModel(models.Model):
     duration = models.DurationField()
 
     @property
