@@ -135,7 +135,7 @@ class PropertyDurationFilterSet(PropertyFilterSet):
 class PropertyRangeFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.NumberClass
+        model = models.RangeFilterModel
         exclude = ['number']
         property_fields = [('prop_number', PropertyRangeFilter, PropertyRangeFilter.supported_lookups)]
 

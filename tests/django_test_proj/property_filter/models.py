@@ -46,7 +46,7 @@ class NumberFilterModel(models.Model):
         return F'{self.number}'
 
 
-class NumberClass(models.Model):
+class RangeFilterModel(models.Model):
     number = models.IntegerField(null=True)
 
     @property

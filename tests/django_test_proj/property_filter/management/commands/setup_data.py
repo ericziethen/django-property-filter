@@ -10,7 +10,7 @@ from property_filter.models import (
     DateFilterModel,
     DateTimeFilterModel,
     DurationFilterModel,
-    NumberClass,
+    RangeFilterModel,
     NumberFilterModel,
     CharFilterModel,
     TimeClass,
@@ -22,9 +22,9 @@ from property_filter.models import (
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        print('Setup NumberClass')
+        print('Setup RangeFilterModel')
         for num in range(21):
-            NumberClass.objects.update_or_create(number=num)
+            RangeFilterModel.objects.update_or_create(number=num)
 
         # BooleanFilterModel Data
         print('Setup BooleanFilterModel')
