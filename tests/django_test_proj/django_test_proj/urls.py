@@ -34,6 +34,6 @@ urlpatterns = [
 
 
 
-    path('timeclasses/', views.TimeClassList.as_view(), name='timeclass_list'),
-    path('timeclassesrange/', views.TimeClassRangeList.as_view(), name='timeclassrange_list'),
+    path('time_filter/', views.TimeFilterView.as_view(), name='time_filter'),
+    path('time_range_filter/', views.TimeRangeFilterView.as_view(), name='time_range_filter'),
 ]
