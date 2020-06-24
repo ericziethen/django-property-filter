@@ -8,14 +8,15 @@ from django.utils.timezone import make_aware
 from property_filter.models import (
     BooleanFilterModel,
     DateFilterModel,
+    DateFromToRangeFilterModel,
     DateTimeFilterModel,
     DurationFilterModel,
     RangeFilterModel,
     NumberFilterModel,
     CharFilterModel,
+    TimeFilterModel,
     TimeClass,
 
-    DateFromToRangeFilterModel,
 )
 
 
@@ -93,8 +94,9 @@ class Command(BaseCommand):
 
         ##### FILTER SPECIFIC CLASSES #####
 
-        self.setup_number_filter_model()
         self.setup_date_from_to_range_filter_model()
+        self.setup_number_filter_model()
+        self.setup_time_filter_model()
 
         # Finished
         print('Setup Finished')
@@ -134,3 +136,15 @@ class Command(BaseCommand):
 
         for num in range(21):
             NumberFilterModel.objects.update_or_create(number=num)
+
+    def setup_time_filter_model(self):
+        print('Setup TimeFilterModel')
+
+        TimeFilterModel.objects.update_or_create(id=1, time=datetime.time(7, 30, 15))
+        TimeFilterModel.objects.update_or_create(id=2, time=datetime.time(7, 30, 15))
+        TimeFilterModel.objects.update_or_create(id=3, time=datetime.time(8, 0, 0))
+        TimeFilterModel.objects.update_or_create(id=4, time=datetime.time(8, 0, 0))
+        TimeFilterModel.objects.update_or_create(id=5, time=datetime.time(8, 0, 0))
+        TimeFilterModel.objects.update_or_create(id=6, time=datetime.time(15, 15, 15))
+        TimeFilterModel.objects.update_or_create(id=7, time=datetime.time(18, 30))
+

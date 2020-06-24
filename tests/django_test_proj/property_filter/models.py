@@ -101,6 +101,17 @@ class DateTimeFilterModel(models.Model):
         return F'{self.date_time} ({self.id})'
 
 
+class TimeFilterModel(models.Model):
+    time = models.TimeField()
+
+    @property
+    def prop_time(self):
+        return self.time
+
+    def __str__(self):
+        return F'{self.time} ({self.id})'
+
+
 class TimeClass(models.Model):
     time = models.TimeField()
 
