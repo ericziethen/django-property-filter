@@ -1,9 +1,12 @@
 """Filters to extend Django-FIlter filters to support property filtering."""
 
+import datetime
+
 from django_filters.filters import (
     BooleanFilter,
     CharFilter,
     DateFilter,
+    DateFromToRangeFilter,
     DateTimeFilter,
     DurationFilter,
     NumberFilter,
@@ -39,29 +42,27 @@ class PropertyBaseFilterMixin():
         self.verify_lookup(lookup_expr)
         super().__init__(*args, **kwargs)
 
-    def filter(self, *args):  # pylint: disable=invalid-name
+    def filter(self, queryset, value):  # pylint: disable=invalid-name
         """Filter the queryset by property."""
-        # Looks a bit Ugly, but this way we don't have to worry about arguments
-        # being added to the signature at the end, in the front will break
-        # functionality anyway
-        q_set = args[0]
-        value = args[1]
-
         # Carefull, a filter value of 0 will be Valid so can't just do 'if value:'
         if value is not None and value != '':
             wanted_ids = set()
-            for obj in q_set:
+            for obj in queryset:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
-                if compare_by_lookup_expression(self.lookup_expr, value, property_value):
+                if self._compare_lookup_with_qs_entry(value, property_value):
                     wanted_ids.add(obj.pk)
-            return q_set.filter(pk__in=wanted_ids)
+            return queryset.filter(pk__in=wanted_ids)
 
-        return q_set
+        return queryset
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
         if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
+
+    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+        """Compare the lookup value with the property value."""
+        return compare_by_lookup_expression(self.lookup_expr, lookup_value, property_value)
 
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
@@ -82,6 +83,34 @@ class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
     """Adding Property Support to DateFilter."""
 
     supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilter):
+    """Adding Property Support to DateFromToRangeFilter."""
+
+    supported_lookups = ['range']
+
+    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+        """Convert all datetime to date and then compare."""
+        # Convert the Lookup Value if needed
+        new_lookup_value = lookup_value
+        if lookup_value:
+            start = lookup_value.start
+            stop = lookup_value.stop
+
+            if start and isinstance(start, datetime.datetime):
+                start = start.date()
+            if stop and isinstance(stop, datetime.datetime):
+                stop = stop.date()
+
+            new_lookup_value = slice(start, stop)
+
+        # Convert the Property Value if needed
+        new_property_value = property_value
+        if new_property_value and isinstance(new_property_value, datetime.datetime):
+            new_property_value = new_property_value.date()
+
+        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
 
 
 class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
