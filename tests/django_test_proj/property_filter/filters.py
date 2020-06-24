@@ -71,7 +71,7 @@ class PropertyBooleanFilterSet(PropertyFilterSet):
 class PropertyCharFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.TextClass
+        model = models.CharFilterModel
         exclude = ['name']
         property_fields = [('prop_name', PropertyCharFilter, PropertyCharFilter.supported_lookups)]
 

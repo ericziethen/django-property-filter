@@ -11,7 +11,7 @@ from property_filter.models import (
     DateTimeClass,
     DurationClass,
     NumberClass,
-    TextClass,
+    CharFilterModel,
     TimeClass,
 
     DateFromToRangeFilterModel,
@@ -34,16 +34,16 @@ class Command(BaseCommand):
         BooleanFilterModel.objects.update_or_create(id=5, is_true=False)
         BooleanFilterModel.objects.update_or_create(id=6, )
 
-        # TextClass Data
-        print('Setup TextClass')
-        TextClass.objects.update_or_create(id=1, name='Tom')
-        TextClass.objects.update_or_create(id=2, name='Peter')
-        TextClass.objects.update_or_create(id=3, name='Ralph')
-        TextClass.objects.update_or_create(id=4, name='Tom')
-        TextClass.objects.update_or_create(id=5, name='TOM')
-        TextClass.objects.update_or_create(id=6, name='Tom')
-        TextClass.objects.update_or_create(id=7)
-        TextClass.objects.update_or_create(id=8)
+        # CharFilterModel Data
+        print('Setup CharFilterModel')
+        CharFilterModel.objects.update_or_create(id=1, name='Tom')
+        CharFilterModel.objects.update_or_create(id=2, name='Peter')
+        CharFilterModel.objects.update_or_create(id=3, name='Ralph')
+        CharFilterModel.objects.update_or_create(id=4, name='Tom')
+        CharFilterModel.objects.update_or_create(id=5, name='TOM')
+        CharFilterModel.objects.update_or_create(id=6, name='Tom')
+        CharFilterModel.objects.update_or_create(id=7)
+        CharFilterModel.objects.update_or_create(id=8)
 
         # DateClass Data
         print('Setup DateClass')

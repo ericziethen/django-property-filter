@@ -61,7 +61,7 @@ class BooleanFilterModel(models.Model):
         return F'{self.is_true} ({self.id})'
 
 
-class TextClass(models.Model):
+class CharFilterModel(models.Model):
     name = models.CharField(max_length=32)
 
     @property

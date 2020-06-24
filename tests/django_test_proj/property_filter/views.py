@@ -10,7 +10,7 @@ from property_filter.models import (
     DateTimeClass,
     DurationClass,
     NumberClass,
-    TextClass,
+    CharFilterModel,
     TimeClass,
     DateFromToRangeFilterModel,
 )
@@ -28,7 +28,7 @@ class BooleanFilterView(FilterView):
 
 
 class CharFilterView(FilterView):
-    model = TextClass
+    model = CharFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyCharFilterSet
 

@@ -5,7 +5,7 @@ from django_filters import FilterSet, CharFilter
 
 from django_property_filter import PropertyFilterSet, PropertyCharFilter
 
-from property_filter.models import TextClass
+from property_filter.models import CharFilterModel
 
 
 @pytest.mark.parametrize('lookup', PropertyCharFilter.supported_lookups)
@@ -21,15 +21,15 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_char_filter():
-    TextClass.objects.create(id=-1, name='Tom')
-    TextClass.objects.create(id=0, name='tom')
-    TextClass.objects.create(id=1, name='TOM')
-    TextClass.objects.create(id=2, name='Tom')
-    TextClass.objects.create(id=3, name='Tom')
-    TextClass.objects.create(id=4, name='Tomm')
-    TextClass.objects.create(id=5, name='Harry')
-    TextClass.objects.create(id=6)
-    TextClass.objects.create(id=7)
+    CharFilterModel.objects.create(id=-1, name='Tom')
+    CharFilterModel.objects.create(id=0, name='tom')
+    CharFilterModel.objects.create(id=1, name='TOM')
+    CharFilterModel.objects.create(id=2, name='Tom')
+    CharFilterModel.objects.create(id=3, name='Tom')
+    CharFilterModel.objects.create(id=4, name='Tomm')
+    CharFilterModel.objects.create(id=5, name='Harry')
+    CharFilterModel.objects.create(id=6)
+    CharFilterModel.objects.create(id=7)
 
 # Sqlite will use the same for e.g. contains and icontains. oth are either case
 # sensitive or not depending on 'case_sensitive_like' pragma setting
@@ -64,10 +64,10 @@ def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, proper
         name = CharFilter(field_name='name', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = TextClass
+            model = CharFilterModel
             fields = ['name']
 
-    filter_fs = CharFilterSet({'name': lookup_val}, queryset=TextClass.objects.all())
+    filter_fs = CharFilterSet({'name': lookup_val}, queryset=CharFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(filter_result_list)
 
     # Compare with Explicit Filter using a normal Filterset
@@ -75,21 +75,21 @@ def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, proper
         prop_name = PropertyCharFilter(property_fld_name='prop_name', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = TextClass
+            model = CharFilterModel
             fields = ['prop_name']
 
-    prop_filter_fs = PropertyCharFilterSet({'prop_name': lookup_val}, queryset=TextClass.objects.all())
+    prop_filter_fs = PropertyCharFilterSet({'prop_name': lookup_val}, queryset=CharFilterModel.objects.all())
     assert set(prop_filter_fs.qs.values_list('id', flat=True)) == set(property_result_list)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
         class Meta:
-            model = TextClass
+            model = CharFilterModel
             exclude = ['name']
             property_fields = [('prop_name', PropertyCharFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({F'prop_name__{lookup_xpr}': lookup_val}, queryset=TextClass.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({F'prop_name__{lookup_xpr}': lookup_val}, queryset=CharFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(prop_filter_fs.qs)
 
 def test_all_expressions_tested():
