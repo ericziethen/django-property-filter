@@ -5,7 +5,7 @@ from django_filters import FilterSet, BooleanFilter
 
 from django_property_filter import PropertyFilterSet, PropertyBooleanFilter
 
-from property_filter.models import BooleanClass
+from property_filter.models import BooleanFilterModel
 
 
 @pytest.mark.parametrize('lookup', PropertyBooleanFilter.supported_lookups)
@@ -21,13 +21,13 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_boolean_filter():
-    BooleanClass.objects.create(id=-1, is_true=True)
-    BooleanClass.objects.create(id=0, is_true=False)
-    BooleanClass.objects.create(id=1, is_true=False)
-    BooleanClass.objects.create(id=2, is_true=True)
-    BooleanClass.objects.create(id=3, is_true=False)
-    BooleanClass.objects.create(id=4)
-    BooleanClass.objects.create(id=5)
+    BooleanFilterModel.objects.create(id=-1, is_true=True)
+    BooleanFilterModel.objects.create(id=0, is_true=False)
+    BooleanFilterModel.objects.create(id=1, is_true=False)
+    BooleanFilterModel.objects.create(id=2, is_true=True)
+    BooleanFilterModel.objects.create(id=3, is_true=False)
+    BooleanFilterModel.objects.create(id=4)
+    BooleanFilterModel.objects.create(id=5)
 
 TEST_LOOKUPS = [
     ('exact', True, [-1, 2]),
@@ -44,10 +44,10 @@ def test_lookup_xpr(fixture_property_boolean_filter, lookup_xpr, lookup_val, res
         is_true = BooleanFilter(field_name='is_true', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = BooleanClass
+            model = BooleanFilterModel
             fields = ['is_true']
 
-    filter_fs = BooleanFilterSet({'is_true': lookup_val}, queryset=BooleanClass.objects.all())
+    filter_fs = BooleanFilterSet({'is_true': lookup_val}, queryset=BooleanFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Explicit Filter using a normal Filterset
@@ -55,21 +55,21 @@ def test_lookup_xpr(fixture_property_boolean_filter, lookup_xpr, lookup_val, res
         prop_is_true = PropertyBooleanFilter(property_fld_name='prop_is_true', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = BooleanClass
+            model = BooleanFilterModel
             fields = ['prop_is_true']
 
-    prop_filter_fs = PropertyBooleanFilterSet({'prop_is_true': lookup_val}, queryset=BooleanClass.objects.all())
+    prop_filter_fs = PropertyBooleanFilterSet({'prop_is_true': lookup_val}, queryset=BooleanFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
         class Meta:
-            model = BooleanClass
+            model = BooleanFilterModel
             exclude = ['is_true']
             property_fields = [('prop_is_true', PropertyBooleanFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({F'prop_is_true__{lookup_xpr}': lookup_val}, queryset=BooleanClass.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({F'prop_is_true__{lookup_xpr}': lookup_val}, queryset=BooleanFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 

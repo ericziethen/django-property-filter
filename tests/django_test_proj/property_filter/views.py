@@ -5,13 +5,15 @@ from django.views.generic import ListView, TemplateView
 from django_filters.views import FilterView
 
 from property_filter.models import (
-    BooleanClass,
-    DateClass,
-    DateTimeClass,
-    DurationClass,
-    NumberClass,
-    TextClass,
-    TimeClass,
+    BooleanFilterModel,
+    DateFilterModel,
+    DateTimeFilterModel,
+    DurationFilterModel,
+    RangeFilterModel,
+    NumberFilterModel,
+    CharFilterModel,
+    TimeFilterModel,
+    TimeRangeModel,
     DateFromToRangeFilterModel,
 )
 
@@ -21,62 +23,62 @@ class HomePageView(TemplateView):
     template_name = 'home.html'
 
 
-class BooleanClassList(FilterView):
-    model = BooleanClass
+class BooleanFilterView(FilterView):
+    model = BooleanFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyBooleanFilterSet
 
 
-class CharClassList(FilterView):
-    model = TextClass
+class CharFilterView(FilterView):
+    model = CharFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyCharFilterSet
 
 
-class DateClassList(FilterView):
-    model = DateClass
+class DateFilterView(FilterView):
+    model = DateFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateFilterSet
 
 
-class DateFromToRangeView(FilterView):
+class DateFromToRangeFilterView(FilterView):
     model = DateFromToRangeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateFromToRangeFilterSet
 
 
-class DateTimeClassList(FilterView):
-    model = DateTimeClass
+class DateTimeFilterView(FilterView):
+    model = DateTimeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateTimeFilterSet
 
 
-class DurationClassList(FilterView):
-    model = DurationClass
+class DurationFilterView(FilterView):
+    model = DurationFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDurationFilterSet
 
 
 # Create your views here.
-class NumberClassList(FilterView):
-    model = NumberClass
+class NumberFilterView(FilterView):
+    model = NumberFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyNumberFilterSet
 
 
-class NumberClassRangeList(FilterView):
-    model = NumberClass
+class RangeFilterView(FilterView):
+    model = RangeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyRangeFilterSet
 
 
-class TimeClassList(FilterView):
-    model = TimeClass
+class TimeFilterView(FilterView):
+    model = TimeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyTimeFilterSet
 
 
-class TimeClassRangeList(FilterView):
-    model = TimeClass
+class TimeRangeFilterView(FilterView):
+    model = TimeRangeModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyTimeRangeFilterSet
