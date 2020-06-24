@@ -95,13 +95,17 @@ class PropertyDateFilterSet(PropertyFilterSet):
 class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.DateClass
+        model = models.DateFromToRangeFilterModel
         exclude = ['date']
-        property_fields = [('prop_date', PropertyDateFromToRangeFilter, PropertyDateFromToRangeFilter.supported_lookups)]
+        property_fields = [
+            ('prop_date', PropertyDateFromToRangeFilter, PropertyDateFromToRangeFilter.supported_lookups),
+            ('prop_date_time', PropertyDateFromToRangeFilter, PropertyDateFromToRangeFilter.supported_lookups)
+            ]
 
     def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
         super().__init__(data, queryset, request=request, prefix=prefix)
         add_supported_filters(self.filters, DateFromToRangeFilter, 'date', PropertyDateFromToRangeFilter.supported_lookups)
+        add_supported_filters(self.filters, DateFromToRangeFilter, 'date_time', PropertyDateFromToRangeFilter.supported_lookups)
 
 
 class PropertyDateTimeFilterSet(PropertyFilterSet):
