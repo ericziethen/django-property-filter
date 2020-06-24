@@ -83,7 +83,7 @@ class DateFilterModel(models.Model):
         return F'{self.date} ({self.id})'
 
 
-class DateTimeClass(models.Model):
+class DateTimeFilterModel(models.Model):
     date_time = models.DateTimeField()
 
     @property

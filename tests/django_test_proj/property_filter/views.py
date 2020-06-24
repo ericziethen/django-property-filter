@@ -7,7 +7,7 @@ from django_filters.views import FilterView
 from property_filter.models import (
     BooleanFilterModel,
     DateFilterModel,
-    DateTimeClass,
+    DateTimeFilterModel,
     DurationClass,
     NumberClass,
     CharFilterModel,
@@ -46,7 +46,7 @@ class DateFromToRangeFilterView(FilterView):
 
 
 class DateTimeFilterView(FilterView):
-    model = DateTimeClass
+    model = DateTimeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateTimeFilterSet
 

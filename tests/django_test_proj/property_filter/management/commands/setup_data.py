@@ -8,7 +8,7 @@ from django.utils.timezone import make_aware
 from property_filter.models import (
     BooleanFilterModel,
     DateFilterModel,
-    DateTimeClass,
+    DateTimeFilterModel,
     DurationClass,
     NumberClass,
     CharFilterModel,
@@ -79,16 +79,16 @@ class Command(BaseCommand):
         DurationClass.objects.update_or_create(id=8, duration=datetime.timedelta(days=30))
         DurationClass.objects.update_or_create(id=9, duration=datetime.timedelta(days=200))
 
-        # DateTimeClass Data
-        print('Setup DateTimeClass')
-        DateTimeClass.objects.update_or_create(id=1, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
-        DateTimeClass.objects.update_or_create(id=2, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
-        DateTimeClass.objects.update_or_create(id=3, date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
-        DateTimeClass.objects.update_or_create(id=4, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
-        DateTimeClass.objects.update_or_create(id=5, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
-        DateTimeClass.objects.update_or_create(id=6, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
-        DateTimeClass.objects.update_or_create(id=7, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
-        DateTimeClass.objects.update_or_create(id=8, date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
+        # DateTimeFilterModel Data
+        print('Setup DateTimeFilterModel')
+        DateTimeFilterModel.objects.update_or_create(id=1, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
+        DateTimeFilterModel.objects.update_or_create(id=2, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
+        DateTimeFilterModel.objects.update_or_create(id=3, date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
+        DateTimeFilterModel.objects.update_or_create(id=4, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
+        DateTimeFilterModel.objects.update_or_create(id=5, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
+        DateTimeFilterModel.objects.update_or_create(id=6, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        DateTimeFilterModel.objects.update_or_create(id=7, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        DateTimeFilterModel.objects.update_or_create(id=8, date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
 
         ##### FILTER SPECIFIC CLASSES #####
 

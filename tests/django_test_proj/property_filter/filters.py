@@ -111,7 +111,7 @@ class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
 class PropertyDateTimeFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.DateTimeClass
+        model = models.DateTimeFilterModel
         exclude = ['date_time']
         property_fields = [('prop_date_time', PropertyDateTimeFilter, PropertyDateTimeFilter.supported_lookups)]
 
