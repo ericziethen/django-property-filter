@@ -12,6 +12,7 @@ from property_filter.models import (
     NumberClass,
     TextClass,
     TimeClass,
+    DateFromToRangeFilterModel,
 )
 
 from . import filters
@@ -36,6 +37,12 @@ class DateClassList(FilterView):
     model = DateClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateFilterSet
+
+
+class DateFromToRangeView(FilterView):
+    model = DateFromToRangeFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyDateFromToRangeFilterSet
 
 
 class DateTimeClassList(FilterView):
