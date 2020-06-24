@@ -96,7 +96,7 @@ class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
 
     class Meta:
         model = models.DateFromToRangeFilterModel
-        exclude = ['date']
+        exclude = ['date', 'date_time']
         property_fields = [
             ('prop_date', PropertyDateFromToRangeFilter, PropertyDateFromToRangeFilter.supported_lookups),
             ('prop_date_time', PropertyDateFromToRangeFilter, PropertyDateFromToRangeFilter.supported_lookups)

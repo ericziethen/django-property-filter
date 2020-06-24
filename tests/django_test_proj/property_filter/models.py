@@ -131,4 +131,4 @@ class DateFromToRangeFilterModel(models.Model):
         return self.date_time
 
     def __str__(self):
-        return F'Date: "{self.date}" --- DateTime: "{self.date_time}"  --- ID: ({self.id})'
+        return F'ID: ({self.id}) ---Date: "{self.date}" --- DateTime: "{self.date_time}"'
