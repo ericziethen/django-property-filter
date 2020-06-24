@@ -83,7 +83,7 @@ class PropertyCharFilterSet(PropertyFilterSet):
 class PropertyDateFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.DateClass
+        model = models.DateFilterModel
         exclude = ['date']
         property_fields = [('prop_date', PropertyDateFilter, PropertyDateFilter.supported_lookups)]
 

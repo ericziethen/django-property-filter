@@ -72,7 +72,7 @@ class CharFilterModel(models.Model):
         return F'{self.name} ({self.id})'
 
 
-class DateClass(models.Model):
+class DateFilterModel(models.Model):
     date = models.DateField()
 
     @property

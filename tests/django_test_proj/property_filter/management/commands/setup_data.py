@@ -7,7 +7,7 @@ from django.utils.timezone import make_aware
 
 from property_filter.models import (
     BooleanFilterModel,
-    DateClass,
+    DateFilterModel,
     DateTimeClass,
     DurationClass,
     NumberClass,
@@ -45,17 +45,17 @@ class Command(BaseCommand):
         CharFilterModel.objects.update_or_create(id=7)
         CharFilterModel.objects.update_or_create(id=8)
 
-        # DateClass Data
-        print('Setup DateClass')
-        DateClass.objects.update_or_create(id=1, date=datetime.date(2018, 2, 1))
-        DateClass.objects.update_or_create(id=2, date=datetime.date(2019, 3, 2))
-        DateClass.objects.update_or_create(id=3, date=datetime.date(2019, 3, 2))
-        DateClass.objects.update_or_create(id=4, date=datetime.date(2019, 3, 4))
-        DateClass.objects.update_or_create(id=5, date=datetime.date(2020, 2, 5))
-        DateClass.objects.update_or_create(id=6, date=datetime.date(2020, 2, 6))
-        DateClass.objects.update_or_create(id=7, date=datetime.date(2020, 2, 6))
-        DateClass.objects.update_or_create(id=8, date=datetime.date(2020, 2, 6))
-        DateClass.objects.update_or_create(id=9, date=datetime.date(2020, 2, 9))
+        # DateFilterModel Data
+        print('Setup DateFilterModel')
+        DateFilterModel.objects.update_or_create(id=1, date=datetime.date(2018, 2, 1))
+        DateFilterModel.objects.update_or_create(id=2, date=datetime.date(2019, 3, 2))
+        DateFilterModel.objects.update_or_create(id=3, date=datetime.date(2019, 3, 2))
+        DateFilterModel.objects.update_or_create(id=4, date=datetime.date(2019, 3, 4))
+        DateFilterModel.objects.update_or_create(id=5, date=datetime.date(2020, 2, 5))
+        DateFilterModel.objects.update_or_create(id=6, date=datetime.date(2020, 2, 6))
+        DateFilterModel.objects.update_or_create(id=7, date=datetime.date(2020, 2, 6))
+        DateFilterModel.objects.update_or_create(id=8, date=datetime.date(2020, 2, 6))
+        DateFilterModel.objects.update_or_create(id=9, date=datetime.date(2020, 2, 9))
 
         # TimeClass Data
         print('Setup TimeClass')
