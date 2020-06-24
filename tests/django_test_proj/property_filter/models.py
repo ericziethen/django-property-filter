@@ -35,22 +35,29 @@ class Product(models.Model):
         return self.del_line.line_no
 
 
-class NumberClass(models.Model):
+class NumberFilterModel(models.Model):
     number = models.IntegerField(null=True)
 
     @property
     def prop_number(self):
         return self.number
 
+    def __str__(self):
+        return F'{self.number}'
+
+
+class RangeFilterModel(models.Model):
+    number = models.IntegerField(null=True)
+
     @property
-    def prop_number_2(self):
+    def prop_number(self):
         return self.number
 
     def __str__(self):
         return F'{self.number}'
 
 
-class BooleanClass(models.Model):
+class BooleanFilterModel(models.Model):
     is_true = models.BooleanField(null=True)
 
     @property
@@ -61,7 +68,7 @@ class BooleanClass(models.Model):
         return F'{self.is_true} ({self.id})'
 
 
-class TextClass(models.Model):
+class CharFilterModel(models.Model):
     name = models.CharField(max_length=32)
 
     @property
@@ -72,7 +79,7 @@ class TextClass(models.Model):
         return F'{self.name} ({self.id})'
 
 
-class DateClass(models.Model):
+class DateFilterModel(models.Model):
     date = models.DateField()
 
     @property
@@ -83,7 +90,7 @@ class DateClass(models.Model):
         return F'{self.date} ({self.id})'
 
 
-class DateTimeClass(models.Model):
+class DateTimeFilterModel(models.Model):
     date_time = models.DateTimeField()
 
     @property
@@ -94,7 +101,7 @@ class DateTimeClass(models.Model):
         return F'{self.date_time} ({self.id})'
 
 
-class TimeClass(models.Model):
+class TimeFilterModel(models.Model):
     time = models.TimeField()
 
     @property
@@ -105,7 +112,18 @@ class TimeClass(models.Model):
         return F'{self.time} ({self.id})'
 
 
-class DurationClass(models.Model):
+class TimeRangeModel(models.Model):
+    time = models.TimeField()
+
+    @property
+    def prop_time(self):
+        return self.time
+
+    def __str__(self):
+        return F'{self.time} ({self.id})'
+
+
+class DurationFilterModel(models.Model):
     duration = models.DurationField()
 
     @property

@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 from .models import (
-    NumberClass
+    RangeFilterModel
 )
 
 # Register your models here.
-admin.site.register(NumberClass)
+admin.site.register(RangeFilterModel)

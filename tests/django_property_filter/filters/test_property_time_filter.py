@@ -6,7 +6,7 @@ from django_filters import FilterSet, TimeFilter
 
 from django_property_filter import PropertyFilterSet, PropertyTimeFilter
 
-from property_filter.models import TimeClass
+from property_filter.models import TimeFilterModel
 
 
 @pytest.mark.parametrize('lookup', PropertyTimeFilter.supported_lookups)
@@ -22,13 +22,13 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_time_filter():
-    TimeClass.objects.update_or_create(id=-1, time=datetime.time(7, 30, 15))
-    TimeClass.objects.update_or_create(id=0, time=datetime.time(7, 30, 15))
-    TimeClass.objects.update_or_create(id=1, time=datetime.time(8, 0, 0))
-    TimeClass.objects.update_or_create(id=2, time=datetime.time(8, 0, 0))
-    TimeClass.objects.update_or_create(id=3, time=datetime.time(8, 0, 0))
-    TimeClass.objects.update_or_create(id=4, time=datetime.time(15, 15, 15))
-    TimeClass.objects.update_or_create(id=5, time=datetime.time(18, 30))
+    TimeFilterModel.objects.update_or_create(id=-1, time=datetime.time(7, 30, 15))
+    TimeFilterModel.objects.update_or_create(id=0, time=datetime.time(7, 30, 15))
+    TimeFilterModel.objects.update_or_create(id=1, time=datetime.time(8, 0, 0))
+    TimeFilterModel.objects.update_or_create(id=2, time=datetime.time(8, 0, 0))
+    TimeFilterModel.objects.update_or_create(id=3, time=datetime.time(8, 0, 0))
+    TimeFilterModel.objects.update_or_create(id=4, time=datetime.time(15, 15, 15))
+    TimeFilterModel.objects.update_or_create(id=5, time=datetime.time(18, 30))
 
 
 TEST_LOOKUPS = [
@@ -50,10 +50,10 @@ def test_lookup_xpr(fixture_property_time_filter, lookup_xpr, lookup_val, result
         time = TimeFilter(field_name='time', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = TimeClass
+            model = TimeFilterModel
             fields = ['time']
 
-    filter_fs = TimeFilterSet({'time': lookup_val}, queryset=TimeClass.objects.all())
+    filter_fs = TimeFilterSet({'time': lookup_val}, queryset=TimeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Explicit Filter using a normal Filterset
@@ -61,21 +61,21 @@ def test_lookup_xpr(fixture_property_time_filter, lookup_xpr, lookup_val, result
         prop_time = PropertyTimeFilter(property_fld_name='prop_time', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = TimeClass
+            model = TimeFilterModel
             fields = ['prop_time']
 
-    prop_filter_fs = PropertyTimeFilterSet({'prop_time': lookup_val}, queryset=TimeClass.objects.all())
+    prop_filter_fs = PropertyTimeFilterSet({'prop_time': lookup_val}, queryset=TimeFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
         class Meta:
-            model = TimeClass
+            model = TimeFilterModel
             exclude = ['time']
             property_fields = [('prop_time', PropertyTimeFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({F'prop_time__{lookup_xpr}': lookup_val}, queryset=TimeClass.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({F'prop_time__{lookup_xpr}': lookup_val}, queryset=TimeFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 def test_all_expressions_tested():
