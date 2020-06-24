@@ -92,7 +92,6 @@ class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilt
 
     def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
         """Convert all datetime to date and then compare."""
-
         # Convert the Lookup Value if needed
         new_lookup_value = lookup_value
         if lookup_value:
