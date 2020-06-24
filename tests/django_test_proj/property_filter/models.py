@@ -50,7 +50,7 @@ class NumberClass(models.Model):
         return F'{self.number}'
 
 
-class BooleanClass(models.Model):
+class BooleanFilterModel(models.Model):
     is_true = models.BooleanField(null=True)
 
     @property

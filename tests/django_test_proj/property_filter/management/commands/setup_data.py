@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.timezone import make_aware
 
 from property_filter.models import (
-    BooleanClass,
+    BooleanFilterModel,
     DateClass,
     DateTimeClass,
     DurationClass,
@@ -25,14 +25,14 @@ class Command(BaseCommand):
         for num in range(21):
             NumberClass.objects.update_or_create(number=num)
 
-        # BooleanClass Data
-        print('Setup BooleanClass')
-        BooleanClass.objects.update_or_create(id=1, is_true=True)
-        BooleanClass.objects.update_or_create(id=2, is_true=False)
-        BooleanClass.objects.update_or_create(id=3, )
-        BooleanClass.objects.update_or_create(id=4, is_true=True)
-        BooleanClass.objects.update_or_create(id=5, is_true=False)
-        BooleanClass.objects.update_or_create(id=6, )
+        # BooleanFilterModel Data
+        print('Setup BooleanFilterModel')
+        BooleanFilterModel.objects.update_or_create(id=1, is_true=True)
+        BooleanFilterModel.objects.update_or_create(id=2, is_true=False)
+        BooleanFilterModel.objects.update_or_create(id=3, )
+        BooleanFilterModel.objects.update_or_create(id=4, is_true=True)
+        BooleanFilterModel.objects.update_or_create(id=5, is_true=False)
+        BooleanFilterModel.objects.update_or_create(id=6, )
 
         # TextClass Data
         print('Setup TextClass')

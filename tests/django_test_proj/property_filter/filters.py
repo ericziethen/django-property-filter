@@ -59,7 +59,7 @@ class PropertyNumberFilterSet(PropertyFilterSet):
 class PropertyBooleanFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.BooleanClass
+        model = models.BooleanFilterModel
         exclude = ['is_true']
         property_fields = [('prop_is_true', PropertyBooleanFilter, PropertyBooleanFilter.supported_lookups)]
 

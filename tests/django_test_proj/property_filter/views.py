@@ -5,7 +5,7 @@ from django.views.generic import ListView, TemplateView
 from django_filters.views import FilterView
 
 from property_filter.models import (
-    BooleanClass,
+    BooleanFilterModel,
     DateClass,
     DateTimeClass,
     DurationClass,
@@ -22,7 +22,7 @@ class HomePageView(TemplateView):
 
 
 class BooleanFilterView(FilterView):
-    model = BooleanClass
+    model = BooleanFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyBooleanFilterSet
 
