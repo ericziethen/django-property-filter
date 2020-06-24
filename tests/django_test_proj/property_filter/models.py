@@ -112,7 +112,7 @@ class TimeFilterModel(models.Model):
         return F'{self.time} ({self.id})'
 
 
-class TimeClass(models.Model):
+class TimeRangeModel(models.Model):
     time = models.TimeField()
 
     @property

@@ -13,7 +13,7 @@ from property_filter.models import (
     NumberFilterModel,
     CharFilterModel,
     TimeFilterModel,
-    TimeClass,
+    TimeRangeModel,
     DateFromToRangeFilterModel,
 )
 
@@ -79,6 +79,6 @@ class TimeFilterView(FilterView):
 
 
 class TimeRangeFilterView(FilterView):
-    model = TimeClass
+    model = TimeRangeModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyTimeRangeFilterSet

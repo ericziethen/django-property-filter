@@ -159,7 +159,7 @@ class PropertyTimeFilterSet(PropertyFilterSet):
 class PropertyTimeRangeFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.TimeClass
+        model = models.TimeRangeModel
         exclude = ['time']
         property_fields = [('prop_time', PropertyTimeRangeFilter, PropertyTimeRangeFilter.supported_lookups)]
 

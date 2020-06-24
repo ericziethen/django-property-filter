@@ -15,7 +15,7 @@ from property_filter.models import (
     NumberFilterModel,
     CharFilterModel,
     TimeFilterModel,
-    TimeClass,
+    TimeRangeModel,
 
 )
 
@@ -59,15 +59,15 @@ class Command(BaseCommand):
         DateFilterModel.objects.update_or_create(id=8, date=datetime.date(2020, 2, 6))
         DateFilterModel.objects.update_or_create(id=9, date=datetime.date(2020, 2, 9))
 
-        # TimeClass Data
-        print('Setup TimeClass')
-        TimeClass.objects.update_or_create(id=1, time=datetime.time(7, 30, 15))
-        TimeClass.objects.update_or_create(id=2, time=datetime.time(7, 30, 15))
-        TimeClass.objects.update_or_create(id=3, time=datetime.time(8, 0, 0))
-        TimeClass.objects.update_or_create(id=4, time=datetime.time(8, 0, 0))
-        TimeClass.objects.update_or_create(id=5, time=datetime.time(8, 0, 0))
-        TimeClass.objects.update_or_create(id=6, time=datetime.time(15, 15, 15))
-        TimeClass.objects.update_or_create(id=7, time=datetime.time(18, 30))
+        # TimeRangeModel Data
+        print('Setup TimeRangeModel')
+        TimeRangeModel.objects.update_or_create(id=1, time=datetime.time(7, 30, 15))
+        TimeRangeModel.objects.update_or_create(id=2, time=datetime.time(7, 30, 15))
+        TimeRangeModel.objects.update_or_create(id=3, time=datetime.time(8, 0, 0))
+        TimeRangeModel.objects.update_or_create(id=4, time=datetime.time(8, 0, 0))
+        TimeRangeModel.objects.update_or_create(id=5, time=datetime.time(8, 0, 0))
+        TimeRangeModel.objects.update_or_create(id=6, time=datetime.time(15, 15, 15))
+        TimeRangeModel.objects.update_or_create(id=7, time=datetime.time(18, 30))
 
         # DurationFilterModel Data
         print('Setup DurationFilterModel')
