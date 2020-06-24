@@ -42,7 +42,7 @@ class PropertyBaseFilterMixin():
         self.verify_lookup(lookup_expr)
         super().__init__(*args, **kwargs)
 
-    def filter(self, queryset, value):  # pylint: disable=invalid-name
+    def filter(self, queryset, value):
         """Filter the queryset by property."""
         # Carefull, a filter value of 0 will be Valid so can't just do 'if value:'
         if value is not None and value != '':
