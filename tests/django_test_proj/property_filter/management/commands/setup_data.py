@@ -2,6 +2,7 @@
 import datetime
 
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 from django.utils.timezone import make_aware
 
 from property_filter.models import (
@@ -100,35 +101,29 @@ class Command(BaseCommand):
     def setup_date_from_to_range_model(self):
         print('Setup DateFromToRangeFilterModel')
 
+        tz = timezone.get_default_timezone()
+
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=-1,
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2018, 2, 1, 13, 30, tzinfo=tz))
+        DateFromToRangeFilterModel.objects.update_or_create(
+            id=0,
+            date=datetime.date(2019, 3, 2),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
         DateFromToRangeFilterModel.objects.update_or_create(
             id=1,
-            date=datetime.date(2018, 2, 1),
-            date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
+            date=datetime.date(2019, 3, 2),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
         DateFromToRangeFilterModel.objects.update_or_create(
             id=2,
-            date=datetime.date(2019, 3, 2),
-            date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
+            date=datetime.date(2019, 3, 4),
+            date_time=datetime.datetime(2019, 3, 4, 12, 0, tzinfo=tz))
         DateFromToRangeFilterModel.objects.update_or_create(
             id=3,
-            date=datetime.date(2019, 3, 2),
-            date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
+            date=datetime.date(2020, 2, 5),
+            date_time=datetime.datetime(2020, 2, 5, 12, 0, 0, tzinfo=tz))
         DateFromToRangeFilterModel.objects.update_or_create(
             id=4,
-            date=datetime.date(2019, 3, 4),
-            date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
-        DateFromToRangeFilterModel.objects.update_or_create(
-            id=5,
-            date=datetime.date(2020, 2, 5),
-            date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
-        DateFromToRangeFilterModel.objects.update_or_create(
-            id=6,
             date=datetime.date(2020, 2, 6),
-            date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
-        DateFromToRangeFilterModel.objects.update_or_create(
-            id=7,
-            date=datetime.date(2020, 2, 6),
-            date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
-        DateFromToRangeFilterModel.objects.update_or_create(
-            id=8,
-            date=datetime.date(2020, 2, 6),
-            date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
+            date_time=datetime.datetime(2020, 2, 6, 13, 30, tzinfo=tz))
