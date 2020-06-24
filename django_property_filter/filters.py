@@ -49,7 +49,7 @@ class PropertyBaseFilterMixin():
             wanted_ids = set()
             for obj in queryset:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
-                if compare_by_lookup_expression(self.lookup_expr, value, property_value):
+                if self._compare_lookup_with_qs_entry(value, property_value):
                     wanted_ids.add(obj.pk)
             return queryset.filter(pk__in=wanted_ids)
 
@@ -59,6 +59,10 @@ class PropertyBaseFilterMixin():
         """Check if lookup_expr is supported."""
         if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
+
+    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+        """Compare the lookup value with the property value."""
+        return compare_by_lookup_expression(self.lookup_expr, lookup_value, property_value)
 
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
@@ -86,23 +90,28 @@ class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilt
 
     supported_lookups = ['range']
 
-    def filter(self, queryset, value):  # pylint: disable=invalid-name
-        """Filter the queryset by property."""
-        # Convert DateTime to Dates as we're are support DateTime field as well
-        # But only the Date part
-        new_value = value
-        if value is not None:
-            start = value.start
-            stop = value.stop
+    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+        """Convert all datetime to date and then compare."""
 
-            if value.start and isinstance(start, datetime.datetime):
+        # Convert the Lookup Value if needed
+        new_lookup_value = lookup_value
+        if lookup_value:
+            start = lookup_value.start
+            stop = lookup_value.stop
+
+            if start and isinstance(start, datetime.datetime):
                 start = start.date()
-            if value.stop and isinstance(stop, datetime.datetime):
+            if stop and isinstance(stop, datetime.datetime):
                 stop = stop.date()
 
-            new_value = slice(start, stop)
+            new_lookup_value = slice(start, stop)
 
-        return super().filter(queryset, new_value)
+        # Convert the Property Value if needed
+        new_property_value = property_value
+        if new_property_value and isinstance(new_property_value, datetime.datetime):
+            new_property_value = new_property_value.date()
+
+        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
 
 
 class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
