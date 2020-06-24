@@ -47,7 +47,7 @@ def add_supported_filters(filter_list, filter_class, field_name, expression_list
 class PropertyNumberFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.NumberClass
+        model = models.NumberFilterModel
         exclude = ['number']
         property_fields = [('prop_number', PropertyNumberFilter, PropertyNumberFilter.supported_lookups)]
 

@@ -11,6 +11,7 @@ from property_filter.models import (
     DateTimeFilterModel,
     DurationFilterModel,
     NumberClass,
+    NumberFilterModel,
     CharFilterModel,
     TimeClass,
 
@@ -92,13 +93,13 @@ class Command(BaseCommand):
 
         ##### FILTER SPECIFIC CLASSES #####
 
-        # DateFromToRangeFilterModel Data
-        self.setup_date_from_to_range_model()
+        self.setup_number_filter_model()
+        self.setup_date_from_to_range_filter_model()
 
         # Finished
         print('Setup Finished')
 
-    def setup_date_from_to_range_model(self):
+    def setup_date_from_to_range_filter_model(self):
         print('Setup DateFromToRangeFilterModel')
 
         tz = timezone.get_default_timezone()
@@ -127,3 +128,9 @@ class Command(BaseCommand):
             id=4,
             date=datetime.date(2020, 2, 6),
             date_time=datetime.datetime(2020, 2, 6, 13, 30, tzinfo=tz))
+
+    def setup_number_filter_model(self):
+        print('Setup NumberFilterModel')
+
+        for num in range(21):
+            NumberFilterModel.objects.update_or_create(number=num)

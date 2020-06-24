@@ -10,6 +10,7 @@ from property_filter.models import (
     DateTimeFilterModel,
     DurationFilterModel,
     NumberClass,
+    NumberFilterModel,
     CharFilterModel,
     TimeClass,
     DateFromToRangeFilterModel,
@@ -58,8 +59,8 @@ class DurationFilterView(FilterView):
 
 
 # Create your views here.
-class NumberClassList(FilterView):
-    model = NumberClass
+class NumberFilterView(FilterView):
+    model = NumberFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyNumberFilterSet
 
