@@ -51,8 +51,8 @@ class PropertyNumberFilterSet(PropertyFilterSet):
         exclude = ['number']
         property_fields = [('prop_number', PropertyNumberFilter, PropertyNumberFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, NumberFilter, 'number', PropertyNumberFilter.supported_lookups)
 
 
@@ -63,8 +63,8 @@ class PropertyBooleanFilterSet(PropertyFilterSet):
         exclude = ['is_true']
         property_fields = [('prop_is_true', PropertyBooleanFilter, PropertyBooleanFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, BooleanFilter, 'is_true', PropertyBooleanFilter.supported_lookups)
 
 
@@ -75,8 +75,8 @@ class PropertyCharFilterSet(PropertyFilterSet):
         exclude = ['name']
         property_fields = [('prop_name', PropertyCharFilter, PropertyCharFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, CharFilter, 'name', PropertyCharFilter.supported_lookups)
 
 
@@ -87,8 +87,8 @@ class PropertyDateFilterSet(PropertyFilterSet):
         exclude = ['date']
         property_fields = [('prop_date', PropertyDateFilter, PropertyDateFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, DateFilter, 'date', PropertyDateFilter.supported_lookups)
 
 
@@ -102,8 +102,8 @@ class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
             ('prop_date_time', PropertyDateFromToRangeFilter, PropertyDateFromToRangeFilter.supported_lookups)
             ]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, DateFromToRangeFilter, 'date', PropertyDateFromToRangeFilter.supported_lookups)
         add_supported_filters(self.filters, DateFromToRangeFilter, 'date_time', PropertyDateFromToRangeFilter.supported_lookups)
 
@@ -115,8 +115,8 @@ class PropertyDateTimeFilterSet(PropertyFilterSet):
         exclude = ['date_time']
         property_fields = [('prop_date_time', PropertyDateTimeFilter, PropertyDateTimeFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, DateTimeFilter, 'date_time', PropertyDateTimeFilter.supported_lookups)
 
 
@@ -127,8 +127,8 @@ class PropertyDurationFilterSet(PropertyFilterSet):
         exclude = ['duration']
         property_fields = [('prop_duration', PropertyDurationFilter, PropertyDurationFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, DurationFilter, 'duration', PropertyDurationFilter.supported_lookups)
 
 
@@ -139,8 +139,8 @@ class PropertyRangeFilterSet(PropertyFilterSet):
         exclude = ['number']
         property_fields = [('prop_number', PropertyRangeFilter, PropertyRangeFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, RangeFilter, 'number', PropertyRangeFilter.supported_lookups)
 
 
@@ -151,8 +151,8 @@ class PropertyTimeFilterSet(PropertyFilterSet):
         exclude = ['time']
         property_fields = [('prop_time', PropertyTimeFilter, PropertyTimeFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, TimeFilter, 'time', PropertyTimeFilter.supported_lookups)
 
 
@@ -163,6 +163,6 @@ class PropertyTimeRangeFilterSet(PropertyFilterSet):
         exclude = ['time']
         property_fields = [('prop_time', PropertyTimeRangeFilter, PropertyTimeRangeFilter.supported_lookups)]
 
-    def __init__(self, data=None, queryset=None, *, request=None, prefix=None):
-        super().__init__(data, queryset, request=request, prefix=prefix)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, TimeRangeFilter, 'time', PropertyTimeRangeFilter.supported_lookups)
