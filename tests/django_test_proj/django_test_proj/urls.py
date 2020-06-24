@@ -21,12 +21,15 @@ from property_filter import models, views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomePageView.as_view(), name='home'),
-    path('booleanclasses/', views.BooleanClassList.as_view(), name='booleanclass_list'),
-    path('charclasses/', views.CharClassList.as_view(), name='charclass_list'),
-    path('dateclasses/', views.DateClassList.as_view(), name='dateclass_list'),
-    path('date_from_to_range_filter/', views.DateFromToRangeView.as_view(), name='date_from_to_range_filter'),
-    path('datetimeclasses/', views.DateTimeClassList.as_view(), name='datetimeclass_list'),
-    path('durationclasses/', views.DurationClassList.as_view(), name='durationclass_list'),
+    path('boolean_filter/', views.BooleanFilterView.as_view(), name='boolean_filter'),
+    path('char_filter/', views.CharFilterView.as_view(), name='char_filter'),
+    path('date_filter/', views.DateFilterView.as_view(), name='date_filter'),
+    path('date_from_to_range_filter/', views.DateFromToRangeFilterView.as_view(), name='date_from_to_range_filter'),
+    path('date_time_filter/', views.DateTimeFilterView.as_view(), name='date_time_filter'),
+    path('duration_filter/', views.DurationFilterView.as_view(), name='duration_filter'),
+
+
+
     path('numberclasses/', views.NumberClassList.as_view(), name='numberclass_list'),
     path('numberclassesrange/', views.NumberClassRangeList.as_view(), name='numberclassrange_list'),
     path('timeclasses/', views.TimeClassList.as_view(), name='timeclass_list'),

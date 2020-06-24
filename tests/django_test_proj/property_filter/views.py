@@ -21,37 +21,37 @@ class HomePageView(TemplateView):
     template_name = 'home.html'
 
 
-class BooleanClassList(FilterView):
+class BooleanFilterView(FilterView):
     model = BooleanClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyBooleanFilterSet
 
 
-class CharClassList(FilterView):
+class CharFilterView(FilterView):
     model = TextClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyCharFilterSet
 
 
-class DateClassList(FilterView):
+class DateFilterView(FilterView):
     model = DateClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateFilterSet
 
 
-class DateFromToRangeView(FilterView):
+class DateFromToRangeFilterView(FilterView):
     model = DateFromToRangeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateFromToRangeFilterSet
 
 
-class DateTimeClassList(FilterView):
+class DateTimeFilterView(FilterView):
     model = DateTimeClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDateTimeFilterSet
 
 
-class DurationClassList(FilterView):
+class DurationFilterView(FilterView):
     model = DurationClass
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDurationFilterSet
