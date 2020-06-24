@@ -5,7 +5,7 @@ from django_filters import FilterSet, RangeFilter
 
 from django_property_filter import PropertyFilterSet, PropertyRangeFilter
 
-from property_filter.models import NumberClass
+from property_filter.models import RangeFilterModel
 
 
 @pytest.mark.parametrize('lookup', PropertyRangeFilter.supported_lookups)
@@ -21,14 +21,14 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_number_filter():
-    NumberClass.objects.create(id=-1, number=-1)
-    NumberClass.objects.create(id=0, number=0)
-    NumberClass.objects.create(id=1, number=1)
-    NumberClass.objects.create(id=2, number=2)
-    NumberClass.objects.create(id=3, number=2)
-    NumberClass.objects.create(id=4, number=2)
-    NumberClass.objects.create(id=5, number=5)
-    NumberClass.objects.create(id=6, number=7)
+    RangeFilterModel.objects.create(id=-1, number=-1)
+    RangeFilterModel.objects.create(id=0, number=0)
+    RangeFilterModel.objects.create(id=1, number=1)
+    RangeFilterModel.objects.create(id=2, number=2)
+    RangeFilterModel.objects.create(id=3, number=2)
+    RangeFilterModel.objects.create(id=4, number=2)
+    RangeFilterModel.objects.create(id=5, number=5)
+    RangeFilterModel.objects.create(id=6, number=7)
 
 
 TEST_LOOKUPS = [
@@ -52,10 +52,10 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
         number = RangeFilter(field_name='number', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = NumberClass
+            model = RangeFilterModel
             fields = ['number']
 
-    filter_fs = RangeFilterSet({'number_min': lookup_val[0], 'number_max': lookup_val[1]}, queryset=NumberClass.objects.all())
+    filter_fs = RangeFilterSet({'number_min': lookup_val[0], 'number_max': lookup_val[1]}, queryset=RangeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Explicit Filter using a normal Filterset
@@ -63,21 +63,21 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
         prop_number = PropertyRangeFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = NumberClass
+            model = RangeFilterModel
             fields = ['prop_number']
 
-    prop_filter_fs = PropertyRangeFilterSet({'prop_number_min': lookup_val[0], 'prop_number_max': lookup_val[1]}, queryset=NumberClass.objects.all())
+    prop_filter_fs = PropertyRangeFilterSet({'prop_number_min': lookup_val[0], 'prop_number_max': lookup_val[1]}, queryset=RangeFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
         class Meta:
-            model = NumberClass
+            model = RangeFilterModel
             exclude = ['number']
             property_fields = [('prop_number', PropertyRangeFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({'prop_number__range_min': lookup_val[0], 'prop_number__range_max': lookup_val[1]}, queryset=NumberClass.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({'prop_number__range_min': lookup_val[0], 'prop_number__range_max': lookup_val[1]}, queryset=RangeFilterModel.objects.all())
 
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 

@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from django_property_filter import PropertyFilterSet, PropertyDateTimeFilter
 
-from property_filter.models import DateTimeClass
+from property_filter.models import DateTimeFilterModel
 
 
 @pytest.mark.parametrize('lookup', PropertyDateTimeFilter.supported_lookups)
@@ -25,14 +25,14 @@ def test_unsupported_lookup():
 def fixture_property_date_time_filter():
     tz = timezone.get_default_timezone()
 
-    DateTimeClass.objects.update_or_create(id=-1, date_time=datetime.datetime(2020, 1, 1, 13, 30, tzinfo=tz))
-    DateTimeClass.objects.update_or_create(id=0, date_time=datetime.datetime(2020, 1, 1, 13, 40, tzinfo=tz))
-    DateTimeClass.objects.update_or_create(id=1, date_time=datetime.datetime(2020, 2, 2, 12, tzinfo=tz))
-    DateTimeClass.objects.update_or_create(id=2, date_time=datetime.datetime(2020, 2, 2, 12, 0, tzinfo=tz))
-    DateTimeClass.objects.update_or_create(id=3, date_time=datetime.datetime(2020, 2, 2, 12, 0, 0, tzinfo=tz))
-    DateTimeClass.objects.update_or_create(id=4, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
-    DateTimeClass.objects.update_or_create(id=5, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
-    DateTimeClass.objects.update_or_create(id=6, date_time=datetime.datetime(2022, 1, 1, 13, 30, tzinfo=tz))
+    DateTimeFilterModel.objects.update_or_create(id=-1, date_time=datetime.datetime(2020, 1, 1, 13, 30, tzinfo=tz))
+    DateTimeFilterModel.objects.update_or_create(id=0, date_time=datetime.datetime(2020, 1, 1, 13, 40, tzinfo=tz))
+    DateTimeFilterModel.objects.update_or_create(id=1, date_time=datetime.datetime(2020, 2, 2, 12, tzinfo=tz))
+    DateTimeFilterModel.objects.update_or_create(id=2, date_time=datetime.datetime(2020, 2, 2, 12, 0, tzinfo=tz))
+    DateTimeFilterModel.objects.update_or_create(id=3, date_time=datetime.datetime(2020, 2, 2, 12, 0, 0, tzinfo=tz))
+    DateTimeFilterModel.objects.update_or_create(id=4, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
+    DateTimeFilterModel.objects.update_or_create(id=5, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
+    DateTimeFilterModel.objects.update_or_create(id=6, date_time=datetime.datetime(2022, 1, 1, 13, 30, tzinfo=tz))
 
 
 TEST_LOOKUPS = [
@@ -55,10 +55,10 @@ def test_lookup_xpr(fixture_property_date_time_filter, lookup_xpr, lookup_val, r
         date_time = DateTimeFilter(field_name='date_time', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = DateTimeClass
+            model = DateTimeFilterModel
             fields = ['date_time']
 
-    filter_fs = DateTimeFilterSet({'date_time': lookup_val}, queryset=DateTimeClass.objects.all())
+    filter_fs = DateTimeFilterSet({'date_time': lookup_val}, queryset=DateTimeFilterModel.objects.all())
     print(filter_fs.qs)
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
@@ -67,21 +67,21 @@ def test_lookup_xpr(fixture_property_date_time_filter, lookup_xpr, lookup_val, r
         prop_date_time = PropertyDateTimeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = DateTimeClass
+            model = DateTimeFilterModel
             fields = ['prop_date_time']
 
-    prop_filter_fs = PropertyDateTimeFilterSet({'prop_date_time': lookup_val}, queryset=DateTimeClass.objects.all())
+    prop_filter_fs = PropertyDateTimeFilterSet({'prop_date_time': lookup_val}, queryset=DateTimeFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
         class Meta:
-            model = DateTimeClass
+            model = DateTimeFilterModel
             exclude = ['date_time']
             property_fields = [('prop_date_time', PropertyDateTimeFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({F'prop_date_time__{lookup_xpr}': lookup_val}, queryset=DateTimeClass.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({F'prop_date_time__{lookup_xpr}': lookup_val}, queryset=DateTimeFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 def test_all_expressions_tested():

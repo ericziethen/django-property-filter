@@ -47,7 +47,7 @@ def add_supported_filters(filter_list, filter_class, field_name, expression_list
 class PropertyNumberFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.NumberClass
+        model = models.NumberFilterModel
         exclude = ['number']
         property_fields = [('prop_number', PropertyNumberFilter, PropertyNumberFilter.supported_lookups)]
 
@@ -59,7 +59,7 @@ class PropertyNumberFilterSet(PropertyFilterSet):
 class PropertyBooleanFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.BooleanClass
+        model = models.BooleanFilterModel
         exclude = ['is_true']
         property_fields = [('prop_is_true', PropertyBooleanFilter, PropertyBooleanFilter.supported_lookups)]
 
@@ -71,7 +71,7 @@ class PropertyBooleanFilterSet(PropertyFilterSet):
 class PropertyCharFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.TextClass
+        model = models.CharFilterModel
         exclude = ['name']
         property_fields = [('prop_name', PropertyCharFilter, PropertyCharFilter.supported_lookups)]
 
@@ -83,7 +83,7 @@ class PropertyCharFilterSet(PropertyFilterSet):
 class PropertyDateFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.DateClass
+        model = models.DateFilterModel
         exclude = ['date']
         property_fields = [('prop_date', PropertyDateFilter, PropertyDateFilter.supported_lookups)]
 
@@ -111,7 +111,7 @@ class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
 class PropertyDateTimeFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.DateTimeClass
+        model = models.DateTimeFilterModel
         exclude = ['date_time']
         property_fields = [('prop_date_time', PropertyDateTimeFilter, PropertyDateTimeFilter.supported_lookups)]
 
@@ -123,7 +123,7 @@ class PropertyDateTimeFilterSet(PropertyFilterSet):
 class PropertyDurationFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.DurationClass
+        model = models.DurationFilterModel
         exclude = ['duration']
         property_fields = [('prop_duration', PropertyDurationFilter, PropertyDurationFilter.supported_lookups)]
 
@@ -135,7 +135,7 @@ class PropertyDurationFilterSet(PropertyFilterSet):
 class PropertyRangeFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.NumberClass
+        model = models.RangeFilterModel
         exclude = ['number']
         property_fields = [('prop_number', PropertyRangeFilter, PropertyRangeFilter.supported_lookups)]
 
@@ -147,7 +147,7 @@ class PropertyRangeFilterSet(PropertyFilterSet):
 class PropertyTimeFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.TimeClass
+        model = models.TimeFilterModel
         exclude = ['time']
         property_fields = [('prop_time', PropertyTimeFilter, PropertyTimeFilter.supported_lookups)]
 
@@ -159,7 +159,7 @@ class PropertyTimeFilterSet(PropertyFilterSet):
 class PropertyTimeRangeFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.TimeClass
+        model = models.TimeRangeModel
         exclude = ['time']
         property_fields = [('prop_time', PropertyTimeRangeFilter, PropertyTimeRangeFilter.supported_lookups)]
 

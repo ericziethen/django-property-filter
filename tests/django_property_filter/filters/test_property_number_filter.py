@@ -5,7 +5,7 @@ from django_filters import FilterSet, NumberFilter
 
 from django_property_filter import PropertyFilterSet, PropertyNumberFilter
 
-from property_filter.models import NumberClass
+from property_filter.models import NumberFilterModel
 
 
 @pytest.mark.parametrize('lookup', PropertyNumberFilter.supported_lookups)
@@ -21,22 +21,22 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_number_filter():
-    NumberClass.objects.create(id=-1, number=-1)
-    NumberClass.objects.create(id=0, number=0)
-    NumberClass.objects.create(id=1, number=1)
-    NumberClass.objects.create(id=2, number=2)
-    NumberClass.objects.create(id=3, number=2)
-    NumberClass.objects.create(id=4, number=2)
-    NumberClass.objects.create(id=5, number=3)
-    NumberClass.objects.create(id=6, number=4)
-    NumberClass.objects.create(id=7, number=4)
-    NumberClass.objects.create(id=8, number=5)
-    NumberClass.objects.create(id=9, number=5)
-    NumberClass.objects.create(id=10, number=5)
-    NumberClass.objects.create(id=11, number=5)
-    NumberClass.objects.create(id=12, number=10)
-    NumberClass.objects.create(id=13, number=20)
-    NumberClass.objects.create(id=14)
+    NumberFilterModel.objects.create(id=-1, number=-1)
+    NumberFilterModel.objects.create(id=0, number=0)
+    NumberFilterModel.objects.create(id=1, number=1)
+    NumberFilterModel.objects.create(id=2, number=2)
+    NumberFilterModel.objects.create(id=3, number=2)
+    NumberFilterModel.objects.create(id=4, number=2)
+    NumberFilterModel.objects.create(id=5, number=3)
+    NumberFilterModel.objects.create(id=6, number=4)
+    NumberFilterModel.objects.create(id=7, number=4)
+    NumberFilterModel.objects.create(id=8, number=5)
+    NumberFilterModel.objects.create(id=9, number=5)
+    NumberFilterModel.objects.create(id=10, number=5)
+    NumberFilterModel.objects.create(id=11, number=5)
+    NumberFilterModel.objects.create(id=12, number=10)
+    NumberFilterModel.objects.create(id=13, number=20)
+    NumberFilterModel.objects.create(id=14)
 
 TEST_LOOKUPS = [
     ('exact', -1, [-1]),
@@ -80,10 +80,10 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
         number = NumberFilter(field_name='number', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = NumberClass
+            model = NumberFilterModel
             fields = ['number']
 
-    filter_fs = NumberFilterSet({'number': lookup_val}, queryset=NumberClass.objects.all())
+    filter_fs = NumberFilterSet({'number': lookup_val}, queryset=NumberFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Explicit Filter using a normal Filterset
@@ -91,21 +91,21 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
         prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
-            model = NumberClass
+            model = NumberFilterModel
             fields = ['prop_number']
 
-    prop_filter_fs = PropertyNumberFilterSet({'prop_number': lookup_val}, queryset=NumberClass.objects.all())
+    prop_filter_fs = PropertyNumberFilterSet({'prop_number': lookup_val}, queryset=NumberFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
         class Meta:
-            model = NumberClass
+            model = NumberFilterModel
             exclude = ['number']
             property_fields = [('prop_number', PropertyNumberFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({F'prop_number__{lookup_xpr}': lookup_val}, queryset=NumberClass.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({F'prop_number__{lookup_xpr}': lookup_val}, queryset=NumberFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 def test_all_expressions_tested():
