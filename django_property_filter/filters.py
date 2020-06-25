@@ -8,6 +8,7 @@ from django_filters.filters import (
     DateFilter,
     DateFromToRangeFilter,
     DateTimeFilter,
+    DateTimeFromToRangeFilter,
     DurationFilter,
     NumberFilter,
     RangeFilter,
@@ -117,6 +118,12 @@ class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
     """Adding Property Support to DateTimeFilter."""
 
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyDateTimeFromToRangeFilter(PropertyBaseFilterMixin, DateTimeFromToRangeFilter):
+    """Adding Property Support to DateTimeFromToRangeFilter."""
+
+    supported_lookups = ['range']
 
 
 class PropertyDurationFilter(PropertyBaseFilterMixin, DurationFilter):
