@@ -1,6 +1,11 @@
 
 {% extends "base.html" %}
 
+{% block main_title %}
+    {% load customtags %}
+    <h1>{{ filter | to_class_name }}</h1>
+{% endblock main_title %}
+
 {% block content %}
     <form action="" method="get">
         <!--{{ filter.form.as_p }}-->
