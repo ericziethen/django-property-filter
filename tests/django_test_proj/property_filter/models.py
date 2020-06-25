@@ -90,52 +90,6 @@ class DateFilterModel(models.Model):
         return F'{self.date} ({self.id})'
 
 
-class DateTimeFilterModel(models.Model):
-    date_time = models.DateTimeField()
-
-    @property
-    def prop_date_time(self):
-        return self.date_time
-
-    def __str__(self):
-        return F'{self.date_time} ({self.id})'
-
-
-class TimeFilterModel(models.Model):
-    time = models.TimeField()
-
-    @property
-    def prop_time(self):
-        return self.time
-
-    def __str__(self):
-        return F'{self.time} ({self.id})'
-
-
-class TimeRangeModel(models.Model):
-    time = models.TimeField()
-
-    @property
-    def prop_time(self):
-        return self.time
-
-    def __str__(self):
-        return F'{self.time} ({self.id})'
-
-
-class DurationFilterModel(models.Model):
-    duration = models.DurationField()
-
-    @property
-    def prop_duration(self):
-        return self.duration
-
-    def __str__(self):
-        return F'{self.duration} ({self.id})'
-
-
-##### FILTER SPECIFIC CLASSES #####
-
 class DateFromToRangeFilterModel(models.Model):
     date = models.DateField()
     date_time = models.DateTimeField()
@@ -150,3 +104,58 @@ class DateFromToRangeFilterModel(models.Model):
 
     def __str__(self):
         return F'ID: ({self.id}) ---Date: "{self.date}" --- DateTime: "{self.date_time}"'
+
+
+class DateTimeFilterModel(models.Model):
+    date_time = models.DateTimeField()
+
+    @property
+    def prop_date_time(self):
+        return self.date_time
+
+    def __str__(self):
+        return F'{self.date_time} ({self.id})'
+
+
+class DateTimeFromToRangeFilterModel(models.Model):
+    date_time = models.DateTimeField()
+
+    @property
+    def prop_date_time(self):
+        return self.date_time
+
+    def __str__(self):
+        return F'{self.date_time} ({self.id})'
+
+
+class DurationFilterModel(models.Model):
+    duration = models.DurationField()
+
+    @property
+    def prop_duration(self):
+        return self.duration
+
+    def __str__(self):
+        return F'{self.duration} ({self.id})'
+
+
+class TimeFilterModel(models.Model):
+    time = models.TimeField()
+
+    @property
+    def prop_time(self):
+        return self.time
+
+    def __str__(self):
+        return F'{self.time} ({self.id})'
+
+
+class TimeRangeFilterModel(models.Model):
+    time = models.TimeField()
+
+    @property
+    def prop_time(self):
+        return self.time
+
+    def __str__(self):
+        return F'{self.time} ({self.id})'

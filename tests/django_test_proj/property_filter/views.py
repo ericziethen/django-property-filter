@@ -6,15 +6,16 @@ from django_filters.views import FilterView
 
 from property_filter.models import (
     BooleanFilterModel,
-    DateFilterModel,
-    DateTimeFilterModel,
-    DurationFilterModel,
-    RangeFilterModel,
-    NumberFilterModel,
     CharFilterModel,
-    TimeFilterModel,
-    TimeRangeModel,
+    DateFilterModel,
     DateFromToRangeFilterModel,
+    DateTimeFilterModel,
+    DateTimeFromToRangeFilterModel,
+    DurationFilterModel,
+    NumberFilterModel,
+    RangeFilterModel,
+    TimeFilterModel,
+    TimeRangeFilterModel,
 )
 
 from . import filters
@@ -53,6 +54,12 @@ class DateTimeFilterView(FilterView):
     filterset_class = filters.PropertyDateTimeFilterSet
 
 
+class DateTimeFromToRangeFilterView(FilterView):
+    model = DateTimeFromToRangeFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyDateTimeFromToRangeFilterSet
+
+
 class DurationFilterView(FilterView):
     model = DurationFilterModel
     template_name = 'generic_filter.html'
@@ -79,6 +86,6 @@ class TimeFilterView(FilterView):
 
 
 class TimeRangeFilterView(FilterView):
-    model = TimeRangeModel
+    model = TimeRangeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyTimeRangeFilterSet

@@ -26,14 +26,10 @@ urlpatterns = [
     path('date_filter/', views.DateFilterView.as_view(), name='date_filter'),
     path('date_from_to_range_filter/', views.DateFromToRangeFilterView.as_view(), name='date_from_to_range_filter'),
     path('date_time_filter/', views.DateTimeFilterView.as_view(), name='date_time_filter'),
+    path('date_time_from_to_range_filter/', views.DateTimeFromToRangeFilterView.as_view(), name='date_time_from_to_range_filter'),
     path('duration_filter/', views.DurationFilterView.as_view(), name='duration_filter'),
     path('number_filter/', views.NumberFilterView.as_view(), name='number_filter'),
     path('range_filter/', views.RangeFilterView.as_view(), name='range_filter'),
-
-
-
-
-
     path('time_filter/', views.TimeFilterView.as_view(), name='time_filter'),
     path('time_range_filter/', views.TimeRangeFilterView.as_view(), name='time_range_filter'),
 ]
