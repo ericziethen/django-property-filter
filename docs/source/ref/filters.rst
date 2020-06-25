@@ -92,6 +92,13 @@ Used instead of DateTimeFilter for property filtering
 
 Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
 
+``PropertyDateTimeFromToRangeFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of DateTimeFromToRangeFilter for property filtering
+
+Supported lookup is 'range'
+
 ``PropertyDurationFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
