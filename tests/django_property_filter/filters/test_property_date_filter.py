@@ -22,12 +22,12 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_date_filter():
-    DateFilterModel.objects.update_or_create(id=-1, date=datetime.date(2018, 2, 1))
-    DateFilterModel.objects.update_or_create(id=0, date=datetime.date(2018, 3, 2))
-    DateFilterModel.objects.update_or_create(id=1, date=datetime.date(2019, 3, 2))
-    DateFilterModel.objects.update_or_create(id=2, date=datetime.date(2019, 3, 2))
-    DateFilterModel.objects.update_or_create(id=3, date=datetime.date(2019, 3, 4))
-    DateFilterModel.objects.update_or_create(id=4, date=datetime.date(2020, 2, 5))
+    DateFilterModel.objects.create(id=-1, date=datetime.date(2018, 2, 1))
+    DateFilterModel.objects.create(id=0, date=datetime.date(2018, 3, 2))
+    DateFilterModel.objects.create(id=1, date=datetime.date(2019, 3, 2))
+    DateFilterModel.objects.create(id=2, date=datetime.date(2019, 3, 2))
+    DateFilterModel.objects.create(id=3, date=datetime.date(2019, 3, 4))
+    DateFilterModel.objects.create(id=4, date=datetime.date(2020, 2, 5))
 
 
 TEST_LOOKUPS = [

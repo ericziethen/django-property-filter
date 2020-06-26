@@ -12,6 +12,7 @@ from property_filter.models import (
     DateTimeFilterModel,
     DateTimeFromToRangeFilterModel,
     DurationFilterModel,
+    IsoDateTimeFromToRangeFilterModel,
     NumberFilterModel,
     RangeFilterModel,
     TimeFilterModel,
@@ -64,6 +65,12 @@ class DurationFilterView(FilterView):
     model = DurationFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyDurationFilterSet
+
+
+class IsoDateTimeFromToRangeFilterView(FilterView):
+    model = IsoDateTimeFromToRangeFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyIsoDateTimeFromToRangeFilterSet
 
 
 # Create your views here.
