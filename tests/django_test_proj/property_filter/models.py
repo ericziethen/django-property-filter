@@ -141,6 +141,17 @@ class DurationFilterModel(models.Model):
         return F'{self.duration} ({self.id})'
 
 
+class IsoDateTimeFilterModel(models.Model):
+    date_time = models.DateTimeField()
+
+    @property
+    def prop_date_time(self):
+        return self.date_time
+
+    def __str__(self):
+        return F'{self.date_time} ({self.id})'
+
+
 class IsoDateTimeFromToRangeFilterModel(models.Model):
     date_time = models.DateTimeField()
 
