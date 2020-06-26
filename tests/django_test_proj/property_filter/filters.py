@@ -12,6 +12,7 @@ from django_filters.filters import (
     DateTimeFilter,
     DateTimeFromToRangeFilter,
     DurationFilter,
+    IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
     NumberFilter,
     RangeFilter,
@@ -28,6 +29,7 @@ from django_property_filter import (
     PropertyDateTimeFilter,
     PropertyDateTimeFromToRangeFilter,
     PropertyDurationFilter,
+    PropertyIsoDateTimeFilter,
     PropertyIsoDateTimeFromToRangeFilter,
     PropertyNumberFilter,
     PropertyRangeFilter,
@@ -146,6 +148,18 @@ class PropertyDurationFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, DurationFilter, 'duration', PropertyDurationFilter.supported_lookups)
+
+
+class PropertyIsoDateTimeFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.IsoDateTimeFilterModel
+        exclude = ['date_time']
+        property_fields = [('prop_date_time', PropertyIsoDateTimeFilter, PropertyIsoDateTimeFilter.supported_lookups)]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        add_supported_filters(self.filters, IsoDateTimeFilter, 'date_time', PropertyIsoDateTimeFilter.supported_lookups)
 
 
 class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
