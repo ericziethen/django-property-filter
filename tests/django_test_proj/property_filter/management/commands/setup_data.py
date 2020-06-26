@@ -144,14 +144,14 @@ class Command(BaseCommand):
     def setup_iso_date_time_from_to_range_filter_model(self):
         print('Setup IsoDateTimeFromToRangeFilterModel')
 
-        DateTimeFilterModel.objects.update_or_create(id=1, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
-        DateTimeFilterModel.objects.update_or_create(id=2, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
-        DateTimeFilterModel.objects.update_or_create(id=3, date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
-        DateTimeFilterModel.objects.update_or_create(id=4, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
-        DateTimeFilterModel.objects.update_or_create(id=5, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
-        DateTimeFilterModel.objects.update_or_create(id=6, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
-        DateTimeFilterModel.objects.update_or_create(id=7, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
-        DateTimeFilterModel.objects.update_or_create(id=8, date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=1, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=2, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=3, date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=4, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=5, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=6, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=7, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=8, date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
 
     def setup_number_filter_model(self):
         print('Setup NumberFilterModel')
