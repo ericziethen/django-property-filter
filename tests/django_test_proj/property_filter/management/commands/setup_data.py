@@ -1,6 +1,7 @@
 
 import datetime
 
+from django.db import transaction
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from django.utils.timezone import make_aware
@@ -13,6 +14,7 @@ from property_filter.models import (
     DateTimeFilterModel,
     DateTimeFromToRangeFilterModel,
     DurationFilterModel,
+    IsoDateTimeFilterModel,
     IsoDateTimeFromToRangeFilterModel,
     NumberFilterModel,
     RangeFilterModel,
@@ -24,18 +26,21 @@ from property_filter.models import (
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        self.setup_boolean_filter_model()
-        self.setup_char_filter_model()
-        self.setup_date_filter_model()
-        self.setup_date_from_to_range_filter_model()
-        self.setup_date_time_filter_model()
-        self.setup_date_time_from_to_range_filter_model()
-        self.setup_duration_filter_model()
-        self.setup_iso_date_time_from_to_range_filter_model()
-        self.setup_number_filter_model()
-        self.setup_range_filter_model()
-        self.setup_time_filter_model()
-        self.setup_time_range_filter_model()
+
+        with transaction.atomic():
+            self.setup_boolean_filter_model()
+            self.setup_char_filter_model()
+            self.setup_date_filter_model()
+            self.setup_date_from_to_range_filter_model()
+            self.setup_date_time_filter_model()
+            self.setup_date_time_from_to_range_filter_model()
+            self.setup_duration_filter_model()
+            self.setup_iso_date_time_filter_model()
+            self.setup_iso_date_time_from_to_range_filter_model()
+            self.setup_number_filter_model()
+            self.setup_range_filter_model()
+            self.setup_time_filter_model()
+            self.setup_time_range_filter_model()
 
         print('>> Setup Finished')
 
@@ -141,12 +146,22 @@ class Command(BaseCommand):
         DurationFilterModel.objects.update_or_create(id=8, duration=datetime.timedelta(days=30))
         DurationFilterModel.objects.update_or_create(id=9, duration=datetime.timedelta(days=200))
 
+    def setup_iso_date_time_filter_model(self):
+        print('Setup IsoDateTimeFilterModel')
+
+        IsoDateTimeFilterModel.objects.update_or_create(id=1, date_time='2020-01-03T12:00:00+12:00')
+        IsoDateTimeFilterModel.objects.update_or_create(id=2, date_time='2020-01-03T12:00:00+11:00')
+        IsoDateTimeFilterModel.objects.update_or_create(id=3, date_time='2020-01-03T12:00:00+10:00')
+        IsoDateTimeFilterModel.objects.update_or_create(id=4, date_time='2020-12-03T12:00:00+10:00')
+        IsoDateTimeFilterModel.objects.update_or_create(id=5, date_time='2020-12-03T12:00:00+10:00')
+        IsoDateTimeFilterModel.objects.update_or_create(id=6, date_time='2021-12-03T12:00:00+10:00')
+
     def setup_iso_date_time_from_to_range_filter_model(self):
         print('Setup IsoDateTimeFromToRangeFilterModel')
 
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=1, date_time='2020-01-03T12:00:00+10:00')
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=1, date_time='2020-01-03T12:00:00+12:00')
         IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=2, date_time='2020-01-03T12:00:00+11:00')
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=3, date_time='2020-01-03T12:00:00+12:00')
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=3, date_time='2020-01-03T12:00:00+10:00')
         IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=4, date_time='2020-12-03T12:00:00+10:00')
         IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=5, date_time='2020-12-03T12:00:00+10:00')
         IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=6, date_time='2021-12-03T12:00:00+10:00')
