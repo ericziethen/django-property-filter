@@ -22,15 +22,15 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_duration_filter():
-    DurationFilterModel.objects.update_or_create(id=-1, duration=datetime.timedelta(hours=5))
-    DurationFilterModel.objects.update_or_create(id=0, duration=datetime.timedelta(hours=5))
-    DurationFilterModel.objects.update_or_create(id=1, duration=datetime.timedelta(days=1, hours=10))
-    DurationFilterModel.objects.update_or_create(id=2, duration=datetime.timedelta(days=2, hours=10))
-    DurationFilterModel.objects.update_or_create(id=3, duration=datetime.timedelta(days=2, hours=10))
-    DurationFilterModel.objects.update_or_create(id=4, duration=datetime.timedelta(days=15))
-    DurationFilterModel.objects.update_or_create(id=5, duration=datetime.timedelta(days=15))
-    DurationFilterModel.objects.update_or_create(id=6, duration=datetime.timedelta(days=30))
-    DurationFilterModel.objects.update_or_create(id=7, duration=datetime.timedelta(days=200))
+    DurationFilterModel.objects.create(id=-1, duration=datetime.timedelta(hours=5))
+    DurationFilterModel.objects.create(id=0, duration=datetime.timedelta(hours=5))
+    DurationFilterModel.objects.create(id=1, duration=datetime.timedelta(days=1, hours=10))
+    DurationFilterModel.objects.create(id=2, duration=datetime.timedelta(days=2, hours=10))
+    DurationFilterModel.objects.create(id=3, duration=datetime.timedelta(days=2, hours=10))
+    DurationFilterModel.objects.create(id=4, duration=datetime.timedelta(days=15))
+    DurationFilterModel.objects.create(id=5, duration=datetime.timedelta(days=15))
+    DurationFilterModel.objects.create(id=6, duration=datetime.timedelta(days=30))
+    DurationFilterModel.objects.create(id=7, duration=datetime.timedelta(days=200))
 
 
 TEST_LOOKUPS = [
