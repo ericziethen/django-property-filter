@@ -13,6 +13,7 @@ from property_filter.models import (
     DateTimeFilterModel,
     DateTimeFromToRangeFilterModel,
     DurationFilterModel,
+    IsoDateTimeFromToRangeFilterModel,
     NumberFilterModel,
     RangeFilterModel,
     TimeFilterModel,
@@ -30,6 +31,7 @@ class Command(BaseCommand):
         self.setup_date_time_filter_model()
         self.setup_date_time_from_to_range_filter_model()
         self.setup_duration_filter_model()
+        self.setup_iso_date_time_from_to_range_filter_model()
         self.setup_number_filter_model()
         self.setup_range_filter_model()
         self.setup_time_filter_model()
@@ -138,6 +140,18 @@ class Command(BaseCommand):
         DurationFilterModel.objects.update_or_create(id=7, duration=datetime.timedelta(days=15))
         DurationFilterModel.objects.update_or_create(id=8, duration=datetime.timedelta(days=30))
         DurationFilterModel.objects.update_or_create(id=9, duration=datetime.timedelta(days=200))
+
+    def setup_iso_date_time_from_to_range_filter_model(self):
+        print('Setup IsoDateTimeFromToRangeFilterModel')
+
+        DateTimeFilterModel.objects.update_or_create(id=1, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
+        DateTimeFilterModel.objects.update_or_create(id=2, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
+        DateTimeFilterModel.objects.update_or_create(id=3, date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
+        DateTimeFilterModel.objects.update_or_create(id=4, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
+        DateTimeFilterModel.objects.update_or_create(id=5, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
+        DateTimeFilterModel.objects.update_or_create(id=6, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        DateTimeFilterModel.objects.update_or_create(id=7, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
+        DateTimeFilterModel.objects.update_or_create(id=8, date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
 
     def setup_number_filter_model(self):
         print('Setup NumberFilterModel')
