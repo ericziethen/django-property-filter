@@ -1,5 +1,7 @@
 from django.db import models
 
+import django_filters.fields
+
 # Create your models here.
 class Delivery(models.Model):
 
@@ -137,6 +139,17 @@ class DurationFilterModel(models.Model):
 
     def __str__(self):
         return F'{self.duration} ({self.id})'
+
+
+class IsoDateTimeFromToRangeFilterModel(models.Model):
+    date_time = models.DateTimeField()
+
+    @property
+    def prop_date_time(self):
+        return self.date_time
+
+    def __str__(self):
+        return F'{self.date_time} ({self.id})'
 
 
 class TimeFilterModel(models.Model):

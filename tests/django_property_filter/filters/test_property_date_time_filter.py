@@ -25,14 +25,14 @@ def test_unsupported_lookup():
 def fixture_property_date_time_filter():
     tz = timezone.get_default_timezone()
 
-    DateTimeFilterModel.objects.update_or_create(id=-1, date_time=datetime.datetime(2020, 1, 1, 13, 30, tzinfo=tz))
-    DateTimeFilterModel.objects.update_or_create(id=0, date_time=datetime.datetime(2020, 1, 1, 13, 40, tzinfo=tz))
-    DateTimeFilterModel.objects.update_or_create(id=1, date_time=datetime.datetime(2020, 2, 2, 12, tzinfo=tz))
-    DateTimeFilterModel.objects.update_or_create(id=2, date_time=datetime.datetime(2020, 2, 2, 12, 0, tzinfo=tz))
-    DateTimeFilterModel.objects.update_or_create(id=3, date_time=datetime.datetime(2020, 2, 2, 12, 0, 0, tzinfo=tz))
-    DateTimeFilterModel.objects.update_or_create(id=4, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
-    DateTimeFilterModel.objects.update_or_create(id=5, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
-    DateTimeFilterModel.objects.update_or_create(id=6, date_time=datetime.datetime(2022, 1, 1, 13, 30, tzinfo=tz))
+    DateTimeFilterModel.objects.create(id=-1, date_time=datetime.datetime(2020, 1, 1, 13, 30, tzinfo=tz))
+    DateTimeFilterModel.objects.create(id=0, date_time=datetime.datetime(2020, 1, 1, 13, 40, tzinfo=tz))
+    DateTimeFilterModel.objects.create(id=1, date_time=datetime.datetime(2020, 2, 2, 12, tzinfo=tz))
+    DateTimeFilterModel.objects.create(id=2, date_time=datetime.datetime(2020, 2, 2, 12, 0, tzinfo=tz))
+    DateTimeFilterModel.objects.create(id=3, date_time=datetime.datetime(2020, 2, 2, 12, 0, 0, tzinfo=tz))
+    DateTimeFilterModel.objects.create(id=4, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
+    DateTimeFilterModel.objects.create(id=5, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
+    DateTimeFilterModel.objects.create(id=6, date_time=datetime.datetime(2022, 1, 1, 13, 30, tzinfo=tz))
 
 
 TEST_LOOKUPS = [

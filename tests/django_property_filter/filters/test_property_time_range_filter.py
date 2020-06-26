@@ -22,13 +22,13 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_time_range_filter():
-    TimeRangeFilterModel.objects.update_or_create(id=-1, time=datetime.time(7, 30, 15))
-    TimeRangeFilterModel.objects.update_or_create(id=0, time=datetime.time(7, 30, 15))
-    TimeRangeFilterModel.objects.update_or_create(id=1, time=datetime.time(8, 0, 0))
-    TimeRangeFilterModel.objects.update_or_create(id=2, time=datetime.time(8, 0, 0))
-    TimeRangeFilterModel.objects.update_or_create(id=3, time=datetime.time(8, 0, 0))
-    TimeRangeFilterModel.objects.update_or_create(id=4, time=datetime.time(15, 15, 15))
-    TimeRangeFilterModel.objects.update_or_create(id=5, time=datetime.time(18, 30))
+    TimeRangeFilterModel.objects.create(id=-1, time=datetime.time(7, 30, 15))
+    TimeRangeFilterModel.objects.create(id=0, time=datetime.time(7, 30, 15))
+    TimeRangeFilterModel.objects.create(id=1, time=datetime.time(8, 0, 0))
+    TimeRangeFilterModel.objects.create(id=2, time=datetime.time(8, 0, 0))
+    TimeRangeFilterModel.objects.create(id=3, time=datetime.time(8, 0, 0))
+    TimeRangeFilterModel.objects.create(id=4, time=datetime.time(15, 15, 15))
+    TimeRangeFilterModel.objects.create(id=5, time=datetime.time(18, 30))
 
 
 TEST_LOOKUPS = [

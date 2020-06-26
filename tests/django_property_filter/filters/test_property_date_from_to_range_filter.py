@@ -37,27 +37,27 @@ def test_unsupported_lookup():
 def fixture_property_filter():
     tz = timezone.get_default_timezone()
 
-    DateFromToRangeFilterModel.objects.update_or_create(
+    DateFromToRangeFilterModel.objects.create(
         id=-1,
         date=datetime.date(2018, 2, 1),
         date_time=datetime.datetime(2018, 2, 1, 13, 30, tzinfo=tz))
-    DateFromToRangeFilterModel.objects.update_or_create(
+    DateFromToRangeFilterModel.objects.create(
         id=0,
         date=datetime.date(2019, 3, 2),
         date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
-    DateFromToRangeFilterModel.objects.update_or_create(
+    DateFromToRangeFilterModel.objects.create(
         id=1,
         date=datetime.date(2019, 3, 2),
         date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
-    DateFromToRangeFilterModel.objects.update_or_create(
+    DateFromToRangeFilterModel.objects.create(
         id=2,
         date=datetime.date(2019, 3, 4),
         date_time=datetime.datetime(2019, 3, 4, 12, 0, tzinfo=tz))
-    DateFromToRangeFilterModel.objects.update_or_create(
+    DateFromToRangeFilterModel.objects.create(
         id=3,
         date=datetime.date(2020, 2, 5),
         date_time=datetime.datetime(2020, 2, 5, 12, 0, 0, tzinfo=tz))
-    DateFromToRangeFilterModel.objects.update_or_create(
+    DateFromToRangeFilterModel.objects.create(
         id=4,
         date=datetime.date(2020, 2, 6),
         date_time=datetime.datetime(2020, 2, 6, 13, 30, tzinfo=tz))
