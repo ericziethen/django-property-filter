@@ -144,14 +144,12 @@ class Command(BaseCommand):
     def setup_iso_date_time_from_to_range_filter_model(self):
         print('Setup IsoDateTimeFromToRangeFilterModel')
 
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=1, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 30)))
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=2, date_time=make_aware(datetime.datetime(2020, 1, 1, 13, 40)))
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=3, date_time=make_aware(datetime.datetime(2020, 2, 2, 12)))
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=4, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0)))
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=5, date_time=make_aware(datetime.datetime(2020, 2, 2, 12, 0, 0)))
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=6, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=7, date_time=make_aware(datetime.datetime(2021, 1, 1, 13, 30)))
-        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=8, date_time=make_aware(datetime.datetime(2022, 1, 1, 13, 30)))
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=1, date_time='2020-01-03T12:00:00+10:00')
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=2, date_time='2020-01-03T12:00:00+11:00')
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=3, date_time='2020-01-03T12:00:00+12:00')
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=4, date_time='2020-12-03T12:00:00+10:00')
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=5, date_time='2020-12-03T12:00:00+10:00')
+        IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=6, date_time='2021-12-03T12:00:00+10:00')
 
     def setup_number_filter_model(self):
         print('Setup NumberFilterModel')

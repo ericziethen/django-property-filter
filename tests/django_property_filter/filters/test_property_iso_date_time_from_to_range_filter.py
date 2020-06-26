@@ -3,8 +3,6 @@ import datetime
 
 import pytest
 
-from django.utils import timezone
-
 from django_filters import FilterSet, IsoDateTimeFromToRangeFilter
 
 from django_property_filter import PropertyFilterSet, PropertyIsoDateTimeFromToRangeFilter
@@ -25,28 +23,25 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_time_range_filter():
-    tz = timezone.get_default_timezone()
-
-    IsoDateTimeFromToRangeFilterModel.objects.create(id=-1, date_time=datetime.datetime(2020, 1, 1, 13, 30, tzinfo=tz))
-    IsoDateTimeFromToRangeFilterModel.objects.create(id=0, date_time=datetime.datetime(2020, 1, 1, 13, 40, tzinfo=tz))
-    IsoDateTimeFromToRangeFilterModel.objects.create(id=1, date_time=datetime.datetime(2020, 2, 2, 12, tzinfo=tz))
-    IsoDateTimeFromToRangeFilterModel.objects.create(id=2, date_time=datetime.datetime(2020, 2, 2, 12, 0, tzinfo=tz))
-    IsoDateTimeFromToRangeFilterModel.objects.create(id=3, date_time=datetime.datetime(2020, 2, 2, 12, 0, 0, tzinfo=tz))
-    IsoDateTimeFromToRangeFilterModel.objects.create(id=4, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
-    IsoDateTimeFromToRangeFilterModel.objects.create(id=5, date_time=datetime.datetime(2021, 1, 1, 13, 30, tzinfo=tz))
-    IsoDateTimeFromToRangeFilterModel.objects.create(id=6, date_time=datetime.datetime(2022, 1, 1, 13, 30, tzinfo=tz))
+    IsoDateTimeFromToRangeFilterModel.objects.create(id=-1, date_time='2020-01-03T12:00:00+12:00')
+    IsoDateTimeFromToRangeFilterModel.objects.create(id=0, date_time='2020-01-03T12:00:00+11:00')
+    IsoDateTimeFromToRangeFilterModel.objects.create(id=1, date_time='2020-01-03T12:00:00+10:00')
+    IsoDateTimeFromToRangeFilterModel.objects.create(id=2, date_time='2020-12-03T12:00:00+10:00')
+    IsoDateTimeFromToRangeFilterModel.objects.create(id=3, date_time='2020-12-03T12:00:00+10:00')
+    IsoDateTimeFromToRangeFilterModel.objects.create(id=4, date_time='2021-12-03T12:00:00+10:00')
 
 
+# Remember, +12 is earlier than +11
 TEST_LOOKUPS = [
-    ('range', ('2018-02-02 12:00:00', '2030-02-02 12:00:00'), [-1, 0, 1, 2, 3, 4, 5, 6]),
-    #('range', ('2020-02-02 12:00:00', '2020-02-02 12:00:00'), [1, 2, 3]),
-    #('range', ('2020-02-02', '2020-02-03'), [1, 2, 3]),
-    #('range', ('2020-02-03 12:00:00', '2020-02-02 12:00:00'), []),
-    #('range', ('2021-02-03 12:00:00', '2024-02-03 12:00:00'), [6]),
-    #('range', ('2020-12-03 12:00:00', '2022-01-01 13:30:00'), [4, 5, 6]),
-    #('range', ('2020-02-02 12:00:00', None), [1, 2, 3, 4, 5, 6]),
-    #('range', (None, '2020-02-02 12:00:00'), [-1, 0, 1, 2, 3]),
-    #('range', (None, None), [-1, 0, 1, 2, 3, 4, 5, 6]),
+    ('range', ('2019-02-02T12:00:00+10:00', '2023-02-02T12:00:00+10:00'), [-1, 0, 1, 2, 3, 4]),
+    ('range', ('2020-12-03T12:00:00+10:00', '2020-12-03T12:00:00+10:00'), [2, 3]),
+    ('range', ('2020-01-03T12:00:00+12:00', '2020-01-03T12:00:00+10:00'), [-1, 0, 1]),
+    ('range', ('2020-12-03T12:00:00+10:00', '2020-12-03T12:00:00+11:00'), []),
+    ('range', ('2021-12-03T12:00:00+11:00', '2021-12-03T12:00:00+09:00'), [4]),
+    ('range', ('2022-12-03T12:00:00+11:00', '2023-12-03T12:00:00+10:00'), []),
+    ('range', ('2020-01-03T12:00:00+10:00', None), [1, 2, 3, 4]),
+    ('range', (None, '2020-01-03T12:00:00+10:00'), [-1, 0, 1]),
+    ('range', (None, None), [-1, 0, 1, 2, 3, 4]),
 ]
 
 
