@@ -106,6 +106,13 @@ Used instead of DurationFilter for property filtering
 
 Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
 
+``PropertyIsoDateTimeFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of IsoDateTimeFilter for property filtering
+
+Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
+
 ``PropertyIsoDateTimeFromToRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
