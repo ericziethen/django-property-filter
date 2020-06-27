@@ -16,6 +16,7 @@ from django_filters.filters import (
     RangeFilter,
     TimeFilter,
     TimeRangeFilter,
+    UUIDFilter,
 )
 
 from django_property_filter.utils import (
@@ -162,3 +163,9 @@ class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
     """Adding Property Support to TimeRangeFilter."""
 
     supported_lookups = ['range']
+
+
+class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
+    """Adding Property Support to UUIDFilter."""
+
+    supported_lookups = ['iexact', 'icontains', 'gt', 'gte', 'lt', 'lte', 'istartswith', 'iendswith']

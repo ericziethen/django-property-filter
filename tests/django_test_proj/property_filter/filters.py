@@ -18,6 +18,7 @@ from django_filters.filters import (
     RangeFilter,
     TimeFilter,
     TimeRangeFilter,
+    UUIDFilter,
 )
 
 from django_property_filter import (
@@ -35,6 +36,7 @@ from django_property_filter import (
     PropertyRangeFilter,
     PropertyTimeFilter,
     PropertyTimeRangeFilter,
+    PropertyUUIDFilter,
 )
 
 from property_filter import models
@@ -208,3 +210,14 @@ class PropertyTimeRangeFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, TimeRangeFilter, 'time', PropertyTimeRangeFilter.supported_lookups)
+
+class PropertyUUIDFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.UUIDFilterModel
+        exclude = ['uuid']
+        property_fields = [('prop_uuid', PropertyUUIDFilter, PropertyUUIDFilter.supported_lookups)]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        add_supported_filters(self.filters, UUIDFilter, 'uuid', PropertyUUIDFilter.supported_lookups)
