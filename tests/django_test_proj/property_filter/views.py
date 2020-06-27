@@ -18,6 +18,7 @@ from property_filter.models import (
     RangeFilterModel,
     TimeFilterModel,
     TimeRangeFilterModel,
+    UUIDFilterModel,
 )
 
 from . import filters
@@ -103,3 +104,9 @@ class TimeRangeFilterView(FilterView):
     model = TimeRangeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyTimeRangeFilterSet
+
+
+class UUIDFilterView(FilterView):
+    model = UUIDFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyUUIDFilterSet

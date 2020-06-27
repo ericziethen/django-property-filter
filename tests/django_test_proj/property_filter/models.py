@@ -183,3 +183,14 @@ class TimeRangeFilterModel(models.Model):
 
     def __str__(self):
         return F'{self.time} ({self.id})'
+
+
+class UUIDFilterModel(models.Model):
+    uuid = models.UUIDField()
+
+    @property
+    def prop_uuid(self):
+        return self.uuid
+
+    def __str__(self):
+        return F'{self.uuid} ({self.id})'

@@ -20,6 +20,7 @@ from property_filter.models import (
     RangeFilterModel,
     TimeFilterModel,
     TimeRangeFilterModel,
+    UUIDFilterModel,
 )
 
 
@@ -41,6 +42,7 @@ class Command(BaseCommand):
             self.setup_range_filter_model()
             self.setup_time_filter_model()
             self.setup_time_range_filter_model()
+            self.setup_uuid_filter_model()
 
         print('>> Setup Finished')
 
@@ -199,3 +201,13 @@ class Command(BaseCommand):
         TimeRangeFilterModel.objects.update_or_create(id=5, time=datetime.time(8, 0, 0))
         TimeRangeFilterModel.objects.update_or_create(id=6, time=datetime.time(15, 15, 15))
         TimeRangeFilterModel.objects.update_or_create(id=7, time=datetime.time(18, 30))
+
+    def setup_uuid_filter_model(self):
+        print('Setup UUIDFilterModel')
+
+        UUIDFilterModel.objects.update_or_create(id=1, uuid='40828e84-66c7-46ee-a94a-1f2087970a68')
+        UUIDFilterModel.objects.update_or_create(id=2, uuid='8f3ba455-2fbd-4f7b-82ff-12b05c0676e7')
+        UUIDFilterModel.objects.update_or_create(id=3, uuid='df4078eb-67ca-49fe-b86d-742e0feaf3ad')
+        UUIDFilterModel.objects.update_or_create(id=4, uuid='4275cc61-433a-44b2-8468-9cdfb149bb5e')
+        UUIDFilterModel.objects.update_or_create(id=5, uuid='3b56ee7b-6fba-4ed6-9a1c-f08690b2a7f2')
+        UUIDFilterModel.objects.update_or_create(id=6, uuid='46390e95-b41a-48ec-819a-3fa54b740d4d')
