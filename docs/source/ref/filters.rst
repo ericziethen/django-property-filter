@@ -147,3 +147,10 @@ Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
 Used instead of TimeRangeFilter for property filtering
 
 Supported lookup is 'range'
+
+``PropertyUUIDFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of UUIDFilter for property filtering
+
+Supported lookup is 'exact'
