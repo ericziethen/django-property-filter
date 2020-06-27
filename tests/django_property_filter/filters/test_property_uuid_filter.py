@@ -25,6 +25,7 @@ def fixture_property_uuid_filter():
     UUIDFilterModel.objects.create(id=0, uuid='40828e84-66c7-46ee-a94a-1f2087970a68')
     UUIDFilterModel.objects.create(id=1, uuid='df4078eb-67ca-49fe-b86d-742e0feaf3ad')
 
+
 TEST_LOOKUPS = [
     ('exact', '40828e84-66c7-46ee-a94a-1f2087970a68', [-1, 0]),
     ('exact', 'df4078eb-67ca-49fe-b86d-742e0feaf3ad', [1]),
