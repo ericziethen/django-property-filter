@@ -168,4 +168,4 @@ class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
 class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
     """Adding Property Support to UUIDFilter."""
 
-    supported_lookups = ['iexact', 'icontains', 'gt', 'gte', 'lt', 'lte', 'istartswith', 'iendswith']
+    supported_lookups = ['exact']
