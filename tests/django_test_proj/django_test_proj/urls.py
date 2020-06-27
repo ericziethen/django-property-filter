@@ -34,4 +34,5 @@ urlpatterns = [
     path('range_filter/', views.RangeFilterView.as_view(), name='range_filter'),
     path('time_filter/', views.TimeFilterView.as_view(), name='time_filter'),
     path('time_range_filter/', views.TimeRangeFilterView.as_view(), name='time_range_filter'),
+    path('uuid_filter/', views.UUIDFilterView.as_view(), name='uuid_filter'),
 ]
