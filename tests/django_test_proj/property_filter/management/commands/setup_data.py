@@ -9,6 +9,7 @@ from django.utils.timezone import make_aware
 from property_filter.models import (
     BooleanFilterModel,
     CharFilterModel,
+    ChoiceFilterModel,
     DateFilterModel,
     DateFromToRangeFilterModel,
     DateTimeFilterModel,
@@ -31,6 +32,7 @@ class Command(BaseCommand):
         with transaction.atomic():
             self.setup_boolean_filter_model()
             self.setup_char_filter_model()
+            self.setup_choice_filter_model()
             self.setup_date_filter_model()
             self.setup_date_from_to_range_filter_model()
             self.setup_date_time_filter_model()
@@ -67,6 +69,12 @@ class Command(BaseCommand):
         CharFilterModel.objects.update_or_create(id=6, name='Tom')
         CharFilterModel.objects.update_or_create(id=7)
         CharFilterModel.objects.update_or_create(id=8)
+
+    def setup_choice_filter_model(self):
+        print('Setup ChoiceFilterModel')
+
+        for num in range(21):
+            ChoiceFilterModel.objects.update_or_create(number=num)
 
     def setup_date_filter_model(self):
         print('Setup DateFilterModel')

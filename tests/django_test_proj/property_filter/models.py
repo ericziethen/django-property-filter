@@ -37,28 +37,6 @@ class Product(models.Model):
         return self.del_line.line_no
 
 
-class NumberFilterModel(models.Model):
-    number = models.IntegerField(null=True)
-
-    @property
-    def prop_number(self):
-        return self.number
-
-    def __str__(self):
-        return F'{self.number}'
-
-
-class RangeFilterModel(models.Model):
-    number = models.IntegerField(null=True)
-
-    @property
-    def prop_number(self):
-        return self.number
-
-    def __str__(self):
-        return F'{self.number}'
-
-
 class BooleanFilterModel(models.Model):
     is_true = models.BooleanField(null=True)
 
@@ -79,6 +57,17 @@ class CharFilterModel(models.Model):
 
     def __str__(self):
         return F'{self.name} ({self.id})'
+
+
+class ChoiceFilterModel(models.Model):
+    number = models.IntegerField(null=True)
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    def __str__(self):
+        return F'{self.number}'
 
 
 class DateFilterModel(models.Model):
@@ -161,6 +150,28 @@ class IsoDateTimeFromToRangeFilterModel(models.Model):
 
     def __str__(self):
         return F'{self.date_time} ({self.id})'
+
+
+class NumberFilterModel(models.Model):
+    number = models.IntegerField(null=True)
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    def __str__(self):
+        return F'{self.number}'
+
+
+class RangeFilterModel(models.Model):
+    number = models.IntegerField(null=True)
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    def __str__(self):
+        return F'{self.number}'
 
 
 class TimeFilterModel(models.Model):
