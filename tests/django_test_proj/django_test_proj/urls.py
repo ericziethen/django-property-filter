@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
     path('boolean_filter/', views.BooleanFilterView.as_view(), name='boolean_filter'),
     path('char_filter/', views.CharFilterView.as_view(), name='char_filter'),
+    path('choice_filter/', views.ChoiceFilterView.as_view(), name='choice_filter'),
     path('date_filter/', views.DateFilterView.as_view(), name='date_filter'),
     path('date_from_to_range_filter/', views.DateFromToRangeFilterView.as_view(), name='date_from_to_range_filter'),
     path('date_time_filter/', views.DateTimeFilterView.as_view(), name='date_time_filter'),

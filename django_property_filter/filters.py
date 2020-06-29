@@ -5,6 +5,7 @@ import datetime
 from django_filters.filters import (
     BooleanFilter,
     CharFilter,
+    ChoiceFilter,
     DateFilter,
     DateFromToRangeFilter,
     DateTimeFilter,
@@ -69,10 +70,6 @@ class PropertyBaseFilterMixin():
         return compare_by_lookup_expression(self.lookup_expr, lookup_value, property_value)
 
 
-class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
-    """Adding Property Support to NumberFilter."""
-
-
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
     """Adding Property Support to BooleanFilter."""
 
@@ -81,6 +78,10 @@ class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
 
 class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
     """Adding Property Support to BooleanFilter."""
+
+
+class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
+    """Adding Property Support to ChoiceFilter."""
 
 
 class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
@@ -145,6 +146,10 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
     """Adding Property Support to IsoDateTimeFromToRangeFilter."""
 
     supported_lookups = ['range']
+
+
+class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
+    """Adding Property Support to NumberFilter."""
 
 
 class PropertyRangeFilter(PropertyBaseFilterMixin, RangeFilter):

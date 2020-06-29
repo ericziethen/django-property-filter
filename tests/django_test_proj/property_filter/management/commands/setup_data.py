@@ -73,7 +73,7 @@ class Command(BaseCommand):
     def setup_choice_filter_model(self):
         print('Setup ChoiceFilterModel')
 
-        for num in range(21):
+        for num in range(11):
             ChoiceFilterModel.objects.update_or_create(number=num)
 
     def setup_date_filter_model(self):
