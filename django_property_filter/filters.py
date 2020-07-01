@@ -174,3 +174,8 @@ class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
     """Adding Property Support to UUIDFilter."""
 
     supported_lookups = ['exact']
+
+
+EXPLICIST_ONLY_FILTERS = [
+    PropertyChoiceFilter,
+]

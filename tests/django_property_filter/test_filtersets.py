@@ -1,7 +1,11 @@
 
 import pytest
 
-from django_property_filter import PropertyFilterSet, PropertyNumberFilter
+from django_property_filter import (
+    PropertyFilterSet,
+    PropertyChoiceFilter,
+    PropertyNumberFilter,
+)
 
 from property_filter.models import (
     Product,
@@ -90,3 +94,18 @@ def test_invalid_implicit_lookup_invalid_list():
 
     with pytest.raises(ValueError):
         Fs({'prop_number': 5}, queryset=RangeFilterModel.objects.all())
+
+def test_disallowed_implicid_filter_created():
+
+    class Fs(PropertyFilterSet):
+
+        class Meta:
+            model = Product
+            exclude = ['name', 'price', 'del_line']
+            property_fields = [
+                ('prop_name', PropertyChoiceFilter, ['exact'])
+                ]
+
+    with pytest.raises(ValueError):
+        Fs({'prop_name': '5'}, queryset=Product.objects.all())
+
