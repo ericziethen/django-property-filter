@@ -110,7 +110,47 @@ class PropertyCharFilterSet(PropertyFilterSet):
         add_supported_filters(self.filters, CharFilter, 'name', PropertyCharFilter.supported_lookups)
 
 
+
+
+
+
+
+
+
+
+
+
+
+class ERIcChoiceFilter(ChoiceFilter):
+
+    def filter(self, qs, value):
+        print('ERIcChoiceFilter.filter()', type(value), value)
+        if value != self.null_value:
+            eric_qs = super().filter(qs, value)
+            print('  qs-filtered', eric_qs)
+            return eric_qs
+
+        qs = self.get_method(qs)(**{'%s__%s' % (self.field_name, self.lookup_expr): None})
+        print('  self.distinct', self.distinct)
+        print('  qs-filtered', qs)
+        print('  qs-filtered-distinct', qs.distinct())
+        print('  self.get_method(qs)', self.get_method(qs))
+        return qs.distinct() if self.distinct else qs
+
+
+
+
+
+
+
+
+
 class PropertyChoiceFilterSet(PropertyFilterSet):
+
+
+ 
+
+
 
     class Meta:
         model = models.ChoiceFilterModel
@@ -119,7 +159,12 @@ class PropertyChoiceFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         choices = [(c.number, F'Number: {c.number}') for c in models.ChoiceFilterModel.objects.order_by('id')]
-        add_supported_filters(self.filters, ChoiceFilter, 'number', PropertyChoiceFilter.supported_lookups, choices=choices)
+        choices = [
+            (1, 'Number 1'),
+            (True, 'Boolean True'),
+            (1.1, '1.1'),
+        ]
+        add_supported_filters(self.filters, ERIcChoiceFilter, 'number', PropertyChoiceFilter.supported_lookups, choices=choices)
         add_supported_property_filters(self.filters, PropertyChoiceFilter, 'prop_number', PropertyChoiceFilter.supported_lookups, choices=choices)
 
 
