@@ -31,11 +31,11 @@ def fixture_property_choice_filter():
     ChoiceFilterModel.objects.create(id=6, number=4)
     ChoiceFilterModel.objects.create(id=7, number=10)
     ChoiceFilterModel.objects.create(id=8, number=20)
-    ChoiceFilterModel.objects.create(id=9)
+    #ChoiceFilterModel.objects.create(id=9)
 
 TEST_LOOKUPS = [
     #('exact', '-1', [-1]),
-    #('exact', -1, [-1]),
+    ('exact', '15', []),
     #('exact', 0, [0]),
     #('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
     #('exact', 15, []),
@@ -50,7 +50,7 @@ TEST_LOOKUPS = [
     #('gt', 4, [8, 9, 10, 11, 12, 13]),
     #('gte', 4, [6, 7, 8, 9, 10, 11, 12, 13]),
     #('gte', 21, []),
-    ('lt', 2, [-1, 0, 1]),
+    #('lt', 2, [-1, 0, 1]),
     #('lt', 4, [-1, 0, 1, 2, 3, 4, 5]),
     #('lte', 0.9, [-1, 0]),
     #('lte', 4, [-1, 0, 1, 2, 3, 4, 5, 6, 7]),
@@ -73,7 +73,6 @@ TEST_LOOKUPS = [
 def test_lookup_xpr(fixture_property_choice_filter, lookup_xpr, lookup_val, result_list):
 
     choices = [(c.number, F'Number: {c.number}') for c in ChoiceFilterModel.objects.order_by('id')]
-
     # Test using Normal Django Filter
     class ChoiceFilterSet(FilterSet):
         number = ChoiceFilter(field_name='number', lookup_expr=lookup_xpr, choices=choices)

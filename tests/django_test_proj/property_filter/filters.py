@@ -119,6 +119,8 @@ class PropertyChoiceFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         choices = [(c.number, F'Number: {c.number}') for c in models.ChoiceFilterModel.objects.order_by('id')]
+        choices.append((-1, 'Number: -1'))
+        choices.append((666, 'Number: 666'))
         add_supported_filters(self.filters, ChoiceFilter, 'number', PropertyChoiceFilter.supported_lookups, choices=choices)
         add_supported_property_filters(self.filters, PropertyChoiceFilter, 'prop_number', PropertyChoiceFilter.supported_lookups, choices=choices)
 
