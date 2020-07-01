@@ -55,6 +55,17 @@ def add_supported_filters(filter_list, filter_class, field_name, expression_list
         add_filter(filter_list, filter_class, field_name, lookup, choices=choices)
 
 
+def add_property_filter(filter_list, filter_class, property_fld_name, lookup_expr, *, choices):
+    filter_name = property_fld_name + lookup_expr
+    filter_list[filter_name] = filter_class(
+        property_fld_name=property_fld_name, lookup_expr=lookup_expr, choices=choices)
+
+
+def add_supported_property_filters(filter_list, filter_class, property_fld_name, expression_list, *, choices=None):
+    for lookup in expression_list:
+        add_property_filter(filter_list, filter_class, property_fld_name, lookup, choices=choices)
+
+
 class PropertyNumberFilterSet(PropertyFilterSet):
 
     class Meta:
@@ -97,19 +108,11 @@ class PropertyChoiceFilterSet(PropertyFilterSet):
         model = models.ChoiceFilterModel
         exclude = ['number']
 
-
-        TODO - Add Implementation to support Choices to be passed
-            - add a test case to test_filtersets.py to pass in choices
-            - add code to filtersets.py to handle optional choices parameter in tuple
-            - add choices in here
-
-
-        property_fields = [('prop_number', PropertyChoiceFilter, PropertyChoiceFilter.supported_lookups)]
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         choices = [(c.number, F'Number: {c.number}') for c in models.ChoiceFilterModel.objects.order_by('id')]
         add_supported_filters(self.filters, ChoiceFilter, 'number', PropertyChoiceFilter.supported_lookups, choices=choices)
+        add_supported_property_filters(self.filters, PropertyChoiceFilter, 'prop_number', PropertyChoiceFilter.supported_lookups, choices=choices)
 
 
 class PropertyDateFilterSet(PropertyFilterSet):
