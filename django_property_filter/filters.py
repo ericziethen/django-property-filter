@@ -80,10 +80,6 @@ class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
     """Adding Property Support to BooleanFilter."""
 
 
-
-
-
-
 class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
     """Adding Property Support to ChoiceFilter."""
 
@@ -96,9 +92,8 @@ class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
             try:
                 convert_lookup_value = type(property_value)(lookup_value)
             except (ValueError, TypeError):
-                print(F'Failed to convert "{lookup_value}" to type "{type(property_value)}"')
+                pass
             else:
-                print(F'Converted "{lookup_value}" to type "{type(property_value)}"')
                 new_lookup_value = convert_lookup_value
 
         return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
