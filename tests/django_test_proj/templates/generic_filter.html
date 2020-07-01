@@ -12,9 +12,9 @@
 
         <div class="row">
             {% for filt in filter.form %}
-            <div class="col-md-3 border border-dark">{{ filt.label }}{{ filt }}</div>
+            <div class="col-md-2 border border-dark">{{ filt.label }}{{ filt }}</div>
                 <!-- if last column in row -->
-                {% if forloop.counter|divisibleby:"3" and not forloop.last %}
+                {% if forloop.counter|divisibleby:"6" and not forloop.last %}
                 </div><div class="row">
                 {% endif %}
             {% endfor %}
@@ -31,7 +31,7 @@
         {% for obj in filter.qs %}
         <div class="col-md-3 border border-dark">{{ obj }}</div>
             <!-- if last column in row -->
-            {% if forloop.counter|divisibleby:"3" and not forloop.last %}
+            {% if forloop.counter|divisibleby:"4" and not forloop.last %}
             </div><div class="row">
             {% endif %}
         {% endfor %}
