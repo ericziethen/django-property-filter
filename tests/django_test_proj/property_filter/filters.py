@@ -47,8 +47,12 @@ from property_filter import models
 def add_filter(filter_list, filter_class, field_name, lookup_expr, *, choices):
     filter_name = field_name + lookup_expr
     label = F'{field_name} [{lookup_expr}]'
+
+    kwargs = {}
+    if choices is not None:
+        kwargs['choices'] = choices
     filter_list[filter_name] = filter_class(label=label, field_name=field_name,
-                                            lookup_expr=lookup_expr, choices=choices)
+                                            lookup_expr=lookup_expr, **kwargs)
 
 def add_supported_filters(filter_list, filter_class, field_name, expression_list, *, choices=None):
     for lookup in expression_list:
@@ -57,8 +61,12 @@ def add_supported_filters(filter_list, filter_class, field_name, expression_list
 
 def add_property_filter(filter_list, filter_class, property_fld_name, lookup_expr, *, choices):
     filter_name = property_fld_name + lookup_expr
+
+    kwargs = {}
+    if choices is not None:
+        kwargs['choices'] = choices
     filter_list[filter_name] = filter_class(
-        property_fld_name=property_fld_name, lookup_expr=lookup_expr, choices=choices)
+        property_fld_name=property_fld_name, lookup_expr=lookup_expr, **kwargs)
 
 
 def add_supported_property_filters(filter_list, filter_class, property_fld_name, expression_list, *, choices=None):
