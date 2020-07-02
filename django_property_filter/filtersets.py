@@ -2,7 +2,7 @@
 
 
 from django_filters import Filter, FilterSet
-from django_property_filter import EXPLICIST_ONLY_FILTERS
+from django_property_filter.filters import EXPLICIST_ONLY_FILTERS
 
 
 class PropertyFilterSet(FilterSet):
