@@ -97,6 +97,17 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
     prop_filter_fs = PropertyNumberFilterSet({'prop_number': lookup_val}, queryset=NumberFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
+    # Compare with Explicit Filter using a normal PropertyFilterSet
+    class PropertyNumberFilterSet(PropertyFilterSet):
+        prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+
+        class Meta:
+            model = NumberFilterModel
+            fields = ['prop_number']
+
+    prop_filter_fs = PropertyNumberFilterSet({'prop_number': lookup_val}, queryset=NumberFilterModel.objects.all())
+    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 

@@ -81,6 +81,17 @@ def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, proper
     prop_filter_fs = PropertyCharFilterSet({'prop_name': lookup_val}, queryset=CharFilterModel.objects.all())
     assert set(prop_filter_fs.qs.values_list('id', flat=True)) == set(property_result_list)
 
+    # Compare with Explicit Filter using a PropertyFilterSet
+    class PropertyCharFilterSet(PropertyFilterSet):
+        prop_name = PropertyCharFilter(property_fld_name='prop_name', lookup_expr=lookup_xpr)
+
+        class Meta:
+            model = CharFilterModel
+            fields = ['prop_name']
+
+    prop_filter_fs = PropertyCharFilterSet({'prop_name': lookup_val}, queryset=CharFilterModel.objects.all())
+    assert set(prop_filter_fs.qs.values_list('id', flat=True)) == set(property_result_list)
+
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 

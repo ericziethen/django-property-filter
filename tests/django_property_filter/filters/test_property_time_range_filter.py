@@ -69,6 +69,17 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
     prop_filter_fs = PropertyTimeRangeFilterSet({'prop_time_after': lookup_val[0], 'prop_time_before': lookup_val[1]}, queryset=TimeRangeFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
+    # Compare with Explicit Filter using a PropertyFilterSet
+    class PropertyTimeRangeFilterSet(PropertyFilterSet):
+        prop_time = PropertyTimeRangeFilter(property_fld_name='prop_time', lookup_expr=lookup_xpr)
+
+        class Meta:
+            model = TimeRangeFilterModel
+            fields = ['prop_time']
+
+    prop_filter_fs = PropertyTimeRangeFilterSet({'prop_time_after': lookup_val[0], 'prop_time_before': lookup_val[1]}, queryset=TimeRangeFilterModel.objects.all())
+    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 

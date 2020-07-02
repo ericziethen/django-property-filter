@@ -61,6 +61,17 @@ def test_lookup_xpr(fixture_property_boolean_filter, lookup_xpr, lookup_val, res
     prop_filter_fs = PropertyBooleanFilterSet({'prop_is_true': lookup_val}, queryset=BooleanFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
+    # Compare with Explicit Filter using a PropertyFilterset
+    class PropertyBooleanFilterSet(PropertyFilterSet):
+        prop_is_true = PropertyBooleanFilter(property_fld_name='prop_is_true', lookup_expr=lookup_xpr)
+
+        class Meta:
+            model = BooleanFilterModel
+            fields = ['prop_is_true']
+
+    prop_filter_fs = PropertyBooleanFilterSet({'prop_is_true': lookup_val}, queryset=BooleanFilterModel.objects.all())
+    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
