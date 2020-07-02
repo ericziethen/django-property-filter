@@ -71,6 +71,18 @@ Used instead of CharFilter for property filtering.
 
 For supported lookups see :ref:`base_lookups`
 
+``PropertyChoiceFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of CoiceFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
+Because the choices are passed as arguments this filter can only be created
+explicitely. For example::
+
+    number = PropertyChoiceFilter(property_fld_name='number', lookup_expr='exact', choices=LOOKUP_CHOICES)
+
 ``PropertyDateFilter``
 ~~~~~~~~~~~~~~~~~~~~~~
 
