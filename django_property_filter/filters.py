@@ -88,7 +88,7 @@ class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
         new_lookup_value = lookup_value
         new_property_value = property_value
 
-        if type(lookup_value) != type(property_value):
+        if type(lookup_value) != type(property_value):  # pylint: disable=unidiomatic-typecheck
             try:
                 convert_lookup_value = type(property_value)(lookup_value)
             except (ValueError, TypeError):
