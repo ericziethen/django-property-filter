@@ -1,14 +1,5 @@
 
 
-
-
-
-# TODO MAKE SURE TO TEST 
-# TODO - compare datetime with date objects
-# TODO - compare datetime with datetime objects
-# TODO - compare date with date objects
-# TODO - compare date with datetime objects
-
 import datetime
 
 import pytest
@@ -101,6 +92,18 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
     prop_filter_fs = PropertyDateFromToRangeFilterSet({'prop_date_after': lookup_val[0], 'prop_date_before': lookup_val[1]}, queryset=DateFromToRangeFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
+    # Compare with Explicit Filter using a PropertyFilterSet
+    class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
+        prop_date = PropertyDateFromToRangeFilter(property_fld_name='prop_date', lookup_expr=lookup_xpr)
+
+        class Meta:
+            model = DateFromToRangeFilterModel
+            fields = ['prop_date']
+
+    prop_filter_fs = PropertyDateFromToRangeFilterSet({'prop_date_after': lookup_val[0], 'prop_date_before': lookup_val[1]}, queryset=DateFromToRangeFilterModel.objects.all())
+    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+
+
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
@@ -153,6 +156,18 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
 
     prop_filter_fs = PropertyDateFromToRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=DateFromToRangeFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+
+    # Compare with Explicit Filter using a PropertyFilterSet
+    class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
+        prop_date_time = PropertyDateFromToRangeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+
+        class Meta:
+            model = DateFromToRangeFilterModel
+            fields = ['prop_date_time']
+
+    prop_filter_fs = PropertyDateFromToRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=DateFromToRangeFilterModel.objects.all())
+    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):

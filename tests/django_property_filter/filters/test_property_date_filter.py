@@ -66,6 +66,17 @@ def test_lookup_xpr(fixture_property_date_filter, lookup_xpr, lookup_val, result
     prop_filter_fs = PropertyDateFilterSet({'prop_date': lookup_val}, queryset=DateFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
+    # Compare with Explicit Filter using a PropertyFilterSet
+    class PropertyDateFilterSet(PropertyFilterSet):
+        prop_date = PropertyDateFilter(property_fld_name='prop_date', lookup_expr=lookup_xpr)
+
+        class Meta:
+            model = DateFilterModel
+            fields = ['prop_date']
+
+    prop_filter_fs = PropertyDateFilterSet({'prop_date': lookup_val}, queryset=DateFilterModel.objects.all())
+    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
 
