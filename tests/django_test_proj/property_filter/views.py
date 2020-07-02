@@ -7,6 +7,7 @@ from django_filters.views import FilterView
 from property_filter.models import (
     BooleanFilterModel,
     CharFilterModel,
+    ChoiceFilterModel,
     DateFilterModel,
     DateFromToRangeFilterModel,
     DateTimeFilterModel,
@@ -37,6 +38,12 @@ class CharFilterView(FilterView):
     model = CharFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyCharFilterSet
+
+
+class ChoiceFilterView(FilterView):
+    model = ChoiceFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyChoiceFilterSet
 
 
 class DateFilterView(FilterView):

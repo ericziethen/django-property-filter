@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath(R'..\..'))
 from django_filters.filters import (
     BooleanFilter,
     CharFilter,
+    ChoiceFilter,
     DateFilter,
     DateFromToRangeFilter,
     DateTimeFilter,
@@ -25,6 +26,7 @@ from django_property_filter import (
     PropertyFilterSet,
     PropertyBooleanFilter,
     PropertyCharFilter,
+    PropertyChoiceFilter,
     PropertyDateFilter,
     PropertyDateFromToRangeFilter,
     PropertyDateTimeFilter,
@@ -42,14 +44,34 @@ from django_property_filter import (
 from property_filter import models
 
 
-def add_filter(filter_list, filter_class, field_name, lookup_expr):
+def add_filter(filter_list, filter_class, field_name, lookup_expr, *, choices):
     filter_name = field_name + lookup_expr
     label = F'{field_name} [{lookup_expr}]'
-    filter_list[filter_name] = filter_class(label=label, field_name=field_name, lookup_expr=lookup_expr)
 
-def add_supported_filters(filter_list, filter_class, field_name, expression_list):
+    kwargs = {}
+    if choices is not None:
+        kwargs['choices'] = choices
+    filter_list[filter_name] = filter_class(label=label, field_name=field_name,
+                                            lookup_expr=lookup_expr, **kwargs)
+
+def add_supported_filters(filter_list, filter_class, field_name, expression_list, *, choices=None):
     for lookup in expression_list:
-        add_filter(filter_list, filter_class, field_name, lookup)
+        add_filter(filter_list, filter_class, field_name, lookup, choices=choices)
+
+
+def add_property_filter(filter_list, filter_class, property_fld_name, lookup_expr, *, choices):
+    filter_name = property_fld_name + lookup_expr
+
+    kwargs = {}
+    if choices is not None:
+        kwargs['choices'] = choices
+    filter_list[filter_name] = filter_class(
+        property_fld_name=property_fld_name, lookup_expr=lookup_expr, **kwargs)
+
+
+def add_supported_property_filters(filter_list, filter_class, property_fld_name, expression_list, *, choices=None):
+    for lookup in expression_list:
+        add_property_filter(filter_list, filter_class, property_fld_name, lookup, choices=choices)
 
 
 class PropertyNumberFilterSet(PropertyFilterSet):
@@ -86,6 +108,21 @@ class PropertyCharFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, CharFilter, 'name', PropertyCharFilter.supported_lookups)
+
+
+class PropertyChoiceFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.ChoiceFilterModel
+        exclude = ['number']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = [(c.number, F'Number: {c.number}') for c in models.ChoiceFilterModel.objects.order_by('id')]
+        choices.append((-1, 'Number: -1'))
+        choices.append((666, 'Number: 666'))
+        add_supported_filters(self.filters, ChoiceFilter, 'number', PropertyChoiceFilter.supported_lookups, choices=choices)
+        add_supported_property_filters(self.filters, PropertyChoiceFilter, 'prop_number', PropertyChoiceFilter.supported_lookups, choices=choices)
 
 
 class PropertyDateFilterSet(PropertyFilterSet):

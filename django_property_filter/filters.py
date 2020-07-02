@@ -5,6 +5,7 @@ import datetime
 from django_filters.filters import (
     BooleanFilter,
     CharFilter,
+    ChoiceFilter,
     DateFilter,
     DateFromToRangeFilter,
     DateTimeFilter,
@@ -69,10 +70,6 @@ class PropertyBaseFilterMixin():
         return compare_by_lookup_expression(self.lookup_expr, lookup_value, property_value)
 
 
-class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
-    """Adding Property Support to NumberFilter."""
-
-
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
     """Adding Property Support to BooleanFilter."""
 
@@ -81,6 +78,25 @@ class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
 
 class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
     """Adding Property Support to BooleanFilter."""
+
+
+class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
+    """Adding Property Support to ChoiceFilter."""
+
+    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+
+        new_lookup_value = lookup_value
+        new_property_value = property_value
+
+        if type(lookup_value) != type(property_value):  # pylint: disable=unidiomatic-typecheck
+            try:
+                convert_lookup_value = type(property_value)(lookup_value)
+            except (ValueError, TypeError):
+                pass
+            else:
+                new_lookup_value = convert_lookup_value
+
+        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
 
 
 class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
@@ -147,6 +163,10 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
     supported_lookups = ['range']
 
 
+class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
+    """Adding Property Support to NumberFilter."""
+
+
 class PropertyRangeFilter(PropertyBaseFilterMixin, RangeFilter):
     """Adding Property Support to RangeFilter."""
 
@@ -169,3 +189,8 @@ class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
     """Adding Property Support to UUIDFilter."""
 
     supported_lookups = ['exact']
+
+
+EXPLICIST_ONLY_FILTERS = [
+    PropertyChoiceFilter,
+]

@@ -59,7 +59,6 @@ def test_lookup_xpr(fixture_property_date_time_filter, lookup_xpr, lookup_val, r
             fields = ['date_time']
 
     filter_fs = DateTimeFilterSet({'date_time': lookup_val}, queryset=DateTimeFilterModel.objects.all())
-    print(filter_fs.qs)
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Explicit Filter using a normal Filterset

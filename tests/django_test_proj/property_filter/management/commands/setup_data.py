@@ -9,6 +9,7 @@ from django.utils.timezone import make_aware
 from property_filter.models import (
     BooleanFilterModel,
     CharFilterModel,
+    ChoiceFilterModel,
     DateFilterModel,
     DateFromToRangeFilterModel,
     DateTimeFilterModel,
@@ -31,6 +32,7 @@ class Command(BaseCommand):
         with transaction.atomic():
             self.setup_boolean_filter_model()
             self.setup_char_filter_model()
+            self.setup_choice_filter_model()
             self.setup_date_filter_model()
             self.setup_date_from_to_range_filter_model()
             self.setup_date_time_filter_model()
@@ -67,6 +69,21 @@ class Command(BaseCommand):
         CharFilterModel.objects.update_or_create(id=6, name='Tom')
         CharFilterModel.objects.update_or_create(id=7)
         CharFilterModel.objects.update_or_create(id=8)
+
+    def setup_choice_filter_model(self):
+        print('Setup ChoiceFilterModel')
+
+        ChoiceFilterModel.objects.create(id=-1, number=-1)
+        ChoiceFilterModel.objects.create(id=0, number=0)
+        ChoiceFilterModel.objects.create(id=1, number=1)
+        ChoiceFilterModel.objects.create(id=2, number=2)
+        ChoiceFilterModel.objects.create(id=3, number=2)
+        ChoiceFilterModel.objects.create(id=4, number=2)
+        ChoiceFilterModel.objects.create(id=5, number=3)
+        ChoiceFilterModel.objects.create(id=6, number=4)
+        ChoiceFilterModel.objects.create(id=7, number=10)
+        ChoiceFilterModel.objects.create(id=8, number=20)
+        ChoiceFilterModel.objects.create(id=9)
 
     def setup_date_filter_model(self):
         print('Setup DateFilterModel')
