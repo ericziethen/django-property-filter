@@ -18,6 +18,7 @@ def test_unsupported_lookup():
     with pytest.raises(ValueError):
         PropertyChoiceFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
 
+
 LOOKUP_CHOICES = []
 @pytest.fixture
 def fixture_property_choice_filter():
@@ -41,15 +42,13 @@ def fixture_property_choice_filter():
 TEST_LOOKUPS = [
     ('exact', '-1', [-1]),
     ('exact', '666', []),
-    #('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
-    #('exact', 15, []),
-    #('exact', 5, [8, 9, 10, 11]),
-    #('iexact', 15, []),
-    #('iexact', 5, [8, 9, 10, 11]),
-    #('contains', 100, []),
-    #('contains', 4, [6, 7]),
-    #('icontains', 100, []),
-    #('icontains', 4, [6, 7]),
+    ('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),  # None returns full queryset
+    ('iexact', '-1', [-1]),
+    ('iexact', '666', []),
+    ('contains', 2, [2, 3, 4, 8]),
+    ('contains', 666, []),
+    ('icontains', 2, [2, 3, 4, 8]),
+    ('icontains', 666, []),
     #('gt', 20, []),
     #('gt', 4, [8, 9, 10, 11, 12, 13]),
     #('gte', 4, [6, 7, 8, 9, 10, 11, 12, 13]),
