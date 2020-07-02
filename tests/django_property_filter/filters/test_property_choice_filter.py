@@ -18,7 +18,7 @@ def test_unsupported_lookup():
     with pytest.raises(ValueError):
         PropertyChoiceFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
 
-
+LOOKUP_CHOICES = []
 @pytest.fixture
 def fixture_property_choice_filter():
     ChoiceFilterModel.objects.create(id=-1, number=-1)
@@ -31,12 +31,16 @@ def fixture_property_choice_filter():
     ChoiceFilterModel.objects.create(id=6, number=4)
     ChoiceFilterModel.objects.create(id=7, number=10)
     ChoiceFilterModel.objects.create(id=8, number=20)
-    #ChoiceFilterModel.objects.create(id=9)
+    ChoiceFilterModel.objects.create(id=9)
+
+    global LOOKUP_CHOICES
+    LOOKUP_CHOICES = [(c.number, F'Number: {c.number}') for c in ChoiceFilterModel.objects.order_by('id')]
+    LOOKUP_CHOICES.append((666, 'Number: 666'))
+
 
 TEST_LOOKUPS = [
-    #('exact', '-1', [-1]),
-    ('exact', '15', []),
-    #('exact', 0, [0]),
+    ('exact', '-1', [-1]),
+    ('exact', '666', []),
     #('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
     #('exact', 15, []),
     #('exact', 5, [8, 9, 10, 11]),
@@ -72,10 +76,10 @@ TEST_LOOKUPS = [
 @pytest.mark.debug
 def test_lookup_xpr(fixture_property_choice_filter, lookup_xpr, lookup_val, result_list):
 
-    choices = [(c.number, F'Number: {c.number}') for c in ChoiceFilterModel.objects.order_by('id')]
+
     # Test using Normal Django Filter
     class ChoiceFilterSet(FilterSet):
-        number = ChoiceFilter(field_name='number', lookup_expr=lookup_xpr, choices=choices)
+        number = ChoiceFilter(field_name='number', lookup_expr=lookup_xpr, choices=LOOKUP_CHOICES)
 
         class Meta:
             model = ChoiceFilterModel
@@ -86,7 +90,7 @@ def test_lookup_xpr(fixture_property_choice_filter, lookup_xpr, lookup_val, resu
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyChoiceFilterSet(FilterSet):
-        prop_number = PropertyChoiceFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr, choices=choices)
+        prop_number = PropertyChoiceFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr, choices=LOOKUP_CHOICES)
 
         class Meta:
             model = ChoiceFilterModel

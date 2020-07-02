@@ -73,8 +73,17 @@ class Command(BaseCommand):
     def setup_choice_filter_model(self):
         print('Setup ChoiceFilterModel')
 
-        for num in range(11):
-            ChoiceFilterModel.objects.update_or_create(number=num)
+        ChoiceFilterModel.objects.create(id=-1, number=-1)
+        ChoiceFilterModel.objects.create(id=0, number=0)
+        ChoiceFilterModel.objects.create(id=1, number=1)
+        ChoiceFilterModel.objects.create(id=2, number=2)
+        ChoiceFilterModel.objects.create(id=3, number=2)
+        ChoiceFilterModel.objects.create(id=4, number=2)
+        ChoiceFilterModel.objects.create(id=5, number=3)
+        ChoiceFilterModel.objects.create(id=6, number=4)
+        ChoiceFilterModel.objects.create(id=7, number=10)
+        ChoiceFilterModel.objects.create(id=8, number=20)
+        ChoiceFilterModel.objects.create(id=9)
 
     def setup_date_filter_model(self):
         print('Setup DateFilterModel')

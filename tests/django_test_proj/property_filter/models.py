@@ -67,7 +67,7 @@ class ChoiceFilterModel(models.Model):
         return self.number
 
     def __str__(self):
-        return F'{self.number}'
+        return F'{self.number} ({self.id})'
 
 
 class DateFilterModel(models.Model):
