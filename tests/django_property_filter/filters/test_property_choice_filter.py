@@ -45,34 +45,33 @@ TEST_LOOKUPS = [
     ('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),  # None returns full queryset
     ('iexact', '-1', [-1]),
     ('iexact', '666', []),
-    ('contains', 2, [2, 3, 4, 8]),
-    ('contains', 666, []),
-    ('icontains', 2, [2, 3, 4, 8]),
-    ('icontains', 666, []),
-    #('gt', 20, []),
-    #('gt', 4, [8, 9, 10, 11, 12, 13]),
-    #('gte', 4, [6, 7, 8, 9, 10, 11, 12, 13]),
-    #('gte', 21, []),
-    #('lt', 2, [-1, 0, 1]),
-    #('lt', 4, [-1, 0, 1, 2, 3, 4, 5]),
-    #('lte', 0.9, [-1, 0]),
-    #('lte', 4, [-1, 0, 1, 2, 3, 4, 5, 6, 7]),
-    #('startswith', 7, []),
-    #('startswith', 2, [2, 3, 4, 13]),
-    #('startswith', 3, [5]),
-    #('istartswith', 7, []),
-    #('istartswith', 3, [5]),
-    #('endswith', 7, []),
-    #('endswith', 0, [0, 12, 13]),
-    #('endswith', 3, [5]),
-    #('iendswith', 7, []),
-    #('iendswith', 3, [5])
+    ('contains', '2', [2, 3, 4, 8]),
+    ('contains', '666', []),
+    ('icontains', '2', [2, 3, 4, 8]),
+    ('icontains', '666', []),
+    ('gt', '20', []),
+    ('gt', '2', [5, 6, 7, 8]),
+    ('gte', '20', [8]),
+    ('gte', '2', [2, 3, 4, 5, 6, 7, 8]),
+    ('lt', '2', [-1, 0, 1]),
+    ('lt', '-1', []),
+    ('lte', '2', [-1, 0, 1, 2, 3, 4]),
+    ('lte', '-1', [-1]),
+    ('startswith', '666', []),
+    ('startswith', '2', [2, 3, 4, 8]),
+    ('istartswith', '666', []),
+    ('istartswith', '2', [2, 3, 4, 8]),
+    ('endswith', '666', []),
+    ('endswith', '0', [0, 7, 8]),
+    ('endswith', '3', [5]),
+    ('iendswith', '666', []),
+    ('iendswith', '0', [0, 7, 8]),
+    ('iendswith', '3', [5]),
 ]
 
 
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
-@pytest.mark.debug
 def test_lookup_xpr(fixture_property_choice_filter, lookup_xpr, lookup_val, result_list):
 
 
