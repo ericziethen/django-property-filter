@@ -1,6 +1,7 @@
 """Filters to extend Django-FIlter filters to support property filtering."""
 
 import datetime
+import logging
 
 from django_filters.filters import (
     BooleanFilter,
@@ -24,6 +25,8 @@ from django_property_filter.utils import (
     get_value_for_db_field,
     compare_by_lookup_expression
 )
+
+logger = logging.getLogger(__name__)
 
 
 class PropertyBaseFilterMixin():
@@ -67,7 +70,14 @@ class PropertyBaseFilterMixin():
 
     def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
         """Compare the lookup value with the property value."""
-        return compare_by_lookup_expression(self.lookup_expr, lookup_value, property_value)
+        result = False
+        try:
+            result = compare_by_lookup_expression(self.lookup_expr, lookup_value, property_value)
+        except (TypeError) as error:
+            logging.info(F'Error during comparing property value "{property_value}" with'
+                         F'filter value "{lookup_value}" with error: "{error}"')
+
+        return result
 
 
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
