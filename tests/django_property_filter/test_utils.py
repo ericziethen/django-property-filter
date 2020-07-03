@@ -120,7 +120,7 @@ def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, property_valu
     assert not compare_by_lookup_expression(lookup_xpr, lookup_val, property_value)
 
 
-
+'''
 #TODO
 TODO - Define the main types we are interested in, most common test_compare_by_lookup_expression_different_types
 TODO - Include None case
@@ -146,7 +146,7 @@ LOOKUP_DIFFERENT_TYPES = [
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value, expected_result', LOOKUP_DIFFERENT_TYPES)
 def test_compare_by_lookup_expression_different_types(lookup_xpr, lookup_val, property_value, expected_result):
     assert compare_by_lookup_expression(lookup_xpr, lookup_val, property_value) == expected_result
-
+'''
 
 
 

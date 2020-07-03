@@ -1,5 +1,4 @@
 
-
 import pytest
 from django_filters import FilterSet, ChoiceFilter
 

@@ -1,4 +1,5 @@
 
+import logging
 
 from django_property_filter import PropertyNumberFilter
 
@@ -9,3 +10,13 @@ def test_label_set():
 
     my_filter_no_label = PropertyNumberFilter(property_fld_name='field_name', lookup_expr='gte')
     assert my_filter_no_label.label == 'field_name [gte]'
+
+def test_handle_invalid_type_comparison(caplog):
+
+    num_filter = PropertyNumberFilter(property_fld_name='field_name', lookup_expr='lt')
+
+    with caplog.at_level(logging.DEBUG):
+        result = num_filter._compare_lookup_with_qs_entry('text', 15)
+
+        assert not result
+        assert 'Error during comparing ' in caplog.text
