@@ -133,8 +133,11 @@ TYPES CONFIRMED SO FAR COMING FROM WEB
     - datetime.time
     - datetime.timedelta
     - decimal.Decimal
-    - uuid.UUID
+    - uuid.UUID 
 
+    -- MAYBES
+        - float
+        
 
 LOOKUP_DIFFERENT_TYPES = [
     (),
