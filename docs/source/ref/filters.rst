@@ -36,6 +36,15 @@ excludes specifically.
     Django-property-filter will behave as normally expected in this case and
     will correctly check for case sensitivity.
 
+.. _invalid-type-comparison:
+
+Invalid Type Comparison
+-----------------------
+
+When the selected Filter Type and comparison is incompatible with the type the
+the property returns that queryset entry will not be a match and an error is
+logged similar to
+    Error during comparing property value "15" withfilter value "text" with error: "'<' not supported between instances of 'int' and 'str'"
 
 .. _core-arguments:
 
