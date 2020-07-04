@@ -81,7 +81,7 @@ class PropertyBaseFilterMixin():
         return result
 
 
-class ChoiceConvertionMixin():
+class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
     """Provide Comparison Convertion for Choice Filters."""
 
     def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
