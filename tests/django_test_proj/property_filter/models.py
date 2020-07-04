@@ -197,14 +197,14 @@ class TimeRangeFilterModel(models.Model):
 
 
 class TypedChoiceFilterModel(models.Model):
-    truth = models.CharField(max_length=32)
+    text = models.CharField(max_length=32)
 
     @property
-    def prop_truth(self):
-        return self.truth
+    def prop_text(self):
+        return self.text
 
     def __str__(self):
-        return F'{self.truth} ({self.id})'
+        return F'{self.text} ({self.id})'
 
 
 class UUIDFilterModel(models.Model):

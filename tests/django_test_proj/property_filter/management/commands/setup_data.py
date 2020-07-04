@@ -224,16 +224,13 @@ class Command(BaseCommand):
     def setup_typed_choice_filter_model(self):
         print('Setup TypedChoiceFilterModel')
 
-        TypedChoiceFilterModel.objects.update_or_create(id=1, truth='True')
-        TypedChoiceFilterModel.objects.update_or_create(id=2, truth='TRUE')
-        TypedChoiceFilterModel.objects.update_or_create(id=3, truth='true')
-        TypedChoiceFilterModel.objects.update_or_create(id=4, truth='yes')
-        TypedChoiceFilterModel.objects.update_or_create(id=5, truth='Not a boolean')
-        TypedChoiceFilterModel.objects.update_or_create(id=6, truth='False')
-        TypedChoiceFilterModel.objects.update_or_create(id=7, truth='FALSE')
-        TypedChoiceFilterModel.objects.update_or_create(id=8, truth='false')
-        TypedChoiceFilterModel.objects.update_or_create(id=9, truth='no')
-        TypedChoiceFilterModel.objects.update_or_create(id=10)
+        TypedChoiceFilterModel.objects.update_or_create(id=1, text='1')
+        TypedChoiceFilterModel.objects.update_or_create(id=2, text='One')
+        TypedChoiceFilterModel.objects.update_or_create(id=3, text='2')
+        TypedChoiceFilterModel.objects.update_or_create(id=4, text='Two')
+        TypedChoiceFilterModel.objects.update_or_create(id=5, text='Not a Number')
+        TypedChoiceFilterModel.objects.update_or_create(id=6, text='3.3')
+        TypedChoiceFilterModel.objects.update_or_create(id=7)
 
     def setup_uuid_filter_model(self):
         print('Setup UUIDFilterModel')
