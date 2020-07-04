@@ -81,18 +81,8 @@ class PropertyBaseFilterMixin():
         return result
 
 
-class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
-    """Adding Property Support to BooleanFilter."""
-
-    supported_lookups = ['exact', 'isnull']
-
-
-class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
-    """Adding Property Support to BooleanFilter."""
-
-
-class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
-    """Adding Property Support to ChoiceFilter."""
+class ChoiceConvertionMixin():
+    """Provide Comparison Convertion for Choice Filters."""
 
     def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
 
@@ -108,6 +98,20 @@ class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
                 new_lookup_value = convert_lookup_value
 
         return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+
+
+class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
+    """Adding Property Support to BooleanFilter."""
+
+    supported_lookups = ['exact', 'isnull']
+
+
+class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
+    """Adding Property Support to BooleanFilter."""
+
+
+class PropertyChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, ChoiceFilter):
+    """Adding Property Support to ChoiceFilter."""
 
 
 class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
@@ -196,32 +200,8 @@ class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
     supported_lookups = ['range']
 
 
-class PropertyTypedChoiceFilter(PropertyBaseFilterMixin, TypedChoiceFilter):
+class PropertyTypedChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, TypedChoiceFilter):
     """Adding Property Support to TypedChoiceFilter."""
-
-
-    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
-
-        new_lookup_value = lookup_value
-        new_property_value = property_value
-
-        if type(lookup_value) != type(property_value):  # pylint: disable=unidiomatic-typecheck
-            try:
-                convert_lookup_value = type(property_value)(lookup_value)
-            except (ValueError, TypeError):
-                pass
-            else:
-                new_lookup_value = convert_lookup_value
-
-        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
-
-
-
-
-
-
-
-
 
 
 class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
