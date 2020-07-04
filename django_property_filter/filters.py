@@ -18,6 +18,7 @@ from django_filters.filters import (
     RangeFilter,
     TimeFilter,
     TimeRangeFilter,
+    TypedChoiceFilter,
     UUIDFilter,
 )
 
@@ -80,18 +81,8 @@ class PropertyBaseFilterMixin():
         return result
 
 
-class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
-    """Adding Property Support to BooleanFilter."""
-
-    supported_lookups = ['exact', 'isnull']
-
-
-class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
-    """Adding Property Support to BooleanFilter."""
-
-
-class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
-    """Adding Property Support to ChoiceFilter."""
+class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
+    """Provide Comparison Convertion for Choice Filters."""
 
     def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
 
@@ -107,6 +98,20 @@ class PropertyChoiceFilter(PropertyBaseFilterMixin, ChoiceFilter):
                 new_lookup_value = convert_lookup_value
 
         return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+
+
+class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
+    """Adding Property Support to BooleanFilter."""
+
+    supported_lookups = ['exact', 'isnull']
+
+
+class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
+    """Adding Property Support to BooleanFilter."""
+
+
+class PropertyChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, ChoiceFilter):
+    """Adding Property Support to ChoiceFilter."""
 
 
 class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
@@ -195,6 +200,10 @@ class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
     supported_lookups = ['range']
 
 
+class PropertyTypedChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, TypedChoiceFilter):
+    """Adding Property Support to TypedChoiceFilter."""
+
+
 class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
     """Adding Property Support to UUIDFilter."""
 
@@ -203,4 +212,5 @@ class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
 
 EXPLICIST_ONLY_FILTERS = [
     PropertyChoiceFilter,
+    PropertyTypedChoiceFilter,
 ]

@@ -10,6 +10,8 @@
     <form action="" method="get">
         <!--{{ filter.form.as_p }}-->
 
+        <h1>{{ filter.form.errors }}</h1>
+
         <div class="row">
             {% for filt in filter.form %}
             <div class="col-md-2 border border-dark">{{ filt.label }}{{ filt }}</div>

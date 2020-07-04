@@ -169,6 +169,18 @@ Used instead of TimeRangeFilter for property filtering
 
 Supported lookup is 'range'
 
+``PropertyTypedChoiceFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of TypedChoiceFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
+Because the choices are passed as arguments this filter can only be created
+explicitely. For example::
+
+    number = PropertyTypedChoiceFilter(property_fld_name='number_str', lookup_expr='exact', choices=NUMBER_LIST, coerce=int)
+
 ``PropertyUUIDFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
