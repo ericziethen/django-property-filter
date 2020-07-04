@@ -18,6 +18,7 @@ from django_filters.filters import (
     RangeFilter,
     TimeFilter,
     TimeRangeFilter,
+    TypedChoiceFilter,
     UUIDFilter,
 )
 
@@ -193,6 +194,34 @@ class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
     """Adding Property Support to TimeRangeFilter."""
 
     supported_lookups = ['range']
+
+
+class PropertyTypedChoiceFilter(PropertyBaseFilterMixin, TypedChoiceFilter):
+    """Adding Property Support to TypedChoiceFilter."""
+
+
+    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+
+        new_lookup_value = lookup_value
+        new_property_value = property_value
+
+        if type(lookup_value) != type(property_value):  # pylint: disable=unidiomatic-typecheck
+            try:
+                convert_lookup_value = type(property_value)(lookup_value)
+            except (ValueError, TypeError):
+                pass
+            else:
+                new_lookup_value = convert_lookup_value
+
+        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+
+
+
+
+
+
+
+
 
 
 class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):

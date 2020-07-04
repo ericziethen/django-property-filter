@@ -19,6 +19,7 @@ from django_filters.filters import (
     RangeFilter,
     TimeFilter,
     TimeRangeFilter,
+    TypedChoiceFilter,
     UUIDFilter,
 )
 
@@ -38,40 +39,33 @@ from django_property_filter import (
     PropertyRangeFilter,
     PropertyTimeFilter,
     PropertyTimeRangeFilter,
+    PropertyTypedChoiceFilter,
     PropertyUUIDFilter,
 )
 
 from property_filter import models
 
 
-def add_filter(filter_list, filter_class, field_name, lookup_expr, *, choices):
+def add_filter(filter_list, filter_class, field_name, lookup_expr, **kwargs):
     filter_name = field_name + lookup_expr
     label = F'{field_name} [{lookup_expr}]'
-
-    kwargs = {}
-    if choices is not None:
-        kwargs['choices'] = choices
     filter_list[filter_name] = filter_class(label=label, field_name=field_name,
                                             lookup_expr=lookup_expr, **kwargs)
 
-def add_supported_filters(filter_list, filter_class, field_name, expression_list, *, choices=None):
+def add_supported_filters(filter_list, filter_class, field_name, expression_list, **kwargs):
     for lookup in expression_list:
-        add_filter(filter_list, filter_class, field_name, lookup, choices=choices)
+        add_filter(filter_list, filter_class, field_name, lookup, **kwargs)
 
 
-def add_property_filter(filter_list, filter_class, property_fld_name, lookup_expr, *, choices):
+def add_property_filter(filter_list, filter_class, property_fld_name, lookup_expr, **kwargs):
     filter_name = property_fld_name + lookup_expr
-
-    kwargs = {}
-    if choices is not None:
-        kwargs['choices'] = choices
     filter_list[filter_name] = filter_class(
         property_fld_name=property_fld_name, lookup_expr=lookup_expr, **kwargs)
 
 
-def add_supported_property_filters(filter_list, filter_class, property_fld_name, expression_list, *, choices=None):
+def add_supported_property_filters(filter_list, filter_class, property_fld_name, expression_list, **kwargs):
     for lookup in expression_list:
-        add_property_filter(filter_list, filter_class, property_fld_name, lookup, choices=choices)
+        add_property_filter(filter_list, filter_class, property_fld_name, lookup, **kwargs)
 
 
 class PropertyNumberFilterSet(PropertyFilterSet):
@@ -247,6 +241,20 @@ class PropertyTimeRangeFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, TimeRangeFilter, 'time', PropertyTimeRangeFilter.supported_lookups)
+
+
+class PropertyTypedChoiceFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.TypedChoiceFilterModel
+        exclude = ['text']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = [(c.text, F'{c.text}') for c in models.TypedChoiceFilterModel.objects.order_by('id')]
+        add_supported_filters(self.filters, TypedChoiceFilter, 'text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
+        add_supported_property_filters(self.filters, PropertyTypedChoiceFilter, 'prop_text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
+
 
 class PropertyUUIDFilterSet(PropertyFilterSet):
 
