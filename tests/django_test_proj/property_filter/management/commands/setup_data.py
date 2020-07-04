@@ -21,6 +21,7 @@ from property_filter.models import (
     RangeFilterModel,
     TimeFilterModel,
     TimeRangeFilterModel,
+    TypedChoiceFilterModel,
     UUIDFilterModel,
 )
 
@@ -44,6 +45,7 @@ class Command(BaseCommand):
             self.setup_range_filter_model()
             self.setup_time_filter_model()
             self.setup_time_range_filter_model()
+            self.setup_typed_choice_filter_model()
             self.setup_uuid_filter_model()
 
         print('>> Setup Finished')
@@ -218,6 +220,20 @@ class Command(BaseCommand):
         TimeRangeFilterModel.objects.update_or_create(id=5, time=datetime.time(8, 0, 0))
         TimeRangeFilterModel.objects.update_or_create(id=6, time=datetime.time(15, 15, 15))
         TimeRangeFilterModel.objects.update_or_create(id=7, time=datetime.time(18, 30))
+
+    def setup_typed_choice_filter_model(self):
+        print('Setup TypedChoiceFilterModel')
+
+        TypedChoiceFilterModel.objects.update_or_create(id=1, truth='True')
+        TypedChoiceFilterModel.objects.update_or_create(id=2, truth='TRUE')
+        TypedChoiceFilterModel.objects.update_or_create(id=3, truth='true')
+        TypedChoiceFilterModel.objects.update_or_create(id=4, truth='yes')
+        TypedChoiceFilterModel.objects.update_or_create(id=5, truth='Not a boolean')
+        TypedChoiceFilterModel.objects.update_or_create(id=6, truth='False')
+        TypedChoiceFilterModel.objects.update_or_create(id=7, truth='FALSE')
+        TypedChoiceFilterModel.objects.update_or_create(id=8, truth='false')
+        TypedChoiceFilterModel.objects.update_or_create(id=9, truth='no')
+        TypedChoiceFilterModel.objects.update_or_create(id=10)
 
     def setup_uuid_filter_model(self):
         print('Setup UUIDFilterModel')
