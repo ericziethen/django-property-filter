@@ -4,6 +4,7 @@ import datetime
 import logging
 
 from django_filters.filters import (
+    AllValuesFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -98,6 +99,10 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
                 new_lookup_value = convert_lookup_value
 
         return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+
+
+class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
+    """Adding Property Support to AllValuesFilter."""
 
 
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):

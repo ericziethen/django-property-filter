@@ -5,6 +5,7 @@ import sys
 sys.path.append(os.path.abspath(R'..\..'))
 
 from django_filters.filters import (
+    AllValuesFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -25,6 +26,7 @@ from django_filters.filters import (
 
 from django_property_filter import (
     PropertyFilterSet,
+    PropertyAllValuesFilter,
     PropertyBooleanFilter,
     PropertyCharFilter,
     PropertyChoiceFilter,
@@ -68,16 +70,16 @@ def add_supported_property_filters(filter_list, filter_class, property_fld_name,
         add_property_filter(filter_list, filter_class, property_fld_name, lookup, **kwargs)
 
 
-class PropertyNumberFilterSet(PropertyFilterSet):
+class PropertyAllValuesFilterSet(PropertyFilterSet):
 
     class Meta:
-        model = models.NumberFilterModel
+        model = models.AllValuesFilterModel
         exclude = ['number']
-        property_fields = [('prop_number', PropertyNumberFilter, PropertyNumberFilter.supported_lookups)]
+        property_fields = [('prop_number', PropertyAllValuesFilter, PropertyAllValuesFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        add_supported_filters(self.filters, NumberFilter, 'number', PropertyNumberFilter.supported_lookups)
+        add_supported_filters(self.filters, AllValuesFilter, 'number', PropertyAllValuesFilter.supported_lookups)
 
 
 class PropertyBooleanFilterSet(PropertyFilterSet):
@@ -205,6 +207,18 @@ class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, IsoDateTimeFromToRangeFilter, 'date_time', PropertyIsoDateTimeFromToRangeFilter.supported_lookups)
+
+
+class PropertyNumberFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.NumberFilterModel
+        exclude = ['number']
+        property_fields = [('prop_number', PropertyNumberFilter, PropertyNumberFilter.supported_lookups)]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        add_supported_filters(self.filters, NumberFilter, 'number', PropertyNumberFilter.supported_lookups)
 
 
 class PropertyRangeFilterSet(PropertyFilterSet):
