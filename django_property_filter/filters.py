@@ -104,6 +104,24 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
 class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
     """Adding Property Support to AllValuesFilter."""
 
+    @property
+    def field(self):
+        queryset = self.model._default_manager.distinct()
+
+        value_list = []
+        for obj in queryset:
+            property_value = get_value_for_db_field(obj, self.property_fld_name)
+            value_list.append(property_value)
+
+        value_list = sorted(value_list, key=lambda x: (x is None, x))
+
+        print('>>> value_list', value_list)
+
+        self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
+
+        # Need to Call parent's Parent since our Parent uses DB fields directly
+        return super(AllValuesFilter, self).field
+
 
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
     """Adding Property Support to BooleanFilter."""
