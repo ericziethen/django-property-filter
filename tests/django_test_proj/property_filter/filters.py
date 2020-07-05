@@ -72,15 +72,23 @@ def add_supported_property_filters(filter_list, filter_class, property_fld_name,
 
 class PropertyAllValuesFilterSet(PropertyFilterSet):
 
+
+
+
     class Meta:
         model = models.AllValuesFilterModel
-        exclude = ['number']
+        exclude = ['id']
         property_fields = [('prop_number', PropertyAllValuesFilter, PropertyAllValuesFilter.supported_lookups)]
+            
+            TODO - Need to Propagate Model And Parent Same as in BaseFilterset in create Munctions
+            !!! IF THAT IS DONE IN PropertyFiltersetInitialisation then we dont have to do it here
+
 
     def __init__(self, *args, **kwargs):
+        self.filters['numberexact'] = AllValuesFilter(field_name='number', lookup_expr='lt')
         super().__init__(*args, **kwargs)
         add_supported_filters(self.filters, AllValuesFilter, 'number', PropertyAllValuesFilter.supported_lookups)
-
+            !!! Maybe we can Pass self as Filterset, then Model is accessible
 
 class PropertyBooleanFilterSet(PropertyFilterSet):
 

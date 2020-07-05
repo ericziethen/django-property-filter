@@ -18,6 +18,10 @@ class PropertyFilterSet(FilterSet):
         filter_name = F'{property_fld_name}__{lookup_expr}'
         self.filters[filter_name] = filter_class(property_fld_name=property_fld_name, lookup_expr=lookup_expr)
 
+        # propagate the model and filterset to the filters
+        self.filters[filter_name].model = self.queryset.model
+        self.filters[filter_name].parent = self
+
     def _setup_property_filters(self):
         """Set up implicit filters."""
         if 'property_fields' in self.__class__.Meta.__dict__:  # pylint: disable=no-member
