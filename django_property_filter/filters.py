@@ -4,6 +4,7 @@ import datetime
 import logging
 
 from django_filters.filters import (
+    AllValuesFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -98,6 +99,27 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
                 new_lookup_value = convert_lookup_value
 
         return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+
+
+class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
+    """Adding Property Support to AllValuesFilter."""
+
+    @property
+    def field(self):
+        """Filed Property to setup default choices."""
+        queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
+
+        value_list = []
+        for obj in queryset:
+            property_value = get_value_for_db_field(obj, self.property_fld_name)
+            value_list.append(property_value)
+
+        value_list = sorted(value_list, key=lambda x: (x is None, x))
+
+        self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
+
+        # Need to Call parent's Parent since our Parent uses DB fields directly
+        return super(AllValuesFilter, self).field
 
 
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):

@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.timezone import make_aware
 
 from property_filter.models import (
+    AllValuesFilterModel,
     BooleanFilterModel,
     CharFilterModel,
     ChoiceFilterModel,
@@ -31,6 +32,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         with transaction.atomic():
+            self.setup_all_values_filter_model()
             self.setup_boolean_filter_model()
             self.setup_char_filter_model()
             self.setup_choice_filter_model()
@@ -49,6 +51,21 @@ class Command(BaseCommand):
             self.setup_uuid_filter_model()
 
         print('>> Setup Finished')
+
+    def setup_all_values_filter_model(self):
+        print('Setup AllValuesFilterModel')
+
+        AllValuesFilterModel.objects.update_or_create(id=-1, number=-1)
+        AllValuesFilterModel.objects.update_or_create(id=0, number=0)
+        AllValuesFilterModel.objects.update_or_create(id=1, number=1)
+        AllValuesFilterModel.objects.update_or_create(id=2, number=2)
+        AllValuesFilterModel.objects.update_or_create(id=3, number=2)
+        AllValuesFilterModel.objects.update_or_create(id=4, number=2)
+        AllValuesFilterModel.objects.update_or_create(id=5, number=3)
+        AllValuesFilterModel.objects.update_or_create(id=6, number=4)
+        AllValuesFilterModel.objects.update_or_create(id=7, number=10)
+        AllValuesFilterModel.objects.update_or_create(id=8, number=20)
+        AllValuesFilterModel.objects.update_or_create(id=9)
 
     def setup_boolean_filter_model(self):
         print('Setup BooleanFilterModel')
@@ -75,17 +92,17 @@ class Command(BaseCommand):
     def setup_choice_filter_model(self):
         print('Setup ChoiceFilterModel')
 
-        ChoiceFilterModel.objects.create(id=-1, number=-1)
-        ChoiceFilterModel.objects.create(id=0, number=0)
-        ChoiceFilterModel.objects.create(id=1, number=1)
-        ChoiceFilterModel.objects.create(id=2, number=2)
-        ChoiceFilterModel.objects.create(id=3, number=2)
-        ChoiceFilterModel.objects.create(id=4, number=2)
-        ChoiceFilterModel.objects.create(id=5, number=3)
-        ChoiceFilterModel.objects.create(id=6, number=4)
-        ChoiceFilterModel.objects.create(id=7, number=10)
-        ChoiceFilterModel.objects.create(id=8, number=20)
-        ChoiceFilterModel.objects.create(id=9)
+        ChoiceFilterModel.objects.update_or_create(id=-1, number=-1)
+        ChoiceFilterModel.objects.update_or_create(id=0, number=0)
+        ChoiceFilterModel.objects.update_or_create(id=1, number=1)
+        ChoiceFilterModel.objects.update_or_create(id=2, number=2)
+        ChoiceFilterModel.objects.update_or_create(id=3, number=2)
+        ChoiceFilterModel.objects.update_or_create(id=4, number=2)
+        ChoiceFilterModel.objects.update_or_create(id=5, number=3)
+        ChoiceFilterModel.objects.update_or_create(id=6, number=4)
+        ChoiceFilterModel.objects.update_or_create(id=7, number=10)
+        ChoiceFilterModel.objects.update_or_create(id=8, number=20)
+        ChoiceFilterModel.objects.update_or_create(id=9)
 
     def setup_date_filter_model(self):
         print('Setup DateFilterModel')

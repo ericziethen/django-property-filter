@@ -66,6 +66,13 @@ This can be
 Property Filter Classes
 -----------------------
 
+``PropertyAllValuesFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of AllValuesFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
 ``PropertyBooleanFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

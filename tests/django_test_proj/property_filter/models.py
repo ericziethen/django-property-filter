@@ -37,6 +37,17 @@ class Product(models.Model):
         return self.del_line.line_no
 
 
+class AllValuesFilterModel(models.Model):
+    number = models.IntegerField(null=True)
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    def __str__(self):
+        return F'{self.number} ({self.id})'
+
+
 class BooleanFilterModel(models.Model):
     is_true = models.BooleanField(null=True)
 
