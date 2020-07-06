@@ -115,8 +115,6 @@ class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, Al
 
         value_list = sorted(value_list, key=lambda x: (x is None, x))
 
-        print('>>> value_list', value_list)
-
         self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
 
         # Need to Call parent's Parent since our Parent uses DB fields directly
