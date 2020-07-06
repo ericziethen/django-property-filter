@@ -106,7 +106,8 @@ class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, Al
 
     @property
     def field(self):
-        queryset = self.model._default_manager.distinct()
+        """Filed Property to setup default choices."""
+        queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
         value_list = []
         for obj in queryset:
