@@ -11,6 +11,7 @@ from django_filters.filters import (
     ChoiceFilter,
     DateFilter,
     DateFromToRangeFilter,
+    DateRangeFilter,
     DateTimeFilter,
     DateTimeFromToRangeFilter,
     DurationFilter,
@@ -32,6 +33,7 @@ from django_property_filter import (
     PropertyChoiceFilter,
     PropertyDateFilter,
     PropertyDateFromToRangeFilter,
+    PropertyDateRangeFilter,
     PropertyDateTimeFilter,
     PropertyDateTimeFromToRangeFilter,
     PropertyDurationFilter,
@@ -150,6 +152,22 @@ class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
         super().__init__(*args, **kwargs)
         add_supported_filters(self, DateFromToRangeFilter, 'date', PropertyDateFromToRangeFilter.supported_lookups)
         add_supported_filters(self, DateFromToRangeFilter, 'date_time', PropertyDateFromToRangeFilter.supported_lookups)
+
+
+class PropertyDateRangeFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.DateRangeFilterModel
+        exclude = ['date', 'date_time']
+        property_fields = [
+            ('prop_date', PropertyDateRangeFilter, PropertyDateRangeFilter.supported_lookups),
+            ('prop_date_time', PropertyDateRangeFilter, PropertyDateRangeFilter.supported_lookups)
+            ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        add_supported_filters(self, DateRangeFilter, 'date', PropertyDateRangeFilter.supported_lookups)
+        add_supported_filters(self, DateRangeFilter, 'date_time', PropertyDateRangeFilter.supported_lookups)
 
 
 class PropertyDateTimeFilterSet(PropertyFilterSet):

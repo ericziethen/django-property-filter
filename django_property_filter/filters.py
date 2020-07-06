@@ -10,6 +10,7 @@ from django_filters.filters import (
     ChoiceFilter,
     DateFilter,
     DateFromToRangeFilter,
+    DateRangeFilter,
     DateTimeFilter,
     DateTimeFromToRangeFilter,
     DurationFilter,
@@ -168,6 +169,12 @@ class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilt
             new_property_value = new_property_value.date()
 
         return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+
+
+class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
+    """Adding Property Support to DateRangeFilter."""
+
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
 class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
