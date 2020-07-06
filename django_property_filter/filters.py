@@ -177,6 +177,61 @@ class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
+
+
+
+
+    '''
+        DateRangeFilter defines
+        ('today', _('Today')),
+        ('yesterday', _('Yesterday')),
+        ('week', _('Past 7 days')),
+        ('month', _('This month')),
+        ('year', _('This year')),
+
+        Need the following new lookup_xpr to support
+            - "year"
+            - "month"
+            - "day"
+
+        Can Calculate
+            - today
+            - yesterday
+
+        Need to convert the following to Ranges
+            - week
+            - month
+            - year
+
+        !!! Also might need to do convertion like PropertyDateFromToRangeFilter._compare_lookup_with_qs_entry_compare_lookup_with_qs_entry
+
+    '''
+
+
+
+    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+
+        # Convert DateTime values to Date only
+        if lookup_value and isinstance(lookup_value, datetime.datetime):
+            lookup_value = lookup_value.date()
+        if property_value and isinstance(property_value, datetime.datetime):
+            property_value = property_value.date()
+
+        # Convert our Custom Expression to Supported Expressions
+
+
+
+
+        result = super()._compare_lookup_with_qs_entry(lookup_value, property_value)
+        print('PropertyDateRangeFilter._compare_lookup_with_qs_entry(lookup_value, property_value, result)',
+            lookup_value, property_value, result)
+        return result
+
+
+
+
+
+
 class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
     """Adding Property Support to DateTimeFilter."""
 
