@@ -16,7 +16,7 @@ def test_handle_invalid_type_comparison(caplog):
     num_filter = PropertyNumberFilter(property_fld_name='field_name', lookup_expr='lt')
 
     with caplog.at_level(logging.DEBUG):
-        result = num_filter._compare_lookup_with_qs_entry('text', 15)
+        result = num_filter._compare_lookup_with_qs_entry(num_filter.lookup_expr, 'text', 15)
 
         assert not result
         assert 'Error during comparing ' in caplog.text

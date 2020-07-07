@@ -60,7 +60,7 @@ class PropertyBaseFilterMixin():
             wanted_ids = set()
             for obj in queryset:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
-                if self._compare_lookup_with_qs_entry(value, property_value):
+                if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                     wanted_ids.add(obj.pk)
             return queryset.filter(pk__in=wanted_ids)
 
@@ -71,7 +71,7 @@ class PropertyBaseFilterMixin():
         if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
-    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
         """Compare the lookup value with the property value."""
         result = False
         try:
@@ -86,7 +86,7 @@ class PropertyBaseFilterMixin():
 class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
     """Provide Comparison Convertion for Choice Filters."""
 
-    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
 
         new_lookup_value = lookup_value
         new_property_value = property_value
@@ -99,7 +99,7 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
             else:
                 new_lookup_value = convert_lookup_value
 
-        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+        return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, new_property_value)
 
 
 class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
@@ -148,7 +148,7 @@ class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilt
 
     supported_lookups = ['range']
 
-    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
         """Convert all datetime to date and then compare."""
         # Convert the Lookup Value if needed
         new_lookup_value = lookup_value
@@ -168,7 +168,7 @@ class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilt
         if new_property_value and isinstance(new_property_value, datetime.datetime):
             new_property_value = new_property_value.date()
 
-        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+        return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, new_property_value)
 
 
 class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
@@ -208,8 +208,8 @@ class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
     '''
 
 
-
-    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+    '''
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
 
         # Convert DateTime values to Date only
         if lookup_value and isinstance(lookup_value, datetime.datetime):
@@ -222,11 +222,11 @@ class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
 
 
 
-        result = super()._compare_lookup_with_qs_entry(lookup_value, property_value)
-        print('PropertyDateRangeFilter._compare_lookup_with_qs_entry(lookup_value, property_value, result)',
+        result = super()._compare_lookup_with_qs_entry(lookup_expr, lookup_value, property_value)
+        print('PropertyDateRangeFilter._compare_lookup_with_qs_entry(lookup_expr, lookup_value, property_value, result)',
             lookup_value, property_value, result)
         return result
-
+    '''
 
 
 
