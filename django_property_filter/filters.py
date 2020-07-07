@@ -208,25 +208,36 @@ class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
     '''
 
 
-    '''
-    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
 
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
         # Convert DateTime values to Date only
+        '''
         if lookup_value and isinstance(lookup_value, datetime.datetime):
             lookup_value = lookup_value.date()
         if property_value and isinstance(property_value, datetime.datetime):
             property_value = property_value.date()
+        '''
 
-        # Convert our Custom Expression to Supported Expressions
-        new_lookup_exp
+        # Convert our Custom Expression and Value to Supported the Hardcoded Expressions
+        new_lookup_exp = lookup_expr
+        new_lookup_value = lookup_value
+        if lookup_value == 'today':
+            new_lookup_value = datetime.date.today()
+        elif lookup_value == 'yesterday':
+            new_lookup_value = datetime.date.today() - datetime.timedelta(days=1)
+        elif lookup_value == 'week':
+            new_lookup_exp = 'range'
+            new_lookup_value = slice(
+                datetime.date.today(),
+                datetime.date.today() - datetime.timedelta(days=7)
+            )
 
 
-
-        result = super()._compare_lookup_with_qs_entry(lookup_expr, lookup_value, property_value)
-        print('PropertyDateRangeFilter._compare_lookup_with_qs_entry(lookup_expr, lookup_value, property_value, result)',
-            lookup_value, property_value, result)
+        result = super()._compare_lookup_with_qs_entry(new_lookup_exp, new_lookup_value, property_value)
+        print('PropertyDateRangeFilter._compare_lookup_with_qs_entry(new_lookup_exp, new_lookup_value, property_value, result)',
+            new_lookup_exp, new_lookup_value, property_value, result)
         return result
-    '''
+
 
 
 

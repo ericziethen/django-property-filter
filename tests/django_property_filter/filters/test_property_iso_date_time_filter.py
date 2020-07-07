@@ -23,12 +23,12 @@ def test_unsupported_lookup():
 @pytest.fixture
 def fixture_property_iso_date_time_filter():
     # Avoiding Time Zone Manipulation to not having to convert iso times for comparison manually
-    IsoDateTimeFilterModel.objects.update_or_create(id=-1, date_time='2020-01-03T00:00:00+00:00')
-    IsoDateTimeFilterModel.objects.update_or_create(id=0, date_time='2020-01-03T01:00:00+00:00')
-    IsoDateTimeFilterModel.objects.update_or_create(id=1, date_time='2020-01-03T02:00:00+00:00')
-    IsoDateTimeFilterModel.objects.update_or_create(id=2, date_time='2020-12-03T02:00:00+00:00')
-    IsoDateTimeFilterModel.objects.update_or_create(id=3, date_time='2020-12-03T02:00:00+00:00')
-    IsoDateTimeFilterModel.objects.update_or_create(id=4, date_time='2021-12-03T02:00:00+00:00')
+    IsoDateTimeFilterModel.objects.create(id=-1, date_time='2020-01-03T00:00:00+00:00')
+    IsoDateTimeFilterModel.objects.create(id=0, date_time='2020-01-03T01:00:00+00:00')
+    IsoDateTimeFilterModel.objects.create(id=1, date_time='2020-01-03T02:00:00+00:00')
+    IsoDateTimeFilterModel.objects.create(id=2, date_time='2020-12-03T02:00:00+00:00')
+    IsoDateTimeFilterModel.objects.create(id=3, date_time='2020-12-03T02:00:00+00:00')
+    IsoDateTimeFilterModel.objects.create(id=4, date_time='2021-12-03T02:00:00+00:00')
 
 
 TEST_LOOKUPS = [

@@ -166,26 +166,31 @@ class Command(BaseCommand):
 
         DateRangeFilterModel.objects.update_or_create(
             id=1,
-            date=datetime.date.today() - datetime.timedelta(days=3),
-            date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=3))
+            date=datetime.date.today() - datetime.timedelta(days=6),
+            date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=6))
 
         DateRangeFilterModel.objects.update_or_create(
             id=2,
+            date=datetime.date.today() - datetime.timedelta(days=7),
+            date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=7))
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=3,
             date=datetime.date.today() - datetime.timedelta(days=15),
             date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=15))
 
         DateRangeFilterModel.objects.update_or_create(
-            id=3,
+            id=4,
             date=datetime.date.today() + datetime.timedelta(days=15),
             date_time=datetime.datetime.now(tz=tz) + datetime.timedelta(days=15))
 
         DateRangeFilterModel.objects.update_or_create(
-            id=4,
+            id=5,
             date=datetime.date.today() + datetime.timedelta(days=400),
             date_time=datetime.datetime.now(tz=tz) + datetime.timedelta(days=400))
 
         DateRangeFilterModel.objects.update_or_create(
-            id=5,
+            id=6,
             date=datetime.date.today() - datetime.timedelta(days=800),
             date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=800))
 

@@ -21,13 +21,13 @@ def test_unsupported_lookup():
 LOOKUP_CHOICES = []
 @pytest.fixture
 def fixture_property_typed_choice_filter():
-    TypedChoiceFilterModel.objects.update_or_create(id=-1, text='1')
-    TypedChoiceFilterModel.objects.update_or_create(id=0, text='One')
-    TypedChoiceFilterModel.objects.update_or_create(id=1, text='2')
-    TypedChoiceFilterModel.objects.update_or_create(id=2, text='2')
-    TypedChoiceFilterModel.objects.update_or_create(id=3, text='Not a Number')
-    TypedChoiceFilterModel.objects.update_or_create(id=4, text='2.3')
-    TypedChoiceFilterModel.objects.update_or_create(id=5)
+    TypedChoiceFilterModel.objects.create(id=-1, text='1')
+    TypedChoiceFilterModel.objects.create(id=0, text='One')
+    TypedChoiceFilterModel.objects.create(id=1, text='2')
+    TypedChoiceFilterModel.objects.create(id=2, text='2')
+    TypedChoiceFilterModel.objects.create(id=3, text='Not a Number')
+    TypedChoiceFilterModel.objects.create(id=4, text='2.3')
+    TypedChoiceFilterModel.objects.create(id=5)
 
     global LOOKUP_CHOICES
     LOOKUP_CHOICES = [(c.text, c.text) for c in TypedChoiceFilterModel.objects.order_by('id')]

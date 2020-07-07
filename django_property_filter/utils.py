@@ -55,7 +55,15 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         result = (lookup_value and property_value is None) or (not lookup_value and property_value is not None)
     elif lookup_expr == 'range' and property_value is not None and lookup_value is not None:
         result = lookup_value.start <= property_value <= lookup_value.stop
+        print('  # RANGE')
     elif lookup_expr == 'in':
         result = property_value in lookup_value
+
+    print('>> compare_by_lookup_expression(lookup_expr, lookup_value, property_value, result)',
+            lookup_expr, type(lookup_value), lookup_value, type(property_value), property_value, result)
+
+
+
+
 
     return result
