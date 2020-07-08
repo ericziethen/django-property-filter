@@ -157,22 +157,17 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
 
 
 TEST_LOOKUPS_DATE_TIME = [
-    #('exact', 'today', [-1]),
-    #('exact', 'yesterday', [0]),
+    ('exact', 'today', [-1]),
+    ('exact', 'yesterday', [0]),
     ('exact', 'week', [-1, 0, 1, 2]),
-    #('exact', 'month', 'SAME_MONTH_VALUES_DATETIME'),
-    #('exact', 'year', 'SAME_YEAR_VALUES_DATETIME'),
+    ('exact', 'month', 'SAME_MONTH_VALUES_DATETIME'),
+    ('exact', 'year', 'SAME_YEAR_VALUES_DATETIME'),
 ]
 
 
+@pytest.mark.filterwarnings('ignore::RuntimeWarning')  # 'week' on DayTime shows a Runtime Warning, ignore
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS_DATE_TIME)
 @pytest.mark.django_db
-
-
-
-
-
-@pytest.mark.debug
 def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, result_list):
 
     global SAME_MONTH_VALUES_DATETIME
