@@ -183,8 +183,6 @@ class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
         new_property_value = property_value
 
         # Convert DateTime values to Date only
-        if lookup_value and isinstance(lookup_value, datetime.datetime):
-            new_lookup_value = lookup_value.date()
         if property_value and isinstance(property_value, datetime.datetime):
             new_property_value = property_value.date()
 
