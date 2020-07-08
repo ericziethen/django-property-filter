@@ -27,6 +27,7 @@ urlpatterns = [
     path('choice_filter/', views.ChoiceFilterView.as_view(), name='choice_filter'),
     path('date_filter/', views.DateFilterView.as_view(), name='date_filter'),
     path('date_from_to_range_filter/', views.DateFromToRangeFilterView.as_view(), name='date_from_to_range_filter'),
+    path('date_range_filter/', views.DateRangeFilterView.as_view(), name='date_range_filter'),
     path('date_time_filter/', views.DateTimeFilterView.as_view(), name='date_time_filter'),
     path('date_time_from_to_range_filter/', views.DateTimeFromToRangeFilterView.as_view(), name='date_time_from_to_range_filter'),
     path('duration_filter/', views.DurationFilterView.as_view(), name='duration_filter'),

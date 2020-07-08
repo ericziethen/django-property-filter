@@ -10,6 +10,7 @@ from django_filters.filters import (
     ChoiceFilter,
     DateFilter,
     DateFromToRangeFilter,
+    DateRangeFilter,
     DateTimeFilter,
     DateTimeFromToRangeFilter,
     DurationFilter,
@@ -59,7 +60,7 @@ class PropertyBaseFilterMixin():
             wanted_ids = set()
             for obj in queryset:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
-                if self._compare_lookup_with_qs_entry(value, property_value):
+                if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                     wanted_ids.add(obj.pk)
             return queryset.filter(pk__in=wanted_ids)
 
@@ -70,11 +71,11 @@ class PropertyBaseFilterMixin():
         if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
-    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
         """Compare the lookup value with the property value."""
         result = False
         try:
-            result = compare_by_lookup_expression(self.lookup_expr, lookup_value, property_value)
+            result = compare_by_lookup_expression(lookup_expr, lookup_value, property_value)
         except (TypeError) as error:
             logging.info(F'Error during comparing property value "{property_value}" with'
                          F'filter value "{lookup_value}" with error: "{error}"')
@@ -85,7 +86,7 @@ class PropertyBaseFilterMixin():
 class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
     """Provide Comparison Convertion for Choice Filters."""
 
-    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
 
         new_lookup_value = lookup_value
         new_property_value = property_value
@@ -98,7 +99,7 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
             else:
                 new_lookup_value = convert_lookup_value
 
-        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+        return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, new_property_value)
 
 
 class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
@@ -147,7 +148,7 @@ class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilt
 
     supported_lookups = ['range']
 
-    def _compare_lookup_with_qs_entry(self, lookup_value, property_value):
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
         """Convert all datetime to date and then compare."""
         # Convert the Lookup Value if needed
         new_lookup_value = lookup_value
@@ -167,7 +168,45 @@ class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilt
         if new_property_value and isinstance(new_property_value, datetime.datetime):
             new_property_value = new_property_value.date()
 
-        return super()._compare_lookup_with_qs_entry(new_lookup_value, new_property_value)
+        return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, new_property_value)
+
+
+class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
+    """Adding Property Support to DateRangeFilter."""
+
+    supported_lookups = ['exact']
+
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
+
+        new_lookup_exp = lookup_expr
+        new_lookup_value = lookup_value
+        new_property_value = property_value
+
+        # Convert DateTime values to Date only
+        if property_value and isinstance(property_value, datetime.datetime):
+            new_property_value = property_value.date()
+
+        # Convert our Custom Expression and Value to Supported the Hardcoded Expressions
+        if lookup_value == 'today':
+            new_lookup_value = datetime.date.today()
+        elif lookup_value == 'yesterday':
+            new_lookup_value = datetime.date.today() - datetime.timedelta(days=1)
+        elif lookup_value == 'week':
+            new_lookup_exp = 'range'
+            new_lookup_value = slice(
+                datetime.date.today() - datetime.timedelta(days=7),
+                datetime.date.today()
+            )
+        elif lookup_value == 'month':
+            new_lookup_exp = 'exact'
+            new_lookup_value = datetime.date.today().month
+            new_property_value = property_value.month
+        elif lookup_value == 'year':
+            new_lookup_exp = 'exact'
+            new_lookup_value = datetime.date.today().year
+            new_property_value = property_value.year
+
+        return super()._compare_lookup_with_qs_entry(new_lookup_exp, new_lookup_value, new_property_value)
 
 
 class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):

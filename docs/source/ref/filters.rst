@@ -113,6 +113,13 @@ Used instead of DateFromToRangeFilter for property filtering
 
 Supported lookup is 'range'
 
+``PropertyDateRangeFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of DateRangeFilter for property filtering
+
+Supported lookup is 'exact'
+
 ``PropertyDateTimeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

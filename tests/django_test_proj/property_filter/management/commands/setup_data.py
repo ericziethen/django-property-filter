@@ -13,6 +13,7 @@ from property_filter.models import (
     ChoiceFilterModel,
     DateFilterModel,
     DateFromToRangeFilterModel,
+    DateRangeFilterModel,
     DateTimeFilterModel,
     DateTimeFromToRangeFilterModel,
     DurationFilterModel,
@@ -38,6 +39,7 @@ class Command(BaseCommand):
             self.setup_choice_filter_model()
             self.setup_date_filter_model()
             self.setup_date_from_to_range_filter_model()
+            self.setup_date_range_filter_model()
             self.setup_date_time_filter_model()
             self.setup_date_time_from_to_range_filter_model()
             self.setup_duration_filter_model()
@@ -146,6 +148,51 @@ class Command(BaseCommand):
             id=4,
             date=datetime.date(2020, 2, 6),
             date_time=datetime.datetime(2020, 2, 6, 13, 30, tzinfo=tz))
+
+    def setup_date_range_filter_model(self):
+        print('Setup DateRangeFilterModel')
+
+        tz = timezone.get_default_timezone()
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=-1,
+            date=datetime.date.today(),
+            date_time=datetime.datetime.now(tz=tz))
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=0,
+            date=datetime.date.today() - datetime.timedelta(days=1),
+            date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=1))
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=1,
+            date=datetime.date.today() - datetime.timedelta(days=6),
+            date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=6))
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=2,
+            date=datetime.date.today() - datetime.timedelta(days=7),
+            date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=7))
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=3,
+            date=datetime.date.today() - datetime.timedelta(days=15),
+            date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=15))
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=4,
+            date=datetime.date.today() + datetime.timedelta(days=15),
+            date_time=datetime.datetime.now(tz=tz) + datetime.timedelta(days=15))
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=5,
+            date=datetime.date.today() + datetime.timedelta(days=400),
+            date_time=datetime.datetime.now(tz=tz) + datetime.timedelta(days=400))
+
+        DateRangeFilterModel.objects.update_or_create(
+            id=6,
+            date=datetime.date.today() - datetime.timedelta(days=800),
+            date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=800))
 
     def setup_date_time_filter_model(self):
         print('Setup DateTimeFilterModel')
