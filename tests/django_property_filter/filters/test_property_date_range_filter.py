@@ -23,6 +23,8 @@ def test_unsupported_lookup():
         PropertyDateRangeFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
 
 
+# This is a bit abstract but since we need to know the same week/year whenever
+# the tests are running we need to calculate them dynamically
 SAME_MONTH_VALUES_DATE = []
 SAME_YEAR_VALUES_DATE = []
 SAME_MONTH_VALUES_DATETIME = []
@@ -90,52 +92,22 @@ TEST_LOOKUPS_DATE = [
     ('exact', 'today', [-1]),
     ('exact', 'yesterday', [0]),
     ('exact', 'week', [-1, 0, 1, 2]),
-    #('exact', 'month', [SAME_MONTH_VALUES_DATE]),
-    #('exact', 'year', [SAME_YEAR_VALUES_DATE]),
-    #('gt', 'today', []),
-    #('gt', 'yesterday', []),
-    #('gt', 'week', []),
-    #('gt', 'month', [SAME_MONTH_VALUES_DATE]),
-    #('gt', 'year', [SAME_YEAR_VALUES_DATE]),
-    #('gte', 'today', []),
-    #('gte', 'yesterday', []),
-    #('gte', 'week', []),
-    #('gte', 'month', [SAME_MONTH_VALUES_DATE]),
-    #('gte', 'year', [SAME_YEAR_VALUES_DATE]),
-    #('lt', 'today', []),
-    #('lt', 'yesterday', []),
-    #('lt', 'week', []),
-    #('lt', 'month', [SAME_MONTH_VALUES_DATE]),
-    #('lt', 'year', [SAME_YEAR_VALUES_DATE]),
-    #('lte', 'today', []),
-    #('lte', 'yesterday', []),
-    #('lte', 'week', []),
-    #('lte', 'month', [SAME_MONTH_VALUES_DATE]),
-    #('lte', 'year', [SAME_YEAR_VALUES_DATE]),
-
-
-
-
-    #('range', ('2018-01-01', '2021-01-01'), [-1, 0, 1, 2, 3, 4]),
-    #('range', ('2019-03-02', '2019-03-02'), [0, 1]),
-    #('range', ('2019-03-03', '2019-03-02'), []),
-    #('range', ('2020-02-06', '2100-01-01'), [4]),
-    #('range', ('2023-01-01', '2024-01-01'), []),
-    #('range', ('2019-03-02', None), [0, 1, 2, 3, 4]),
-    #('range', (None, '2019-03-02'), [-1, 0, 1]),
-    #('range', (None, None), [-1, 0, 1, 2, 3, 4]),
+    ('exact', 'month', 'SAME_MONTH_VALUES_DATE'),
+    ('exact', 'year', 'SAME_YEAR_VALUES_DATE'),
 ]
 
 
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS_DATE)
 @pytest.mark.django_db
-
-
-
-
-
-@pytest.mark.debug
 def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result_list):
+
+    global SAME_MONTH_VALUES_DATE
+    global SAME_YEAR_VALUES_DATE
+    
+    if result_list == 'SAME_MONTH_VALUES_DATE':
+        result_list = SAME_MONTH_VALUES_DATE
+    elif result_list == 'SAME_YEAR_VALUES_DATE':
+        result_list = SAME_YEAR_VALUES_DATE
 
     # Test using Normal Django Filter
     class DateRangeFilterSet(FilterSet):
@@ -185,16 +157,11 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
 
 
 TEST_LOOKUPS_DATE_TIME = [
-    #('range', ('2018-01-01', '2021-01-01'), [-1, 0, 1, 2, 3, 4]),
-    #('range', ('2019-03-02', '2019-03-02'), [0, 1]),
-    #('range', ('2019-03-02', '2019-03-02'), [0, 1]),
-    #('range', ('2019-03-02 12:00:00', '2019-03-02 12:00:00'), [-1, 0, 1, 2, 3, 4]), # Any time component is ignored
-    #('range', ('2019-03-03', '2019-03-02'), []),
-    #('range', ('2020-02-06', '2100-01-01'), [4]),
-    #('range', ('2023-01-01', '2024-01-01'), []),
-    #('range', ('2019-03-02', None), [0, 1, 2, 3, 4]),
-    #('range', (None, '2019-03-02'), [-1, 0, 1]),
-    #('range', (None, None), [-1, 0, 1, 2, 3, 4]),
+    #('exact', 'today', [-1]),
+    #('exact', 'yesterday', [0]),
+    ('exact', 'week', [-1, 0, 1, 2]),
+    #('exact', 'month', 'SAME_MONTH_VALUES_DATETIME'),
+    #('exact', 'year', 'SAME_YEAR_VALUES_DATETIME'),
 ]
 
 
@@ -208,6 +175,14 @@ TEST_LOOKUPS_DATE_TIME = [
 @pytest.mark.debug
 def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, result_list):
 
+    global SAME_MONTH_VALUES_DATETIME
+    global SAME_YEAR_VALUES_DATETIME
+    
+    if result_list == 'SAME_MONTH_VALUES_DATETIME':
+        result_list = SAME_MONTH_VALUES_DATETIME
+    elif result_list == 'SAME_YEAR_VALUES_DATETIME':
+        result_list = SAME_YEAR_VALUES_DATETIME
+
     # Test using Normal Django Filter
     class DateRangeFilterSet(FilterSet):
         date_time = DateRangeFilter(field_name='date_time', lookup_expr=lookup_xpr)
@@ -216,7 +191,7 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
             model = DateRangeFilterModel
             fields = ['date_time']
 
-    filter_fs = DateRangeFilterSet({'date_time_after': lookup_val[0], 'date_time_before': lookup_val[1]}, queryset=DateRangeFilterModel.objects.all())
+    filter_fs = DateRangeFilterSet({'date_time': lookup_val}, queryset=DateRangeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Explicit Filter using a normal Filterset
@@ -227,7 +202,7 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
             model = DateRangeFilterModel
             fields = ['prop_date_time']
 
-    prop_filter_fs = PropertyDateRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=DateRangeFilterModel.objects.all())
+    prop_filter_fs = PropertyDateRangeFilterSet({'prop_date_time': lookup_val}, queryset=DateRangeFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Explicit Filter using a PropertyFilterSet
@@ -238,7 +213,7 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
             model = DateRangeFilterModel
             fields = ['prop_date_time']
 
-    prop_filter_fs = PropertyDateRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=DateRangeFilterModel.objects.all())
+    prop_filter_fs = PropertyDateRangeFilterSet({'prop_date_time': lookup_val}, queryset=DateRangeFilterModel.objects.all())
     assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
 
@@ -250,7 +225,7 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
             exclude = ['date_time']
             property_fields = [('prop_date_time', PropertyDateRangeFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({'prop_date_time__range_after': lookup_val[0], 'prop_date_time__range_before': lookup_val[1]}, queryset=DateRangeFilterModel.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({F'prop_date_time__{lookup_xpr}': lookup_val}, queryset=DateRangeFilterModel.objects.all())
 
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 

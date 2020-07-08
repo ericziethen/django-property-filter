@@ -75,7 +75,7 @@ class PropertyBaseFilterMixin():
         """Compare the lookup value with the property value."""
         result = False
         try:
-            result = compare_by_lookup_expression(self.lookup_expr, lookup_value, property_value)
+            result = compare_by_lookup_expression(lookup_expr, lookup_value, property_value)
         except (TypeError) as error:
             logging.info(F'Error during comparing property value "{property_value}" with'
                          F'filter value "{lookup_value}" with error: "{error}"')
@@ -174,53 +174,21 @@ class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilt
 class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
     """Adding Property Support to DateRangeFilter."""
 
-    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
-
-
-
-
-
-
-    '''
-        DateRangeFilter defines
-        ('today', _('Today')),
-        ('yesterday', _('Yesterday')),
-        ('week', _('Past 7 days')),
-        ('month', _('This month')),
-        ('year', _('This year')),
-
-        Need the following new lookup_xpr to support
-            - "year"
-            - "month"
-            - "day"
-
-        Can Calculate
-            - today
-            - yesterday
-
-        Need to convert the following to Ranges
-            - week
-            - month
-            - year
-
-        !!! Also might need to do convertion like PropertyDateFromToRangeFilter._compare_lookup_with_qs_entry_compare_lookup_with_qs_entry
-
-    '''
-
-
+    supported_lookups = ['exact']
 
     def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
-        # Convert DateTime values to Date only
-        '''
-        if lookup_value and isinstance(lookup_value, datetime.datetime):
-            lookup_value = lookup_value.date()
-        if property_value and isinstance(property_value, datetime.datetime):
-            property_value = property_value.date()
-        '''
 
-        # Convert our Custom Expression and Value to Supported the Hardcoded Expressions
         new_lookup_exp = lookup_expr
         new_lookup_value = lookup_value
+        new_property_value = property_value
+
+        # Convert DateTime values to Date only
+        if lookup_value and isinstance(lookup_value, datetime.datetime):
+            new_lookup_value = lookup_value.date()
+        if property_value and isinstance(property_value, datetime.datetime):
+            new_property_value = property_value.date()
+
+        # Convert our Custom Expression and Value to Supported the Hardcoded Expressions
         if lookup_value == 'today':
             new_lookup_value = datetime.date.today()
         elif lookup_value == 'yesterday':
@@ -228,19 +196,19 @@ class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
         elif lookup_value == 'week':
             new_lookup_exp = 'range'
             new_lookup_value = slice(
-                datetime.date.today(),
-                datetime.date.today() - datetime.timedelta(days=7)
+                datetime.date.today() - datetime.timedelta(days=7),
+                datetime.date.today()
             )
+        elif lookup_value == 'month':
+            new_lookup_exp = 'exact'
+            new_lookup_value = datetime.date.today().month
+            new_property_value = property_value.month
+        elif lookup_value == 'year':
+            new_lookup_exp = 'exact'
+            new_lookup_value = datetime.date.today().year
+            new_property_value = property_value.year
 
-
-        result = super()._compare_lookup_with_qs_entry(new_lookup_exp, new_lookup_value, property_value)
-        print('PropertyDateRangeFilter._compare_lookup_with_qs_entry(new_lookup_exp, new_lookup_value, property_value, result)',
-            new_lookup_exp, new_lookup_value, property_value, result)
-        return result
-
-
-
-
+        return super()._compare_lookup_with_qs_entry(new_lookup_exp, new_lookup_value, new_property_value)
 
 
 class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
