@@ -71,7 +71,7 @@ class PropertyBaseFilterMixin():
         if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
-    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
         """Compare the lookup value with the property value."""
         result = False
         try:
