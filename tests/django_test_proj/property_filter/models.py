@@ -179,6 +179,29 @@ class IsoDateTimeFromToRangeFilterModel(models.Model):
         return F'{self.date_time} ({self.id})'
 
 
+class ModelChoiceFilterRelatedModel(models.Model):
+    text = models.CharField(max_length=32)
+
+    @property
+    def prop_text(self):
+        return self.text
+
+    def __str__(self):
+        return F'{self.text} ({self.id})'
+
+
+class ModelChoiceFilterModel(models.Model):
+    number = models.IntegerField(null=True)
+    related = models.ForeignKey(ModelChoiceFilterRelatedModel, on_delete=models.CASCADE, related_name='related_models')
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    def __str__(self):
+        return F'Related Key: {self.related} - {self.number} ({self.id})'
+
+
 class NumberFilterModel(models.Model):
     number = models.IntegerField(null=True)
 

@@ -17,6 +17,7 @@ from django_filters.filters import (
     DurationFilter,
     IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
+    ModelChoiceFilter,
     NumberFilter,
     RangeFilter,
     TimeFilter,
@@ -228,6 +229,17 @@ class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_supported_filters(self, IsoDateTimeFromToRangeFilter, 'date_time', PropertyIsoDateTimeFromToRangeFilter.supported_lookups)
+
+
+class PropertyModelChoiceFilterSet(PropertyFilterSet):
+
+    # No Property filter since working directly with FOreign Keys
+
+    related = ModelChoiceFilter(queryset=models.ModelChoiceFilterRelatedModel.objects.all())
+
+    class Meta:
+        model = models.ModelChoiceFilterModel
+        fields = ['related']
 
 
 class PropertyNumberFilterSet(PropertyFilterSet):

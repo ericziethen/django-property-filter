@@ -63,6 +63,15 @@ This can be
     2.) A Related field property e.g. "property_fld_name='related.my_property'"
         which can span as many models as are related
 
+Unmapped Filters
+----------------
+
+``ModelChoiceFilter``
+~~~~~~~~~~~~~~~~~~~~~
+
+Because ModelChoiceFilter works directly on a models foreign keys, there is no
+need for a property filter.
+
 Property Filter Classes
 -----------------------
 
