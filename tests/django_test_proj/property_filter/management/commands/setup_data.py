@@ -19,6 +19,8 @@ from property_filter.models import (
     DurationFilterModel,
     IsoDateTimeFilterModel,
     IsoDateTimeFromToRangeFilterModel,
+    ModelChoiceFilterModel,
+    ModelChoiceFilterRelatedModel,
     NumberFilterModel,
     RangeFilterModel,
     TimeFilterModel,
@@ -45,6 +47,7 @@ class Command(BaseCommand):
             self.setup_duration_filter_model()
             self.setup_iso_date_time_filter_model()
             self.setup_iso_date_time_from_to_range_filter_model()
+            self.setup_model_choice_filter_model()
             self.setup_number_filter_model()
             self.setup_range_filter_model()
             self.setup_time_filter_model()
@@ -250,6 +253,20 @@ class Command(BaseCommand):
         IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=4, date_time='2020-12-03T12:00:00+10:00')
         IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=5, date_time='2020-12-03T12:00:00+10:00')
         IsoDateTimeFromToRangeFilterModel.objects.update_or_create(id=6, date_time='2021-12-03T12:00:00+10:00')
+
+    def setup_model_choice_filter_model(self):
+        print('Setup ModelChoiceFilterModel')
+
+        (related_a, _) = ModelChoiceFilterRelatedModel.objects.update_or_create(id=1, text='AAA')
+        (related_b, _) = ModelChoiceFilterRelatedModel.objects.update_or_create(id=2, text='BBB')
+        (related_c, _) = ModelChoiceFilterRelatedModel.objects.update_or_create(id=3, text='CCC')
+
+        ModelChoiceFilterModel.objects.update_or_create(id=1, related=related_a)
+        ModelChoiceFilterModel.objects.update_or_create(id=2, related=related_a)
+        ModelChoiceFilterModel.objects.update_or_create(id=3, related=related_a)
+        ModelChoiceFilterModel.objects.update_or_create(id=4, related=related_c)
+        ModelChoiceFilterModel.objects.update_or_create(id=5, related=related_c)
+
 
     def setup_number_filter_model(self):
         print('Setup NumberFilterModel')
