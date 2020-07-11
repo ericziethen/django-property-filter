@@ -235,17 +235,22 @@ class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
 
 class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
 
+    choices = [(num, F'Number: {num}') for num in models.MultipleChoiceFilterModel.objects.values_list('number', flat=True).distinct()]
+    choices.append((-5, 'Number: -5'))
+    choices.append((666, 'Number: 666'))
+
+    number_contains_and = MultipleChoiceFilter(field_name='number', lookup_expr='contains', label='Number Contains <AND>', conjoined=True, choices=choices)
+    prop_number_contains_and = PropertyMultipleChoiceFilter(property_fld_name='prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True, choices=choices)
+
     class Meta:
         model = models.MultipleChoiceFilterModel
         exclude = ['number']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        choices = [(num, F'Number: {num}') for num in models.MultipleChoiceFilterModel.objects.values_list('number', flat=True).distinct()]
-        choices.append((-5, 'Number: -5'))
-        choices.append((666, 'Number: 666'))
-        add_supported_filters(self, MultipleChoiceFilter, 'number', PropertyMultipleChoiceFilter.supported_lookups, choices=choices)
-        add_supported_property_filters(self.filters, PropertyMultipleChoiceFilter, 'prop_number', PropertyMultipleChoiceFilter.supported_lookups, choices=choices)
+
+        add_supported_filters(self, MultipleChoiceFilter, 'number', PropertyMultipleChoiceFilter.supported_lookups, choices=self.choices)
+        add_supported_property_filters(self.filters, PropertyMultipleChoiceFilter, 'prop_number', PropertyMultipleChoiceFilter.supported_lookups, choices=self.choices)
 
 
 class PropertyModelChoiceFilterSet(PropertyFilterSet):
