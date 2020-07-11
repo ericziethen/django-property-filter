@@ -244,6 +244,53 @@ class PropertyMultipleChoiceFilter(PropertyBaseFilterMixin, MultipleChoiceFilter
     """Adding Property Support to MultipleChoiceFilter."""
 
 
+
+
+
+    def filter(self, qs, value):
+
+        result_qs = self.model.objects.none()
+        if qs:
+            for sub_value in value:
+                sub_result_qs = super().filter(qs, sub_value)
+
+                if self.conjoined:
+                    if sub_result_qs:
+                        result_qs = result_qs.filter(...) & sub_result_qs.filter(...)
+                    else:  # Result QS empty, 'AND' will always be False, no work needed
+                        break
+                else:
+                    result_qs = result_qs | sub_result_qs
+                    print('RESULT QS', sub_result_qs)
+                    print('MERGED QS', result_qs)
+                    # TODO - FOr Or we should start with an Empty Queryset
+
+        '''
+        # TODO
+            # Keep it simple for now
+            result_qs = qs
+            for each sub_value in value
+                if self.conjoined and not result_qs.empty()   (use AND), if we reached 0 then we already have a failed condition
+                    result_qs = result_qs AND super().filter(result_qs, sub_value)  # if and don't need to test all everytime
+                else
+                    result_qs = result_qs OR super().filter(qs, sub_value)
+
+
+        '''
+        #print('PropertyMultipleChoiceFilter.filter()', value)
+        return result_qs
+
+
+
+
+
+
+
+
+
+
+
+
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
     """Adding Property Support to NumberFilter."""
 
