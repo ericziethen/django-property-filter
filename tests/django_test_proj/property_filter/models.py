@@ -202,6 +202,17 @@ class ModelChoiceFilterModel(models.Model):
         return F'Related Key: {self.related} - {self.number} ({self.id})'
 
 
+class MultipleChoiceFilterModel(models.Model):
+    number = models.IntegerField(null=True)
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    def __str__(self):
+        return F'{self.number} ({self.id})'
+
+
 class NumberFilterModel(models.Model):
     number = models.IntegerField(null=True)
 
