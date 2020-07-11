@@ -39,14 +39,14 @@ def fixture_property_multiple_choice_filter():
 
 
 TEST_LOOKUPS = [
-    #('exact', ['666'], 'AND', [])
-    #('exact', ['666'], 'OR', [])
-    #('exact', ['2'], 'AND', [2, 3, 4])
-    ('exact', ['2'], 'OR', [2, 3, 4])
-    #('exact', ['1', '2'], 'AND', [])
-    #('exact', ['1', '2'], 'OR', [])
-    #('exact', ['1', '666'], 'AND', [])
-    #('exact', ['1', '666'], 'OR', [])
+    ('exact', ['666'], 'AND', []),
+    ('exact', ['666'], 'OR', []),
+    ('exact', ['2'], 'AND', [2, 3, 4]),
+    ('exact', ['2'], 'OR', [2, 3, 4]),
+    ('exact', ['1', '2'], 'AND', []),
+    ('exact', ['1', '2'], 'OR', [1, 2, 3, 4]),
+    ('exact', ['1', '666'], 'AND', []),
+    ('exact', ['1', '666'], 'OR', [1]),
 
 
 
