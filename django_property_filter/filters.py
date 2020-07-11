@@ -16,6 +16,7 @@ from django_filters.filters import (
     DurationFilter,
     IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
+    MultipleChoiceFilter,
     NumberFilter,
     RangeFilter,
     TimeFilter,
@@ -239,6 +240,10 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
     supported_lookups = ['range']
 
 
+class PropertyMultipleChoiceFilter(PropertyBaseFilterMixin, MultipleChoiceFilter):
+    """Adding Property Support to MultipleChoiceFilter."""
+
+
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
     """Adding Property Support to NumberFilter."""
 
@@ -271,7 +276,8 @@ class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
     supported_lookups = ['exact']
 
 
-EXPLICIST_ONLY_FILTERS = [
+EXPLICIT_ONLY_FILTERS = [
     PropertyChoiceFilter,
     PropertyTypedChoiceFilter,
+    PropertyMultipleChoiceFilter,
 ]

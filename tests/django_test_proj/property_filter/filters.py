@@ -18,6 +18,7 @@ from django_filters.filters import (
     IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
     ModelChoiceFilter,
+    MultipleChoiceFilter,
     NumberFilter,
     RangeFilter,
     TimeFilter,
@@ -40,6 +41,7 @@ from django_property_filter import (
     PropertyDurationFilter,
     PropertyIsoDateTimeFilter,
     PropertyIsoDateTimeFromToRangeFilter,
+    PropertyMultipleChoiceFilter,
     PropertyNumberFilter,
     PropertyRangeFilter,
     PropertyTimeFilter,
@@ -229,6 +231,21 @@ class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         add_supported_filters(self, IsoDateTimeFromToRangeFilter, 'date_time', PropertyIsoDateTimeFromToRangeFilter.supported_lookups)
+
+
+class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.MultipleChoiceFilterModel
+        exclude = ['number']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = [(num, F'Number: {num}') for num in models.MultipleChoiceFilterModel.objects.values_list('number', flat=True).distinct()]
+        choices.append((-5, 'Number: -5'))
+        choices.append((666, 'Number: 666'))
+        add_supported_filters(self, MultipleChoiceFilter, 'number', PropertyMultipleChoiceFilter.supported_lookups, choices=choices)
+        add_supported_property_filters(self.filters, PropertyMultipleChoiceFilter, 'prop_number', PropertyMultipleChoiceFilter.supported_lookups, choices=choices)
 
 
 class PropertyModelChoiceFilterSet(PropertyFilterSet):
