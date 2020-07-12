@@ -16,6 +16,7 @@ from django_filters.filters import (
     DurationFilter,
     IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
+    MultipleChoiceFilter,
     NumberFilter,
     RangeFilter,
     TimeFilter,
@@ -239,6 +240,35 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
     supported_lookups = ['range']
 
 
+class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
+    """Adding Property Support to MultipleChoiceFilter."""
+
+    def filter(self, queryset, value):
+        """Filter Multiple Choice Property Values."""
+        result_qs = None
+        if queryset:
+            for sub_value in value:
+                sub_result_qs = super().filter(queryset, sub_value)
+
+                if self.conjoined:
+                    if result_qs is None:
+                        # For 'AND' start from the first qs found
+                        result_qs = sub_result_qs
+
+                    if sub_result_qs:
+                        result_qs = result_qs & sub_result_qs
+                    else:  # Result QS empty, 'AND' will always be False, return empty qs
+                        result_qs = sub_result_qs
+                else:
+                    if result_qs is None:
+                        # For 'OR' start from an empty qs
+                        result_qs = self.model.objects.none()  # pylint: disable=no-member
+
+                    result_qs = result_qs | sub_result_qs
+
+        return result_qs
+
+
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
     """Adding Property Support to NumberFilter."""
 
@@ -271,7 +301,8 @@ class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
     supported_lookups = ['exact']
 
 
-EXPLICIST_ONLY_FILTERS = [
+EXPLICIT_ONLY_FILTERS = [
     PropertyChoiceFilter,
     PropertyTypedChoiceFilter,
+    PropertyMultipleChoiceFilter,
 ]

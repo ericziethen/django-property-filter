@@ -2,7 +2,7 @@
 
 
 from django_filters import Filter, FilterSet
-from django_property_filter.filters import EXPLICIST_ONLY_FILTERS
+from django_property_filter.filters import EXPLICIT_ONLY_FILTERS
 
 
 class PropertyFilterSet(FilterSet):
@@ -36,7 +36,7 @@ class PropertyFilterSet(FilterSet):
                 if not issubclass(prop_filter_class, Filter):
                     raise ValueError(F'{prop_filter_class} is not a subclass of {Filter}')
 
-                if prop_filter_class in EXPLICIST_ONLY_FILTERS:
+                if prop_filter_class in EXPLICIT_ONLY_FILTERS:
                     raise ValueError(F'{prop_filter_class} can only be declared Explicitely')
 
                 if not isinstance(prop_fld_name, str):

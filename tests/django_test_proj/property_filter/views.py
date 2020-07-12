@@ -19,6 +19,7 @@ from property_filter.models import (
     IsoDateTimeFromToRangeFilterModel,
     ModelChoiceFilterModel,
     ModelChoiceFilterRelatedModel,
+    MultipleChoiceFilterModel,
     NumberFilterModel,
     RangeFilterModel,
     TimeFilterModel,
@@ -109,6 +110,12 @@ class ModelChoiceFilterView(FilterView):
     model = ModelChoiceFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyModelChoiceFilterSet
+
+
+class MultipleChoiceFilterView(FilterView):
+    model = MultipleChoiceFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyMultipleChoiceFilterSet
 
 
 # Create your views here.

@@ -7,8 +7,23 @@
 {% endblock main_title %}
 
 {% block content %}
+
+    <h1>Data</h1>
+
+    <div class="row">
+        {% for obj in filter.qs %}
+        <div class="col-md-3 border border-dark">{{ obj }}</div>
+            <!-- if last column in row -->
+            {% if forloop.counter|divisibleby:"4" and not forloop.last %}
+            </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <h1>Filter</h1>
+
     <form action="" method="get">
-        <!--{{ filter.form.as_p }}-->
+        <input type="submit" />
 
         <h1>{{ filter.form.errors }}</h1>
 
@@ -21,22 +36,6 @@
                 {% endif %}
             {% endfor %}
         </div>
-
-        <input type="submit" />
     </form>
-    <br/><br/>
-
-    <h1>Data</h1>
-    <br/>
-
-    <div class="row">
-        {% for obj in filter.qs %}
-        <div class="col-md-3 border border-dark">{{ obj }}</div>
-            <!-- if last column in row -->
-            {% if forloop.counter|divisibleby:"4" and not forloop.last %}
-            </div><div class="row">
-            {% endif %}
-        {% endfor %}
-    </div>
 
 {% endblock %}

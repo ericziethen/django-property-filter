@@ -44,6 +44,7 @@ Invalid Type Comparison
 When the selected Filter Type and comparison is incompatible with the type the
 the property returns that queryset entry will not be a match and an error is
 logged similar to
+
     Error during comparing property value "15" withfilter value "text" with error: "'<' not supported between instances of 'int' and 'str'"
 
 .. _core-arguments:
@@ -163,6 +164,18 @@ Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
 Used instead of IsoDateTimeFromToRangeFilter for property filtering
 
 Supported lookup is 'range'
+
+``PropertyMultipleChoiceFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of MultipleChoiceFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
+Because the choices are passed as arguments this filter can only be created
+explicitely. For example::
+
+    number = PropertyMultipleChoiceFilter(property_fld_name='number', lookup_expr='exact', choices=LOOKUP_CHOICES)
 
 ``PropertyNumberFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~
