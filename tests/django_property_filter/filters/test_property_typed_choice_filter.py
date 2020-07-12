@@ -10,12 +10,12 @@ from property_filter.models import TypedChoiceFilterModel
 @pytest.mark.parametrize('lookup', PropertyTypedChoiceFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyTypedChoiceFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyTypedChoiceFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyTypedChoiceFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyTypedChoiceFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 LOOKUP_CHOICES = []
@@ -76,7 +76,7 @@ def test_lookup_xpr(fixture_property_typed_choice_filter, lookup_xpr, lookup_val
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyTypedChoiceFilterSet(FilterSet):
-        prop_text = PropertyTypedChoiceFilter(property_fld_name='prop_text', lookup_expr=lookup_xpr,
+        prop_text = PropertyTypedChoiceFilter(field_name='prop_text', lookup_expr=lookup_xpr,
                                               choices=LOOKUP_CHOICES, coerce=int)
 
         class Meta:
@@ -88,7 +88,7 @@ def test_lookup_xpr(fixture_property_typed_choice_filter, lookup_xpr, lookup_val
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyTypedChoiceFilterSet(PropertyFilterSet):
-        prop_text = PropertyTypedChoiceFilter(property_fld_name='prop_text', lookup_expr=lookup_xpr,
+        prop_text = PropertyTypedChoiceFilter(field_name='prop_text', lookup_expr=lookup_xpr,
                                               choices=LOOKUP_CHOICES, coerce=int)
 
         class Meta:

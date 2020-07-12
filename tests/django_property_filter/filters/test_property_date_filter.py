@@ -12,12 +12,12 @@ from property_filter.models import DateFilterModel
 @pytest.mark.parametrize('lookup', PropertyDateFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyDateFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyDateFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyDateFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyDateFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -57,7 +57,7 @@ def test_lookup_xpr(fixture_property_date_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyDateFilterSet(FilterSet):
-        prop_date = PropertyDateFilter(property_fld_name='prop_date', lookup_expr=lookup_xpr)
+        prop_date = PropertyDateFilter(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateFilterModel
@@ -68,7 +68,7 @@ def test_lookup_xpr(fixture_property_date_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateFilterSet(PropertyFilterSet):
-        prop_date = PropertyDateFilter(property_fld_name='prop_date', lookup_expr=lookup_xpr)
+        prop_date = PropertyDateFilter(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateFilterModel

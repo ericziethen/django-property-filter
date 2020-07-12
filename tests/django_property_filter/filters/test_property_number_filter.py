@@ -11,12 +11,12 @@ from property_filter.models import NumberFilterModel
 @pytest.mark.parametrize('lookup', PropertyNumberFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyNumberFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyNumberFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyNumberFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyNumberFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -88,7 +88,7 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyNumberFilterSet(FilterSet):
-        prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyNumberFilter(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = NumberFilterModel
@@ -99,7 +99,7 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyNumberFilterSet(PropertyFilterSet):
-        prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyNumberFilter(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = NumberFilterModel

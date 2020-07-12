@@ -10,12 +10,12 @@ from property_filter.models import MultipleChoiceFilterModel
 @pytest.mark.parametrize('lookup', PropertyMultipleChoiceFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyMultipleChoiceFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyMultipleChoiceFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyMultipleChoiceFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyMultipleChoiceFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 LOOKUP_CHOICES = []
@@ -114,7 +114,7 @@ def test_lookup_xpr(fixture_property_multiple_choice_filter, lookup_xpr, lookup_
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyMultipleChoiceFilterSet(FilterSet):
-        prop_number = PropertyMultipleChoiceFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr, conjoined=conjoined, choices=LOOKUP_CHOICES)
+        prop_number = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr=lookup_xpr, conjoined=conjoined, choices=LOOKUP_CHOICES)
 
         class Meta:
             model = MultipleChoiceFilterModel
@@ -125,7 +125,7 @@ def test_lookup_xpr(fixture_property_multiple_choice_filter, lookup_xpr, lookup_
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
-        prop_number = PropertyMultipleChoiceFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr, conjoined=conjoined, choices=LOOKUP_CHOICES)
+        prop_number = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr=lookup_xpr, conjoined=conjoined, choices=LOOKUP_CHOICES)
 
         class Meta:
             model = MultipleChoiceFilterModel

@@ -11,12 +11,12 @@ from property_filter.models import CharFilterModel
 @pytest.mark.parametrize('lookup', PropertyCharFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyCharFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyCharFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyCharFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyCharFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -72,7 +72,7 @@ def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, proper
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyCharFilterSet(FilterSet):
-        prop_name = PropertyCharFilter(property_fld_name='prop_name', lookup_expr=lookup_xpr)
+        prop_name = PropertyCharFilter(field_name='prop_name', lookup_expr=lookup_xpr)
 
         class Meta:
             model = CharFilterModel
@@ -83,7 +83,7 @@ def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, proper
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyCharFilterSet(PropertyFilterSet):
-        prop_name = PropertyCharFilter(property_fld_name='prop_name', lookup_expr=lookup_xpr)
+        prop_name = PropertyCharFilter(field_name='prop_name', lookup_expr=lookup_xpr)
 
         class Meta:
             model = CharFilterModel

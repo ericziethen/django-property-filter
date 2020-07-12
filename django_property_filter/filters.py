@@ -41,16 +41,19 @@ class PropertyBaseFilterMixin():
         'lt', 'lte', 'startswith', 'istartswith', 'endswith', 'iendswith',
     ]
 
-    def __init__(self, *args, property_fld_name, **kwargs):
+    def __init__(self, *args, **kwargs):
         """Shared Constructor for Property Filters."""
         label = kwargs.get('label')
         lookup_expr = kwargs.get('lookup_expr')
 
+        # Use a different field name for properties to avoid conflicts with property_filter implementation
+        self.property_fld_name = kwargs.get('field_name')
+        kwargs['field_name'] = None
+
         if label is None:
-            label = F'{property_fld_name} [{lookup_expr}]'
+            label = F'{self.property_fld_name} [{lookup_expr}]'
             kwargs['label'] = label
 
-        self.property_fld_name = property_fld_name
         self.verify_lookup(lookup_expr)
         super().__init__(*args, **kwargs)
 

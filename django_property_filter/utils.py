@@ -10,7 +10,7 @@ def get_value_for_db_field(obj, field_str):
         new_object = getattr(obj, sub_list[0])
         return get_attr_val_recursive(new_object, sub_list[1:])
 
-    return get_attr_val_recursive(obj, field_str.split('.'))
+    return get_attr_val_recursive(obj, field_str.split('__'))
 
 
 def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # pylint: disable=too-many-branches

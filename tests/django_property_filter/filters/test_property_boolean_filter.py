@@ -11,12 +11,12 @@ from property_filter.models import BooleanFilterModel
 @pytest.mark.parametrize('lookup', PropertyBooleanFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyBooleanFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyBooleanFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyBooleanFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyBooleanFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -52,7 +52,7 @@ def test_lookup_xpr(fixture_property_boolean_filter, lookup_xpr, lookup_val, res
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyBooleanFilterSet(FilterSet):
-        prop_is_true = PropertyBooleanFilter(property_fld_name='prop_is_true', lookup_expr=lookup_xpr)
+        prop_is_true = PropertyBooleanFilter(field_name='prop_is_true', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BooleanFilterModel
@@ -63,7 +63,7 @@ def test_lookup_xpr(fixture_property_boolean_filter, lookup_xpr, lookup_val, res
 
     # Compare with Explicit Filter using a PropertyFilterset
     class PropertyBooleanFilterSet(PropertyFilterSet):
-        prop_is_true = PropertyBooleanFilter(property_fld_name='prop_is_true', lookup_expr=lookup_xpr)
+        prop_is_true = PropertyBooleanFilter(field_name='prop_is_true', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BooleanFilterModel
