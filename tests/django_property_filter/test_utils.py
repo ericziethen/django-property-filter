@@ -27,12 +27,12 @@ class GetAttributeTests(TestCase):
         self.assertEqual(get_value_for_db_field(self.prod1, 'prop_name'), 'Sun Rice')
 
     def test_get_attribute_2_level(self):
-        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line.line_no'), 1)
-        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line.prop_line_no'), 1)
+        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line__line_no'), 1)
+        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line__prop_line_no'), 1)
 
     def test_get_attribute_3_level(self):
-        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line.delivery.address'), 'My Home')
-        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line.delivery.prop_address'), 'My Home')
+        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line__delivery__address'), 'My Home')
+        self.assertEqual(get_value_for_db_field(self.prod1, 'del_line__delivery__prop_address'), 'My Home')
 
     def test_get_attribute_invalid_object(self):
         self.assertRaises(AttributeError, get_value_for_db_field, 'None', 'id')
@@ -41,7 +41,7 @@ class GetAttributeTests(TestCase):
         self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'invalid_field')
 
     def test_get_attribute_invalid_related_field(self):
-        self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'del_line.delivery.invalid_field')
+        self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'del_line__delivery__invalid_field')
 
 
 LOOKUP_SUCCEED = [
@@ -118,44 +118,3 @@ LOOKUP_FAILED = [
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_FAILED)
 def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, property_value):
     assert not compare_by_lookup_expression(lookup_xpr, lookup_val, property_value)
-
-
-'''
-#TODO
-TODO - Define the main types we are interested in, most common test_compare_by_lookup_expression_different_types
-TODO - Include None case
-
-TYPES CONFIRMED SO FAR COMING FROM WEB
-    - bool
-    - str
-    - datetime.date
-    - datetime.datetime
-    - datetime.time
-    - datetime.timedelta
-    - decimal.Decimal
-    - uuid.UUID 
-
-    -- MAYBES
-        - float
-        
-
-LOOKUP_DIFFERENT_TYPES = [
-    (),
-
-]
-@pytest.mark.parametrize('lookup_xpr, lookup_val, property_value, expected_result', LOOKUP_DIFFERENT_TYPES)
-def test_compare_by_lookup_expression_different_types(lookup_xpr, lookup_val, property_value, expected_result):
-    assert compare_by_lookup_expression(lookup_xpr, lookup_val, property_value) == expected_result
-'''
-
-
-
-
-
-
-
-
-
-
-
-

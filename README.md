@@ -128,8 +128,8 @@ The only difference to using a normal FilterSet from django-filter is the
 
 The "property_fields" is a list of tuples with 3 values.
     1.) The property name. 
-        If the property is on a related Model it should be separated by ".",
-        and can span multiple levels e.g. fk.fk.fk.property
+        If the property is on a related Model it should be separated by "__",
+        and can span multiple levels e.g. fk__fk__fk__property
     2.) The specific Property Filter to use.
         This is necessary since it can't be determined what the return type
         of the property will be in all cases
