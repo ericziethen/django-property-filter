@@ -52,16 +52,16 @@ logged similar to
 Core Arguments
 --------------
 
-``property_fld_name``
+``field_name``
 ~~~~~~~~~~~~~~~~~~~~~
 
 The name of the property to lookup.
 
 This can be
 
-    1.) Property directly on the model e.g. "property_fld_name='my_property'"
+    1.) Property directly on the model e.g. "field_name='my_property'"
 
-    2.) A Related field property e.g. "property_fld_name='related.my_property'"
+    2.) A Related field property e.g. "field_name='related__my_property'"
         which can span as many models as are related
 
 Unmapped Filters
@@ -107,7 +107,7 @@ For supported lookups see :ref:`base_lookups`
 Because the choices are passed as arguments this filter can only be created
 explicitely. For example::
 
-    number = PropertyChoiceFilter(property_fld_name='number', lookup_expr='exact', choices=LOOKUP_CHOICES)
+    number = PropertyChoiceFilter(field_name='number', lookup_expr='exact', choices=LOOKUP_CHOICES)
 
 ``PropertyDateFilter``
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -175,7 +175,7 @@ For supported lookups see :ref:`base_lookups`
 Because the choices are passed as arguments this filter can only be created
 explicitely. For example::
 
-    number = PropertyMultipleChoiceFilter(property_fld_name='number', lookup_expr='exact', choices=LOOKUP_CHOICES)
+    number = PropertyMultipleChoiceFilter(field_name='number', lookup_expr='exact', choices=LOOKUP_CHOICES)
 
 ``PropertyNumberFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -215,7 +215,7 @@ For supported lookups see :ref:`base_lookups`
 Because the choices are passed as arguments this filter can only be created
 explicitely. For example::
 
-    number = PropertyTypedChoiceFilter(property_fld_name='number_str', lookup_expr='exact', choices=NUMBER_LIST, coerce=int)
+    number = PropertyTypedChoiceFilter(field_name='number_str', lookup_expr='exact', choices=NUMBER_LIST, coerce=int)
 
 ``PropertyUUIDFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

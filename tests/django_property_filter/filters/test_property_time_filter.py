@@ -12,12 +12,12 @@ from property_filter.models import TimeFilterModel
 @pytest.mark.parametrize('lookup', PropertyTimeFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyTimeFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyTimeFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyTimeFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyTimeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -58,7 +58,7 @@ def test_lookup_xpr(fixture_property_time_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyTimeFilterSet(FilterSet):
-        prop_time = PropertyTimeFilter(property_fld_name='prop_time', lookup_expr=lookup_xpr)
+        prop_time = PropertyTimeFilter(field_name='prop_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = TimeFilterModel
@@ -69,7 +69,7 @@ def test_lookup_xpr(fixture_property_time_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyTimeFilterSet(PropertyFilterSet):
-        prop_time = PropertyTimeFilter(property_fld_name='prop_time', lookup_expr=lookup_xpr)
+        prop_time = PropertyTimeFilter(field_name='prop_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = TimeFilterModel

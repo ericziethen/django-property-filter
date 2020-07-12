@@ -16,12 +16,12 @@ from property_filter.models import DateFromToRangeFilterModel
 @pytest.mark.parametrize('lookup', PropertyDateFromToRangeFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyDateFromToRangeFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyDateFromToRangeFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyDateFromToRangeFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyDateFromToRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -83,7 +83,7 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyDateFromToRangeFilterSet(FilterSet):
-        prop_date = PropertyDateFromToRangeFilter(property_fld_name='prop_date', lookup_expr=lookup_xpr)
+        prop_date = PropertyDateFromToRangeFilter(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateFromToRangeFilterModel
@@ -94,7 +94,7 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
-        prop_date = PropertyDateFromToRangeFilter(property_fld_name='prop_date', lookup_expr=lookup_xpr)
+        prop_date = PropertyDateFromToRangeFilter(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateFromToRangeFilterModel
@@ -148,7 +148,7 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyDateFromToRangeFilterSet(FilterSet):
-        prop_date_time = PropertyDateFromToRangeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyDateFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateFromToRangeFilterModel
@@ -159,7 +159,7 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
-        prop_date_time = PropertyDateFromToRangeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyDateFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateFromToRangeFilterModel

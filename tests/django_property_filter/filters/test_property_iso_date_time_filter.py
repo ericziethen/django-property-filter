@@ -12,12 +12,12 @@ from property_filter.models import IsoDateTimeFilterModel
 @pytest.mark.parametrize('lookup', PropertyIsoDateTimeFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyIsoDateTimeFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyIsoDateTimeFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyIsoDateTimeFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyIsoDateTimeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -58,7 +58,7 @@ def test_lookup_xpr(fixture_property_iso_date_time_filter, lookup_xpr, lookup_va
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyIsoDateTimeFilterSet(FilterSet):
-        prop_date_time = PropertyIsoDateTimeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyIsoDateTimeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = IsoDateTimeFilterModel
@@ -69,7 +69,7 @@ def test_lookup_xpr(fixture_property_iso_date_time_filter, lookup_xpr, lookup_va
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyIsoDateTimeFilterSet(PropertyFilterSet):
-        prop_date_time = PropertyIsoDateTimeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyIsoDateTimeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = IsoDateTimeFilterModel

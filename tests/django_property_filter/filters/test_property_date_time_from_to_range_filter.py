@@ -15,12 +15,12 @@ from property_filter.models import DateTimeFromToRangeFilterModel
 @pytest.mark.parametrize('lookup', PropertyDateTimeFromToRangeFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyDateTimeFromToRangeFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyDateTimeFromToRangeFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyDateTimeFromToRangeFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyDateTimeFromToRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -67,7 +67,7 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyDateTimeFromToRangeFilterSet(FilterSet):
-        prop_date_time = PropertyDateTimeFromToRangeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateTimeFromToRangeFilterModel
@@ -78,7 +78,7 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateTimeFromToRangeFilterSet(PropertyFilterSet):
-        prop_date_time = PropertyDateTimeFromToRangeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateTimeFromToRangeFilterModel

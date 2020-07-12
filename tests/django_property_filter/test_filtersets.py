@@ -31,7 +31,7 @@ def test_declare_implicit_filter_normal_fs_no_filters():
 def test_declare_explicit_filter_normal_fs():
     class Fs(FilterSet):
 
-        prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr='exact')
+        prop_number = PropertyNumberFilter(field_name='prop_number', lookup_expr='exact')
 
         class Meta:
             model = RangeFilterModel
@@ -69,7 +69,7 @@ def test_declare_implicit_filter_property_fs():
 def test_declare_explicit_filter_property_fs():
     class Fs(PropertyFilterSet):
 
-        prop_number = PropertyNumberFilter(property_fld_name='prop_number', lookup_expr='exact')
+        prop_number = PropertyNumberFilter(field_name='prop_number', lookup_expr='exact')
 
         class Meta:
             model = RangeFilterModel

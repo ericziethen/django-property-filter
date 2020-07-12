@@ -11,12 +11,12 @@ from property_filter.models import RangeFilterModel
 @pytest.mark.parametrize('lookup', PropertyRangeFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyRangeFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyRangeFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyRangeFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -60,7 +60,7 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyRangeFilterSet(FilterSet):
-        prop_number = PropertyRangeFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyRangeFilter(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = RangeFilterModel
@@ -71,7 +71,7 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyRangeFilterSet(PropertyFilterSet):
-        prop_number = PropertyRangeFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyRangeFilter(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = RangeFilterModel

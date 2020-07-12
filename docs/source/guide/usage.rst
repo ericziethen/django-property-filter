@@ -93,7 +93,7 @@ Using Filterset::
     from django_property_filter import PropertyNumberFilter
 
     class BookFilterSet(FilterSet):
-        prop_number = PropertyNumberFilter(property_fld_name='discounted_price', lookup_expr='gte')
+        prop_number = PropertyNumberFilter(field_name='discounted_price', lookup_expr='gte')
 
         class Meta:
             model = NumberClass
@@ -106,7 +106,7 @@ The same can be achieved using a PropertyFilterSet::
     from django_property_filter import PropertyNumberFilter, PropertyFilterSet
 
     class BookFilterSet(PropertyFilterSet):
-        prop_number = PropertyNumberFilter(property_fld_name='discounted_price', lookup_expr='gte')
+        prop_number = PropertyNumberFilter(field_name='discounted_price', lookup_expr='gte')
 
         class Meta:
             model = NumberClass

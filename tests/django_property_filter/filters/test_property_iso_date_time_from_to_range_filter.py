@@ -13,12 +13,12 @@ from property_filter.models import IsoDateTimeFromToRangeFilterModel
 @pytest.mark.parametrize('lookup', PropertyIsoDateTimeFromToRangeFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyIsoDateTimeFromToRangeFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyIsoDateTimeFromToRangeFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyIsoDateTimeFromToRangeFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyIsoDateTimeFromToRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -65,7 +65,7 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyIsoDateTimeFromToRangeFilterSet(FilterSet):
-        prop_date_time = PropertyIsoDateTimeFromToRangeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = IsoDateTimeFromToRangeFilterModel
@@ -76,7 +76,7 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyIsoDateTimeFromToRangeFilterSet(FilterSet):
-        prop_date_time = PropertyIsoDateTimeFromToRangeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = IsoDateTimeFromToRangeFilterModel
@@ -87,7 +87,7 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
-        prop_date_time = PropertyIsoDateTimeFromToRangeFilter(property_fld_name='prop_date_time', lookup_expr=lookup_xpr)
+        prop_date_time = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = IsoDateTimeFromToRangeFilterModel

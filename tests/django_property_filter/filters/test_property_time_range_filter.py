@@ -12,12 +12,12 @@ from property_filter.models import TimeRangeFilterModel
 @pytest.mark.parametrize('lookup', PropertyTimeRangeFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyTimeRangeFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyTimeRangeFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyTimeRangeFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyTimeRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -60,7 +60,7 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyTimeRangeFilterSet(FilterSet):
-        prop_time = PropertyTimeRangeFilter(property_fld_name='prop_time', lookup_expr=lookup_xpr)
+        prop_time = PropertyTimeRangeFilter(field_name='prop_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = TimeRangeFilterModel
@@ -71,7 +71,7 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyTimeRangeFilterSet(PropertyFilterSet):
-        prop_time = PropertyTimeRangeFilter(property_fld_name='prop_time', lookup_expr=lookup_xpr)
+        prop_time = PropertyTimeRangeFilter(field_name='prop_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = TimeRangeFilterModel

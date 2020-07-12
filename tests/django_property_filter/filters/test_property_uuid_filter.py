@@ -11,12 +11,12 @@ from property_filter.models import UUIDFilterModel
 @pytest.mark.parametrize('lookup', PropertyUUIDFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyUUIDFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyUUIDFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyUUIDFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyUUIDFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -48,7 +48,7 @@ def test_lookup_xpr(fixture_property_uuid_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyUUIDFilterSet(FilterSet):
-        prop_uuid = PropertyUUIDFilter(property_fld_name='prop_uuid', lookup_expr=lookup_xpr)
+        prop_uuid = PropertyUUIDFilter(field_name='prop_uuid', lookup_expr=lookup_xpr)
 
         class Meta:
             model = UUIDFilterModel
@@ -59,7 +59,7 @@ def test_lookup_xpr(fixture_property_uuid_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyUUIDFilterSet(PropertyFilterSet):
-        prop_uuid = PropertyUUIDFilter(property_fld_name='prop_uuid', lookup_expr=lookup_xpr)
+        prop_uuid = PropertyUUIDFilter(field_name='prop_uuid', lookup_expr=lookup_xpr)
 
         class Meta:
             model = UUIDFilterModel

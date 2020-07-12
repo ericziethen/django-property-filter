@@ -67,15 +67,15 @@ def add_supported_filters(filterset_ref, filter_class, field_name, expression_li
         add_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
 
 
-def add_property_filter(filter_list, filter_class, property_fld_name, lookup_expr, **kwargs):
-    filter_name = property_fld_name + lookup_expr
+def add_property_filter(filter_list, filter_class, field_name, lookup_expr, **kwargs):
+    filter_name = field_name + lookup_expr
     filter_list[filter_name] = filter_class(
-        property_fld_name=property_fld_name, lookup_expr=lookup_expr, **kwargs)
+        field_name=field_name, lookup_expr=lookup_expr, **kwargs)
 
 
-def add_supported_property_filters(filter_list, filter_class, property_fld_name, expression_list, **kwargs):
+def add_supported_property_filters(filter_list, filter_class, field_name, expression_list, **kwargs):
     for lookup in expression_list:
-        add_property_filter(filter_list, filter_class, property_fld_name, lookup, **kwargs)
+        add_property_filter(filter_list, filter_class, field_name, lookup, **kwargs)
 
 
 class PropertyAllValuesFilterSet(PropertyFilterSet):
@@ -240,7 +240,7 @@ class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
     choices.append((666, 'Number: 666'))
 
     number_contains_and = MultipleChoiceFilter(field_name='number', lookup_expr='contains', label='Number Contains <AND>', conjoined=True, choices=choices)
-    prop_number_contains_and = PropertyMultipleChoiceFilter(property_fld_name='prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True, choices=choices)
+    prop_number_contains_and = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True, choices=choices)
 
     class Meta:
         model = models.MultipleChoiceFilterModel

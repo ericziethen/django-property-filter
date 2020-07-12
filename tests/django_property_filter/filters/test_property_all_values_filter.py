@@ -10,12 +10,12 @@ from property_filter.models import AllValuesFilterModel
 @pytest.mark.parametrize('lookup', PropertyAllValuesFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyAllValuesFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyAllValuesFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyAllValuesFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyAllValuesFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 LOOKUP_CHOICES = []
@@ -75,7 +75,7 @@ def test_lookup_xpr(fixture_property_choice_filter, lookup_xpr, lookup_val, resu
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyAllValuesFilterSet(FilterSet):
-        prop_number = PropertyAllValuesFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyAllValuesFilter(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = AllValuesFilterModel
@@ -86,7 +86,7 @@ def test_lookup_xpr(fixture_property_choice_filter, lookup_xpr, lookup_val, resu
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyAllValuesFilterSet(PropertyFilterSet):
-        prop_number = PropertyAllValuesFilter(property_fld_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyAllValuesFilter(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = AllValuesFilterModel

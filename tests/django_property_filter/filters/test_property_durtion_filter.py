@@ -12,12 +12,12 @@ from property_filter.models import DurationFilterModel
 @pytest.mark.parametrize('lookup', PropertyDurationFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
-    PropertyDurationFilter(property_fld_name='fake_field', lookup_expr=lookup)
+    PropertyDurationFilter(field_name='fake_field', lookup_expr=lookup)
 
 
 def test_unsupported_lookup():
     with pytest.raises(ValueError):
-        PropertyDurationFilter(property_fld_name='fake_field', lookup_expr='fake-lookup')
+        PropertyDurationFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
 @pytest.fixture
@@ -61,7 +61,7 @@ def test_lookup_xpr(fixture_property_duration_filter, lookup_xpr, lookup_val, re
 
     # Compare with Explicit Filter using a normal Filterset
     class PropertyDurationFilterSet(FilterSet):
-        prop_duration = PropertyDurationFilter(property_fld_name='prop_duration', lookup_expr=lookup_xpr)
+        prop_duration = PropertyDurationFilter(field_name='prop_duration', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DurationFilterModel
@@ -72,7 +72,7 @@ def test_lookup_xpr(fixture_property_duration_filter, lookup_xpr, lookup_val, re
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDurationFilterSet(PropertyFilterSet):
-        prop_duration = PropertyDurationFilter(property_fld_name='prop_duration', lookup_expr=lookup_xpr)
+        prop_duration = PropertyDurationFilter(field_name='prop_duration', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DurationFilterModel

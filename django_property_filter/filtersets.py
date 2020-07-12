@@ -13,10 +13,10 @@ class PropertyFilterSet(FilterSet):
         super().__init__(*args, **kwargs)
         self._setup_property_filters()
 
-    def _add_filter(self, filter_class, property_fld_name, lookup_expr):
+    def _add_filter(self, filter_class, field_name, lookup_expr):
         """Add a Filter."""
-        filter_name = F'{property_fld_name}__{lookup_expr}'
-        self.filters[filter_name] = filter_class(property_fld_name=property_fld_name, lookup_expr=lookup_expr)
+        filter_name = F'{field_name}__{lookup_expr}'
+        self.filters[filter_name] = filter_class(field_name=field_name, lookup_expr=lookup_expr)
 
         # propagate the model and filterset to the filters
         self.filters[filter_name].model = self.queryset.model
