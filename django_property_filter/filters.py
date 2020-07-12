@@ -243,26 +243,26 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
 class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
 
-    def filter(self, qs, value):
-
+    def filter(self, queryset, value):
+        """Filter Multiple Choice Property Values."""
         result_qs = None
-        if qs:
+        if queryset:
             for sub_value in value:
-                sub_result_qs = super().filter(qs, sub_value)
-                print('### SuperFilter', sub_value, sub_result_qs)
+                sub_result_qs = super().filter(queryset, sub_value)
 
                 if self.conjoined:
                     if result_qs is None:
-                        result_qs = sub_result_qs  # For 'AND' start from the first qs found
+                        # For 'AND' start from the first qs found
+                        result_qs = sub_result_qs
 
                     if sub_result_qs:
-                        print('### AND, comparing', result_qs, sub_result_qs)
                         result_qs = result_qs & sub_result_qs
                     else:  # Result QS empty, 'AND' will always be False, return empty qs
                         result_qs = sub_result_qs
                 else:
                     if result_qs is None:
-                        result_qs = self.model.objects.none()  # For 'OR' start from an empty qs
+                        # For 'OR' start from an empty qs
+                        result_qs = self.model.objects.none()  # pylint: disable=no-member
 
                     result_qs = result_qs | sub_result_qs
 
