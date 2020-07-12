@@ -47,55 +47,52 @@ TEST_LOOKUPS = [
     ('exact', ['1', '2'], 'OR', [1, 2, 3, 4]),
     ('exact', ['1', '666'], 'AND', []),
     ('exact', ['1', '666'], 'OR', [1]),
-
-
-
-
-
-    #('exact', '-1', [-1]),
-    #('exact', '666', []),
-    #('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),  # None returns full queryset
-    #('iexact', '-1', [-1]),
-    #('iexact', '666', []),
-    #('contains', '2', [2, 3, 4, 8]),
-    #('contains', '666', []),
-    #('icontains', '2', [2, 3, 4, 8]),
-    #('icontains', '666', []),
-    #('gt', '20', []),
-    #('gt', '2', [5, 6, 7, 8]),
-    #('gte', '20', [8]),
-    #('gte', '2', [2, 3, 4, 5, 6, 7, 8]),
-    #('lt', '2', [-1, 0, 1]),
-    #('lt', '-1', []),
-    #('lte', '2', [-1, 0, 1, 2, 3, 4]),
-    #('lte', '-1', [-1]),
-    #('startswith', '666', []),
-    #('startswith', '2', [2, 3, 4, 8]),
-    #('istartswith', '666', []),
-    #('istartswith', '2', [2, 3, 4, 8]),
-    #('endswith', '666', []),
-    #('endswith', '0', [0, 7, 8]),
-    #('endswith', '3', [5]),
-    #('iendswith', '666', []),
-    #('iendswith', '0', [0, 7, 8]),
-    #('iendswith', '3', [5]),
+    ('iexact', ['666'], 'AND', []),
+    ('iexact', ['666'], 'OR', []),
+    ('iexact', ['2'], 'AND', [2, 3, 4]),
+    ('iexact', ['2'], 'OR', [2, 3, 4]),
+    ('iexact', ['1', '2'], 'AND', []),
+    ('iexact', ['1', '2'], 'OR', [1, 2, 3, 4]),
+    ('iexact', ['1', '666'], 'AND', []),
+    ('iexact', ['1', '666'], 'OR', [1]),
+    ('contains', ['1', '2'], 'AND', []),
+    ('contains', ['2'], 'AND', [2, 3, 4, 8]),
+    ('contains', ['0', '2'], 'AND', [8]),
+    ('contains', ['0', '2'], 'OR', [0, 2, 3, 4, 7, 8]),
+    ('contains', ['1', '666'], 'AND', []),
+    ('contains', ['1', '666'], 'OR', [-1, 1, 7]),
+    ('contains', ['0', '1', '2', '3', '4', '10', '20'], 'OR', [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8]),
+    ('icontains', ['2'], 'AND', [2, 3, 4, 8]),
+    ('icontains', ['1', '2'], 'AND', []),
+    ('icontains', ['0', '2'], 'AND', [8]),
+    ('icontains', ['0', '2'], 'OR', [0, 2, 3, 4, 7, 8]),
+    ('icontains', ['1', '666'], 'AND', []),
+    ('icontains', ['1', '666'], 'OR', [-1, 1, 7]),
+    ('gt', ['3', '10'], 'AND', [8]),
+    ('gt', ['3', '10'], 'OR', [6, 7, 8]),
+    ('gte', ['3', '10'], 'AND', [7, 8]),
+    ('gte', ['3', '10'], 'OR', [5, 6, 7, 8]),
+    ('lt', ['3', '10'], 'AND', [-1, 0, 1, 2, 3, 4]),
+    ('lt', ['3', '10'], 'OR', [-1, 0, 1, 2, 3, 4, 5, 6]),
+    ('lte', ['3', '10'], 'AND', [-1, 0, 1, 2, 3, 4, 5]),
+    ('lte', ['3', '10'], 'OR', [-1, 0, 1, 2, 3, 4, 5, 6, 7]),
+    ('startswith', ['2'], 'AND', [2, 3, 4, 8]),
+    ('startswith', ['2', '3'], 'AND', []),
+    ('startswith', ['2', '3'], 'OR', [2, 3, 4, 5, 8]),
+    ('istartswith', ['2'], 'AND', [2, 3, 4, 8]),
+    ('istartswith', ['2', '3'], 'AND', []),
+    ('istartswith', ['2', '3'], 'OR', [2, 3, 4, 5, 8]),
+    ('endswith', ['0'], 'AND', [0, 7, 8]),
+    ('endswith', ['0', '3'], 'AND', []),
+    ('endswith', ['0', '3'], 'OR', [0, 5, 7, 8]),
+    ('iendswith', ['0'], 'AND', [0, 7, 8]),
+    ('iendswith', ['0', '3'], 'AND', []),
+    ('iendswith', ['0', '3'], 'OR', [0, 5, 7, 8]),
 ]
 
 
 @pytest.mark.parametrize('lookup_xpr, lookup_val, and_or, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
-
-
-
-
-
-
-
-@pytest.mark.debug
-
-
-
-
 def test_lookup_xpr(fixture_property_multiple_choice_filter, lookup_xpr, lookup_val, and_or, result_list):
     if and_or == 'AND':
         conjoined = True

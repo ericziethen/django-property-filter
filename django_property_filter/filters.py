@@ -240,12 +240,8 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
     supported_lookups = ['range']
 
 
-class PropertyMultipleChoiceFilter(PropertyBaseFilterMixin, MultipleChoiceFilter):
+class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
-
-
-
-
 
     def filter(self, qs, value):
 
@@ -271,16 +267,6 @@ class PropertyMultipleChoiceFilter(PropertyBaseFilterMixin, MultipleChoiceFilter
                     result_qs = result_qs | sub_result_qs
 
         return result_qs
-
-
-
-
-
-
-
-
-
-
 
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
