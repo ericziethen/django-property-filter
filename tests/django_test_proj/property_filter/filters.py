@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(R'..\..'))
 
 from django_filters.filters import (
     AllValuesFilter,
+    AllValuesMultipleFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -30,6 +31,7 @@ from django_filters.filters import (
 from django_property_filter import (
     PropertyFilterSet,
     PropertyAllValuesFilter,
+    PropertyAllValuesMultipleFilter,
     PropertyBooleanFilter,
     PropertyCharFilter,
     PropertyChoiceFilter,
@@ -56,26 +58,23 @@ from property_filter import models
 def add_filter(filterset_ref, filter_class, field_name, lookup_expr, **kwargs):
     filter_name = field_name + lookup_expr
     label = F'{field_name} [{lookup_expr}]'
-    filterset_ref.filters[filter_name] = filter_class(label=label, field_name=field_name,
-                                                      lookup_expr=lookup_expr, **kwargs)
-    filterset_ref.filters[filter_name].model = filterset_ref.queryset.model
-    filterset_ref.filters[filter_name].parent = filterset_ref
-
+    filterset_ref.base_filters[filter_name] = filter_class(label=label, field_name=field_name,
+                                                           lookup_expr=lookup_expr, **kwargs)
 
 def add_supported_filters(filterset_ref, filter_class, field_name, expression_list, **kwargs):
     for lookup in expression_list:
         add_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
 
 
-def add_property_filter(filter_list, filter_class, field_name, lookup_expr, **kwargs):
+def add_property_filter(filterset_ref, filter_class, field_name, lookup_expr, **kwargs):
     filter_name = field_name + lookup_expr
-    filter_list[filter_name] = filter_class(
+    filterset_ref.base_filters[filter_name] = filter_class(
         field_name=field_name, lookup_expr=lookup_expr, **kwargs)
 
 
-def add_supported_property_filters(filter_list, filter_class, field_name, expression_list, **kwargs):
+def add_supported_property_filters(filterset_ref, filter_class, field_name, expression_list, **kwargs):
     for lookup in expression_list:
-        add_property_filter(filter_list, filter_class, field_name, lookup, **kwargs)
+        add_property_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
 
 
 class PropertyAllValuesFilterSet(PropertyFilterSet):
@@ -86,8 +85,24 @@ class PropertyAllValuesFilterSet(PropertyFilterSet):
         property_fields = [('prop_number', PropertyAllValuesFilter, PropertyAllValuesFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, AllValuesFilter, 'number', PropertyAllValuesFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
+
+
+class PropertyAllValuesMultipleFilterSet(PropertyFilterSet):
+
+    number_contains_and = AllValuesMultipleFilter(field_name='number', lookup_expr='contains', label='Number Contains <AND>', conjoined=True)
+    prop_number_contains_and = PropertyAllValuesMultipleFilter(field_name='prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True)
+
+    class Meta:
+        model = models.AllValuesMultipleFilterModel
+        exclude = ['number']
+        fields = ['number_contains_and', 'prop_number_contains_and']
+        property_fields = [('prop_number', PropertyAllValuesMultipleFilter, PropertyAllValuesMultipleFilter.supported_lookups)]
+
+    def __init__(self, *args, **kwargs):
+        add_supported_filters(self, AllValuesMultipleFilter, 'number', PropertyAllValuesMultipleFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyBooleanFilterSet(PropertyFilterSet):
@@ -98,8 +113,8 @@ class PropertyBooleanFilterSet(PropertyFilterSet):
         property_fields = [('prop_is_true', PropertyBooleanFilter, PropertyBooleanFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, BooleanFilter, 'is_true', PropertyBooleanFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyCharFilterSet(PropertyFilterSet):
@@ -110,8 +125,8 @@ class PropertyCharFilterSet(PropertyFilterSet):
         property_fields = [('prop_name', PropertyCharFilter, PropertyCharFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, CharFilter, 'name', PropertyCharFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyChoiceFilterSet(PropertyFilterSet):
@@ -121,12 +136,12 @@ class PropertyChoiceFilterSet(PropertyFilterSet):
         exclude = ['number']
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         choices = [(c.number, F'Number: {c.number}') for c in models.ChoiceFilterModel.objects.order_by('id')]
         choices.append((-1, 'Number: -1'))
         choices.append((666, 'Number: 666'))
         add_supported_filters(self, ChoiceFilter, 'number', PropertyChoiceFilter.supported_lookups, choices=choices)
-        add_supported_property_filters(self.filters, PropertyChoiceFilter, 'prop_number', PropertyChoiceFilter.supported_lookups, choices=choices)
+        add_supported_property_filters(self, PropertyChoiceFilter, 'prop_number', PropertyChoiceFilter.supported_lookups, choices=choices)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyDateFilterSet(PropertyFilterSet):
@@ -137,8 +152,8 @@ class PropertyDateFilterSet(PropertyFilterSet):
         property_fields = [('prop_date', PropertyDateFilter, PropertyDateFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, DateFilter, 'date', PropertyDateFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
@@ -152,9 +167,9 @@ class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
             ]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, DateFromToRangeFilter, 'date', PropertyDateFromToRangeFilter.supported_lookups)
         add_supported_filters(self, DateFromToRangeFilter, 'date_time', PropertyDateFromToRangeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyDateRangeFilterSet(PropertyFilterSet):
@@ -168,9 +183,9 @@ class PropertyDateRangeFilterSet(PropertyFilterSet):
             ]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, DateRangeFilter, 'date', PropertyDateRangeFilter.supported_lookups)
         add_supported_filters(self, DateRangeFilter, 'date_time', PropertyDateRangeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyDateTimeFilterSet(PropertyFilterSet):
@@ -181,8 +196,8 @@ class PropertyDateTimeFilterSet(PropertyFilterSet):
         property_fields = [('prop_date_time', PropertyDateTimeFilter, PropertyDateTimeFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, DateTimeFilter, 'date_time', PropertyDateTimeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyDateTimeFromToRangeFilterSet(PropertyFilterSet):
@@ -193,8 +208,8 @@ class PropertyDateTimeFromToRangeFilterSet(PropertyFilterSet):
         property_fields = [('prop_date_time', PropertyDateTimeFromToRangeFilter, PropertyDateTimeFromToRangeFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, DateTimeFromToRangeFilter, 'date_time', PropertyDateTimeFromToRangeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyDurationFilterSet(PropertyFilterSet):
@@ -205,8 +220,8 @@ class PropertyDurationFilterSet(PropertyFilterSet):
         property_fields = [('prop_duration', PropertyDurationFilter, PropertyDurationFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, DurationFilter, 'duration', PropertyDurationFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyIsoDateTimeFilterSet(PropertyFilterSet):
@@ -217,8 +232,8 @@ class PropertyIsoDateTimeFilterSet(PropertyFilterSet):
         property_fields = [('prop_date_time', PropertyIsoDateTimeFilter, PropertyIsoDateTimeFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, IsoDateTimeFilter, 'date_time', PropertyIsoDateTimeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
@@ -229,8 +244,8 @@ class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
         property_fields = [('prop_date_time', PropertyIsoDateTimeFromToRangeFilter, PropertyIsoDateTimeFromToRangeFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, IsoDateTimeFromToRangeFilter, 'date_time', PropertyIsoDateTimeFromToRangeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
@@ -247,10 +262,9 @@ class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
         exclude = ['number']
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
         add_supported_filters(self, MultipleChoiceFilter, 'number', PropertyMultipleChoiceFilter.supported_lookups, choices=self.choices)
-        add_supported_property_filters(self.filters, PropertyMultipleChoiceFilter, 'prop_number', PropertyMultipleChoiceFilter.supported_lookups, choices=self.choices)
+        add_supported_property_filters(self, PropertyMultipleChoiceFilter, 'prop_number', PropertyMultipleChoiceFilter.supported_lookups, choices=self.choices)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyModelChoiceFilterSet(PropertyFilterSet):
@@ -272,8 +286,8 @@ class PropertyNumberFilterSet(PropertyFilterSet):
         property_fields = [('prop_number', PropertyNumberFilter, PropertyNumberFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, NumberFilter, 'number', PropertyNumberFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyRangeFilterSet(PropertyFilterSet):
@@ -284,8 +298,8 @@ class PropertyRangeFilterSet(PropertyFilterSet):
         property_fields = [('prop_number', PropertyRangeFilter, PropertyRangeFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, RangeFilter, 'number', PropertyRangeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyTimeFilterSet(PropertyFilterSet):
@@ -296,8 +310,8 @@ class PropertyTimeFilterSet(PropertyFilterSet):
         property_fields = [('prop_time', PropertyTimeFilter, PropertyTimeFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, TimeFilter, 'time', PropertyTimeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyTimeRangeFilterSet(PropertyFilterSet):
@@ -308,8 +322,8 @@ class PropertyTimeRangeFilterSet(PropertyFilterSet):
         property_fields = [('prop_time', PropertyTimeRangeFilter, PropertyTimeRangeFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, TimeRangeFilter, 'time', PropertyTimeRangeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyTypedChoiceFilterSet(PropertyFilterSet):
@@ -319,10 +333,10 @@ class PropertyTypedChoiceFilterSet(PropertyFilterSet):
         exclude = ['text']
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         choices = [(c.text, F'{c.text}') for c in models.TypedChoiceFilterModel.objects.order_by('id')]
         add_supported_filters(self, TypedChoiceFilter, 'text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
-        add_supported_property_filters(self.filters, PropertyTypedChoiceFilter, 'prop_text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
+        add_supported_property_filters(self, PropertyTypedChoiceFilter, 'prop_text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
+        super().__init__(*args, **kwargs)
 
 
 class PropertyUUIDFilterSet(PropertyFilterSet):
@@ -333,5 +347,5 @@ class PropertyUUIDFilterSet(PropertyFilterSet):
         property_fields = [('prop_uuid', PropertyUUIDFilter, PropertyUUIDFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         add_supported_filters(self, UUIDFilter, 'uuid', PropertyUUIDFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
