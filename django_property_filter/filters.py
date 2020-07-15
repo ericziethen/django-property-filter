@@ -112,7 +112,6 @@ class MultipleChoiceFilterMixin():  # pylint: disable=too-few-public-methods
 
     def filter(self, queryset, value):
         """Filter Multiple Choice Property Values."""
-
         # If no or empty qs there is nothing to filter, leave the qs untouched
         if not queryset or not value:
             return queryset
@@ -144,7 +143,6 @@ class MultipleChoiceFilterMixin():  # pylint: disable=too-few-public-methods
 class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
     """Adding Property Support to AllValuesFilter."""
 
-    
     @property
     def field(self):
         """Filed Property to setup default choices."""
@@ -161,7 +159,6 @@ class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, Al
 
         # Need to Call parent's Parent since our Parent uses DB fields directly
         return super(AllValuesFilter, self).field
-
 
 
 class PropertyAllValuesMultipleFilter(

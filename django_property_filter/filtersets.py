@@ -16,7 +16,8 @@ class PropertyFilterSet(FilterSet):
     def _add_filter(self, filter_class, field_name, lookup_expr):
         """Add a Filter."""
         filter_name = F'{field_name}__{lookup_expr}'
-        self.base_filters[filter_name] = filter_class(field_name=field_name, lookup_expr=lookup_expr)
+        self.base_filters[filter_name] = filter_class(  # pylint: disable=no-member
+            field_name=field_name, lookup_expr=lookup_expr)
 
     def _setup_property_filters(self):
         """Set up implicit filters."""
