@@ -19,7 +19,7 @@ def test_unsupported_lookup():
 
 
 @pytest.fixture
-def fixture_property_multiple_choice_filter():
+def fixture_property_all_values_multiple_filter():
     AllValuesMultipleFilterModel.objects.create(id=-1, number=-1)
     AllValuesMultipleFilterModel.objects.create(id=0, number=0)
     AllValuesMultipleFilterModel.objects.create(id=1, number=1)
@@ -31,6 +31,21 @@ def fixture_property_multiple_choice_filter():
     AllValuesMultipleFilterModel.objects.create(id=7, number=10)
     AllValuesMultipleFilterModel.objects.create(id=8, number=20)
     AllValuesMultipleFilterModel.objects.create(id=9)
+
+
+@pytest.mark.django_db
+def test_filter_no_values_skip_filtering(fixture_property_all_values_multiple_filter):
+
+    class PropertyAllValuesMultipleFilterSet(PropertyFilterSet):
+        prop_number = PropertyAllValuesMultipleFilter(field_name='prop_number', lookup_expr='exact')
+
+        class Meta:
+            model = AllValuesMultipleFilterModel
+            fields = ['prop_number']
+
+
+    prop_filter_fs = PropertyAllValuesMultipleFilterSet({'prop_number': None}, queryset=AllValuesMultipleFilterModel.objects.all())
+    assert set(prop_filter_fs.qs) == set(AllValuesMultipleFilterModel.objects.all())
 
 
 TEST_LOOKUPS = [
@@ -76,7 +91,7 @@ TEST_LOOKUPS = [
 
 @pytest.mark.parametrize('lookup_xpr, lookup_val, and_or, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
-def test_lookup_xpr(fixture_property_multiple_choice_filter, lookup_xpr, lookup_val, and_or, result_list):
+def test_lookup_xpr(fixture_property_all_values_multiple_filter, lookup_xpr, lookup_val, and_or, result_list):
     if and_or == 'AND':
         conjoined = True
     elif and_or == 'OR':
