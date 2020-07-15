@@ -344,5 +344,6 @@ class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
 EXPLICIT_ONLY_FILTERS = [
     PropertyChoiceFilter,
     PropertyTypedChoiceFilter,
+    PropertyTypedMultipleChoiceFilter,
     PropertyMultipleChoiceFilter,
 ]
