@@ -279,6 +279,17 @@ class TypedChoiceFilterModel(models.Model):
         return F'{self.text} ({self.id})'
 
 
+class TypedMultipleChoiceFilterModel(models.Model):
+    text = models.CharField(max_length=32)
+
+    @property
+    def prop_text(self):
+        return self.text
+
+    def __str__(self):
+        return F'{self.text} ({self.id})'
+
+
 class UUIDFilterModel(models.Model):
     uuid = models.UUIDField()
 
