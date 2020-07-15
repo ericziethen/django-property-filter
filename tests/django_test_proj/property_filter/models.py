@@ -48,6 +48,17 @@ class AllValuesFilterModel(models.Model):
         return F'{self.number} ({self.id})'
 
 
+class AllValuesMultipleFilterModel(models.Model):
+    number = models.IntegerField(null=True)
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    def __str__(self):
+        return F'{self.number} ({self.id})'
+
+
 class BooleanFilterModel(models.Model):
     is_true = models.BooleanField(null=True)
 

@@ -53,7 +53,7 @@ Core Arguments
 --------------
 
 ``field_name``
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 The name of the property to lookup.
 
@@ -80,6 +80,13 @@ Property Filter Classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Used instead of AllValuesFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
+``PropertyAllValuesMultipleFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of AllValuesMultipleFilter for property filtering.
 
 For supported lookups see :ref:`base_lookups`
 

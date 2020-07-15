@@ -5,6 +5,7 @@ import logging
 
 from django_filters.filters import (
     AllValuesFilter,
+    AllValuesMultipleFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -106,6 +107,39 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
         return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, new_property_value)
 
 
+class MultipleChoiceFilterMixin():  # pylint: disable=too-few-public-methods
+    """Provide filtering for multiple choice FIlter."""
+
+    def filter(self, queryset, value):
+        """Filter Multiple Choice Property Values."""
+        # If no or empty qs there is nothing to filter, leave the qs untouched
+        if not queryset or not value:
+            return queryset
+
+        result_qs = None
+
+        for sub_value in value:
+            sub_result_qs = super().filter(queryset, sub_value)
+
+            if self.conjoined:
+                if result_qs is None:
+                    # For 'AND' start from the first qs found
+                    result_qs = sub_result_qs
+
+                if sub_result_qs:
+                    result_qs = result_qs & sub_result_qs
+                else:  # Result QS empty, 'AND' will always be False, return empty qs
+                    result_qs = sub_result_qs
+            else:
+                if result_qs is None:
+                    # For 'OR' start from an empty qs
+                    result_qs = self.model.objects.none()  # pylint: disable=no-member
+
+                result_qs = result_qs | sub_result_qs
+
+        return result_qs if result_qs is not None else self.model.objects.none()
+
+
 class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
     """Adding Property Support to AllValuesFilter."""
 
@@ -125,6 +159,28 @@ class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, Al
 
         # Need to Call parent's Parent since our Parent uses DB fields directly
         return super(AllValuesFilter, self).field
+
+
+class PropertyAllValuesMultipleFilter(
+        ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, AllValuesMultipleFilter):
+    """Adding Property Support to AllValuesFilter."""
+
+    @property
+    def field(self):
+        """Filed Property to setup default choices."""
+        queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
+
+        value_list = []
+        for obj in queryset:
+            property_value = get_value_for_db_field(obj, self.property_fld_name)
+            value_list.append(property_value)
+
+        value_list = sorted(set(value_list), key=lambda x: (x is None, x))
+
+        self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
+
+        # Need to Call parent's Parent since our Parent uses DB fields directly
+        return super(AllValuesMultipleFilter, self).field
 
 
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
@@ -243,33 +299,9 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
     supported_lookups = ['range']
 
 
-class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
+class PropertyMultipleChoiceFilter(
+        ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
-
-    def filter(self, queryset, value):
-        """Filter Multiple Choice Property Values."""
-        result_qs = None
-        if queryset:
-            for sub_value in value:
-                sub_result_qs = super().filter(queryset, sub_value)
-
-                if self.conjoined:
-                    if result_qs is None:
-                        # For 'AND' start from the first qs found
-                        result_qs = sub_result_qs
-
-                    if sub_result_qs:
-                        result_qs = result_qs & sub_result_qs
-                    else:  # Result QS empty, 'AND' will always be False, return empty qs
-                        result_qs = sub_result_qs
-                else:
-                    if result_qs is None:
-                        # For 'OR' start from an empty qs
-                        result_qs = self.model.objects.none()  # pylint: disable=no-member
-
-                    result_qs = result_qs | sub_result_qs
-
-        return result_qs
 
 
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):

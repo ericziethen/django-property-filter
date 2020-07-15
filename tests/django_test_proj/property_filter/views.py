@@ -6,6 +6,7 @@ from django_filters.views import FilterView
 
 from property_filter.models import (
     AllValuesFilterModel,
+    AllValuesMultipleFilterModel,
     BooleanFilterModel,
     CharFilterModel,
     ChoiceFilterModel,
@@ -38,6 +39,12 @@ class AllValuesFilterView(FilterView):
     model = AllValuesFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyAllValuesFilterSet
+
+
+class AllValuesMultipleFilterView(FilterView):
+    model = AllValuesMultipleFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyAllValuesMultipleFilterSet
 
 
 class BooleanFilterView(FilterView):

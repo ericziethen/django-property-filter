@@ -23,5 +23,6 @@
     "python.linting.banditEnabled": true,
 
     "python.linting.mypyEnabled": false,
-    "python.envFile": "${workspaceFolder}/.env_vars"
+    "python.envFile": "${workspaceFolder}/.env_vars",
+    "restructuredtext.confPath": "${workspaceFolder}\\docs\\source"
 }
