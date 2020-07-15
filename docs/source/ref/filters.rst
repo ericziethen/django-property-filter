@@ -83,6 +83,13 @@ Used instead of AllValuesFilter for property filtering.
 
 For supported lookups see :ref:`base_lookups`
 
+``PropertyAllValuesMultipleFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of AllValuesMultipleFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
 ``PropertyBooleanFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
