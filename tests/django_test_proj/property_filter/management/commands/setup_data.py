@@ -359,10 +359,11 @@ class Command(BaseCommand):
         TypedMultipleChoiceFilterModel.objects.create(id=1, text='1')
         TypedMultipleChoiceFilterModel.objects.create(id=2, text='One')
         TypedMultipleChoiceFilterModel.objects.create(id=3, text='2')
-        TypedMultipleChoiceFilterModel.objects.create(id=4, text='Two')
+        TypedMultipleChoiceFilterModel.objects.create(id=4, text='2')
         TypedMultipleChoiceFilterModel.objects.create(id=5, text='Not a Number')
-        TypedMultipleChoiceFilterModel.objects.create(id=6, text='3.3')
-        TypedMultipleChoiceFilterModel.objects.create(id=7)
+        TypedMultipleChoiceFilterModel.objects.create(id=6, text='3')
+        TypedMultipleChoiceFilterModel.objects.create(id=7, text='3.3')
+        TypedMultipleChoiceFilterModel.objects.create(id=8)
 
     def setup_uuid_filter_model(self):
         print('Setup UUIDFilterModel')

@@ -25,6 +25,7 @@ from django_filters.filters import (
     TimeFilter,
     TimeRangeFilter,
     TypedChoiceFilter,
+    TypedMultipleChoiceFilter,
     UUIDFilter,
 )
 
@@ -49,6 +50,7 @@ from django_property_filter import (
     PropertyTimeFilter,
     PropertyTimeRangeFilter,
     PropertyTypedChoiceFilter,
+    PropertyTypedMultipleChoiceFilter,
     PropertyUUIDFilter,
 )
 
@@ -336,6 +338,26 @@ class PropertyTypedChoiceFilterSet(PropertyFilterSet):
         choices = [(c.text, F'{c.text}') for c in models.TypedChoiceFilterModel.objects.order_by('id')]
         add_supported_filters(self, TypedChoiceFilter, 'text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
         add_supported_property_filters(self, PropertyTypedChoiceFilter, 'prop_text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
+        super().__init__(*args, **kwargs)
+
+
+class PropertyTypedMultipleChoiceFilterSet(PropertyFilterSet):
+
+    choices = [(c.text, F'{c.text}') for c in models.TypedMultipleChoiceFilterModel.objects.order_by('id')]
+    choices.append(('__NOT IN LIST__', '__NOT IN LIST__'))
+    choices.append(('666', '666'))
+
+    text_contains_and = TypedMultipleChoiceFilter(field_name='text', lookup_expr='contains', label='Text Contains <AND>', conjoined=True, choices=choices)
+    prop_text_contains_and = PropertyTypedMultipleChoiceFilter(field_name='prop_text', lookup_expr='contains', label='Prop Text Contains <AND>', conjoined=True, choices=choices)
+
+    class Meta:
+        model = models.TypedMultipleChoiceFilterModel
+        exclude = ['text']
+        fields = ['text_contains_and', 'prop_text_contains_and']
+
+    def __init__(self, *args, **kwargs):
+        add_supported_filters(self, TypedMultipleChoiceFilter, 'text', PropertyTypedMultipleChoiceFilter.supported_lookups, choices=self.choices, coerce=int)
+        add_supported_property_filters(self, PropertyTypedMultipleChoiceFilter, 'prop_text', PropertyTypedMultipleChoiceFilter.supported_lookups, choices=self.choices, coerce=int)
         super().__init__(*args, **kwargs)
 
 

@@ -41,5 +41,6 @@ urlpatterns = [
     path('time_filter/', views.TimeFilterView.as_view(), name='time_filter'),
     path('time_range_filter/', views.TimeRangeFilterView.as_view(), name='time_range_filter'),
     path('typed_choice_filter/', views.TypedChoiceFilterView.as_view(), name='typed_choice_filter'),
+    path('typed_mutiple_choice_filter/', views.TypedMultipleChoiceFilterView.as_view(), name='typed_mutiple_choice_filter'),
     path('uuid_filter/', views.UUIDFilterView.as_view(), name='uuid_filter'),
 ]

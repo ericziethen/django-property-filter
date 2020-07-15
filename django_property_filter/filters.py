@@ -23,6 +23,7 @@ from django_filters.filters import (
     TimeFilter,
     TimeRangeFilter,
     TypedChoiceFilter,
+    TypedMultipleChoiceFilter,
     UUIDFilter,
 )
 
@@ -328,6 +329,10 @@ class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
 
 class PropertyTypedChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, TypedChoiceFilter):
     """Adding Property Support to TypedChoiceFilter."""
+
+
+class PropertyTypedMultipleChoiceFilter(ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, TypedMultipleChoiceFilter):
+    """Adding Property Support to TypedMultipleChoiceFilter."""
 
 
 class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):

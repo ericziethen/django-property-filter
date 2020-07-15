@@ -26,6 +26,7 @@ from property_filter.models import (
     TimeFilterModel,
     TimeRangeFilterModel,
     TypedChoiceFilterModel,
+    TypedMultipleChoiceFilterModel,
     UUIDFilterModel,
 )
 
@@ -154,6 +155,12 @@ class TypedChoiceFilterView(FilterView):
     model = TypedChoiceFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyTypedChoiceFilterSet
+
+
+class TypedMultipleChoiceFilterView(FilterView):
+    model = TypedMultipleChoiceFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyTypedMultipleChoiceFilterSet
 
 
 class UUIDFilterView(FilterView):
