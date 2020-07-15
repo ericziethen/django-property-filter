@@ -53,7 +53,7 @@ Core Arguments
 --------------
 
 ``field_name``
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 The name of the property to lookup.
 
