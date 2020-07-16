@@ -331,7 +331,8 @@ class PropertyTypedChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, 
     """Adding Property Support to TypedChoiceFilter."""
 
 
-class PropertyTypedMultipleChoiceFilter(ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, TypedMultipleChoiceFilter):
+class PropertyTypedMultipleChoiceFilter(
+        ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, TypedMultipleChoiceFilter):
     """Adding Property Support to TypedMultipleChoiceFilter."""
 
 
