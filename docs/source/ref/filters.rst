@@ -224,8 +224,20 @@ explicitely. For example::
 
     number = PropertyTypedChoiceFilter(field_name='number_str', lookup_expr='exact', choices=NUMBER_LIST, coerce=int)
 
+``PropertyTypedMultipleChoiceFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of TypedMultipleChoiceFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
+Because the choices are passed as arguments this filter can only be created
+explicitely. For example::
+
+    number = PropertyTypedMultipleChoiceFilter(field_name='number_str', lookup_expr='exact', choices=NUMBER_LIST, coerce=int)
+
 ``PropertyUUIDFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Used instead of UUIDFilter for property filtering
 

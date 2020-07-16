@@ -29,6 +29,7 @@ from property_filter.models import (
     TimeFilterModel,
     TimeRangeFilterModel,
     TypedChoiceFilterModel,
+    TypedMultipleChoiceFilterModel,
     UUIDFilterModel,
 )
 
@@ -62,6 +63,7 @@ class Command(BaseCommand):
             self.setup_time_filter_model()
             self.setup_time_range_filter_model()
             self.setup_typed_choice_filter_model()
+            self.setup_typed_multiple_choice_filter_model()
             self.setup_uuid_filter_model()
 
         print('>> Setup Finished')
@@ -350,6 +352,18 @@ class Command(BaseCommand):
         TypedChoiceFilterModel.objects.create(id=5, text='Not a Number')
         TypedChoiceFilterModel.objects.create(id=6, text='3.3')
         TypedChoiceFilterModel.objects.create(id=7)
+
+    def setup_typed_multiple_choice_filter_model(self):
+        print('Setup TypedMultipleChoiceFilterModel')
+
+        TypedMultipleChoiceFilterModel.objects.create(id=1, text='1')
+        TypedMultipleChoiceFilterModel.objects.create(id=2, text='One')
+        TypedMultipleChoiceFilterModel.objects.create(id=3, text='2')
+        TypedMultipleChoiceFilterModel.objects.create(id=4, text='2')
+        TypedMultipleChoiceFilterModel.objects.create(id=5, text='Not a Number')
+        TypedMultipleChoiceFilterModel.objects.create(id=6, text='3')
+        TypedMultipleChoiceFilterModel.objects.create(id=7, text='3.3')
+        TypedMultipleChoiceFilterModel.objects.create(id=8)
 
     def setup_uuid_filter_model(self):
         print('Setup UUIDFilterModel')
