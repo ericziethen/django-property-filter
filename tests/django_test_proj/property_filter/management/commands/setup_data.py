@@ -286,12 +286,14 @@ class Command(BaseCommand):
         related_a = ModelChoiceFilterRelatedModel.objects.create(id=1, text='AAA')
         related_b = ModelChoiceFilterRelatedModel.objects.create(id=2, text='BBB')
         related_c = ModelChoiceFilterRelatedModel.objects.create(id=3, text='CCC')
+        related_d = ModelChoiceFilterRelatedModel.objects.create(id=4, text='DDD')
 
         ModelChoiceFilterModel.objects.create(id=1, related=related_a)
         ModelChoiceFilterModel.objects.create(id=2, related=related_a)
         ModelChoiceFilterModel.objects.create(id=3, related=related_a)
         ModelChoiceFilterModel.objects.create(id=4, related=related_c)
         ModelChoiceFilterModel.objects.create(id=5, related=related_c)
+        ModelChoiceFilterModel.objects.create(id=6, related=related_d)
 
     def setup_multiple_choice_filter_model(self):
         print('Setup MultipleChoiceFilterModel')

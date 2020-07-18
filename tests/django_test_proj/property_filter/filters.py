@@ -19,6 +19,7 @@ from django_filters.filters import (
     IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
     ModelChoiceFilter,
+    ModelMultipleChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
     RangeFilter,
@@ -271,9 +272,20 @@ class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
 
 class PropertyModelChoiceFilterSet(PropertyFilterSet):
 
-    # No Property filter since working directly with FOreign Keys
+    # No Property filter since working directly with Foreign Keys
 
     related = ModelChoiceFilter(queryset=models.ModelChoiceFilterRelatedModel.objects.all())
+
+    class Meta:
+        model = models.ModelChoiceFilterModel
+        fields = ['related']
+
+
+class PropertyModelMultipleChoiceFilterSet(PropertyFilterSet):
+
+    # No Property filter since working directly with Foreign Keys
+
+    related = ModelMultipleChoiceFilter(queryset=models.ModelChoiceFilterRelatedModel.objects.all())
 
     class Meta:
         model = models.ModelChoiceFilterModel

@@ -73,6 +73,12 @@ Unmapped Filters
 Because ModelChoiceFilter works directly on a models foreign keys, there is no
 need for a property filter.
 
+``ModelMultipleChoiceFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Because ModelMultipleChoiceFilter works directly on a models foreign keys, there
+is no need for a property filter.
+
 Property Filter Classes
 -----------------------
 

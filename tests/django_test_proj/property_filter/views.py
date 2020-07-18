@@ -120,6 +120,12 @@ class ModelChoiceFilterView(FilterView):
     filterset_class = filters.PropertyModelChoiceFilterSet
 
 
+class ModelMultipleChoiceFilterView(FilterView):
+    model = ModelChoiceFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyModelMultipleChoiceFilterSet
+
+
 class MultipleChoiceFilterView(FilterView):
     model = MultipleChoiceFilterModel
     template_name = 'generic_filter.html'
