@@ -8,7 +8,7 @@ run_tester () {
     local tester_script=$2
 
     echo "### TESTING START - '$tester_script' ###"
-    $tester_script
+    "$tester_script"
     local return_code=$?
 
     if [[ $return_code -eq  0 ]];
@@ -25,6 +25,20 @@ run_tester () {
 ##### END OF FUNCTION DEFINITIONS #####
 #######################################
 
+if [ "$1" == "postgres-travis" ];
+then
+    echo Argument "$1" passed, use postgresql as db
+    DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
+elif [ "$1" == "postgres-local" ];
+then
+    echo Argument "$1" passed, use postgresql as db
+    DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
+else
+    echo No Argument Passed, use sqlite as default db
+    DJANGO_SETTINGS_MODULE=django_test_proj.settings
+fi
+
+echo DJANGO_SETTINGS_MODULE: "$DJANGO_SETTINGS_MODULE"
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 TEST_DIR=$SCRIPT_PATH/Testing
 

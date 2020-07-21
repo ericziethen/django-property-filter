@@ -22,6 +22,7 @@ class GetAttributeTests(TestCase):
         self.line1 = DeliveryLine.objects.create(line_no=1, delivery=self.delivery1)
         self.prod1 = Product.objects.create(name='Sun Rice', price='20.0', del_line=self.line1)
 
+    @pytest.mark.debug
     def test_get_attribute_1_level(self):
         self.assertEqual(get_value_for_db_field(self.prod1, 'name'), 'Sun Rice')
         self.assertEqual(get_value_for_db_field(self.prod1, 'prop_name'), 'Sun Rice')
