@@ -28,14 +28,14 @@ run_tester () {
 if [ "$1" == "postgres-travis" ];
 then
     echo Argument "$1" passed, use postgresql as db
-    DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
+    export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
 elif [ "$1" == "postgres-local" ];
 then
     echo Argument "$1" passed, use postgresql as db
-    DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
+    export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
 else
     echo No Argument Passed, use sqlite as default db
-    DJANGO_SETTINGS_MODULE=django_test_proj.settings
+    export DJANGO_SETTINGS_MODULE=django_test_proj.settings
 fi
 
 echo DJANGO_SETTINGS_MODULE: "$DJANGO_SETTINGS_MODULE"
