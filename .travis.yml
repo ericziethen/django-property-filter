@@ -51,7 +51,7 @@ install:
 - python --version --version
 - pip list
 
-- python -m pip install --upgrade pip pipenv setuptools wheel numpy
+- python -m pip install --upgrade pip pipenv setuptools wheel numpy distutils
 - pip list
 
 # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
