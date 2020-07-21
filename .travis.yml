@@ -13,26 +13,26 @@ branches:
 
 matrix:
   include:
-#  - name: "Linux, Python 3.6 - Sqlite"
-#    os: linux
-#    dist: xenial
-#    python: "3.6"
-#    env: DJANGO_DB=SQLITE
-#  - name: "Linux, Python 3.6 - Postgres"
-#    os: linux
-#    dist: xenial
-#    python: "3.6"
-#    env: DJANGO_DB=POSTGRES
-#  - name: "Linux, Python 3.7 - Sqlite"
-#    os: linux
-#    dist: xenial
-#    python: "3.7"
-#    env: DJANGO_DB=SQLITE
-#  - name: "Linux, Python 3.7 - Postgres"
-#    os: linux
-#    dist: xenial
-#    python: "3.7"
-#    env: DJANGO_DB=POSTGRES
+  - name: "Linux, Python 3.6 - Sqlite"
+    os: linux
+    dist: xenial
+    python: "3.6"
+    env: DJANGO_DB=SQLITE
+  - name: "Linux, Python 3.6 - Postgres"
+    os: linux
+    dist: xenial
+    python: "3.6"
+    env: DJANGO_DB=POSTGRES
+  - name: "Linux, Python 3.7 - Sqlite"
+    os: linux
+    dist: xenial
+    python: "3.7"
+    env: DJANGO_DB=SQLITE
+  - name: "Linux, Python 3.7 - Postgres"
+    os: linux
+    dist: xenial
+    python: "3.7"
+    env: DJANGO_DB=POSTGRES
   - name: "Linux, Python 3.8 - Sqlite"
     os: linux
     dist: xenial
@@ -45,7 +45,7 @@ matrix:
     env: DJANGO_DB=POSTGRES
 
 services:
-- if [ "$DJANGO_DB" = "POSTGRES" ]; then postgresql; fi
+- postgresql
 
 install:
 - pip --version
