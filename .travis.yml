@@ -45,7 +45,7 @@ matrix:
     env: DJANGO_DB=POSTGRES
 
 services:
-  - postgresql
+- postgresql
 
 install:
 - pip --version
