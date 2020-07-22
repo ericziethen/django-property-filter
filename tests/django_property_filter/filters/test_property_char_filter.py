@@ -54,7 +54,7 @@ TEST_LOOKUPS = [
     ('lte', 'TOM', [1, 5, 6, 7], [1, 5, 6, 7]),
 ]
 
-
+@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_result_list, filter_result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, property_result_list, filter_result_list):
