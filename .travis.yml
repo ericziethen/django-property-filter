@@ -68,6 +68,11 @@ before_script:
 - if [ "$DJANGO_DB" = "POSTGRES" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 
 script:
+
+# Check Django
+- if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/check_django.bat; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/check_django.sh; fi
+
 # Run Tests
 - if [ "$TRAVIS_OS_NAME" = "windows" ]; then
     if [ "$DJANGO_DB" = "POSTGRES" ]; then
