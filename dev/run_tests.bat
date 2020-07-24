@@ -20,7 +20,7 @@ if "%1"=="postgres-local" (
     goto run_tests
 )
 
-echo No Argument Passed, use sqlite as default db
+echo No or unexpected Argument "%1" Passed, use sqlite as default db
 set DJANGO_SETTINGS_MODULE=django_test_proj.settings
 goto run_tests
 

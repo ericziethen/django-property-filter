@@ -34,7 +34,7 @@ then
     echo Argument "$1" passed, use postgresql as db
     export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
 else
-    echo No Argument Passed, use sqlite as default db
+    echo No or unexpected Argument "$1" Passed, use sqlite as default db
     export DJANGO_SETTINGS_MODULE=django_test_proj.settings
 fi
 
