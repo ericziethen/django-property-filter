@@ -51,19 +51,19 @@ TEST_LOOKUPS = [
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     pytest.param(
         'contains', 'B', [0], [0, 1],
-        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='Sqlite ignoring case sensitivity')),
     pytest.param(
         'startswith', 'C', [2], [2, 3],
-        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='Sqlite ignoring case sensitivity')),
     pytest.param(
         'endswith', 'b', [1], [0, 1],
-        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='Sqlite ignoring case sensitivity')),
     pytest.param(
         'gt', 'BB', [1, 2, 3], [1, 2, 3],
-        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='Different Postgresql Behaviour')),
     pytest.param(
         'lt', 'bb', [-1, 0, 2, 4], [-1, 0, 2, 4],
-        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='Different Postgresql Behaviour')),
 
     # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
     pytest.param(
@@ -132,6 +132,7 @@ def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, proper
     implicit_filter_fs = ImplicitFilterSet({F'prop_name__{lookup_xpr}': lookup_val}, queryset=CharFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(prop_filter_fs.qs)
 
+
 def test_all_expressions_tested():
-    tested_expressions = [x[0] for x in TEST_LOOKUPS]
+    tested_expressions = [x[0] for x in TEST_LOOKUPS if isinstance(x[0], str)]
     assert sorted(list(set(tested_expressions))) == sorted(PropertyCharFilter.supported_lookups)
