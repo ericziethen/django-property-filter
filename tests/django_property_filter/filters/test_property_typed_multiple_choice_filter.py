@@ -50,6 +50,7 @@ TEST_LOOKUPS = [
     ('exact', ['1', 'One'], 'AND', [-1, 0, 1, 2, 3, 4, 5, 6]),  # Invalid Input, not int
     ('exact', ['1', None], 'OR', [-1, 0, 1, 2, 3, 4, 5, 6]),  # None returns full queryset
     ('exact', ['1', None], 'AND', [-1, 0, 1, 2, 3, 4, 5, 6]),  # None returns full queryset
+    ('iexact', ['One'], 'AND', [-1, 0, 1, 2, 3, 4, 5, 6]),  # None returns full queryset
     ('contains', ['1', '2'], 'AND', []),
     ('contains', ['2'], 'AND', [1, 2]),
     ('contains', ['1', '2'], 'AND', []),
@@ -148,5 +149,5 @@ def test_lookup_xpr(fixture_property_typed_multiple_choice_filter, lookup_xpr, l
 
 
 def test_all_expressions_tested():
-    tested_expressions = [x[0] for x in TEST_LOOKUPS]
+    tested_expressions = [x[0] for x in TEST_LOOKUPS if isinstance(x[0], str)]
     assert sorted(list(set(tested_expressions))) == sorted(PropertyTypedMultipleChoiceFilter.supported_lookups)
