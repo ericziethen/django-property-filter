@@ -88,7 +88,7 @@ TEST_LOOKUPS = [
         marks=pytest.mark.skipif(db_is_postgresql(), reason='Postgress treat this as a number and cannot convert case')),
 ]
 
-@pytest.mark.debug
+
 @pytest.mark.parametrize('lookup_xpr, lookup_val, and_or, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_typed_multiple_choice_filter, lookup_xpr, lookup_val, and_or, result_list):
