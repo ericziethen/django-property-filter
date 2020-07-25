@@ -209,7 +209,7 @@ Supported lookup is 'range'
 
 Used instead of TimeFilter for property filtering
 
-Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
+Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
 
 ``PropertyTimeRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

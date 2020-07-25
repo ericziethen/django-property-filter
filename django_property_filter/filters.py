@@ -321,7 +321,7 @@ class PropertyRangeFilter(PropertyBaseFilterMixin, RangeFilter):
 class PropertyTimeFilter(PropertyBaseFilterMixin, TimeFilter):
     """Adding Property Support to TimeFilter."""
 
-    supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
 class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
