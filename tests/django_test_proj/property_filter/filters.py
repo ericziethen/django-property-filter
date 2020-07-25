@@ -358,21 +358,21 @@ class PropertyTypedChoiceFilterSet(PropertyFilterSet):
 
 class PropertyTypedMultipleChoiceFilterSet(PropertyFilterSet):
 
-    text_contains_and = TypedMultipleChoiceFilter(field_name='text', lookup_expr='contains', label='Text Contains <AND>', conjoined=True, choices=[])
-    prop_text_contains_and = PropertyTypedMultipleChoiceFilter(field_name='prop_text', lookup_expr='contains', label='Prop Text Contains <AND>', conjoined=True, choices=[])
+    text_iexact_and = TypedMultipleChoiceFilter(field_name='text', lookup_expr='iexact', label='Text iexact <AND>', conjoined=True, choices=[], coerce=int)
+    prop_text_iexact_and = PropertyTypedMultipleChoiceFilter(field_name='prop_text', lookup_expr='iexact', label='Prop Text iexact <AND>', conjoined=True, choices=[], coerce=int)
 
     class Meta:
         model = models.TypedMultipleChoiceFilterModel
         exclude = ['text']
-        fields = ['text_contains_and', 'prop_text_contains_and']
+        fields = ['text_iexact_and', 'prop_text_iexact_and']
 
     def __init__(self, *args, **kwargs):
         choices = [(c.text, F'{c.text}') for c in models.TypedMultipleChoiceFilterModel.objects.order_by('id')]
         choices.append(('__NOT IN LIST__', '__NOT IN LIST__'))
         choices.append(('666', '666'))
 
-        self.base_filters['text_contains_and'].extra['choices'] = choices
-        self.base_filters['prop_text_contains_and'].extra['choices'] = choices
+        self.base_filters['text_iexact_and'].extra['choices'] = choices
+        self.base_filters['prop_text_iexact_and'].extra['choices'] = choices
 
         add_supported_filters(self, TypedMultipleChoiceFilter, 'text', PropertyTypedMultipleChoiceFilter.supported_lookups, choices=choices, coerce=int)
         add_supported_property_filters(self, PropertyTypedMultipleChoiceFilter, 'prop_text', PropertyTypedMultipleChoiceFilter.supported_lookups, choices=choices, coerce=int)
