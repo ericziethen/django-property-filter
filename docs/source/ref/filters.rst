@@ -127,7 +127,7 @@ explicitely. For example::
 
 Used instead of DateFilter for property filtering
 
-Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
+Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
 
 ``PropertyDateFromToRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

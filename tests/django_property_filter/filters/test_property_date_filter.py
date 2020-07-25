@@ -32,14 +32,13 @@ def fixture_property_date_filter():
 
 TEST_LOOKUPS = [
     ('exact', '2019-03-02', [1, 2]),
-    ('iexact', '2019-03-02', [1, 2]),
     ('gt', '2018-03-02', [1, 2, 3, 4]),
     ('gte', '2018-03-02', [0, 1, 2, 3, 4]),
     ('lt', '2019-03-02', [-1, 0]),
     ('lte', '2019-03-02', [-1, 0, 1, 2]),
 ]
 
-
+@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_date_filter, lookup_xpr, lookup_val, result_list):

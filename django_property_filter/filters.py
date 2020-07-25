@@ -201,7 +201,7 @@ class PropertyChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, Choic
 class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
     """Adding Property Support to DateFilter."""
 
-    supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
 class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilter):
