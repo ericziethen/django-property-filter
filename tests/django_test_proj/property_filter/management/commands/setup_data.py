@@ -111,14 +111,12 @@ class Command(BaseCommand):
     def setup_char_filter_model(self):
         print('Setup CharFilterModel')
 
-        CharFilterModel.objects.create(id=1, name='Tom')
-        CharFilterModel.objects.create(id=2, name='Peter')
-        CharFilterModel.objects.create(id=3, name='Ralph')
-        CharFilterModel.objects.create(id=4, name='Tom')
-        CharFilterModel.objects.create(id=5, name='TOM')
-        CharFilterModel.objects.create(id=6, name='Tom')
-        CharFilterModel.objects.create(id=7)
-        CharFilterModel.objects.create(id=8)
+        CharFilterModel.objects.create(id=-1, name='Aa')
+        CharFilterModel.objects.create(id=0, name='BB')
+        CharFilterModel.objects.create(id=1, name='bb')
+        CharFilterModel.objects.create(id=2, name='C')
+        CharFilterModel.objects.create(id=3, name='c')
+        CharFilterModel.objects.create(id=4)
 
     def setup_choice_filter_model(self):
         print('Setup ChoiceFilterModel')
@@ -349,11 +347,12 @@ class Command(BaseCommand):
 
         TypedChoiceFilterModel.objects.create(id=1, text='1')
         TypedChoiceFilterModel.objects.create(id=2, text='One')
-        TypedChoiceFilterModel.objects.create(id=3, text='2')
-        TypedChoiceFilterModel.objects.create(id=4, text='Two')
-        TypedChoiceFilterModel.objects.create(id=5, text='Not a Number')
-        TypedChoiceFilterModel.objects.create(id=6, text='3.3')
-        TypedChoiceFilterModel.objects.create(id=7)
+        TypedChoiceFilterModel.objects.create(id=3, text='one')
+        TypedChoiceFilterModel.objects.create(id=4, text='2')
+        TypedChoiceFilterModel.objects.create(id=5, text='Two')
+        TypedChoiceFilterModel.objects.create(id=6, text='Not a Number')
+        TypedChoiceFilterModel.objects.create(id=7, text='3.3')
+        TypedChoiceFilterModel.objects.create(id=8)
 
     def setup_typed_multiple_choice_filter_model(self):
         print('Setup TypedMultipleChoiceFilterModel')

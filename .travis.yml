@@ -13,20 +13,43 @@ branches:
 
 matrix:
   include:
-  - name: "Linux, Python 3.6"
+  - name: "Linux, Python 3.6 - Sqlite"
     os: linux
     dist: xenial
     python: "3.6"
-  - name: "Linux, Python 3.7"
+    env: DJANGO_DB=SQLITE
+  - name: "Linux, Python 3.6 - Postgres"
+    os: linux
+    dist: xenial
+    python: "3.6"
+    env: DJANGO_DB=POSTGRES
+  - name: "Linux, Python 3.7 - Sqlite"
     os: linux
     dist: xenial
     python: "3.7"
-  - name: "Linux, Python 3.8"
+    env: DJANGO_DB=SQLITE
+  - name: "Linux, Python 3.7 - Postgres"
+    os: linux
+    dist: xenial
+    python: "3.7"
+    env: DJANGO_DB=POSTGRES
+  - name: "Linux, Python 3.8 - Sqlite"
     os: linux
     dist: xenial
     python: "3.8"
+    env: DJANGO_DB=SQLITE
+  - name: "Linux, Python 3.8 - Postgres"
+    os: linux
+    dist: xenial
+    python: "3.8"
+    env: DJANGO_DB=POSTGRES
+
+services:
+- postgresql
 
 install:
+- pip --version
+
 - python --version --version
 - pip list
 
@@ -37,11 +60,36 @@ install:
 - pip install -r requirements.txt
 - pip list
 
+# Print Environment Variables
+- if [ "$TRAVIS_OS_NAME" = "windows" ]; then set; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then printenv; fi
+
+before_script:
+- if [ "$DJANGO_DB" = "POSTGRES" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 
 script:
+
+# Check Django
+- if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/check_django.bat; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/check_django.sh; fi
+
 # Run Tests
-- if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/run_tests.bat travis-ci; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/run_tests.sh travis-ci; fi
+- if [ "$TRAVIS_OS_NAME" = "windows" ]; then
+    if [ "$DJANGO_DB" = "POSTGRES" ]; then
+      dev/run_tests.bat postgres-travis;
+    else
+      dev/run_tests.bat;
+    fi
+  fi
+
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+    if [ "$DJANGO_DB" = "POSTGRES" ]; then
+      ./dev/run_tests.sh postgres-travis;
+    else
+      ./dev/run_tests.sh;
+    fi
+  fi
+
 
 # Run Linting
 - if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/run_linters.bat; fi

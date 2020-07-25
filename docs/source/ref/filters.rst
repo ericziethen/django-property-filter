@@ -127,7 +127,7 @@ explicitely. For example::
 
 Used instead of DateFilter for property filtering
 
-Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
+Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
 
 ``PropertyDateFromToRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -195,7 +195,7 @@ explicitely. For example::
 
 Used instead of NumberFilter for property filtering.
 
-For supported lookups see :ref:`base_lookups`
+Supported lookups are 'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith' and 'endswith'
 
 ``PropertyRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -209,7 +209,7 @@ Supported lookup is 'range'
 
 Used instead of TimeFilter for property filtering
 
-Supported lookups are 'exact', 'iexact', 'gt', 'gte', 'lt' and 'lte'
+Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
 
 ``PropertyTimeRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

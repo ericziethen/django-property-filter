@@ -201,7 +201,7 @@ class PropertyChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, Choic
 class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
     """Adding Property Support to DateFilter."""
 
-    supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
 class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilter):
@@ -308,6 +308,9 @@ class PropertyMultipleChoiceFilter(
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
     """Adding Property Support to NumberFilter."""
 
+    supported_lookups = [
+        'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith', 'endswith']
+
 
 class PropertyRangeFilter(PropertyBaseFilterMixin, RangeFilter):
     """Adding Property Support to RangeFilter."""
@@ -318,7 +321,7 @@ class PropertyRangeFilter(PropertyBaseFilterMixin, RangeFilter):
 class PropertyTimeFilter(PropertyBaseFilterMixin, TimeFilter):
     """Adding Property Support to TimeFilter."""
 
-    supported_lookups = ['exact', 'iexact', 'gt', 'gte', 'lt', 'lte']
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
 class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):

@@ -5,9 +5,17 @@ Development and Testing
 Run the Test Suite
 ------------------
 
+For running tests using sqlite use
+
 .. code-block:: batch
 
     $ dev\run_tests.bat
+
+or for postgresql
+
+.. code-block:: batch
+
+    $ dev\run_tests_pygresql_local.bat
 
 Run the Linters
 ---------------
@@ -28,3 +36,7 @@ Change to the test project directory setup and run the django project
     $ python manage.py migrate
     $ python manage.py setup_data
     $ python manage.py runserver
+
+By default sqlite is used, but postgresql is also supported. For this set the
+environment variable to the local postgres settings
+    DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local

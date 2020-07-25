@@ -253,20 +253,23 @@ class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
 
 class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
 
-    choices = [(num, F'Number: {num}') for num in models.MultipleChoiceFilterModel.objects.values_list('number', flat=True).distinct()]
-    choices.append((-5, 'Number: -5'))
-    choices.append((666, 'Number: 666'))
-
-    number_contains_and = MultipleChoiceFilter(field_name='number', lookup_expr='contains', label='Number Contains <AND>', conjoined=True, choices=choices)
-    prop_number_contains_and = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True, choices=choices)
+    number_contains_and = MultipleChoiceFilter(field_name='number', lookup_expr='contains', label='Number Contains <AND>', conjoined=True, choices=[])
+    prop_number_contains_and = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True, choices=[])
 
     class Meta:
         model = models.MultipleChoiceFilterModel
         exclude = ['number']
 
     def __init__(self, *args, **kwargs):
-        add_supported_filters(self, MultipleChoiceFilter, 'number', PropertyMultipleChoiceFilter.supported_lookups, choices=self.choices)
-        add_supported_property_filters(self, PropertyMultipleChoiceFilter, 'prop_number', PropertyMultipleChoiceFilter.supported_lookups, choices=self.choices)
+        choices = [(num, F'Number: {num}') for num in models.MultipleChoiceFilterModel.objects.values_list('number', flat=True).distinct()]
+        choices.append((-5, 'Number: -5'))
+        choices.append((666, 'Number: 666'))
+
+        self.base_filters['number_contains_and'].extra['choices'] = choices
+        self.base_filters['prop_number_contains_and'].extra['choices'] = choices
+
+        add_supported_filters(self, MultipleChoiceFilter, 'number', PropertyMultipleChoiceFilter.supported_lookups, choices=choices)
+        add_supported_property_filters(self, PropertyMultipleChoiceFilter, 'prop_number', PropertyMultipleChoiceFilter.supported_lookups, choices=choices)
         super().__init__(*args, **kwargs)
 
 
@@ -348,28 +351,32 @@ class PropertyTypedChoiceFilterSet(PropertyFilterSet):
 
     def __init__(self, *args, **kwargs):
         choices = [(c.text, F'{c.text}') for c in models.TypedChoiceFilterModel.objects.order_by('id')]
-        add_supported_filters(self, TypedChoiceFilter, 'text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
-        add_supported_property_filters(self, PropertyTypedChoiceFilter, 'prop_text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
+        add_supported_filters(self, TypedChoiceFilter, 'text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=str)
+        add_supported_property_filters(self, PropertyTypedChoiceFilter, 'prop_text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=str)
         super().__init__(*args, **kwargs)
 
 
 class PropertyTypedMultipleChoiceFilterSet(PropertyFilterSet):
 
-    choices = [(c.text, F'{c.text}') for c in models.TypedMultipleChoiceFilterModel.objects.order_by('id')]
-    choices.append(('__NOT IN LIST__', '__NOT IN LIST__'))
-    choices.append(('666', '666'))
-
-    text_contains_and = TypedMultipleChoiceFilter(field_name='text', lookup_expr='contains', label='Text Contains <AND>', conjoined=True, choices=choices)
-    prop_text_contains_and = PropertyTypedMultipleChoiceFilter(field_name='prop_text', lookup_expr='contains', label='Prop Text Contains <AND>', conjoined=True, choices=choices)
+    text_iexact_and = TypedMultipleChoiceFilter(field_name='text', lookup_expr='iexact', label='Text iexact <AND>', conjoined=True, choices=[], coerce=int)
+    prop_text_iexact_and = PropertyTypedMultipleChoiceFilter(field_name='prop_text', lookup_expr='iexact', label='Prop Text iexact <AND>', conjoined=True, choices=[], coerce=int)
 
     class Meta:
         model = models.TypedMultipleChoiceFilterModel
         exclude = ['text']
-        fields = ['text_contains_and', 'prop_text_contains_and']
+        fields = ['text_iexact_and', 'prop_text_iexact_and']
 
     def __init__(self, *args, **kwargs):
-        add_supported_filters(self, TypedMultipleChoiceFilter, 'text', PropertyTypedMultipleChoiceFilter.supported_lookups, choices=self.choices, coerce=int)
-        add_supported_property_filters(self, PropertyTypedMultipleChoiceFilter, 'prop_text', PropertyTypedMultipleChoiceFilter.supported_lookups, choices=self.choices, coerce=int)
+        choices = [(c.text, F'{c.text}') for c in models.TypedMultipleChoiceFilterModel.objects.order_by('id')]
+        choices.append(('__NOT IN LIST__', '__NOT IN LIST__'))
+        choices.append(('666', '666'))
+
+        self.base_filters['text_iexact_and'].extra['choices'] = choices
+        self.base_filters['prop_text_iexact_and'].extra['choices'] = choices
+
+        add_supported_filters(self, TypedMultipleChoiceFilter, 'text', PropertyTypedMultipleChoiceFilter.supported_lookups, choices=choices, coerce=int)
+        add_supported_property_filters(self, PropertyTypedMultipleChoiceFilter, 'prop_text', PropertyTypedMultipleChoiceFilter.supported_lookups, choices=choices, coerce=int)
+
         super().__init__(*args, **kwargs)
 
 

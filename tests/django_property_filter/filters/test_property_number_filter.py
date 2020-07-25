@@ -44,12 +44,8 @@ TEST_LOOKUPS = [
     ('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
     ('exact', 15, []),
     ('exact', 5, [8, 9, 10, 11]),
-    ('iexact', 15, []),
-    ('iexact', 5, [8, 9, 10, 11]),
     ('contains', 100, []),
     ('contains', 4, [6, 7]),
-    ('icontains', 100, []),
-    ('icontains', 4, [6, 7]),
     ('gt', 20, []),
     ('gt', 4, [8, 9, 10, 11, 12, 13]),
     ('gte', 4, [6, 7, 8, 9, 10, 11, 12, 13]),
@@ -61,13 +57,9 @@ TEST_LOOKUPS = [
     ('startswith', 7, []),
     ('startswith', 2, [2, 3, 4, 13]),
     ('startswith', 3, [5]),
-    ('istartswith', 7, []),
-    ('istartswith', 3, [5]),
     ('endswith', 7, []),
     ('endswith', 0, [0, 12, 13]),
     ('endswith', 3, [5]),
-    ('iendswith', 7, []),
-    ('iendswith', 3, [5])
 ]
 
 

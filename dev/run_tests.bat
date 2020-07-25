@@ -8,6 +8,25 @@ set TEST_DIR=%SCRIPT_DIR%Testing
 set ERROR_FOUND=
 set ERROR_LIST=
 
+if "%1"=="postgres-travis" (
+    echo Argument "%1" passed, use postgresql as db
+    set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
+    goto run_tests
+)
+
+if "%1"=="postgres-local" (
+    echo Argument "%1" passed, use postgresql as db
+    set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
+    goto run_tests
+)
+
+echo No or unexpected Argument "%1" Passed, use sqlite as default db
+set DJANGO_SETTINGS_MODULE=django_test_proj.settings
+goto run_tests
+
+
+:run_tests
+echo DJANGO_SETTINGS_MODULE: '%DJANGO_SETTINGS_MODULE%'
 echo ### Start Testing ###
 call:run_tester "Pytest"        "%TEST_DIR%\RunPytest.bat"
 rem call:run_tester "DjangoTests"   "%TEST_DIR%\RunDjangoTests.bat"
