@@ -195,7 +195,7 @@ explicitely. For example::
 
 Used instead of NumberFilter for property filtering.
 
-For supported lookups see :ref:`base_lookups`
+Supported lookups are 'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith' and 'endswith'
 
 ``PropertyRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~

@@ -308,6 +308,9 @@ class PropertyMultipleChoiceFilter(
 class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
     """Adding Property Support to NumberFilter."""
 
+    supported_lookups = [
+        'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith', 'endswith']
+
 
 class PropertyRangeFilter(PropertyBaseFilterMixin, RangeFilter):
     """Adding Property Support to RangeFilter."""
