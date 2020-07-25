@@ -1,4 +1,5 @@
  
+from django.db import connection
 from django_filters import FilterSet
 
 
@@ -43,3 +44,11 @@ def class_functions_diff_dic(class1, class2, *, ignore=None):
         diff_dic['Different Address'] = sorted(different_sig)
 
     return diff_dic
+
+
+def db_is_sqlite():
+    return connection.vendor == 'sqlite'
+
+
+def db_is_postgresql():
+    return connection.vendor == 'postgresql'

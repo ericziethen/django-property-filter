@@ -111,14 +111,12 @@ class Command(BaseCommand):
     def setup_char_filter_model(self):
         print('Setup CharFilterModel')
 
-        CharFilterModel.objects.create(id=1, name='Tom')
-        CharFilterModel.objects.create(id=2, name='Peter')
-        CharFilterModel.objects.create(id=3, name='Ralph')
-        CharFilterModel.objects.create(id=4, name='Tom')
-        CharFilterModel.objects.create(id=5, name='TOM')
-        CharFilterModel.objects.create(id=6, name='Tom')
-        CharFilterModel.objects.create(id=7)
-        CharFilterModel.objects.create(id=8)
+        CharFilterModel.objects.create(id=-1, name='Aa')
+        CharFilterModel.objects.create(id=0, name='BB')
+        CharFilterModel.objects.create(id=1, name='bb')
+        CharFilterModel.objects.create(id=2, name='C')
+        CharFilterModel.objects.create(id=3, name='c')
+        CharFilterModel.objects.create(id=4)
 
     def setup_choice_filter_model(self):
         print('Setup ChoiceFilterModel')

@@ -7,6 +7,8 @@ from django_property_filter import PropertyFilterSet, PropertyCharFilter
 
 from property_filter.models import CharFilterModel
 
+from tests.common import db_is_sqlite, db_is_postgresql
+
 
 @pytest.mark.parametrize('lookup', PropertyCharFilter.supported_lookups)
 def test_supported_lookups(lookup):
@@ -21,40 +23,67 @@ def test_unsupported_lookup():
 
 @pytest.fixture
 def fixture_property_char_filter():
-    CharFilterModel.objects.create(id=-1, name='Tom')
-    CharFilterModel.objects.create(id=0, name='tom')
-    CharFilterModel.objects.create(id=1, name='TOM')
-    CharFilterModel.objects.create(id=2, name='Tom')
-    CharFilterModel.objects.create(id=3, name='Tom')
-    CharFilterModel.objects.create(id=4, name='Tomm')
-    CharFilterModel.objects.create(id=5, name='Harry')
-    CharFilterModel.objects.create(id=6)
-    CharFilterModel.objects.create(id=7)
+    CharFilterModel.objects.create(id=-1, name='Aa')
+    CharFilterModel.objects.create(id=0, name='BB')
+    CharFilterModel.objects.create(id=1, name='bb')
+    CharFilterModel.objects.create(id=2, name='C')
+    CharFilterModel.objects.create(id=3, name='c')
+    CharFilterModel.objects.create(id=4)
 
-# Sqlite will use the same for e.g. contains and icontains. oth are either case
-# sensitive or not depending on 'case_sensitive_like' pragma setting
+# Sqlite by default is always case insensitive
+# it's case sensitive if 'case_sensitive_like' pragma setting is set
+# We use the default as case insensitive
 TEST_LOOKUPS = [
-    ('exact', 'No Name', [], []),
-    ('exact', 'Tom', [-1, 2, 3], [-1, 2, 3]),
-    ('exact', 'TOM', [1], [1]),
-    ('iexact', 'Tom', [-1, 0, 1, 2, 3], [-1, 0, 1, 2, 3]),
-    ('iexact', 'TOM', [-1, 0, 1, 2, 3], [-1, 0, 1, 2, 3]),
-    ('contains', 'OM', [1], [-1, 0, 1, 2, 3, 4]),
-    ('contains', 'o', [-1, 0, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
-    ('contains', 'rR', [], [5]),
-    ('icontains', 'rR', [5], [5]),
-    ('icontains', 'o', [-1, 0, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
-    ('startswith', 'T', [-1, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
-    ('istartswith', 'T', [-1, 0, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
-    ('endswith', 'om', [-1, 0, 2, 3], [-1, 0, 1, 2, 3]),
-    ('iendswith', 'om', [-1, 0, 1, 2, 3], [-1, 0, 1, 2, 3]),
-    ('gt', 'Harry', [-1, 0, 1, 2, 3, 4], [-1, 0, 1, 2, 3, 4]),
-    ('gte', 'Harry', [-1, 0, 1, 2, 3, 4, 5], [-1, 0, 1, 2, 3, 4, 5]),
-    ('lt', 'TOM', [5, 6, 7], [5, 6, 7]),
-    ('lte', 'TOM', [1, 5, 6, 7], [1, 5, 6, 7]),
+    ('exact', 'Aa', [-1], [-1]),
+    ('exact', 'C', [2], [2]),
+    ('iexact', 'bB', [0, 1], [0, 1]),
+    ('contains', 'A', [-1], [-1]),
+    ('icontains', 'c', [2, 3], [2, 3]),
+    ('startswith', 'A', [-1], [-1]),
+    ('istartswith', 'B', [0, 1], [0, 1]),
+    ('endswith', 'a', [-1], [-1]),
+    ('iendswith', 'b', [0, 1], [0, 1]),
+    ('gt', 'Aa', [0, 1, 2, 3], [0, 1, 2, 3]),
+    ('gte', 'Aa', [-1, 0, 1, 2, 3], [-1, 0, 1, 2, 3]),
+    ('lt', 'Aa', [4], [4]),
+    ('lte', 'Aa', [-1, 4], [-1, 4]),
+
+    # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
+    pytest.param(
+        'contains', 'B', [0], [0, 1],
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+    pytest.param(
+        'startswith', 'C', [2], [2, 3],
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+    pytest.param(
+        'endswith', 'b', [1], [0, 1],
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+    pytest.param(
+        'gt', 'BB', [1, 2, 3], [1, 2, 3],
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+    pytest.param(
+        'lt', 'bb', [-1, 0, 2, 4], [-1, 0, 2, 4],
+        marks=pytest.mark.skipif(db_is_postgresql(), reason='')),
+
+    # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
+    pytest.param(
+        'contains', 'B', [0], [0],
+        marks=pytest.mark.skipif(db_is_sqlite(), reason='Sqlite ignoring case sensitivity')),
+    pytest.param(
+        'startswith', 'C', [2], [2],
+        marks=pytest.mark.skipif(db_is_sqlite(), reason='Sqlite ignoring case sensitivity')),
+    pytest.param(
+        'endswith', 'b', [1], [1],
+        marks=pytest.mark.skipif(db_is_sqlite(), reason='Sqlite ignoring case sensitivity')),
+    pytest.param(
+        'gt', 'BB', [1, 2, 3], [2, 3],
+        marks=pytest.mark.skipif(db_is_sqlite(), reason='Postgresql string sorting different then python pure ascii sorting')),
+    pytest.param(
+        'lt', 'bb', [-1, 0, 2, 4], [-1, 4],
+        marks=pytest.mark.skipif(db_is_sqlite(), reason='Postgresql string sorting different then python pure ascii sorting')),
 ]
 
-@pytest.mark.debug
+
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_result_list, filter_result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_char_filter, lookup_xpr, lookup_val, property_result_list, filter_result_list):
