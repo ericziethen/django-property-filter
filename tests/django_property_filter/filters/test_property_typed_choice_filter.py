@@ -37,11 +37,11 @@ def fixture_property_typed_choice_filter():
 TEST_LOOKUPS = [
     ('exact', '1', [-1]),
     ('exact', '666', []),
-    ('exact', 'One', [-1, 0, 1, 2, 3, 4, 5]),  # Invalid Input, not int
+    ('exact', 'One', [0]),
     ('exact', None, [-1, 0, 1, 2, 3, 4, 5]),  # None returns full queryset
     ('iexact', '1', [-1]),
     ('iexact', '666', []),
-    ('contains', 'One', [-1, 0, 1, 2, 3, 4, 5]),
+    ('contains', 'One', [0]),
     ('icontains', '2', [1, 2, 4]),
     ('icontains', '666', []),
     ('gt', '1', [0, 1, 2, 3, 4]),  # Doing Text Comparison
@@ -65,7 +65,7 @@ def test_lookup_xpr(fixture_property_typed_choice_filter, lookup_xpr, lookup_val
     # Test using Normal Django Filter
     class TypedChoiceFilterSet(FilterSet):
         text = TypedChoiceFilter(field_name='text', lookup_expr=lookup_xpr,
-                                 choices=LOOKUP_CHOICES, coerce=int)
+                                 choices=LOOKUP_CHOICES, coerce=str)
 
         class Meta:
             model = TypedChoiceFilterModel
@@ -77,7 +77,7 @@ def test_lookup_xpr(fixture_property_typed_choice_filter, lookup_xpr, lookup_val
     # Compare with Explicit Filter using a normal Filterset
     class PropertyTypedChoiceFilterSet(FilterSet):
         prop_text = PropertyTypedChoiceFilter(field_name='prop_text', lookup_expr=lookup_xpr,
-                                              choices=LOOKUP_CHOICES, coerce=int)
+                                              choices=LOOKUP_CHOICES, coerce=str)
 
         class Meta:
             model = TypedChoiceFilterModel
@@ -89,7 +89,7 @@ def test_lookup_xpr(fixture_property_typed_choice_filter, lookup_xpr, lookup_val
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyTypedChoiceFilterSet(PropertyFilterSet):
         prop_text = PropertyTypedChoiceFilter(field_name='prop_text', lookup_expr=lookup_xpr,
-                                              choices=LOOKUP_CHOICES, coerce=int)
+                                              choices=LOOKUP_CHOICES, coerce=str)
 
         class Meta:
             model = TypedChoiceFilterModel

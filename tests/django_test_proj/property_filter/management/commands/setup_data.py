@@ -347,11 +347,12 @@ class Command(BaseCommand):
 
         TypedChoiceFilterModel.objects.create(id=1, text='1')
         TypedChoiceFilterModel.objects.create(id=2, text='One')
-        TypedChoiceFilterModel.objects.create(id=3, text='2')
-        TypedChoiceFilterModel.objects.create(id=4, text='Two')
-        TypedChoiceFilterModel.objects.create(id=5, text='Not a Number')
-        TypedChoiceFilterModel.objects.create(id=6, text='3.3')
-        TypedChoiceFilterModel.objects.create(id=7)
+        TypedChoiceFilterModel.objects.create(id=3, text='one')
+        TypedChoiceFilterModel.objects.create(id=4, text='2')
+        TypedChoiceFilterModel.objects.create(id=5, text='Two')
+        TypedChoiceFilterModel.objects.create(id=6, text='Not a Number')
+        TypedChoiceFilterModel.objects.create(id=7, text='3.3')
+        TypedChoiceFilterModel.objects.create(id=8)
 
     def setup_typed_multiple_choice_filter_model(self):
         print('Setup TypedMultipleChoiceFilterModel')

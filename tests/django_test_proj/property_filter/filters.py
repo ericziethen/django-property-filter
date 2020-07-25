@@ -351,8 +351,8 @@ class PropertyTypedChoiceFilterSet(PropertyFilterSet):
 
     def __init__(self, *args, **kwargs):
         choices = [(c.text, F'{c.text}') for c in models.TypedChoiceFilterModel.objects.order_by('id')]
-        add_supported_filters(self, TypedChoiceFilter, 'text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
-        add_supported_property_filters(self, PropertyTypedChoiceFilter, 'prop_text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=int)
+        add_supported_filters(self, TypedChoiceFilter, 'text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=str)
+        add_supported_property_filters(self, PropertyTypedChoiceFilter, 'prop_text', PropertyTypedChoiceFilter.supported_lookups, choices=choices, coerce=str)
         super().__init__(*args, **kwargs)
 
 
