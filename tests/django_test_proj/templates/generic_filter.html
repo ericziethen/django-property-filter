@@ -3,7 +3,7 @@
 
 {% block main_title %}
     {% load customtags %}
-    <h1>{{ filter | to_class_name }}</h1>
+    <h1>Database: {{ null | db_provider }} - {{ filter | to_class_name }}</h1>
 {% endblock main_title %}
 
 {% block content %}
