@@ -38,7 +38,7 @@ TEST_LOOKUPS = [
     ('lte', '2019-03-02', [-1, 0, 1, 2]),
 ]
 
-@pytest.mark.debug
+
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_date_filter, lookup_xpr, lookup_val, result_list):
