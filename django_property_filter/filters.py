@@ -326,25 +326,18 @@ class PropertyLookupChoiceFilter(PropertyBaseFilterMixin, LookupChoiceFilter):
 
         return lookup_tup_list
 
+    def filter(self, qs, lookup):
+        if not lookup:
+            return super().filter(qs, None)
 
+        self.lookup_expr = lookup.lookup_expr
+        return super().filter(qs, lookup.value)
 
 
 
     '''
     # TODO - 
         CHECK HOW TO OVERWRITE IF NEEDED
-            - def normalize_lookup(cls, lookup):
-                -> Should not need to Overwrite
-
-            - def get_lookup_choices(self):
-                -> Need test first for
-                   - Lookups Passed
-                   - No Lookups Passed
-
-                -> Overwrite:::
-                    if lookups not defined
-                        return Class lookups as tuple list
-                    return lookups as tuple list
 
             - def field(self):
                 -> Might not need to overwrite
@@ -415,7 +408,8 @@ class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
 
 EXPLICIT_ONLY_FILTERS = [
     PropertyChoiceFilter,
+    PropertyLookupChoiceFilter,
+    PropertyMultipleChoiceFilter,
     PropertyTypedChoiceFilter,
     PropertyTypedMultipleChoiceFilter,
-    PropertyMultipleChoiceFilter,
 ]
