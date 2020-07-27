@@ -62,6 +62,7 @@ class PropertyBaseFilterMixin():
             kwargs['label'] = label
 
         self.verify_lookup(lookup_expr)
+
         super().__init__(*args, **kwargs)
 
     def filter(self, queryset, value):
@@ -79,7 +80,7 @@ class PropertyBaseFilterMixin():
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
-        if self.require_lookup_expr:
+        if self.require_lookup_expr or lookup_expr is not None:
             if lookup_expr not in self.supported_lookups:
                 raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
@@ -311,7 +312,25 @@ class PropertyLookupChoiceFilter(PropertyBaseFilterMixin, LookupChoiceFilter):
 
     require_lookup_expr = False
 
+    def get_lookup_choices(self):
+        """Get th Lookup choices in the correct format."""
 
+        lookups = self.lookup_choices
+        if lookups is None:
+            lookups = self.supported_lookups
+
+        lookup_tup_list = [self.normalize_lookup(lookup) for lookup in lookups]
+
+        for lookup_expr, _ in lookup_tup_list:
+            self.verify_lookup(lookup_expr)
+
+        return lookup_tup_list
+
+
+
+
+
+    '''
     # TODO - 
         CHECK HOW TO OVERWRITE IF NEEDED
             - def normalize_lookup(cls, lookup):
@@ -334,7 +353,7 @@ class PropertyLookupChoiceFilter(PropertyBaseFilterMixin, LookupChoiceFilter):
             - def filter(self, qs, lookup):
                 -> Might not need to overwrite
                 -> Might need to overwrite to handle "None" Filtering
-
+    '''
 
 
 
