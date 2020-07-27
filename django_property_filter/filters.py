@@ -333,7 +333,7 @@ class PropertyLookupChoiceFilter(PropertyBaseFilterMixin, LookupChoiceFilter):
 
             - def filter(self, qs, lookup):
                 -> Might not need to overwrite
-
+                -> Might need to overwrite to handle "None" Filtering
 
 
 
