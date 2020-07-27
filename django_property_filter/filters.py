@@ -3,6 +3,8 @@
 import datetime
 import logging
 
+from django.utils import timezone
+
 from django_filters.filters import (
     AllValuesFilter,
     AllValuesMultipleFilter,
@@ -254,23 +256,25 @@ class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
             new_property_value = property_value.date()
 
         # Convert our Custom Expression and Value to Supported the Hardcoded Expressions
+        today_datetime = timezone.now()
+
         if lookup_value == 'today':
-            new_lookup_value = datetime.date.today()
+            new_lookup_value = today_datetime.date()
         elif lookup_value == 'yesterday':
-            new_lookup_value = datetime.date.today() - datetime.timedelta(days=1)
+            new_lookup_value = today_datetime.date() - datetime.timedelta(days=1)
         elif lookup_value == 'week':
             new_lookup_exp = 'range'
             new_lookup_value = slice(
-                datetime.date.today() - datetime.timedelta(days=7),
-                datetime.date.today()
+                today_datetime.date() - datetime.timedelta(days=7),
+                today_datetime.date()
             )
         elif lookup_value == 'month':
             new_lookup_exp = 'exact'
-            new_lookup_value = datetime.date.today().month
+            new_lookup_value = today_datetime.date().month
             new_property_value = property_value.month
         elif lookup_value == 'year':
             new_lookup_exp = 'exact'
-            new_lookup_value = datetime.date.today().year
+            new_lookup_value = today_datetime.date().year
             new_property_value = property_value.year
 
         return super()._compare_lookup_with_qs_entry(new_lookup_exp, new_lookup_value, new_property_value)
