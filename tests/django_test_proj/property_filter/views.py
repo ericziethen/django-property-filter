@@ -18,6 +18,7 @@ from property_filter.models import (
     DurationFilterModel,
     IsoDateTimeFilterModel,
     IsoDateTimeFromToRangeFilterModel,
+    LookupChoiceFilterModel,
     ModelChoiceFilterModel,
     ModelChoiceFilterRelatedModel,
     MultipleChoiceFilterModel,
@@ -112,6 +113,12 @@ class IsoDateTimeFromToRangeFilterView(FilterView):
     model = IsoDateTimeFromToRangeFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyIsoDateTimeFromToRangeFilterSet
+
+
+class LookupChoiceFilterView(FilterView):
+    model = LookupChoiceFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyLookupChoiceFilterSet
 
 
 class ModelChoiceFilterView(FilterView):

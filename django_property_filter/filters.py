@@ -17,6 +17,7 @@ from django_filters.filters import (
     DurationFilter,
     IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
+    LookupChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
     RangeFilter,
@@ -42,6 +43,7 @@ class PropertyBaseFilterMixin():
         'exact', 'iexact', 'contains', 'icontains', 'gt', 'gte',
         'lt', 'lte', 'startswith', 'istartswith', 'endswith', 'iendswith',
     ]
+    require_lookup_expr = True
 
     def __init__(self, *args, **kwargs):
         """Shared Constructor for Property Filters."""
@@ -53,11 +55,31 @@ class PropertyBaseFilterMixin():
         kwargs['field_name'] = None
 
         if label is None:
-            label = F'{self.property_fld_name} [{lookup_expr}]'
+            if lookup_expr is not None:
+                label = F'{self.property_fld_name} [{lookup_expr}]'
+            else:
+                label = self.property_fld_name
             kwargs['label'] = label
 
         self.verify_lookup(lookup_expr)
         super().__init__(*args, **kwargs)
+
+
+
+    # TODO - 
+        CHECK HOW TO OVERWRITE IF NEEDED
+            - def normalize_lookup(cls, lookup):
+            - def get_lookup_choices(self):
+            - def field(self):
+            - def filter(self, qs, lookup):
+
+
+
+
+
+
+
+
 
     def filter(self, queryset, value):
         """Filter the queryset by property."""
@@ -74,8 +96,9 @@ class PropertyBaseFilterMixin():
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
-        if lookup_expr not in self.supported_lookups:
-            raise ValueError(F'Lookup "{lookup_expr}" not supported"')
+        if self.require_lookup_expr:
+            if lookup_expr not in self.supported_lookups:
+                raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
     def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
         """Compare the lookup value with the property value."""
@@ -299,6 +322,11 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
 
     supported_lookups = ['range']
 
+
+class PropertyLookupChoiceFilter(PropertyBaseFilterMixin, LookupChoiceFilter):
+    """Adding Property Support to LookupChoiceFilter."""
+
+    require_lookup_expr = False
 
 class PropertyMultipleChoiceFilter(
         ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
