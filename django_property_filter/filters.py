@@ -64,23 +64,6 @@ class PropertyBaseFilterMixin():
         self.verify_lookup(lookup_expr)
         super().__init__(*args, **kwargs)
 
-
-
-    # TODO - 
-        CHECK HOW TO OVERWRITE IF NEEDED
-            - def normalize_lookup(cls, lookup):
-            - def get_lookup_choices(self):
-            - def field(self):
-            - def filter(self, qs, lookup):
-
-
-
-
-
-
-
-
-
     def filter(self, queryset, value):
         """Filter the queryset by property."""
         # Carefull, a filter value of 0 will be Valid so can't just do 'if value:'
@@ -327,6 +310,44 @@ class PropertyLookupChoiceFilter(PropertyBaseFilterMixin, LookupChoiceFilter):
     """Adding Property Support to LookupChoiceFilter."""
 
     require_lookup_expr = False
+
+
+    # TODO - 
+        CHECK HOW TO OVERWRITE IF NEEDED
+            - def normalize_lookup(cls, lookup):
+                -> Should not need to Overwrite
+
+            - def get_lookup_choices(self):
+                -> Need test first for
+                   - Lookups Passed
+                   - No Lookups Passed
+
+                -> Overwrite:::
+                    if lookups not defined
+                        return Class lookups as tuple list
+                    return lookups as tuple list
+
+            - def field(self):
+                -> Might not need to overwrite
+
+
+            - def filter(self, qs, lookup):
+                -> Might not need to overwrite
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class PropertyMultipleChoiceFilter(
         ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
