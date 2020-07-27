@@ -32,8 +32,6 @@ SAME_YEAR_VALUES_DATETIME = []
 
 @pytest.fixture
 def fixture_property_filter():
-    tz = timezone.get_default_timezone()
-
     global SAME_MONTH_VALUES_DATE
     global SAME_YEAR_VALUES_DATE
     global SAME_MONTH_VALUES_DATETIME
@@ -43,40 +41,42 @@ def fixture_property_filter():
     SAME_MONTH_VALUES_DATETIME = []
     SAME_YEAR_VALUES_DATETIME = []
 
+    today_datetime = timezone.now()
+
     DateRangeFilterModel.objects.create(
         id=-1,
-        date=datetime.date.today(),
-        date_time=datetime.datetime.now(tz=tz))
+        date=today_datetime.date(),
+        date_time=today_datetime)
     DateRangeFilterModel.objects.create(
         id=0,
-        date=datetime.date.today() - datetime.timedelta(days=1),
-        date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=1))
+        date=today_datetime.date() - datetime.timedelta(days=1),
+        date_time=today_datetime - datetime.timedelta(days=1))
     DateRangeFilterModel.objects.create(
         id=1,
-        date=datetime.date.today() - datetime.timedelta(days=6),
-        date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=6))
+        date=today_datetime.date() - datetime.timedelta(days=6),
+        date_time=today_datetime - datetime.timedelta(days=6))
     DateRangeFilterModel.objects.create(
         id=2,
-        date=datetime.date.today() - datetime.timedelta(days=7),
-        date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=7))
+        date=today_datetime.date() - datetime.timedelta(days=7),
+        date_time=today_datetime - datetime.timedelta(days=7))
     DateRangeFilterModel.objects.create(
         id=3,
-        date=datetime.date.today() - datetime.timedelta(days=15),
-        date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=15))
+        date=today_datetime.date() - datetime.timedelta(days=15),
+        date_time=today_datetime - datetime.timedelta(days=15))
     DateRangeFilterModel.objects.create(
         id=4,
-        date=datetime.date.today() + datetime.timedelta(days=15),
-        date_time=datetime.datetime.now(tz=tz) + datetime.timedelta(days=15))
+        date=today_datetime.date() + datetime.timedelta(days=15),
+        date_time=today_datetime + datetime.timedelta(days=15))
     DateRangeFilterModel.objects.create(
         id=5,
-        date=datetime.date.today() + datetime.timedelta(days=400),
-        date_time=datetime.datetime.now(tz=tz) + datetime.timedelta(days=400))
+        date=today_datetime.date() + datetime.timedelta(days=400),
+        date_time=today_datetime + datetime.timedelta(days=400))
     DateRangeFilterModel.objects.create(
         id=6,
-        date=datetime.date.today() - datetime.timedelta(days=800),
-        date_time=datetime.datetime.now(tz=tz) - datetime.timedelta(days=800))
+        date=today_datetime.date() - datetime.timedelta(days=800),
+        date_time=today_datetime - datetime.timedelta(days=800))
 
-    today = datetime.date.today()
+    today = timezone.now().date()
     for obj in DateRangeFilterModel.objects.all():
         if obj.date.month == today.month:
             SAME_MONTH_VALUES_DATE.append(obj.id)
@@ -118,6 +118,7 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
             fields = ['date']
 
     filter_fs = DateRangeFilterSet({'date': lookup_val}, queryset=DateRangeFilterModel.objects.all())
+
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
     # Compare with Explicit Filter using a normal Filterset
