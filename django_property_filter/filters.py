@@ -307,7 +307,7 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
     supported_lookups = ['range']
 
 
-class PropertyLookupChoiceFilter(PropertyBaseFilterMixin, LookupChoiceFilter):
+class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, LookupChoiceFilter):
     """Adding Property Support to LookupChoiceFilter."""
 
     require_lookup_expr = False
@@ -332,33 +332,6 @@ class PropertyLookupChoiceFilter(PropertyBaseFilterMixin, LookupChoiceFilter):
 
         self.lookup_expr = lookup.lookup_expr
         return super().filter(qs, lookup.value)
-
-
-
-    '''
-    # TODO - 
-        CHECK HOW TO OVERWRITE IF NEEDED
-
-            - def field(self):
-                -> Might not need to overwrite
-
-
-            - def filter(self, qs, lookup):
-                -> Might not need to overwrite
-                -> Might need to overwrite to handle "None" Filtering
-    '''
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class PropertyMultipleChoiceFilter(

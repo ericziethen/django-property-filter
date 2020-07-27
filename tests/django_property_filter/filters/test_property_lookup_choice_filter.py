@@ -60,33 +60,30 @@ def fixture_property_lookup_choice_filter():
 
 TEST_LOOKUPS = [
     ('exact', -1, [-1]),
-    #('exact', 0, [0]),
-    #('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
-    #('exact', 15, []),
-    #('exact', 5, [8, 9, 10, 11]),
-    #('contains', 100, []),
-    #('contains', 4, [6, 7]),
-    #('gt', 20, []),
-    #('gt', 4, [8, 9, 10, 11, 12, 13]),
-    #('gte', 4, [6, 7, 8, 9, 10, 11, 12, 13]),
-    #('gte', 21, []),
-    #('lt', 1, [-1, 0]),
-    #('lt', 4, [-1, 0, 1, 2, 3, 4, 5]),
-    #('lte', 0.9, [-1, 0]),
-    #('lte', 4, [-1, 0, 1, 2, 3, 4, 5, 6, 7]),
-    #('startswith', 7, []),
-    #('startswith', 2, [2, 3, 4, 13]),
-    #('startswith', 3, [5]),
-    #('endswith', 7, []),
-    #('endswith', 0, [0, 12, 13]),
-    #('endswith', 3, [5]),
+    ('exact', 0, [0]),
+    ('exact', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),  # None returns full queryset
+    ('exact', 15, []),
+    ('exact', 5, [8, 9, 10, 11]),
+    ('iexact', 5, [8, 9, 10, 11]),
+    ('contains', 100, []),
+    ('contains', 4, [6, 7]),
+    ('icontains', 4, [6, 7]),
+    ('gt', 20, []),
+    ('gt', 4, [8, 9, 10, 11, 12, 13]),
+    ('gte', 4, [6, 7, 8, 9, 10, 11, 12, 13]),
+    ('gte', 21, []),
+    ('lt', 1, [-1, 0]),
+    ('lt', 4, [-1, 0, 1, 2, 3, 4, 5]),
+    ('lte', 4, [-1, 0, 1, 2, 3, 4, 5, 6, 7]),
+    ('startswith', 7, []),
+    ('startswith', 2, [2, 3, 4, 13]),
+    ('startswith', 3, [5]),
+    ('istartswith', 3, [5]),
+    ('endswith', 7, []),
+    ('endswith', 0, [0, 12, 13]),
+    ('endswith', 3, [5]),
+    ('iendswith', 3, [5]),
 ]
-
-
-
-
-@pytest.mark.debug
-
 
 
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
