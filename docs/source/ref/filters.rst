@@ -178,6 +178,22 @@ Used instead of IsoDateTimeFromToRangeFilter for property filtering
 
 Supported lookup is 'range'
 
+``PropertyLookupChoiceFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of LookupChoiceFilter for property filtering.
+
+For supported lookups see :ref:`base_lookups`
+
+Because the lookup choices are passed as arguments this filter can only be
+created explicitely. For example::
+
+    number = PropertyMultipleChoiceFilter(field_name='number', lookup_choices=['exact', 'gt'])
+
+or for all available choices::
+
+    number = PropertyMultipleChoiceFilter(field_name='number')
+
 ``PropertyMultipleChoiceFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

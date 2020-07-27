@@ -34,6 +34,7 @@ urlpatterns = [
     path('duration_filter/', views.DurationFilterView.as_view(), name='duration_filter'),
     path('iso_date_time_filter/', views.IsoDateTimeFilterView.as_view(), name='iso_date_time_filter'),
     path('iso_date_time_from_to_range_filter/', views.IsoDateTimeFromToRangeFilterView.as_view(), name='iso_date_time_from_to_range_filter'),
+    path('lookup_choice_filter/', views.LookupChoiceFilterView.as_view(), name='lookup_choice_filter'),    
     path('model_choice_filter/', views.ModelChoiceFilterView.as_view(), name='model_choice_filter'),
     path('model_multiple_choice_filter/', views.ModelMultipleChoiceFilterView.as_view(), name='model_multiple_choice_filter'),
     path('multiple_choice_filter/', views.MultipleChoiceFilterView.as_view(), name='multiple_choice_filter'),

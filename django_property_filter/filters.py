@@ -17,6 +17,7 @@ from django_filters.filters import (
     DurationFilter,
     IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
+    LookupChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
     RangeFilter,
@@ -42,6 +43,7 @@ class PropertyBaseFilterMixin():
         'exact', 'iexact', 'contains', 'icontains', 'gt', 'gte',
         'lt', 'lte', 'startswith', 'istartswith', 'endswith', 'iendswith',
     ]
+    require_lookup_expr = True
 
     def __init__(self, *args, **kwargs):
         """Shared Constructor for Property Filters."""
@@ -53,10 +55,14 @@ class PropertyBaseFilterMixin():
         kwargs['field_name'] = None
 
         if label is None:
-            label = F'{self.property_fld_name} [{lookup_expr}]'
+            if lookup_expr is not None:
+                label = F'{self.property_fld_name} [{lookup_expr}]'
+            else:
+                label = self.property_fld_name
             kwargs['label'] = label
 
         self.verify_lookup(lookup_expr)
+
         super().__init__(*args, **kwargs)
 
     def filter(self, queryset, value):
@@ -74,7 +80,7 @@ class PropertyBaseFilterMixin():
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
-        if lookup_expr not in self.supported_lookups:
+        if (self.require_lookup_expr or lookup_expr is not None) and lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
     def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
@@ -300,6 +306,33 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
     supported_lookups = ['range']
 
 
+class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, LookupChoiceFilter):
+    """Adding Property Support to LookupChoiceFilter."""
+
+    require_lookup_expr = False
+
+    def get_lookup_choices(self):
+        """Get th Lookup choices in the correct format."""
+        lookups = self.lookup_choices
+        if lookups is None:
+            lookups = self.supported_lookups
+
+        lookup_tup_list = [self.normalize_lookup(lookup) for lookup in lookups]
+
+        for lookup_expr, _ in lookup_tup_list:
+            self.verify_lookup(lookup_expr)
+
+        return lookup_tup_list
+
+    def filter(self, queryset, value):
+        """Perform the custom filtering."""
+        if not value:
+            return super().filter(queryset, None)
+
+        self.lookup_expr = value.lookup_expr
+        return super().filter(queryset, value.value)
+
+
 class PropertyMultipleChoiceFilter(
         ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
@@ -347,7 +380,8 @@ class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
 
 EXPLICIT_ONLY_FILTERS = [
     PropertyChoiceFilter,
+    PropertyLookupChoiceFilter,
+    PropertyMultipleChoiceFilter,
     PropertyTypedChoiceFilter,
     PropertyTypedMultipleChoiceFilter,
-    PropertyMultipleChoiceFilter,
 ]

@@ -18,6 +18,7 @@ from django_filters.filters import (
     DurationFilter,
     IsoDateTimeFilter,
     IsoDateTimeFromToRangeFilter,
+    LookupChoiceFilter,
     ModelChoiceFilter,
     ModelMultipleChoiceFilter,
     MultipleChoiceFilter,
@@ -45,6 +46,7 @@ from django_property_filter import (
     PropertyDurationFilter,
     PropertyIsoDateTimeFilter,
     PropertyIsoDateTimeFromToRangeFilter,
+    PropertyLookupChoiceFilter,
     PropertyMultipleChoiceFilter,
     PropertyNumberFilter,
     PropertyRangeFilter,
@@ -249,6 +251,16 @@ class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         add_supported_filters(self, IsoDateTimeFromToRangeFilter, 'date_time', PropertyIsoDateTimeFromToRangeFilter.supported_lookups)
         super().__init__(*args, **kwargs)
+
+
+class PropertyLookupChoiceFilterSet(PropertyFilterSet):
+    lookup_choices = [(lookup, lookup) for lookup in PropertyLookupChoiceFilter.supported_lookups]
+    number = LookupChoiceFilter(field_name='number', lookup_choices=lookup_choices)
+    prop_number = PropertyLookupChoiceFilter(field_name='prop_number', lookup_choices=lookup_choices)
+
+    class Meta:
+        model = models.LookupChoiceFilterModel
+        fields = ['number', 'prop_number']
 
 
 class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
