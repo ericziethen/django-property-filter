@@ -314,7 +314,6 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin,
 
     def get_lookup_choices(self):
         """Get th Lookup choices in the correct format."""
-
         lookups = self.lookup_choices
         if lookups is None:
             lookups = self.supported_lookups
@@ -326,12 +325,13 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin,
 
         return lookup_tup_list
 
-    def filter(self, qs, lookup):
-        if not lookup:
-            return super().filter(qs, None)
+    def filter(self, queryset, value):
+        """Perform the custom filtering."""
+        if not value:
+            return super().filter(queryset, None)
 
-        self.lookup_expr = lookup.lookup_expr
-        return super().filter(qs, lookup.value)
+        self.lookup_expr = value.lookup_expr
+        return super().filter(queryset, value.value)
 
 
 class PropertyMultipleChoiceFilter(
