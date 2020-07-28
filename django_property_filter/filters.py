@@ -62,10 +62,7 @@ class PropertyBaseFilterMixin():
 
         # Set the Label
         if label is None:
-            if lookup_expr is not None:
-                label = F'{self.property_fld_name} [{lookup_expr}]'
-            else:
-                label = self.property_fld_name
+            label = F'{self.property_fld_name} [{lookup_expr}]'
             kwargs['label'] = label
 
         super().__init__(*args, **kwargs)
