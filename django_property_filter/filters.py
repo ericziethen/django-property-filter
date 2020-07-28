@@ -45,7 +45,6 @@ class PropertyBaseFilterMixin():
         'exact', 'iexact', 'contains', 'icontains', 'gt', 'gte',
         'lt', 'lte', 'startswith', 'istartswith', 'endswith', 'iendswith',
     ]
-    require_lookup_expr = True
 
     def __init__(self, *args, **kwargs):
         """Shared Constructor for Property Filters."""
@@ -56,16 +55,20 @@ class PropertyBaseFilterMixin():
         self.property_fld_name = kwargs.get('field_name')
         kwargs['field_name'] = None
 
+        # Set the default lookup if none is specified
+        if lookup_expr is None:
+            lookup_expr = self.supported_lookups[0]
+            kwargs['lookup_expr'] = lookup_expr
+
+        # Set the Label
         if label is None:
-            if lookup_expr is not None:
-                label = F'{self.property_fld_name} [{lookup_expr}]'
-            else:
-                label = self.property_fld_name
+            label = F'{self.property_fld_name} [{lookup_expr}]'
             kwargs['label'] = label
 
-        self.verify_lookup(lookup_expr)
-
         super().__init__(*args, **kwargs)
+
+        # Verify lookup after initializing since django-filter can set it as well
+        self.verify_lookup(lookup_expr)
 
     def filter(self, queryset, value):
         """Filter the queryset by property."""
@@ -82,7 +85,7 @@ class PropertyBaseFilterMixin():
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
-        if (self.require_lookup_expr or lookup_expr is not None) and lookup_expr not in self.supported_lookups:
+        if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
     def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
@@ -312,8 +315,6 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeF
 
 class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, LookupChoiceFilter):
     """Adding Property Support to LookupChoiceFilter."""
-
-    require_lookup_expr = False
 
     def get_lookup_choices(self):
         """Get th Lookup choices in the correct format."""

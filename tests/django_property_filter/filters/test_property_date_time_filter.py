@@ -21,6 +21,11 @@ def test_unsupported_lookup():
         PropertyDateTimeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyDateTimeFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'exact'
+
+
 @pytest.fixture
 def fixture_property_date_time_filter():
     tz = timezone.get_default_timezone()

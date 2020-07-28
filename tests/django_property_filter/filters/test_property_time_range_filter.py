@@ -20,6 +20,11 @@ def test_unsupported_lookup():
         PropertyTimeRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyTimeRangeFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'range'
+
+
 @pytest.fixture
 def fixture_property_time_range_filter():
     TimeRangeFilterModel.objects.create(id=-1, time=datetime.time(7, 30, 15))

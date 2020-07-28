@@ -19,6 +19,11 @@ def test_unsupported_lookup():
         PropertyRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyRangeFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'range'
+
+
 @pytest.fixture
 def fixture_property_number_filter():
     RangeFilterModel.objects.create(id=-1, number=-1)

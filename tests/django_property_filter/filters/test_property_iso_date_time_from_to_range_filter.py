@@ -21,6 +21,11 @@ def test_unsupported_lookup():
         PropertyIsoDateTimeFromToRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyIsoDateTimeFromToRangeFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'range'
+
+
 @pytest.fixture
 def fixture_property_time_range_filter():
     IsoDateTimeFromToRangeFilterModel.objects.create(id=-1, date_time='2020-01-03T12:00:00+12:00')

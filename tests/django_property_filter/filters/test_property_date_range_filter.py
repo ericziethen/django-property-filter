@@ -23,6 +23,11 @@ def test_unsupported_lookup():
         PropertyDateRangeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyDateRangeFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'exact'
+
+
 # This is a bit abstract but since we need to know the same week/year whenever
 # the tests are running we need to calculate them dynamically
 SAME_MONTH_VALUES_DATE = []

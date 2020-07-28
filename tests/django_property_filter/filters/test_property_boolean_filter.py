@@ -19,6 +19,11 @@ def test_unsupported_lookup():
         PropertyBooleanFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyBooleanFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'exact'
+
+
 @pytest.fixture
 def fixture_property_boolean_filter():
     BooleanFilterModel.objects.create(id=-1, is_true=True)
