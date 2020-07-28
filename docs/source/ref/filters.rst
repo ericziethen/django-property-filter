@@ -64,6 +64,13 @@ This can be
     2.) A Related field property e.g. "field_name='related__my_property'"
         which can span as many models as are related
 
+``lookup_expr``
+~~~~~~~~~~~~~~~
+
+The lookup expression to filter against.
+The default lookup expression when not specified will be 'exact' if the filter supports it.
+Some filters only support 'range' and this will be the default.
+
 Unmapped Filters
 ----------------
 
