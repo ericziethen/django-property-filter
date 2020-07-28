@@ -56,6 +56,12 @@ class PropertyBaseFilterMixin():
         self.property_fld_name = kwargs.get('field_name')
         kwargs['field_name'] = None
 
+        # Set the default lookup if none is specified
+        if lookup_expr is None:
+            lookup_expr = self.supported_lookups[0]
+            kwargs['lookup_expr'] = lookup_expr
+
+        # Set the Label
         if label is None:
             if lookup_expr is not None:
                 label = F'{self.property_fld_name} [{lookup_expr}]'
@@ -80,6 +86,11 @@ class PropertyBaseFilterMixin():
 
         return queryset
 
+
+
+
+
+    # TODO - Do we still (verify_lookup & require_lookup_expr) need this if we have a default Value???
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
         if (self.require_lookup_expr or lookup_expr is not None) and lookup_expr not in self.supported_lookups:

@@ -20,6 +20,11 @@ def test_unsupported_lookup():
         PropertyDurationFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyDurationFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'exact'
+
+
 @pytest.fixture
 def fixture_property_duration_filter():
     DurationFilterModel.objects.create(id=-1, duration=datetime.timedelta(hours=5))

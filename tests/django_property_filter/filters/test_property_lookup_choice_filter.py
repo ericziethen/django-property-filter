@@ -18,6 +18,13 @@ def test_unsupported_lookup():
         PropertyLookupChoiceFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyLookupChoiceFilter(field_name='fake_field')
+    # Property filter sets default always to 'exact'
+    # Since this filter doesn't need any 'lookup_expr' that is fine
+    assert my_filter.lookup_expr == 'exact'
+
+
 def test_no_lookup_expressions():
     test_filter = PropertyLookupChoiceFilter(field_name='fake_field')
 

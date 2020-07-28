@@ -21,6 +21,11 @@ def test_unsupported_lookup():
         PropertyCharFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyCharFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'exact'
+
+
 @pytest.fixture
 def fixture_property_char_filter():
     CharFilterModel.objects.create(id=-1, name='Aa')

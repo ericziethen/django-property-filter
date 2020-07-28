@@ -20,6 +20,11 @@ def test_unsupported_lookup():
         PropertyTypedMultipleChoiceFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyTypedMultipleChoiceFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'exact'
+
+
 LOOKUP_CHOICES = []
 @pytest.fixture
 def fixture_property_typed_multiple_choice_filter():

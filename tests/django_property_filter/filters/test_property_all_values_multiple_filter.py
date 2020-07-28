@@ -18,6 +18,11 @@ def test_unsupported_lookup():
         PropertyAllValuesMultipleFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyAllValuesMultipleFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'exact'
+
+
 @pytest.fixture
 def fixture_property_all_values_multiple_filter():
     AllValuesMultipleFilterModel.objects.create(id=-1, number=-1)

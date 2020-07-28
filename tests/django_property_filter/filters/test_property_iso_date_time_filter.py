@@ -20,6 +20,11 @@ def test_unsupported_lookup():
         PropertyIsoDateTimeFilter(field_name='fake_field', lookup_expr='fake-lookup')
 
 
+def test_default_lookup():
+    my_filter = PropertyIsoDateTimeFilter(field_name='fake_field')
+    assert my_filter.lookup_expr == 'exact'
+
+
 @pytest.fixture
 def fixture_property_iso_date_time_filter():
     # Avoiding Time Zone Manipulation to not having to convert iso times for comparison manually
