@@ -78,6 +78,10 @@ class PropertyBaseFilterMixin():
             wanted_ids = set()
             for obj in queryset:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
+
+                #self.lookup_expr, value, property_value = self._lookup_convertion(
+                #    self.lookup_expr, value, property_value)
+
                 if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                     wanted_ids.add(obj.pk)
             return queryset.filter(pk__in=wanted_ids)
@@ -100,6 +104,8 @@ class PropertyBaseFilterMixin():
 
         return result
 
+    def _lookup_convertion(self, lookup_expr, value, property_value):
+        return(lookup_expr, value, property_value)
 
 class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
     """Provide Comparison Convertion for Choice Filters."""
@@ -151,6 +157,26 @@ class MultipleChoiceFilterMixin():  # pylint: disable=too-few-public-methods
                 result_qs = result_qs | sub_result_qs
 
         return result_qs if result_qs is not None else self.model.objects.none()
+
+
+class RangeFilterFilteringMixin():  # pylint: disable=too-few-public-methods
+    """Provide filtering for Range Filters."""
+
+    def _lookup_convertion(self, lookup_expr, value, property_value):
+    #def filter(self, qs, value):  # pylint: disable=invalid-name
+        """Filter Range Filter Specific Style."""
+
+        print('RangeFilterFilteringMixin:value', value)
+
+        if lookup_expr == 'range':
+            if value.start is None:
+                lookup_expr = 'lte'
+                value = value.stop
+            elif value.stop is None:
+                lookup_expr = 'gte'
+                value = value.start
+
+        return (lookup_expr, value, property_value)
 
 
 class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
@@ -216,7 +242,7 @@ class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilter):
+class PropertyDateFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, DateFromToRangeFilter):
     """Adding Property Support to DateFromToRangeFilter."""
 
     supported_lookups = ['range']
@@ -290,7 +316,7 @@ class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyDateTimeFromToRangeFilter(PropertyBaseFilterMixin, DateTimeFromToRangeFilter):
+class PropertyDateTimeFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, DateTimeFromToRangeFilter):
     """Adding Property Support to DateTimeFromToRangeFilter."""
 
     supported_lookups = ['range']
@@ -302,13 +328,13 @@ class PropertyDurationFilter(PropertyBaseFilterMixin, DurationFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyIsoDateTimeFilter(PropertyBaseFilterMixin, IsoDateTimeFilter):
+class PropertyIsoDateTimeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, IsoDateTimeFilter):
     """Adding Property Support to IsoDateTimeFilter."""
 
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeFromToRangeFilter):
+class PropertyIsoDateTimeFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, IsoDateTimeFromToRangeFilter):
     """Adding Property Support to IsoDateTimeFromToRangeFilter."""
 
     supported_lookups = ['range']
@@ -357,7 +383,28 @@ class PropertyNumericRangeFilter(PropertyBaseFilterMixin, NumericRangeFilter):
     supported_lookups = ['range']
 
 
-class PropertyRangeFilter(PropertyBaseFilterMixin, RangeFilter):
+    def filter(self, qs, value):
+
+
+        print('PropertyNumericRangeFilter:value', value)
+
+
+        if value:
+            if value.start is not None and value.stop is not None:
+                value = (value.start, value.stop)
+            elif value.start is not None:
+                self.lookup_expr = 'startswith'
+                value = value.start
+            elif value.stop is not None:
+                self.lookup_expr = 'endswith'
+                value = value.stop
+
+        return super().filter(qs, value)
+
+
+
+
+class PropertyRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, RangeFilter):
     """Adding Property Support to RangeFilter."""
 
     supported_lookups = ['range']

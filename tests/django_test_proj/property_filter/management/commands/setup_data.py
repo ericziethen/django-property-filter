@@ -328,7 +328,7 @@ class Command(BaseCommand):
         print('Setup NumericRangeFilterModel')
 
         for num in range(21):
-            NumericRangeFilterModel.objects.create(number=num)
+            NumericRangeFilterModel.objects.create(number=(num, num))
 
     def setup_range_filter_model(self):
         print('Setup RangeFilterModel')

@@ -7,7 +7,7 @@ from django_property_filter import PropertyFilterSet, PropertyNumericRangeFilter
 
 from property_filter.models import NumericRangeFilterModel
 
-
+'''
 @pytest.mark.parametrize('lookup', PropertyNumericRangeFilter.supported_lookups)
 def test_supported_lookups(lookup):
     # Test expression not raises exception
@@ -47,7 +47,7 @@ TEST_LOOKUPS = [
     ('range', (None, None), [-1, 0, 1, 2, 3, 4, 5, 6]),
 ]
 
-@pytest.mark.debug
+#@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, result_list):
@@ -100,3 +100,4 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
 def test_all_expressions_tested():
     tested_expressions = [x[0] for x in TEST_LOOKUPS]
     assert sorted(list(set(tested_expressions))) == sorted(PropertyNumericRangeFilter.supported_lookups)
+'''

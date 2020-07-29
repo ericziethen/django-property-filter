@@ -97,6 +97,7 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
 
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
+
 def test_all_expressions_tested():
     tested_expressions = [x[0] for x in TEST_LOOKUPS]
     assert sorted(list(set(tested_expressions))) == sorted(PropertyRangeFilter.supported_lookups)
