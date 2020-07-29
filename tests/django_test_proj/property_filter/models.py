@@ -2,6 +2,9 @@ from django.db import models
 
 import django_filters.fields
 
+from django.contrib.postgres import fields as pg_fields
+
+
 # Create your models here.
 class Delivery(models.Model):
 

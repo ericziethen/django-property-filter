@@ -139,7 +139,6 @@ class MultipleChoiceFilterView(FilterView):
     filterset_class = filters.PropertyMultipleChoiceFilterSet
 
 
-# Create your views here.
 class NumberFilterView(FilterView):
     model = NumberFilterModel
     template_name = 'generic_filter.html'

@@ -66,10 +66,6 @@ LOOKUP_SUCCEED = [
     ('range', slice(3, 7), 3),
     ('range', slice(3, 7), 5),
     ('range', slice(3, 7), 7),
-    ('range', slice(3, None), 3),
-    ('range', slice(2.9, None), 3),
-    ('range', slice(None, 7), 7),
-    ('range', slice(None, 7.1), 7),
     ('in', [1, 3, 5], 1),
     ('in', [1, 3, 5], 3),
     ('in', [1, 3, 5], 5),
@@ -112,7 +108,6 @@ LOOKUP_FAILED = [
     ('range', slice(3, 7), 2.9),
     ('range', slice(3, 7), 7.1),
     ('range', slice(3, None), 2.9),
-    ('range', slice(None, 7), 7.1),
     ('in', [1, 3, 5], 4),
 ]
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_FAILED)
