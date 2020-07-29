@@ -22,7 +22,6 @@ from django_filters.filters import (
     LookupChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
-    NumericRangeFilter,
     RangeFilter,
     TimeFilter,
     TimeRangeFilter,
@@ -379,21 +378,6 @@ class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
 
     supported_lookups = [
         'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith', 'endswith']
-
-
-class PropertyNumericRangeFilter(PropertyBaseFilterMixin, NumericRangeFilter):
-    """Adding Property Support to NumericRangeFilter."""
-
-    supported_lookups = ['range']
-
-    def _lookup_convertion_before_filter(self, lookup_expr, lookup_value, property_value):
-
-        if lookup_expr == 'range':
-            if lookup_value.start is None or lookup_value.stop is None:
-                # If either is none we need to result in an empty query set
-                lookup_value = slice(2, 1, None)
-
-        return lookup_expr, lookup_value, property_value
 
 
 class PropertyRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, RangeFilter):

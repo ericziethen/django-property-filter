@@ -26,7 +26,6 @@ from property_filter.models import (
     ModelChoiceFilterRelatedModel,
     MultipleChoiceFilterModel,
     NumberFilterModel,
-    NumericRangeFilterModel,
     RangeFilterModel,
     TimeFilterModel,
     TimeRangeFilterModel,
@@ -63,7 +62,6 @@ class Command(BaseCommand):
             self.setup_multiple_choice_filter_model()
             self.setup_number_filter_model()
             self.setup_range_filter_model()
-            self.setup_numeric_range_filter_model()
             self.setup_time_filter_model()
             self.setup_time_range_filter_model()
             self.setup_typed_choice_filter_model()
@@ -323,12 +321,6 @@ class Command(BaseCommand):
 
         for num in range(21):
             NumberFilterModel.objects.create(number=num)
-
-    def setup_numeric_range_filter_model(self):
-        print('Setup NumericRangeFilterModel')
-
-        for num in range(21):
-            NumericRangeFilterModel.objects.create(number=(0, num))
 
     def setup_range_filter_model(self):
         print('Setup RangeFilterModel')

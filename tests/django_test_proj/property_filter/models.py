@@ -249,17 +249,6 @@ class NumberFilterModel(models.Model):
         return F'{self.number}'
 
 
-class NumericRangeFilterModel(models.Model):
-    number = pg_fields.IntegerRangeField(null=True)
-
-    @property
-    def prop_number(self):
-        return self.number
-
-    def __str__(self):
-        return F'{self.number}'
-
-
 class RangeFilterModel(models.Model):
     number = models.IntegerField(null=True)
 

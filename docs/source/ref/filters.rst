@@ -220,13 +220,6 @@ Used instead of NumberFilter for property filtering.
 
 Supported lookups are 'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith' and 'endswith'
 
-``PropertyNumericRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of NumericRangeFilter for property filtering
-
-Supported lookup is 'range'
-
 ``PropertyRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~
 
