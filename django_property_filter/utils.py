@@ -17,7 +17,6 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
     """Compare Lookup Expressions."""
     # Handle Special case if only 1 case of range given
 
-    '''
     if lookup_expr == 'range':
         if lookup_value.start is None:
             lookup_expr = 'lte'
@@ -25,10 +24,6 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         elif lookup_value.stop is None:
             lookup_expr = 'gte'
             lookup_value = lookup_value.start
-    '''
-
-
-
 
     result = False
 

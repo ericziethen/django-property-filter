@@ -70,7 +70,7 @@ TEST_LOOKUPS_DATE = [
     ('range', (None, None), [-1, 0, 1, 2, 3, 4]),
 ]
 
-
+@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS_DATE)
 @pytest.mark.django_db
 def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result_list):

@@ -49,7 +49,7 @@ TEST_LOOKUPS = [
     ('range', (None, None), [-1, 0, 1, 2, 3, 4]),
 ]
 
-@pytest.mark.debug
+
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, result_list):
