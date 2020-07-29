@@ -39,6 +39,7 @@ urlpatterns = [
     path('model_multiple_choice_filter/', views.ModelMultipleChoiceFilterView.as_view(), name='model_multiple_choice_filter'),
     path('multiple_choice_filter/', views.MultipleChoiceFilterView.as_view(), name='multiple_choice_filter'),
     path('number_filter/', views.NumberFilterView.as_view(), name='number_filter'),
+    path('numeric_range_filter/', views.NumericRangeFilterView.as_view(), name='numeric_range_filter'),
     path('range_filter/', views.RangeFilterView.as_view(), name='range_filter'),
     path('time_filter/', views.TimeFilterView.as_view(), name='time_filter'),
     path('time_range_filter/', views.TimeRangeFilterView.as_view(), name='time_range_filter'),
