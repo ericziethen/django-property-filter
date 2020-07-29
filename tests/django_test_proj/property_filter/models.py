@@ -2,6 +2,9 @@ from django.db import models
 
 import django_filters.fields
 
+from django.contrib.postgres import fields as pg_fields
+
+
 # Create your models here.
 class Delivery(models.Model):
 
@@ -237,6 +240,17 @@ class MultipleChoiceFilterModel(models.Model):
 
 class NumberFilterModel(models.Model):
     number = models.IntegerField(null=True)
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    def __str__(self):
+        return F'{self.number}'
+
+
+class NumericRangeFilterModel(models.Model):
+    number = pg_fields.IntegerRangeField(null=True)
 
     @property
     def prop_number(self):
