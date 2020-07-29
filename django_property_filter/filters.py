@@ -89,9 +89,20 @@ class PropertyBaseFilterMixin():
         if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
+
+    # TODO - Can we have a separate choice convertion and then the Actual Lookup?
+    #   first do choice convertion
+    #   then do lookup
+
+
     def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
         """Compare the lookup value with the property value."""
         result = False
+
+        # Convert any of the Lookups, e.g. for Range with only 1 value
+        lookup_expr, lookup_value, property_value = self._lookup_convertion_before_filter(
+            lookup_expr, lookup_value, property_value)
+
         try:
             result = compare_by_lookup_expression(lookup_expr, lookup_value, property_value)
         except (TypeError) as error:
@@ -99,6 +110,9 @@ class PropertyBaseFilterMixin():
                          F'filter value "{lookup_value}" with error: "{error}"')
 
         return result
+
+    def _lookup_convertion_before_filter(self, lookup_expr, lookup_value, property_value):
+        return lookup_expr, lookup_value, property_value
 
 
 class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
@@ -156,32 +170,17 @@ class MultipleChoiceFilterMixin():  # pylint: disable=too-few-public-methods
 class RangeFilterFilteringMixin():  # pylint: disable=too-few-public-methods
     """Provide filtering for Range Filters."""
 
-    def filter(self, qs, value):  # pylint: disable=invalid-name
-        """Filter Range Filter Specific Style."""
+    def _lookup_convertion_before_filter(self, lookup_expr, lookup_value, property_value):
 
-        print('RangeFilterFilteringMixin:value', value)
+        if lookup_expr == 'range':
+            if lookup_value.start is None:
+                lookup_expr = 'lte'
+                lookup_value = lookup_value.stop
+            elif lookup_value.stop is None:
+                lookup_expr = 'gte'
+                lookup_value = lookup_value.start
 
-        if value:
-            if value.start is None:
-                self.lookup_expr = 'lte'
-                value = value.stop
-            elif value.stop is None:
-                self.lookup_expr = 'gte'
-                value = value.start
-
-
-            '''
-            if value.start is not None and value.stop is not None:
-                self.lookup_expr = 'range'
-                value = (value.start, value.stop)
-            elif value.start is not None:
-                self.lookup_expr = 'gte'
-                value = value.start
-            elif value.stop is not None:
-                self.lookup_expr = 'lte'
-                value = value.stop
-            '''
-        return super().filter(qs, value)
+        return lookup_expr, lookup_value, property_value
 
 
 class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
@@ -247,7 +246,7 @@ class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyDateFromToRangeFilter(PropertyBaseFilterMixin, DateFromToRangeFilter):
+class PropertyDateFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, DateFromToRangeFilter):
     """Adding Property Support to DateFromToRangeFilter."""
 
     supported_lookups = ['range']
@@ -321,7 +320,7 @@ class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyDateTimeFromToRangeFilter(PropertyBaseFilterMixin, DateTimeFromToRangeFilter):
+class PropertyDateTimeFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, DateTimeFromToRangeFilter):
     """Adding Property Support to DateTimeFromToRangeFilter."""
 
     supported_lookups = ['range']
@@ -339,7 +338,7 @@ class PropertyIsoDateTimeFilter(PropertyBaseFilterMixin, IsoDateTimeFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyIsoDateTimeFromToRangeFilter(PropertyBaseFilterMixin, IsoDateTimeFromToRangeFilter):
+class PropertyIsoDateTimeFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, IsoDateTimeFromToRangeFilter):
     """Adding Property Support to IsoDateTimeFromToRangeFilter."""
 
     supported_lookups = ['range']
@@ -401,8 +400,6 @@ class PropertyNumericRangeFilter(PropertyBaseFilterMixin, NumericRangeFilter):
         return super().filter(qs, value)
 
 
-
-
 class PropertyRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, RangeFilter):
     """Adding Property Support to RangeFilter."""
 
@@ -415,7 +412,7 @@ class PropertyTimeFilter(PropertyBaseFilterMixin, TimeFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyTimeRangeFilter(PropertyBaseFilterMixin, TimeRangeFilter):
+class PropertyTimeRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, TimeRangeFilter):
     """Adding Property Support to TimeRangeFilter."""
 
     supported_lookups = ['range']
