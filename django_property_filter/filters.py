@@ -223,7 +223,7 @@ class PropertyAllValuesMultipleFilter(
 class PropertyBaseCSVFilter(PropertyBaseFilterMixin, BaseCSVFilter):
     """Adding Property Support to BaseCSVFilter."""
 
-    supported_lookups = ['in']
+    supported_lookups = ['in', 'range']
 
 
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
