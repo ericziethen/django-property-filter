@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.HomePageView.as_view(), name='home'),
     path('all_values_filter/', views.AllValuesFilterView.as_view(), name='all_values_filter'),
     path('all_values_multiple_filter/', views.AllValuesMultipleFilterView.as_view(), name='all_values_multiple_filter'),
+    path('base_csv_filter/', views.BaseCSVFilterView.as_view(), name='base_csv_filter'),
     path('boolean_filter/', views.BooleanFilterView.as_view(), name='boolean_filter'),
     path('char_filter/', views.CharFilterView.as_view(), name='char_filter'),
     path('choice_filter/', views.ChoiceFilterView.as_view(), name='choice_filter'),

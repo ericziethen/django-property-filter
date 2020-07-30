@@ -8,6 +8,7 @@ from django.utils import timezone
 from django_filters.filters import (
     AllValuesFilter,
     AllValuesMultipleFilter,
+    BaseCSVFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -217,6 +218,12 @@ class PropertyAllValuesMultipleFilter(
 
         # Need to Call parent's Parent since our Parent uses DB fields directly
         return super(AllValuesMultipleFilter, self).field
+
+
+class PropertyBaseCSVFilter(PropertyBaseFilterMixin, BaseCSVFilter):
+    """Adding Property Support to BaseCSVFilter."""
+
+    supported_lookups = ['in']
 
 
 class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):

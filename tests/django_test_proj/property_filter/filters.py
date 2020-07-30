@@ -4,9 +4,12 @@ import sys
 
 sys.path.append(os.path.abspath(R'..\..'))
 
+from django_filters.widgets import CSVWidget
+
 from django_filters.filters import (
     AllValuesFilter,
     AllValuesMultipleFilter,
+    BaseCSVFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -35,6 +38,7 @@ from django_property_filter import (
     PropertyFilterSet,
     PropertyAllValuesFilter,
     PropertyAllValuesMultipleFilter,
+    PropertyBaseCSVFilter,
     PropertyBooleanFilter,
     PropertyCharFilter,
     PropertyChoiceFilter,
@@ -107,6 +111,22 @@ class PropertyAllValuesMultipleFilterSet(PropertyFilterSet):
 
     def __init__(self, *args, **kwargs):
         add_supported_filters(self, AllValuesMultipleFilter, 'number', PropertyAllValuesMultipleFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
+
+
+class BaseCSVFilterNumer(BaseCSVFilter, CharFilter):
+    pass
+class PropertyBaseCSVFilterNumer(PropertyBaseCSVFilter, PropertyCharFilter):
+    pass
+class PropertyBaseCSVFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.BaseCSVFilterModel
+        exclude = ['number']
+        property_fields = [('prop_number', PropertyBaseCSVFilterNumer, PropertyBaseCSVFilter.supported_lookups)]
+
+    def __init__(self, *args, **kwargs):
+        add_supported_filters(self, BaseCSVFilterNumer, 'number', PropertyBaseCSVFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 
