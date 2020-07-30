@@ -10,6 +10,7 @@ from django.utils.timezone import make_aware
 from property_filter.models import (
     AllValuesFilterModel,
     AllValuesMultipleFilterModel,
+    BaseCSVFilterModel,
     BooleanFilterModel,
     CharFilterModel,
     ChoiceFilterModel,
@@ -46,6 +47,7 @@ class Command(BaseCommand):
             # Add the Data
             self.setup_all_values_filter_model()
             self.setup_all_values_multiple_filter_model()
+            self.setup_base_csv_filter_model()
             self.setup_boolean_filter_model()
             self.setup_char_filter_model()
             self.setup_choice_filter_model()
@@ -99,6 +101,12 @@ class Command(BaseCommand):
         AllValuesMultipleFilterModel.objects.create(id=7, number=10)
         AllValuesMultipleFilterModel.objects.create(id=8, number=20)
         AllValuesMultipleFilterModel.objects.create(id=9)
+
+    def setup_base_csv_filter_model(self):
+        print('Setup NumberFilterModel')
+
+        for num in range(21):
+            BaseCSVFilterModel.objects.create(number=num)
 
     def setup_boolean_filter_model(self):
         print('Setup BooleanFilterModel')
