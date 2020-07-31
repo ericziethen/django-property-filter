@@ -72,17 +72,17 @@ class PropertyBaseFilter(Filter):
         # Verify lookup after initializing since django-filter can set it as well
         self.verify_lookup(lookup_expr)
 
-    def filter(self, queryset, value):
+    def filter(self, qs, value):
         """Filter the queryset by property."""
         if value or value == 0:
             wanted_ids = set()
-            for obj in queryset:
+            for obj in qs:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
                 if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                     wanted_ids.add(obj.pk)
-            return queryset.filter(pk__in=wanted_ids)
+            return qs.filter(pk__in=wanted_ids)
 
-        return queryset
+        return qs
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
@@ -215,28 +215,28 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Look
 
         return lookup_tup_list
 
-    def filter(self, queryset, value):
+    def filter(self, qs, value):
         """Perform the custom filtering."""
         if not value:
-            return super().filter(queryset, None)
+            return super().filter(qs, None)
 
         self.lookup_expr = value.lookup_expr
-        return super().filter(queryset, value.value)
+        return super().filter(qs, value.value)
 
 
 class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
 
-    def filter(self, queryset, value):
+    def filter(self, qs, value):
         """Filter Multiple Choice Property Values."""
         # If no or empty qs there is nothing to filter, leave the qs untouched
-        if not queryset or not value:
-            return queryset
+        if not qs or not value:
+            return qs
 
         result_qs = None
 
         for sub_value in value:
-            sub_result_qs = super().filter(queryset, sub_value)
+            sub_result_qs = super().filter(qs, sub_value)
 
             if self.conjoined:
                 if result_qs is None:
@@ -254,7 +254,7 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
 
                 result_qs = result_qs | sub_result_qs
 
-        return result_qs if result_qs is not None else self.model.objects.none()
+        return result_qs if result_qs is not None else self.model.objects.none()  # pylint: disable=no-member
 
 
 class PropertyNumberFilter(PropertyBaseFilter, NumberFilter):
@@ -280,6 +280,7 @@ class PropertyRangeFilter(PropertyBaseFilter, RangeFilter):
                 lookup_value = lookup_value.start
 
         return lookup_expr, lookup_value, property_value
+
 
 class PropertyTimeFilter(PropertyBaseFilter, TimeFilter):
     """Adding Property Support to TimeFilter."""
