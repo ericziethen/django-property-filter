@@ -74,8 +74,7 @@ class PropertyBaseFilter(Filter):
 
     def filter(self, queryset, value):
         """Filter the queryset by property."""
-        # Carefull, a filter value of 0 will be Valid so can't just do 'if value:'
-        if value is not None and value != '':
+        if value or value == 0:
             wanted_ids = set()
             for obj in queryset:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
@@ -133,6 +132,14 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
     """Adding Property Support to BaseCSVFilter."""
 
     supported_lookups = ['in', 'range']
+
+
+    # TODO
+    '''
+        do we need to overwrite
+            - def _field_class_name(cls, field_class, lookup_expr):
+    '''
+
 
 
 class PropertyBooleanFilter(PropertyBaseFilter, BooleanFilter):
