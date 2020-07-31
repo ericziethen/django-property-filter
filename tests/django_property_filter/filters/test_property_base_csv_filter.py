@@ -37,7 +37,7 @@ def fixture_property_number_filter():
     BaseCSVFilterModel.objects.create(id=8)
 
 TEST_LOOKUPS = [
-    ('in', None, [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8])
+    ('in', '', [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8])
 
 
     #('exact', -1, [-1]),

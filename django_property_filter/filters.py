@@ -134,14 +134,6 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
     supported_lookups = ['in', 'range']
 
 
-    # TODO
-    '''
-        do we need to overwrite
-            - def _field_class_name(cls, field_class, lookup_expr):
-    '''
-
-
-
 class PropertyBooleanFilter(PropertyBaseFilter, BooleanFilter):
     """Adding Property Support to BooleanFilter."""
 
