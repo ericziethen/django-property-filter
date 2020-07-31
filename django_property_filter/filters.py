@@ -254,7 +254,7 @@ class PropertyTimeFilter(PropertyBaseFilter, TimeFilter):
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyTypedChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, TypedChoiceFilter):
+class PropertyTypedChoiceFilter(PropertyBaseFilter, TypedChoiceFilter):
     """Adding Property Support to TypedChoiceFilter."""
 
 
