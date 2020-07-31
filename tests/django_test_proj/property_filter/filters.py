@@ -123,10 +123,13 @@ class PropertyBaseCSVFilterSet(PropertyFilterSet):
     class Meta:
         model = models.BaseCSVFilterModel
         exclude = ['number', 'text']
-        property_fields = [('prop_number', PropertyBaseCSVFilterNumer, PropertyBaseCSVFilter.supported_lookups)]
+        property_fields = [
+            ('prop_number', PropertyBaseCSVFilterNumer, PropertyBaseCSVFilter.supported_lookups),
+            ('prop_text', PropertyBaseCSVFilterNumer, PropertyBaseCSVFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
         add_supported_filters(self, BaseCSVFilterNumer, 'number', PropertyBaseCSVFilter.supported_lookups)
+        add_supported_filters(self, BaseCSVFilterNumer, 'text', PropertyBaseCSVFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 

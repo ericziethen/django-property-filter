@@ -137,24 +137,32 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
 
         # Converting the types everytime might be a bit inefficient but we don't know for
         # sure what type the property value is unlike with db fields
+        if lookup_expr == 'range' and len(lookup_value) != 2:
+            raise ValueError(F'2 values needed for range lookup but got {len(lookup_value)} - {lookup_value}')
 
-        '''
-        if lookup_expr == 'in':
-            property_value = str(property_value)
-        elif lookup_expr == 'range':
-        '''
-
-        new_lookup_value = []
+        converted_values = []
 
         for entry in lookup_value:
+            converted_field = entry
+
+            # django-filter falls back to None if ranges are missing string values otherwise an exception is raised
+            if not entry and not isinstance(property_value, str):
+                raise ValueError(F'Empty value not allowed for type "{type(property_value)}"')
+
             if type(entry) != type(property_value):  # pylint: disable=unidiomatic-typecheck
                 try:
                     convert_lookup_value = type(property_value)(entry)
                 except (ValueError, TypeError):
                     # Use original if can't convert
-                    new_lookup_value.append(entry)
+                    pass
                 else:
-                    new_lookup_value.append(convert_lookup_value)
+                    converted_field = convert_lookup_value
+            converted_values.append(converted_field)
+
+        if lookup_expr == 'in':
+            new_lookup_value = converted_values
+        elif lookup_expr == 'range':
+            new_lookup_value = slice(converted_values[0], converted_values[1], None)
 
         return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, property_value)
 
