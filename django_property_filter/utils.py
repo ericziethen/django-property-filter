@@ -15,8 +15,6 @@ def get_value_for_db_field(obj, field_str):
 
 def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # pylint: disable=too-many-branches
     """Compare Lookup Expressions."""
-    # Handle Special case if only 1 case of range given
-
     result = False
 
     # Do the Comparison
