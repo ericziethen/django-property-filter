@@ -8,6 +8,7 @@ from property_filter.models import (
     AllValuesFilterModel,
     AllValuesMultipleFilterModel,
     BaseCSVFilterModel,
+    BaseInFilterModel,
     BooleanFilterModel,
     CharFilterModel,
     ChoiceFilterModel,
@@ -54,6 +55,12 @@ class BaseCSVFilterView(FilterView):
     model = BaseCSVFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyBaseCSVFilterSet
+
+
+class BaseInFilterView(FilterView):
+    model = BaseInFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyBaseInFilterSet
 
 
 class BooleanFilterView(FilterView):

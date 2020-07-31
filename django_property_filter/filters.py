@@ -10,6 +10,7 @@ from django_filters.filters import (
     AllValuesFilter,
     AllValuesMultipleFilter,
     BaseCSVFilter,
+    BaseInFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -299,6 +300,12 @@ class PropertyUUIDFilter(PropertyBaseFilter, UUIDFilter):
 
 
 # Filter Inheriting from other Property Filters #
+
+
+class PropertyBaseInFilter(PropertyBaseCSVFilter, BaseInFilter):
+    """Adding Property Support to BaseInFilter."""
+
+    supported_lookups = ['in']
 
 
 class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):

@@ -10,6 +10,7 @@ from django_filters.filters import (
     AllValuesFilter,
     AllValuesMultipleFilter,
     BaseCSVFilter,
+    BaseInFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -39,6 +40,7 @@ from django_property_filter import (
     PropertyAllValuesFilter,
     PropertyAllValuesMultipleFilter,
     PropertyBaseCSVFilter,
+    PropertyBaseInFilter,
     PropertyBooleanFilter,
     PropertyCharFilter,
     PropertyChoiceFilter,
@@ -130,6 +132,22 @@ class PropertyBaseCSVFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         add_supported_filters(self, BaseCSVFilterNumer, 'number', PropertyBaseCSVFilter.supported_lookups)
         add_supported_filters(self, BaseCSVFilterNumer, 'text', PropertyBaseCSVFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
+
+
+class BaseInFilterNumer(BaseInFilter, CharFilter):
+    pass
+class PropertyBaseInFilterNumer(PropertyBaseInFilter, PropertyCharFilter):
+    pass
+class PropertyBaseInFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.BaseInFilterModel
+        exclude = ['number']
+        property_fields = [('prop_number', PropertyBaseInFilterNumer, PropertyBaseInFilter.supported_lookups)]
+
+    def __init__(self, *args, **kwargs):
+        add_supported_filters(self, BaseInFilterNumer, 'number', PropertyBaseInFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 
