@@ -103,6 +103,13 @@ Used instead of AllValuesMultipleFilter for property filtering.
 
 For supported lookups see :ref:`base_lookups`
 
+``PropertyBaseCSVFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of BaseCSVFilter for property filtering
+
+Supported lookups are 'in' and 'range'
+
 ``PropertyBooleanFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
