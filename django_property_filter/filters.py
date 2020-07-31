@@ -6,6 +6,7 @@ import logging
 from django.utils import timezone
 
 from django_filters.filters import (
+    Filter,
     AllValuesFilter,
     AllValuesMultipleFilter,
     BaseCSVFilter,
@@ -39,8 +40,8 @@ from django_property_filter.utils import (
 logger = logging.getLogger(__name__)
 
 
-class PropertyBaseFilterMixin():
-    """Mixin for Property Filters."""
+class PropertyBaseFilter(Filter):
+    """Property Base Filter."""
 
     supported_lookups = [
         'exact', 'iexact', 'contains', 'icontains', 'gt', 'gte',
@@ -128,8 +129,71 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
         return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, new_property_value)
 
 
-class MultipleChoiceFilterMixin():  # pylint: disable=too-few-public-methods
-    """Provide filtering for multiple choice FIlter."""
+class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
+    """Adding Property Support to BaseCSVFilter."""
+
+    supported_lookups = ['in', 'range']
+
+
+class PropertyBooleanFilter(PropertyBaseFilter, BooleanFilter):
+    """Adding Property Support to BooleanFilter."""
+
+    supported_lookups = ['exact', 'isnull']
+
+
+class PropertyCharFilter(PropertyBaseFilter, CharFilter):
+    """Adding Property Support to BooleanFilter."""
+
+
+class PropertyChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, ChoiceFilter):
+    """Adding Property Support to ChoiceFilter."""
+
+
+class PropertyDateFilter(PropertyBaseFilter, DateFilter):
+    """Adding Property Support to DateFilter."""
+
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyDateTimeFilter(PropertyBaseFilter, DateTimeFilter):
+    """Adding Property Support to DateTimeFilter."""
+
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyDurationFilter(PropertyBaseFilter, DurationFilter):
+    """Adding Property Support to DurationFilter."""
+
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, LookupChoiceFilter):
+    """Adding Property Support to LookupChoiceFilter."""
+
+    def get_lookup_choices(self):
+        """Get th Lookup choices in the correct format."""
+        lookups = self.lookup_choices
+        if lookups is None:
+            lookups = self.supported_lookups
+
+        lookup_tup_list = [self.normalize_lookup(lookup) for lookup in lookups]
+
+        for lookup_expr, _ in lookup_tup_list:
+            self.verify_lookup(lookup_expr)
+
+        return lookup_tup_list
+
+    def filter(self, queryset, value):
+        """Perform the custom filtering."""
+        if not value:
+            return super().filter(queryset, None)
+
+        self.lookup_expr = value.lookup_expr
+        return super().filter(queryset, value.value)
+
+
+class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, MultipleChoiceFilter):
+    """Adding Property Support to MultipleChoiceFilter."""
 
     def filter(self, queryset, value):
         """Filter Multiple Choice Property Values."""
@@ -160,9 +224,17 @@ class MultipleChoiceFilterMixin():  # pylint: disable=too-few-public-methods
 
         return result_qs if result_qs is not None else self.model.objects.none()
 
+class PropertyNumberFilter(PropertyBaseFilter, NumberFilter):
+    """Adding Property Support to NumberFilter."""
 
-class RangeFilterFilteringMixin():  # pylint: disable=too-few-public-methods
-    """Provide filtering for Range Filters."""
+    supported_lookups = [
+        'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith', 'endswith']
+
+
+class PropertyRangeFilter(PropertyBaseFilter, RangeFilter):
+    """Adding Property Support to RangeFilter."""
+
+    supported_lookups = ['range']
 
     def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
 
@@ -176,8 +248,26 @@ class RangeFilterFilteringMixin():  # pylint: disable=too-few-public-methods
 
         return lookup_expr, lookup_value, property_value
 
+class PropertyTimeFilter(PropertyBaseFilter, TimeFilter):
+    """Adding Property Support to TimeFilter."""
 
-class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, AllValuesFilter):
+    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
+
+
+class PropertyTypedChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, TypedChoiceFilter):
+    """Adding Property Support to TypedChoiceFilter."""
+
+
+class PropertyUUIDFilter(PropertyBaseFilter, UUIDFilter):
+    """Adding Property Support to UUIDFilter."""
+
+    supported_lookups = ['exact']
+
+
+# Filter Inheriting from other Property Filters #
+
+
+class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):
     """Adding Property Support to AllValuesFilter."""
 
     @property
@@ -198,8 +288,7 @@ class PropertyAllValuesFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, Al
         return super(AllValuesFilter, self).field
 
 
-class PropertyAllValuesMultipleFilter(
-        ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, AllValuesMultipleFilter):
+class PropertyAllValuesMultipleFilter(PropertyMultipleChoiceFilter, AllValuesMultipleFilter):
     """Adding Property Support to AllValuesFilter."""
 
     @property
@@ -220,33 +309,7 @@ class PropertyAllValuesMultipleFilter(
         return super(AllValuesMultipleFilter, self).field
 
 
-class PropertyBaseCSVFilter(PropertyBaseFilterMixin, BaseCSVFilter):
-    """Adding Property Support to BaseCSVFilter."""
-
-    supported_lookups = ['in', 'range']
-
-
-class PropertyBooleanFilter(PropertyBaseFilterMixin, BooleanFilter):
-    """Adding Property Support to BooleanFilter."""
-
-    supported_lookups = ['exact', 'isnull']
-
-
-class PropertyCharFilter(PropertyBaseFilterMixin, CharFilter):
-    """Adding Property Support to BooleanFilter."""
-
-
-class PropertyChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, ChoiceFilter):
-    """Adding Property Support to ChoiceFilter."""
-
-
-class PropertyDateFilter(PropertyBaseFilterMixin, DateFilter):
-    """Adding Property Support to DateFilter."""
-
-    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
-
-
-class PropertyDateFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, DateFromToRangeFilter):
+class PropertyDateFromToRangeFilter(PropertyRangeFilter, DateFromToRangeFilter):
     """Adding Property Support to DateFromToRangeFilter."""
 
     supported_lookups = ['range']
@@ -274,7 +337,13 @@ class PropertyDateFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilte
         return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, new_property_value)
 
 
-class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
+class PropertyDateTimeFromToRangeFilter(PropertyRangeFilter, DateTimeFromToRangeFilter):
+    """Adding Property Support to DateTimeFromToRangeFilter."""
+
+    supported_lookups = ['range']
+
+
+class PropertyDateRangeFilter(PropertyChoiceFilter, DateRangeFilter):
     """Adding Property Support to DateRangeFilter."""
 
     supported_lookups = ['exact']
@@ -314,105 +383,26 @@ class PropertyDateRangeFilter(PropertyBaseFilterMixin, DateRangeFilter):
         return super()._compare_lookup_with_qs_entry(new_lookup_exp, new_lookup_value, new_property_value)
 
 
-class PropertyDateTimeFilter(PropertyBaseFilterMixin, DateTimeFilter):
-    """Adding Property Support to DateTimeFilter."""
-
-    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
-
-
-class PropertyDateTimeFromToRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, DateTimeFromToRangeFilter):
-    """Adding Property Support to DateTimeFromToRangeFilter."""
-
-    supported_lookups = ['range']
-
-
-class PropertyDurationFilter(PropertyBaseFilterMixin, DurationFilter):
-    """Adding Property Support to DurationFilter."""
-
-    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
-
-
-class PropertyIsoDateTimeFilter(PropertyBaseFilterMixin, IsoDateTimeFilter):
+class PropertyIsoDateTimeFilter(PropertyDateTimeFilter, IsoDateTimeFilter):
     """Adding Property Support to IsoDateTimeFilter."""
 
     supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
 
 
-class PropertyIsoDateTimeFromToRangeFilter(
-        RangeFilterFilteringMixin, PropertyBaseFilterMixin, IsoDateTimeFromToRangeFilter):
+class PropertyIsoDateTimeFromToRangeFilter(PropertyRangeFilter, IsoDateTimeFromToRangeFilter):
     """Adding Property Support to IsoDateTimeFromToRangeFilter."""
 
     supported_lookups = ['range']
 
 
-class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, LookupChoiceFilter):
-    """Adding Property Support to LookupChoiceFilter."""
-
-    def get_lookup_choices(self):
-        """Get th Lookup choices in the correct format."""
-        lookups = self.lookup_choices
-        if lookups is None:
-            lookups = self.supported_lookups
-
-        lookup_tup_list = [self.normalize_lookup(lookup) for lookup in lookups]
-
-        for lookup_expr, _ in lookup_tup_list:
-            self.verify_lookup(lookup_expr)
-
-        return lookup_tup_list
-
-    def filter(self, queryset, value):
-        """Perform the custom filtering."""
-        if not value:
-            return super().filter(queryset, None)
-
-        self.lookup_expr = value.lookup_expr
-        return super().filter(queryset, value.value)
-
-
-class PropertyMultipleChoiceFilter(
-        ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, MultipleChoiceFilter):
-    """Adding Property Support to MultipleChoiceFilter."""
-
-
-class PropertyNumberFilter(PropertyBaseFilterMixin, NumberFilter):
-    """Adding Property Support to NumberFilter."""
-
-    supported_lookups = [
-        'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith', 'endswith']
-
-
-class PropertyRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, RangeFilter):
-    """Adding Property Support to RangeFilter."""
-
-    supported_lookups = ['range']
-
-
-class PropertyTimeFilter(PropertyBaseFilterMixin, TimeFilter):
-    """Adding Property Support to TimeFilter."""
-
-    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
-
-
-class PropertyTimeRangeFilter(RangeFilterFilteringMixin, PropertyBaseFilterMixin, TimeRangeFilter):
+class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
     """Adding Property Support to TimeRangeFilter."""
 
     supported_lookups = ['range']
 
 
-class PropertyTypedChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilterMixin, TypedChoiceFilter):
-    """Adding Property Support to TypedChoiceFilter."""
-
-
-class PropertyTypedMultipleChoiceFilter(
-        ChoiceConvertionMixin, MultipleChoiceFilterMixin, PropertyBaseFilterMixin, TypedMultipleChoiceFilter):
+class PropertyTypedMultipleChoiceFilter(PropertyMultipleChoiceFilter, TypedMultipleChoiceFilter):
     """Adding Property Support to TypedMultipleChoiceFilter."""
-
-
-class PropertyUUIDFilter(PropertyBaseFilterMixin, UUIDFilter):
-    """Adding Property Support to UUIDFilter."""
-
-    supported_lookups = ['exact']
 
 
 EXPLICIT_ONLY_FILTERS = [
