@@ -24,7 +24,7 @@ def test_default_lookup():
     assert my_filter.lookup_expr == 'in'
 
 @pytest.fixture
-def fixture_property_number_filter():
+def fixture_property_base_csv_filter():
     BaseCSVFilterModel.objects.create(id=-1, number=-1)
     BaseCSVFilterModel.objects.create(id=0, number=0)
     BaseCSVFilterModel.objects.create(id=1, number=1)
@@ -37,7 +37,12 @@ def fixture_property_number_filter():
     BaseCSVFilterModel.objects.create(id=8)
 
 TEST_LOOKUPS = [
-    ('in', '', [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8])
+    ('in', '', [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8]),
+    ('in', '2', [2, 3]),
+    #('in', '8', []),
+    #('in', '0,1', [0, 1]),
+    #('in', '2,10,30', [2, 3, 6]),
+
 
 
     #('exact', -1, [-1]),
@@ -63,10 +68,10 @@ TEST_LOOKUPS = [
     #('endswith', 3, [5]),
 ]
 
-
+@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
-def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, result_list):
+def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, result_list):
 
     class BaseCSVFilterNumer(BaseCSVFilter, CharFilter):
         pass

@@ -64,13 +64,18 @@ class AllValuesMultipleFilterModel(models.Model):
 
 class BaseCSVFilterModel(models.Model):
     number = models.IntegerField(null=True)
+    text = models.CharField(max_length=32)
 
     @property
     def prop_number(self):
         return self.number
 
+    @property
+    def prop_text(self):
+        return self.text
+
     def __str__(self):
-        return F'{self.number} ({self.id})'
+        return F'{self.number} - "{self.text}" ({self.id})'
 
 
 class BooleanFilterModel(models.Model):

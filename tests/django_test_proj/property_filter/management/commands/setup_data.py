@@ -103,10 +103,15 @@ class Command(BaseCommand):
         AllValuesMultipleFilterModel.objects.create(id=9)
 
     def setup_base_csv_filter_model(self):
-        print('Setup NumberFilterModel')
+        print('Setup BaseCSVFilterModel')
 
-        for num in range(21):
-            BaseCSVFilterModel.objects.create(number=num)
+        BaseCSVFilterModel.objects.create(id=1, number=1, text='Another')
+        BaseCSVFilterModel.objects.create(id=2, number=2, text='Best')
+        BaseCSVFilterModel.objects.create(id=3, number=3, text='Clear')
+        BaseCSVFilterModel.objects.create(id=4, number=3, text='clear')
+        BaseCSVFilterModel.objects.create(id=5, number=4, text='date')
+        BaseCSVFilterModel.objects.create(id=6, number=10, text='Hello')
+        BaseCSVFilterModel.objects.create(id=7, number=20, text='zebra')
 
     def setup_boolean_filter_model(self):
         print('Setup BooleanFilterModel')

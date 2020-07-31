@@ -133,6 +133,31 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
 
     supported_lookups = ['in', 'range']
 
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
+
+        # Converting the types everytime might be a bit inefficient but we don't know for
+        # sure what type the property value is unlike with db fields
+
+        '''
+        if lookup_expr == 'in':
+            property_value = str(property_value)
+        elif lookup_expr == 'range':
+        '''
+
+        new_lookup_value = []
+
+        for entry in lookup_value:
+            if type(entry) != type(property_value):  # pylint: disable=unidiomatic-typecheck
+                try:
+                    convert_lookup_value = type(property_value)(entry)
+                except (ValueError, TypeError):
+                    # Use original if can't convert
+                    new_lookup_value.append(entry)
+                else:
+                    new_lookup_value.append(convert_lookup_value)
+
+        return super()._compare_lookup_with_qs_entry(lookup_expr, new_lookup_value, property_value)
+
 
 class PropertyBooleanFilter(PropertyBaseFilter, BooleanFilter):
     """Adding Property Support to BooleanFilter."""
@@ -222,6 +247,7 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
                 result_qs = result_qs | sub_result_qs
 
         return result_qs if result_qs is not None else self.model.objects.none()
+
 
 class PropertyNumberFilter(PropertyBaseFilter, NumberFilter):
     """Adding Property Support to NumberFilter."""
