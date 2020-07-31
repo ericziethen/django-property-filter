@@ -118,13 +118,13 @@ class Command(BaseCommand):
     def setup_base_in_filter_model(self):
         print('Setup BaseInFilterModel')
 
-        BaseInFilterModel.objects.create(id=1, number=1, text='Another')
-        BaseInFilterModel.objects.create(id=2, number=2, text='Best')
-        BaseInFilterModel.objects.create(id=3, number=3, text='Clear')
-        BaseInFilterModel.objects.create(id=4, number=3, text='clear')
-        BaseInFilterModel.objects.create(id=5, number=4, text='date')
-        BaseInFilterModel.objects.create(id=6, number=10, text='Hello')
-        BaseInFilterModel.objects.create(id=7, number=20, text='zebra')
+        BaseInFilterModel.objects.create(id=1, number=-1.25)
+        BaseInFilterModel.objects.create(id=2, number=0.0)
+        BaseInFilterModel.objects.create(id=3, number=0)
+        BaseInFilterModel.objects.create(id=4, number=1.0)
+        BaseInFilterModel.objects.create(id=5, number=1.1)
+        BaseInFilterModel.objects.create(id=6, number=3.5)
+        BaseInFilterModel.objects.create(id=7, number=20.99)
 
     def setup_boolean_filter_model(self):
         print('Setup BooleanFilterModel')

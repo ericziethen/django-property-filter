@@ -79,19 +79,14 @@ class BaseCSVFilterModel(models.Model):
 
 
 class BaseInFilterModel(models.Model):
-    number = models.IntegerField(null=True)
-    text = models.CharField(max_length=32)
+    number = models.DecimalField(decimal_places=2, max_digits=10)
 
     @property
     def prop_number(self):
         return self.number
 
-    @property
-    def prop_text(self):
-        return self.text
-
     def __str__(self):
-        return F'{self.number} - "{self.text}" ({self.id})'
+        return F'{self.number} ({self.id})'
 
 
 class BooleanFilterModel(models.Model):
