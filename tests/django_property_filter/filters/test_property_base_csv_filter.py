@@ -1,9 +1,9 @@
 
 
 import pytest
-from django_filters import FilterSet, BaseCSVFilter
+from django_filters import FilterSet, BaseCSVFilter, CharFilter
 
-from django_property_filter import PropertyFilterSet, PropertyBaseCSVFilter
+from django_property_filter import PropertyFilterSet, PropertyBaseCSVFilter, PropertyCharFilter
 
 from property_filter.models import BaseCSVFilterModel
 
