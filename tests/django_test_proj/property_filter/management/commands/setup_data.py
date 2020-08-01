@@ -11,6 +11,7 @@ from property_filter.models import (
     AllValuesFilterModel,
     AllValuesMultipleFilterModel,
     BaseCSVFilterModel,
+    BaseInFilterModel,
     BooleanFilterModel,
     CharFilterModel,
     ChoiceFilterModel,
@@ -48,6 +49,7 @@ class Command(BaseCommand):
             self.setup_all_values_filter_model()
             self.setup_all_values_multiple_filter_model()
             self.setup_base_csv_filter_model()
+            self.setup_base_in_filter_model()
             self.setup_boolean_filter_model()
             self.setup_char_filter_model()
             self.setup_choice_filter_model()
@@ -112,6 +114,17 @@ class Command(BaseCommand):
         BaseCSVFilterModel.objects.create(id=5, number=4, text='date')
         BaseCSVFilterModel.objects.create(id=6, number=10, text='Hello')
         BaseCSVFilterModel.objects.create(id=7, number=20, text='zebra')
+
+    def setup_base_in_filter_model(self):
+        print('Setup BaseInFilterModel')
+
+        BaseInFilterModel.objects.create(id=1, number=-1.25)
+        BaseInFilterModel.objects.create(id=2, number=0.0)
+        BaseInFilterModel.objects.create(id=3, number=0)
+        BaseInFilterModel.objects.create(id=4, number=1.0)
+        BaseInFilterModel.objects.create(id=5, number=1.1)
+        BaseInFilterModel.objects.create(id=6, number=3.5)
+        BaseInFilterModel.objects.create(id=7, number=20.99)
 
     def setup_boolean_filter_model(self):
         print('Setup BooleanFilterModel')

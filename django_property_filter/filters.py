@@ -10,6 +10,7 @@ from django_filters.filters import (
     AllValuesFilter,
     AllValuesMultipleFilter,
     BaseCSVFilter,
+    BaseInFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -301,6 +302,12 @@ class PropertyUUIDFilter(PropertyBaseFilter, UUIDFilter):
 # Filter Inheriting from other Property Filters #
 
 
+class PropertyBaseInFilter(PropertyBaseCSVFilter, BaseInFilter):
+    """Adding Property Support to BaseInFilter."""
+
+    supported_lookups = ['in']
+
+
 class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):
     """Adding Property Support to AllValuesFilter."""
 
@@ -346,8 +353,6 @@ class PropertyAllValuesMultipleFilter(PropertyMultipleChoiceFilter, AllValuesMul
 class PropertyDateFromToRangeFilter(PropertyRangeFilter, DateFromToRangeFilter):
     """Adding Property Support to DateFromToRangeFilter."""
 
-    supported_lookups = ['range']
-
     def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
         """Convert all datetime to date and then compare."""
         # Convert the Lookup Value if needed
@@ -373,8 +378,6 @@ class PropertyDateFromToRangeFilter(PropertyRangeFilter, DateFromToRangeFilter):
 
 class PropertyDateTimeFromToRangeFilter(PropertyRangeFilter, DateTimeFromToRangeFilter):
     """Adding Property Support to DateTimeFromToRangeFilter."""
-
-    supported_lookups = ['range']
 
 
 class PropertyDateRangeFilter(PropertyChoiceFilter, DateRangeFilter):
@@ -420,19 +423,13 @@ class PropertyDateRangeFilter(PropertyChoiceFilter, DateRangeFilter):
 class PropertyIsoDateTimeFilter(PropertyDateTimeFilter, IsoDateTimeFilter):
     """Adding Property Support to IsoDateTimeFilter."""
 
-    supported_lookups = ['exact', 'gt', 'gte', 'lt', 'lte']
-
 
 class PropertyIsoDateTimeFromToRangeFilter(PropertyRangeFilter, IsoDateTimeFromToRangeFilter):
     """Adding Property Support to IsoDateTimeFromToRangeFilter."""
 
-    supported_lookups = ['range']
-
 
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
     """Adding Property Support to TimeRangeFilter."""
-
-    supported_lookups = ['range']
 
 
 class PropertyTypedMultipleChoiceFilter(PropertyMultipleChoiceFilter, TypedMultipleChoiceFilter):

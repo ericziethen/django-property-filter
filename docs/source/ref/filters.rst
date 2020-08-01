@@ -110,6 +110,13 @@ Used instead of BaseCSVFilter for property filtering
 
 Supported lookups are 'in' and 'range'
 
+``PropertyBaseInFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of BaseInFilter for property filtering
+
+Supported lookup is 'in'
+
 ``PropertyBooleanFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
