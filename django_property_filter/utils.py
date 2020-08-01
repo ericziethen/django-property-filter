@@ -23,8 +23,14 @@ def sort_queryset_by_value(value, queryset, *, descending=False):
     return queryset
 
 
-def sort_queryset(sort_value_list, queryset, *, descending=False):
-    return sort_queryset_by_value(sort_value_list[0], queryset, descending=descending)
+def sort_queryset(sort_value_list, queryset):
+    sort_value = sort_value_list[0]
+    descending = False
+    if sort_value.startswith('-'):
+        descending = True
+        sort_value = sort_value[1:]
+
+    return sort_queryset_by_value(sort_value, queryset, descending=descending)
 
 
 def get_value_for_db_field(obj, field_str):

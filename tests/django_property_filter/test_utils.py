@@ -142,7 +142,7 @@ class SortQuerysetTests(TestCase):
         qs = DoubleIntModel.objects.all()
         assert list(qs)[0].id == 1
 
-        sorted_qs = sort_queryset(['prop_age'], qs, descending=True)
+        sorted_qs = sort_queryset(['-prop_age'], qs)
 
         assert list(sorted_qs.values_list('id', flat=True)) == [4, 2, 5, 1, 3]
 
