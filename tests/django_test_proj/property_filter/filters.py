@@ -153,9 +153,9 @@ class PropertyBaseInFilterSet(PropertyFilterSet):
         super().__init__(*args, **kwargs)
 
 
-class BaseRangeFilterDate(BaseRangeFilter, CharFilter):
+class BaseRangeFilterDate(BaseRangeFilter, DateFilter):
     pass
-class PropertyBaseRangeFilterDate(PropertyBaseRangeFilter, PropertyCharFilter):
+class PropertyBaseRangeFilterDate(PropertyBaseRangeFilter, PropertyDateFilter):
     pass
 class PropertyBaseRangeFilterSet(PropertyFilterSet):
 
