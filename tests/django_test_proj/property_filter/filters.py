@@ -379,23 +379,8 @@ class PropertyNumberFilterSet(PropertyFilterSet):
         add_supported_filters(self, NumberFilter, 'number', PropertyNumberFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class PropertyOrderingFilterSet(PropertyFilterSet):
-    
+
     first_last_name = OrderingFilter(
         label='first_last_name',
         fields=(
@@ -412,20 +397,21 @@ class PropertyOrderingFilterSet(PropertyFilterSet):
     property_first_last_name = PropertyOrderingFilter(
         label='property_first_last_name',
         fields=(
-            ('first_name', 'first_name'),
-            ('last_name', 'Last Name'),
-            ('username', 'username'),
-            ('age', 'age')
+            ('prop_first_name', 'prop_first_name'),
+            ('prop_last_name', 'Last Name'),
+            ('prop_username', 'username'),
+            ('prop_age', 'age')
 
         ),
         field_labels={
-            'first_name': 'First Name',
+            'prop_first_name': 'First Name',
         }
     )
 
     class Meta:
         model = models.OrderingFilterModel
         exclude = ['first_name', 'last_name', 'username', 'age']
+
 
 
 class PropertyRangeFilterSet(PropertyFilterSet):

@@ -40,6 +40,19 @@ class Product(models.Model):
         return self.del_line.line_no
 
 
+class DoubleIntModel(models.Model):
+    age = models.IntegerField()
+    number = models.IntegerField()
+
+    @property
+    def prop_age(self):
+        return self.age
+
+    @property
+    def prop_number(self):
+        return self.number
+
+
 class AllValuesFilterModel(models.Model):
     number = models.IntegerField(null=True)
 
@@ -298,8 +311,16 @@ class OrderingFilterModel(models.Model):
         return self.age
 
     @property
-    def prop_name(self):
-        return self.name
+    def prop_username(self):
+        return self.username
+
+    @property
+    def prop_first_name(self):
+        return self.first_name
+
+    @property
+    def prop_last_name(self):
+        return self.last_name
 
     def __str__(self):
         return F'{self.username} - {self.last_name}, {self.first_name}, {self.age} ({self.id})'

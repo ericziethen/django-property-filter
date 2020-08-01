@@ -77,6 +77,12 @@ class PropertyBaseFilter(Filter):
 
     def filter(self, qs, value):
         """Filter the queryset by property."""
+
+
+        print('### PropertyBaseFilter.filter(value)', value)
+
+
+
         if value or value == 0:
             wanted_ids = set()
             for obj in qs:
@@ -442,6 +448,53 @@ class PropertyOrderingFilter(PropertyBaseCSVFilter, PropertyChoiceFilter, Orderi
     supported_lookups = ['exact']
 
 
+    # TODO
+    '''
+        do we need to overwrite?
+            - __init__
+            - ??? - get_ordering_value
+            - ??? - filter
+            - normalize_fields
+            - build_choices
+
+
+    '''
+    def get_ordering_value(self, param):
+        print('>>> PropertyOrderingFilter.get_ordering_value()', param)
+        result = super().get_ordering_value(param)
+        print('<<< PropertyOrderingFilter.get_ordering_value()', result)
+        return result
+
+    def filter(self, qs, value):
+        print('>>> PropertyOrderingFilter.filter()', value, qs)
+        #result = super(OrderingFilter, self).filter(qs, value)
+
+
+        # TODO - MUST SUPPORT MULTIPLE SORTINGS PARAMETERS
+
+        value_list = []
+        for obj in queryset:
+            property_value = get_value_for_db_field(obj, self.property_fld_name)
+            value_list.append(property_value)
+
+        value_list = sorted(value_list, key=lambda x: (x is None, x))
+
+
+
+
+
+        ordering = [self.get_ordering_value(param) for param in value]
+        print('Start order_by')
+        result = qs.order_by(*ordering)
+        result = qs
+        print('End order_by')
+
+        print('<<< PropertyOrderingFilter.filter()', type(result), result)
+        return result
+
+
+
+
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
     """Adding Property Support to TimeRangeFilter."""
 
@@ -454,6 +507,7 @@ EXPLICIT_ONLY_FILTERS = [
     PropertyChoiceFilter,
     PropertyLookupChoiceFilter,
     PropertyMultipleChoiceFilter,
+    PropertyOrderingFilter,
     PropertyTypedChoiceFilter,
     PropertyTypedMultipleChoiceFilter,
 ]
