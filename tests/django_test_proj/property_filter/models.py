@@ -287,6 +287,17 @@ class NumberFilterModel(models.Model):
         return F'{self.number}'
 
 
+class OrderingFilterModel(models.Model):
+    name = models.CharField(max_length=32)
+
+    @property
+    def prop_name(self):
+        return self.name
+
+    def __str__(self):
+        return F'{self.name} ({self.id})'
+
+
 class RangeFilterModel(models.Model):
     number = models.IntegerField(null=True)
 

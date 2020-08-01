@@ -29,6 +29,7 @@ from property_filter.models import (
     ModelChoiceFilterRelatedModel,
     MultipleChoiceFilterModel,
     NumberFilterModel,
+    OrderingFilterModel,
     RangeFilterModel,
     TimeFilterModel,
     TimeRangeFilterModel,
@@ -67,6 +68,7 @@ class Command(BaseCommand):
             self.setup_model_choice_filter_model()
             self.setup_multiple_choice_filter_model()
             self.setup_number_filter_model()
+            self.setup_ordering_filter_model()
             self.setup_range_filter_model()
             self.setup_time_filter_model()
             self.setup_time_range_filter_model()
@@ -362,6 +364,16 @@ class Command(BaseCommand):
 
         for num in range(21):
             NumberFilterModel.objects.create(number=num)
+
+    def setup_ordering_filter_model(self):
+        print('Setup OrderingFilterModel')
+
+        OrderingFilterModel.objects.create(id=-1, name='Aa')
+        OrderingFilterModel.objects.create(id=0, name='BB')
+        OrderingFilterModel.objects.create(id=1, name='bb')
+        OrderingFilterModel.objects.create(id=2, name='C')
+        OrderingFilterModel.objects.create(id=3, name='c')
+        OrderingFilterModel.objects.create(id=4)
 
     def setup_range_filter_model(self):
         print('Setup RangeFilterModel')
