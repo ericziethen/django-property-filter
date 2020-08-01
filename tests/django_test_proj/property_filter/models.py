@@ -291,13 +291,18 @@ class OrderingFilterModel(models.Model):
     first_name = models.CharField(max_length=32)
     last_name = models.CharField(max_length=32)
     username = models.CharField(max_length=32)
+    age = models.IntegerField()
+
+    @property
+    def prop_age(self):
+        return self.age
 
     @property
     def prop_name(self):
         return self.name
 
     def __str__(self):
-        return F'{self.username} - {self.last_name}, {self.first_name} ({self.id})'
+        return F'{self.username} - {self.last_name}, {self.first_name}, {self.age} ({self.id})'
 
 
 class RangeFilterModel(models.Model):
