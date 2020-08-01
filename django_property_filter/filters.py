@@ -26,6 +26,7 @@ from django_filters.filters import (
     LookupChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
+    OrderingFilter,
     RangeFilter,
     TimeFilter,
     TimeRangeFilter,
@@ -433,6 +434,12 @@ class PropertyIsoDateTimeFilter(PropertyDateTimeFilter, IsoDateTimeFilter):
 
 class PropertyIsoDateTimeFromToRangeFilter(PropertyRangeFilter, IsoDateTimeFromToRangeFilter):
     """Adding Property Support to IsoDateTimeFromToRangeFilter."""
+
+
+class PropertyOrderingFilter(PropertyBaseCSVFilter, PropertyChoiceFilter, OrderingFilter):
+    """Adding Property Support to OrderingFilter."""
+
+    supported_lookups = ['exact']
 
 
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
