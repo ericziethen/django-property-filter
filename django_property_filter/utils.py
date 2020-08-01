@@ -3,11 +3,17 @@
 from django.db.models import Case, When
 
 
-def sort_queryset_by_value(value, queryset, *, descending=False):
+def sort_queryset(sort_property, queryset):
+    # Identify the sort order
+    descending = False
+    if sort_property.startswith('-'):
+        descending = True
+        sort_property = sort_property[1:]
+
     # Build a list of pk and value, this might become very large depending on data type
     value_list = []
     for obj in queryset:
-        property_value = get_value_for_db_field(obj, value)
+        property_value = get_value_for_db_field(obj, sort_property)
         value_list.append((obj.pk, property_value))
 
     # Sort the list of tuples
@@ -21,16 +27,6 @@ def sort_queryset_by_value(value, queryset, *, descending=False):
     queryset = queryset.filter(pk__in=value_list).order_by(preserved)
 
     return queryset
-
-
-def sort_queryset(sort_value_list, queryset):
-    sort_value = sort_value_list[0]
-    descending = False
-    if sort_value.startswith('-'):
-        descending = True
-        sort_value = sort_value[1:]
-
-    return sort_queryset_by_value(sort_value, queryset, descending=descending)
 
 
 def get_value_for_db_field(obj, field_str):

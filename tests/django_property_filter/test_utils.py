@@ -117,38 +117,27 @@ def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, property_valu
     assert not compare_by_lookup_expression(lookup_xpr, lookup_val, property_value)
 
 
-
-
 class SortQuerysetTests(TestCase):
 
     def setUp(self):
         DoubleIntModel.objects.create(id=1, number=2, age=10)
         DoubleIntModel.objects.create(id=2, number=2, age=12)
         DoubleIntModel.objects.create(id=3, number=1, age=5)
-        DoubleIntModel.objects.create(id=4, number=4, age=20)
+        DoubleIntModel.objects.create(id=4, number=4, age=9)
         DoubleIntModel.objects.create(id=5, number=2, age=11)
 
-    @pytest.mark.debug
     def test_sort_single_value_ascending(self):
         qs = DoubleIntModel.objects.all()
         assert list(qs)[0].id == 1
 
-        sorted_qs = sort_queryset(['prop_age'], qs)
+        sorted_qs = sort_queryset('prop_age', qs)
 
-        assert list(sorted_qs.values_list('id', flat=True)) == [3, 1, 5, 2, 4]
+        assert list(sorted_qs.values_list('id', flat=True)) == [3, 4, 1, 5, 2]
 
-    @pytest.mark.debug
     def test_sort_single_value_descending(self):
         qs = DoubleIntModel.objects.all()
         assert list(qs)[0].id == 1
 
-        sorted_qs = sort_queryset(['-prop_age'], qs)
+        sorted_qs = sort_queryset('-prop_age', qs)
 
-        assert list(sorted_qs.values_list('id', flat=True)) == [4, 2, 5, 1, 3]
-
-    #@pytest.mark.debug
-    def test_sort_multiple_values(self):
-        assert False
-
-
-
+        assert list(sorted_qs.values_list('id', flat=True)) == [2, 5, 1, 4, 3]
