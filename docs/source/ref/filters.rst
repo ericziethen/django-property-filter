@@ -241,6 +241,18 @@ Used instead of NumberFilter for property filtering.
 
 Supported lookups are 'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith' and 'endswith'
 
+``PropertyOrderingFilterModel``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of OrderingFilterModel for property filtering.
+
+Supported lookups is 'exact'.
+
+Because the field parameters are passed as arguments this filter can only be created
+explicitely. For example::
+
+    prop_age = PropertyOrderingFilter(fields=('prop_age', 'prop_age'))
+
 ``PropertyRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~
 
