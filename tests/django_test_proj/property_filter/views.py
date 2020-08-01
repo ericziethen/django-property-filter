@@ -9,6 +9,7 @@ from property_filter.models import (
     AllValuesMultipleFilterModel,
     BaseCSVFilterModel,
     BaseInFilterModel,
+    BaseRangeFilterModel,
     BooleanFilterModel,
     CharFilterModel,
     ChoiceFilterModel,
@@ -61,6 +62,12 @@ class BaseInFilterView(FilterView):
     model = BaseInFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyBaseInFilterSet
+
+
+class BaseRangeFilterView(FilterView):
+    model = BaseRangeFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyBaseRangeFilterSet
 
 
 class BooleanFilterView(FilterView):
