@@ -137,9 +137,14 @@ class SortQuerysetTests(TestCase):
 
         assert list(sorted_qs.values_list('id', flat=True)) == [3, 1, 5, 2, 4]
 
-    #@pytest.mark.debug
+    @pytest.mark.debug
     def test_sort_single_value_descending(self):
-        assert False
+        qs = DoubleIntModel.objects.all()
+        assert list(qs)[0].id == 1
+
+        sorted_qs = sort_queryset(['prop_age'], qs, descending=True)
+
+        assert list(sorted_qs.values_list('id', flat=True)) == [4, 2, 5, 1, 3]
 
     #@pytest.mark.debug
     def test_sort_multiple_values(self):
