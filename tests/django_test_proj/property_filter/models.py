@@ -89,6 +89,17 @@ class BaseInFilterModel(models.Model):
         return F'{self.number} ({self.id})'
 
 
+class BaseRangeFilterModel(models.Model):
+    date = models.DateField()
+
+    @property
+    def prop_date(self):
+        return self.date
+
+    def __str__(self):
+        return F'{self.date} ({self.id})'
+
+
 class BooleanFilterModel(models.Model):
     is_true = models.BooleanField(null=True)
 

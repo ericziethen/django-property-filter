@@ -12,6 +12,7 @@ from property_filter.models import (
     AllValuesMultipleFilterModel,
     BaseCSVFilterModel,
     BaseInFilterModel,
+    BaseRangeFilterModel,
     BooleanFilterModel,
     CharFilterModel,
     ChoiceFilterModel,
@@ -50,6 +51,7 @@ class Command(BaseCommand):
             self.setup_all_values_multiple_filter_model()
             self.setup_base_csv_filter_model()
             self.setup_base_in_filter_model()
+            self.setup_base_range_filter_model()
             self.setup_boolean_filter_model()
             self.setup_char_filter_model()
             self.setup_choice_filter_model()
@@ -125,6 +127,19 @@ class Command(BaseCommand):
         BaseInFilterModel.objects.create(id=5, number=1.1)
         BaseInFilterModel.objects.create(id=6, number=3.5)
         BaseInFilterModel.objects.create(id=7, number=20.99)
+
+    def setup_base_range_filter_model(self):
+        print('Setup BaseRangeFilterModel')
+
+        BaseRangeFilterModel.objects.create(id=1, date=datetime.date(2018, 2, 1))
+        BaseRangeFilterModel.objects.create(id=2, date=datetime.date(2019, 3, 2))
+        BaseRangeFilterModel.objects.create(id=3, date=datetime.date(2019, 3, 2))
+        BaseRangeFilterModel.objects.create(id=4, date=datetime.date(2019, 3, 4))
+        BaseRangeFilterModel.objects.create(id=5, date=datetime.date(2020, 2, 5))
+        BaseRangeFilterModel.objects.create(id=6, date=datetime.date(2020, 2, 6))
+        BaseRangeFilterModel.objects.create(id=7, date=datetime.date(2020, 2, 6))
+        BaseRangeFilterModel.objects.create(id=8, date=datetime.date(2020, 2, 6))
+        BaseRangeFilterModel.objects.create(id=9, date=datetime.date(2020, 2, 9))
 
     def setup_boolean_filter_model(self):
         print('Setup BooleanFilterModel')

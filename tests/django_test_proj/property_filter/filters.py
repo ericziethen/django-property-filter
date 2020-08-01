@@ -11,6 +11,7 @@ from django_filters.filters import (
     AllValuesMultipleFilter,
     BaseCSVFilter,
     BaseInFilter,
+    BaseRangeFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -41,6 +42,7 @@ from django_property_filter import (
     PropertyAllValuesMultipleFilter,
     PropertyBaseCSVFilter,
     PropertyBaseInFilter,
+    PropertyBaseRangeFilter,
     PropertyBooleanFilter,
     PropertyCharFilter,
     PropertyChoiceFilter,
@@ -148,6 +150,22 @@ class PropertyBaseInFilterSet(PropertyFilterSet):
 
     def __init__(self, *args, **kwargs):
         add_supported_filters(self, BaseInFilterNumer, 'number', PropertyBaseInFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
+
+
+class BaseRangeFilterDate(BaseRangeFilter, DateFilter):
+    pass
+class PropertyBaseRangeFilterDate(PropertyBaseRangeFilter, PropertyDateFilter):
+    pass
+class PropertyBaseRangeFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.BaseRangeFilterModel
+        exclude = ['date']
+        property_fields = [('prop_date', PropertyBaseRangeFilterDate, PropertyBaseRangeFilter.supported_lookups)]
+
+    def __init__(self, *args, **kwargs):
+        add_supported_filters(self, BaseRangeFilterDate, 'date', PropertyBaseRangeFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 

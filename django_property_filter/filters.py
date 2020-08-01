@@ -11,6 +11,7 @@ from django_filters.filters import (
     AllValuesMultipleFilter,
     BaseCSVFilter,
     BaseInFilter,
+    BaseRangeFilter,
     BooleanFilter,
     CharFilter,
     ChoiceFilter,
@@ -306,6 +307,12 @@ class PropertyBaseInFilter(PropertyBaseCSVFilter, BaseInFilter):
     """Adding Property Support to BaseInFilter."""
 
     supported_lookups = ['in']
+
+
+class PropertyBaseRangeFilter(PropertyBaseCSVFilter, BaseRangeFilter):
+    """Adding Property Support to BaseRangeFilter."""
+
+    supported_lookups = ['range']
 
 
 class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):

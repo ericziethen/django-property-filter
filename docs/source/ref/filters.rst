@@ -117,6 +117,13 @@ Used instead of BaseInFilter for property filtering
 
 Supported lookup is 'in'
 
+``PropertyBaseRangeFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of BaseRangeFilter for property filtering
+
+Supported lookup is 'range'
+
 ``PropertyBooleanFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
