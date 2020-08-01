@@ -368,12 +368,13 @@ class Command(BaseCommand):
     def setup_ordering_filter_model(self):
         print('Setup OrderingFilterModel')
 
-        OrderingFilterModel.objects.create(id=-1, name='Aa')
-        OrderingFilterModel.objects.create(id=0, name='BB')
-        OrderingFilterModel.objects.create(id=1, name='bb')
-        OrderingFilterModel.objects.create(id=2, name='C')
-        OrderingFilterModel.objects.create(id=3, name='c')
-        OrderingFilterModel.objects.create(id=4)
+        OrderingFilterModel.objects.create(id=-1, first_name='Bart', last_name='Simpson', username='El Barto')
+        OrderingFilterModel.objects.create(id=0, first_name='Walter', last_name='White', username='Heisenberg')
+        OrderingFilterModel.objects.create(id=1, first_name='Eric', last_name='Cartman', username='KylesMom')
+        OrderingFilterModel.objects.create(id=2, first_name='Sonic', last_name='the Hedgehog', username='The Flash')
+        OrderingFilterModel.objects.create(id=3, first_name='Lester', last_name='Nygaard', username='Innocent')
+        OrderingFilterModel.objects.create(id=4, first_name='Lionel', last_name='Messi', username='Bola')
+        OrderingFilterModel.objects.create(id=5, first_name='Misato', last_name='Katsuragi', username='Shinji')
 
     def setup_range_filter_model(self):
         print('Setup RangeFilterModel')
