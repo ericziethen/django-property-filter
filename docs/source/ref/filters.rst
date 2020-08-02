@@ -253,6 +253,15 @@ explicitely. For example::
 
     prop_age = PropertyOrderingFilter(fields=('prop_age', 'prop_age'))
 
+.. warning::
+    Sorting is all happening in memory rather than sql.
+    Since this filter depends on sorted querysets, the sorting loads the values
+    into memory first and therefore can make it an expensive operator.
+    Carefull with larger data sets.
+
+    Because of the in memory sorting, sorting is only supported by a single 
+    property
+
 ``PropertyRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~
 
