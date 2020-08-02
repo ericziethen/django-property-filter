@@ -413,7 +413,6 @@ class PropertyOrderingFilterSet(PropertyFilterSet):
         exclude = ['first_name', 'last_name', 'username', 'age']
 
 
-
 class PropertyRangeFilterSet(PropertyFilterSet):
 
     class Meta:

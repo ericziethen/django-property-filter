@@ -77,12 +77,4 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
     elif lookup_expr == 'in':
         result = property_value in lookup_value
 
-
-    print('compare_by_lookup_expression(lookup_expr, lookup_value, property_value)',
-        lookup_expr, lookup_value, property_value)
-
-
-
-
-
     return result
