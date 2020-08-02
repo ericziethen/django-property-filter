@@ -4,6 +4,7 @@ from django.db.models import Case, When
 
 
 def sort_queryset(sort_property, queryset):
+    """Sort the queryset by the given property name. "-" for descending is supported."""
     # Identify the sort order
     descending = False
     if sort_property.startswith('-'):
