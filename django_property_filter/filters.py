@@ -445,7 +445,7 @@ class PropertyOrderingFilter(PropertyBaseCSVFilter, PropertyChoiceFilter, Orderi
     supported_lookups = ['exact']
 
     def filter(self, qs, value):
-        # If no vaue is set just return this queryset
+        # If no value is set just return this queryset
         if not value:
             return qs
 

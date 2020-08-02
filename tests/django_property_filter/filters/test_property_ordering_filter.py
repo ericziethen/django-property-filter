@@ -36,6 +36,7 @@ def fixture_property_number_filter():
 
 
 TEST_LOOKUPS = [
+    ('exact', '', '', [-1, 0, 1, 2, 3, 4, 5]),
     ('exact', 'age', 'prop_age', [1, -1, 2, 5, 4, 3, 0]),
     ('exact', '-age', '-prop_age', [0, 3, 4, 5, 2, -1, 1]),
 ]
