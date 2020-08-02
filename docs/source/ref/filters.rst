@@ -241,6 +241,27 @@ Used instead of NumberFilter for property filtering.
 
 Supported lookups are 'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith' and 'endswith'
 
+``PropertyOrderingFilterModel``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of OrderingFilterModel for property filtering.
+
+Supported lookups is 'exact'.
+
+Because the field parameters are passed as arguments this filter can only be created
+explicitely. For example::
+
+    prop_age = PropertyOrderingFilter(fields=('prop_age', 'prop_age'))
+
+.. warning::
+    Sorting is all happening in memory rather than sql.
+    Since this filter depends on sorted querysets, the sorting loads the values
+    into memory first and therefore can make it an expensive operator.
+    Carefull with larger data sets.
+
+    Because of the in memory sorting, sorting is only supported by a single 
+    property
+
 ``PropertyRangeFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~
 

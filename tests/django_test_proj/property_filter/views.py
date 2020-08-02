@@ -26,6 +26,7 @@ from property_filter.models import (
     ModelChoiceFilterRelatedModel,
     MultipleChoiceFilterModel,
     NumberFilterModel,
+    OrderingFilterModel,
     RangeFilterModel,
     TimeFilterModel,
     TimeRangeFilterModel,
@@ -164,6 +165,12 @@ class NumberFilterView(FilterView):
     model = NumberFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyNumberFilterSet
+
+
+class OrderingFilterView(FilterView):
+    model = OrderingFilterModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.PropertyOrderingFilterSet
 
 
 class RangeFilterView(FilterView):

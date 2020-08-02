@@ -26,6 +26,7 @@ from django_filters.filters import (
     LookupChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
+    OrderingFilter,
     RangeFilter,
     TimeFilter,
     TimeRangeFilter,
@@ -35,8 +36,9 @@ from django_filters.filters import (
 )
 
 from django_property_filter.utils import (
+    compare_by_lookup_expression,
     get_value_for_db_field,
-    compare_by_lookup_expression
+    sort_queryset
 )
 
 logger = logging.getLogger(__name__)
@@ -435,6 +437,22 @@ class PropertyIsoDateTimeFromToRangeFilter(PropertyRangeFilter, IsoDateTimeFromT
     """Adding Property Support to IsoDateTimeFromToRangeFilter."""
 
 
+class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
+        PropertyBaseCSVFilter, PropertyChoiceFilter, OrderingFilter):
+    """Adding Property Support to OrderingFilter."""
+
+    supported_lookups = ['exact']
+
+    def filter(self, qs, value):
+        """Filter the PropertyOrderingFilter."""
+        # If no value is set just return this queryset
+        if not value:
+            return qs
+
+        # Only sort by the first parameter
+        return sort_queryset(self.get_ordering_value(value[0]), qs)
+
+
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
     """Adding Property Support to TimeRangeFilter."""
 
@@ -447,6 +465,7 @@ EXPLICIT_ONLY_FILTERS = [
     PropertyChoiceFilter,
     PropertyLookupChoiceFilter,
     PropertyMultipleChoiceFilter,
+    PropertyOrderingFilter,
     PropertyTypedChoiceFilter,
     PropertyTypedMultipleChoiceFilter,
 ]

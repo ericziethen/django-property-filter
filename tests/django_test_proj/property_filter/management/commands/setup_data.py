@@ -29,6 +29,7 @@ from property_filter.models import (
     ModelChoiceFilterRelatedModel,
     MultipleChoiceFilterModel,
     NumberFilterModel,
+    OrderingFilterModel,
     RangeFilterModel,
     TimeFilterModel,
     TimeRangeFilterModel,
@@ -67,6 +68,7 @@ class Command(BaseCommand):
             self.setup_model_choice_filter_model()
             self.setup_multiple_choice_filter_model()
             self.setup_number_filter_model()
+            self.setup_ordering_filter_model()
             self.setup_range_filter_model()
             self.setup_time_filter_model()
             self.setup_time_range_filter_model()
@@ -362,6 +364,17 @@ class Command(BaseCommand):
 
         for num in range(21):
             NumberFilterModel.objects.create(number=num)
+
+    def setup_ordering_filter_model(self):
+        print('Setup OrderingFilterModel')
+
+        OrderingFilterModel.objects.create(id=-1, first_name='Bart', last_name='Simpson', username='El Barto', age=10)
+        OrderingFilterModel.objects.create(id=0, first_name='Walter', last_name='White', username='Heisenberg', age=55)
+        OrderingFilterModel.objects.create(id=1, first_name='Eric', last_name='Cartman', username='KylesMom', age=8)
+        OrderingFilterModel.objects.create(id=2, first_name='Sonic', last_name='the Hedgehog', username='The Flash', age=16)
+        OrderingFilterModel.objects.create(id=3, first_name='Lester', last_name='Nygaard', username='Innocent', age=45)
+        OrderingFilterModel.objects.create(id=4, first_name='Lionel', last_name='Messi', username='Bola', age=35)
+        OrderingFilterModel.objects.create(id=5, first_name='Misato', last_name='Katsuragi', username='Shinji', age=28)
 
     def setup_range_filter_model(self):
         print('Setup RangeFilterModel')
