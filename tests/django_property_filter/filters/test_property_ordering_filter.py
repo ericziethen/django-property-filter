@@ -40,7 +40,7 @@ TEST_LOOKUPS = [
     ('exact', '-age', [0, 3, 4, 5, 2, -1, 1]),
 ]
 
-#@pytest.mark.debug
+@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, result_list):
@@ -67,6 +67,13 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
             exclude = ['id']
 
     prop_filter_fs = PropertyOrderingFilterSet({'prop_age': lookup_val}, queryset=OrderingFilterModel.objects.all())
+
+
+    #TODO ??? Why does it not Print from filter function, does it not go there????
+    print('##### ERIC')
+
+
+
     assert list(prop_filter_fs.qs) == list(filter_fs.qs)
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
