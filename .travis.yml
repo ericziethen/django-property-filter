@@ -61,13 +61,14 @@ before_script:
 - if [ "$DJANGO_DB" = "POSTGRES" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 
 script:
+- echo DJANGO_DB - "$DJANGO_DB";
 - if [ "$DJANGO_DB" = "SQLITE" ]; then
     tox sqlite;
   elif [ "$DJANGO_DB" = "POSTGRES" ]; then
     tox postgres-travis;
   else
-    echo Unexpected DJANGO_DB variable "$DJANGO_DB", error
-    exit 1
+    echo 'Unexpected DJANGO_DB variable "$DJANGO_DB", error';
+    exit 1;
   fi
 
 after_success:
