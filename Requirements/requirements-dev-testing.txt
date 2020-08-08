@@ -10,12 +10,13 @@ django
 django-filter
 
 # Testing tools
+codecov
+psycopg2
 pytest
 pytest-cov
 pytest-django
-codecov
 safety
-psycopg2
+tox
 
 # Documentation
 sphinx
