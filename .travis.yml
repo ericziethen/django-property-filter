@@ -2,102 +2,74 @@ language: python
 
 cache: pip
 
-# TODO
-# Create athe Same Travis with Build Stages, so only deploy if build ok on all jobs
 # https://docs.travis-ci.com/user/build-stages/
 
-# Limit under which Conditions we run Travis
-branches:
-  only:
-  - master      # Build if the branch is the master branch
+#branches:
+#  only:
+#  - master      # Build if the branch is the master branch
 
-matrix:
+# Matrix Expansion (python versions and databases to run tox tests against)
+# Tox is only used for running the tests, the linters only have to run against the latest code
+python:
+  - '3.8'
+  - '3.7'
+  - '3.6'
+
+env:
+- DJANGO_DB=SQLITE
+- DJANGO_DB=POSTGRES
+
+jobs:
   include:
-  - name: "Linux, Python 3.6 - Sqlite"
-    os: linux
-    dist: xenial
-    python: "3.6"
-    env: DJANGO_DB=SQLITE
-  - name: "Linux, Python 3.6 - Postgres"
-    os: linux
-    dist: xenial
-    python: "3.6"
-    env: DJANGO_DB=POSTGRES
-  - name: "Linux, Python 3.7 - Sqlite"
-    os: linux
-    dist: xenial
-    python: "3.7"
-    env: DJANGO_DB=SQLITE
-  - name: "Linux, Python 3.7 - Postgres"
-    os: linux
-    dist: xenial
-    python: "3.7"
-    env: DJANGO_DB=POSTGRES
-  - name: "Linux, Python 3.8 - Sqlite"
-    os: linux
-    dist: xenial
-    python: "3.8"
-    env: DJANGO_DB=SQLITE
-  - name: "Linux, Python 3.8 - Postgres"
-    os: linux
-    dist: xenial
-    python: "3.8"
-    env: DJANGO_DB=POSTGRES
+    - name: 'Linting and Checks'
+      services: echo PHASE - "services" (nothing to do)
+      install:
+      # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+      - pip install -r requirements.txt
+      - pip list
+      script:
+      # Check Django, e.g. Migrations are working
+      - ./dev/check_django.sh
+
+      # Run Linter
+      - ./dev/run_linters.sh
+
+      # Run Package Safety
+      - ./dev/check_package_safety.sh
 
 services:
 - postgresql
 
-install:
+before_install:
+# Print Python Details, Upgrade base packages
 - pip --version
 
 - python --version --version
 - pip list
 
-- python -m pip install --upgrade pip pipenv setuptools wheel numpy
-- pip list
-
-# don't use the '--upgrade' to not upgrade pinned requirements with generic ones
-- pip install -r requirements.txt
+- python -m pip install --upgrade pip pipenv
 - pip list
 
 # Print Environment Variables
 - if [ "$TRAVIS_OS_NAME" = "windows" ]; then set; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then printenv; fi
 
+install:
+  pip install tox-travis
+
 before_script:
 - if [ "$DJANGO_DB" = "POSTGRES" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 
 script:
-
-# Check Django
-- if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/check_django.bat; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/check_django.sh; fi
-
-# Run Tests
-- if [ "$TRAVIS_OS_NAME" = "windows" ]; then
-    if [ "$DJANGO_DB" = "POSTGRES" ]; then
-      dev/run_tests.bat postgres-travis;
-    else
-      dev/run_tests.bat;
-    fi
+- if [ "$DJANGO_DB" = "SQLITE" ]; then
+    tox sqlite;
+  elif [ "$DJANGO_DB" = "POSTGRES" ]; then
+    tox postgres-travis;
   fi
-
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-    if [ "$DJANGO_DB" = "POSTGRES" ]; then
-      ./dev/run_tests.sh postgres-travis;
-    else
-      ./dev/run_tests.sh;
-    fi
+  else
+    echo Unexpected DJANGO_DB variable "$DJANGO_DB", error
+    exit 1
   fi
-
-
-# Run Linting
-- if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/run_linters.bat; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/run_linters.sh; fi
-
-# Run Package Safety Checks
-- if [ "$TRAVIS_OS_NAME" = "windows" ]; then dev/check_package_safety_bare.bat; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./dev/check_package_safety.sh; fi
 
 after_success:
 - codecov
