@@ -1,5 +1,7 @@
 @echo off
 
+echo ##### Calling: "%~nx0" (%0)
+
 rem the safety module throws a Unicode error on Travis, so we need a base version
 
 safety check --bare

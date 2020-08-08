@@ -1,5 +1,7 @@
 @echo off
 
+echo ##### Calling: "%~nx0" (%0)
+
 setlocal
 
 set PROJ_MAIN_DIR=%~dp0..\..

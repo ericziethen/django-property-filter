@@ -1,9 +1,9 @@
 
-@echo off
+@echo on
+
+echo ##### Calling: "%~nx0" (%0)
 
 setlocal
-
-echo ##### Calling: run_tests.sh ###
 
 set SCRIPT_DIR=%~dp0
 set TEST_DIR=%SCRIPT_DIR%Testing
