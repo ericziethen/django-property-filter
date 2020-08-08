@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "##### Calling: run_tests.sh ###"
+echo '##### Calling: '`basename "$0"` '('$0')'
 
 #########################################
 ##### START OF FUNCTION DEFINITIONS #####

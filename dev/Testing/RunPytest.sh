@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo '##### Calling: '`basename "$0"` '('$0')'
+
 PACKAGE_ROOT=django_property_filter
 DJANGO_TEST_PROJ_ROOT=tests/django_test_proj
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
