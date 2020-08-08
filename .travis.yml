@@ -21,7 +21,7 @@ env:
 
 jobs:
   include:
-    - name: 'Linting and Checks'
+    - name: 'Latest Dev - Linting and Checks'
       services: echo PHASE - "services" (nothing to do)
       install:
       # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
@@ -65,7 +65,6 @@ script:
     tox sqlite;
   elif [ "$DJANGO_DB" = "POSTGRES" ]; then
     tox postgres-travis;
-  fi
   else
     echo Unexpected DJANGO_DB variable "$DJANGO_DB", error
     exit 1
