@@ -3,6 +3,8 @@
 
 setlocal
 
+echo ##### Calling: run_tests.sh ###
+
 set SCRIPT_DIR=%~dp0
 set TEST_DIR=%SCRIPT_DIR%Testing
 set ERROR_FOUND=

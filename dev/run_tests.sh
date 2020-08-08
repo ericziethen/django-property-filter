@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "##### Calling: run_tests.sh ###"
+
 #########################################
 ##### START OF FUNCTION DEFINITIONS #####
 #########################################
