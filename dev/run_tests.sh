@@ -25,17 +25,22 @@ run_tester () {
 ##### END OF FUNCTION DEFINITIONS #####
 #######################################
 
-if [ "$1" == "postgres-travis" ];
+# ${1,,} - Using Lowercase comparison
+if [ "${1,,}" == "sqlite" ];
+then
+    echo Argument "$1" passed, use postgresql as db
+    export DJANGO_SETTINGS_MODULE=django_test_proj.settings
+elif [ "${1,,}" == "postgres-travis" ];
 then
     echo Argument "$1" passed, use postgresql as db
     export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
-elif [ "$1" == "postgres-local" ];
+elif [ "${1,,}" == "postgres-local" ];
 then
     echo Argument "$1" passed, use postgresql as db
     export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
 else
-    echo No or unexpected Argument "$1" Passed, use sqlite as default db
-    export DJANGO_SETTINGS_MODULE=django_test_proj.settings
+    echo No or unexpected Argument "$1" Passed
+    exit 1
 fi
 
 echo DJANGO_SETTINGS_MODULE: "$DJANGO_SETTINGS_MODULE"
