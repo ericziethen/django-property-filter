@@ -1,7 +1,11 @@
 
 @echo off
 
+echo ##### Calling: "%~nx0" (%0)
+
 setlocal
+
+echo ##### Calling: run_linters.bat ###
 
 set SCRIPT_DIR=%~dp0
 set LINTER_DIR=%SCRIPT_DIR%Linting

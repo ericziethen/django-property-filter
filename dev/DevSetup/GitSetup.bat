@@ -1,5 +1,7 @@
 @echo off
 
+echo ##### Calling: "%~nx0" (%0)
+
 rem Setup the githooks directory
 echo Setting git hooks directory to ".githooks"
 git config core.hooksPath .githooks

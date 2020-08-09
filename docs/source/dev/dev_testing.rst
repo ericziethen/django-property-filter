@@ -2,27 +2,30 @@
 Development and Testing
 =======================
 
-Run the Test Suite
-------------------
+Run the Test Suite locally
+--------------------------
 
-For running tests using sqlite use
-
-.. code-block:: batch
-
-    $ dev\run_tests.bat
-
-or for postgresql
+For running tests using sqlite use either
 
 .. code-block:: batch
 
-    $ dev\run_tests_pygresql_local.bat
+    Windows: $ dev\run_tests.bat sqlite
+    Linux:   $ dev/run_tests.sh sqlite
+
+or for postgresql (needs local postgres setup first)
+
+.. code-block:: batch
+
+    Windows: $ dev\run_tests.bat postgres-local
+    Linux:   $ dev/run_tests.sh postgres-local
 
 Run the Linters
 ---------------
 
 .. code-block:: batch
 
-    $ dev\run_linters.bat
+    Windows: $ dev\run_linters.bat
+    Linux:   $ dev/run_linters.sh
 
 
 Run the Django Test Project

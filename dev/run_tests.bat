@@ -1,5 +1,7 @@
 
-@echo off
+@echo on
+
+echo ##### Calling: "%~nx0" (%0)
 
 setlocal
 
@@ -8,22 +10,26 @@ set TEST_DIR=%SCRIPT_DIR%Testing
 set ERROR_FOUND=
 set ERROR_LIST=
 
-if "%1"=="postgres-travis" (
-    echo Argument "%1" passed, use postgresql as db
+if /I "%1"=="sqlite" (
+    echo Argument "%1" passed, use sqlite as db
+    set DJANGO_SETTINGS_MODULE=django_test_proj.settings
+    goto run_tests
+)
+
+if /I "%1"=="postgres-travis" (
+    echo Argument "%1" passed, use postgresql (for travis) as db
     set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
     goto run_tests
 )
 
-if "%1"=="postgres-local" (
-    echo Argument "%1" passed, use postgresql as db
+if /I "%1"=="postgres-local" (
+    echo Argument "%1" passed, use postgresql (local dev) as db
     set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
     goto run_tests
 )
 
-echo No or unexpected Argument "%1" Passed, use sqlite as default db
-set DJANGO_SETTINGS_MODULE=django_test_proj.settings
-goto run_tests
-
+echo No or unexpected Argument "%1" Passed
+goto goto error
 
 :run_tests
 echo DJANGO_SETTINGS_MODULE: '%DJANGO_SETTINGS_MODULE%'
