@@ -4,9 +4,9 @@ cache: pip
 
 # https://docs.travis-ci.com/user/build-stages/
 
-#branches:
-#  only:
-#  - master      # Build if the branch is the master branch
+branches:
+  only:
+  - master      # Build if the branch is the master branch
 
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
