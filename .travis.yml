@@ -16,8 +16,8 @@ python:
   - '3.6'
 
 env:
-- DJANGO_DB=SQLITE
-- DJANGO_DB=POSTGRES
+  - DJANGO_DB=SQLITE
+  - DJANGO_DB=POSTGRES
 
 jobs:
   include:
@@ -38,38 +38,42 @@ jobs:
       - ./dev/check_package_safety.sh
 
 services:
-- postgresql
+  - postgresql
 
 before_install:
-# Print Python Details, Upgrade base packages
-- pip --version
+  # Print Python Details, Upgrade base packages
+  - pip --version
 
-- python --version --version
-- pip list
+  - python --version --version
+  - pip list
 
-- python -m pip install --upgrade pip pipenv
-- pip list
+  - python -m pip install --upgrade pip pipenv
+  - pip list
 
-# Print Environment Variables
-- if [ "$TRAVIS_OS_NAME" = "windows" ]; then set; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then printenv; fi
+  # Print Environment Variables
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then set; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then printenv; fi
 
 install:
-  pip install tox-travis
+  - pip install coverage tox-travis
 
 before_script:
-- if [ "$DJANGO_DB" = "POSTGRES" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
+  - if [ "$DJANGO_DB" = "POSTGRES" ]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 
 script:
-- echo DJANGO_DB - "$DJANGO_DB";
-- if [ "$DJANGO_DB" = "SQLITE" ]; then
-    tox sqlite;
-  elif [ "$DJANGO_DB" = "POSTGRES" ]; then
-    tox postgres-travis;
-  else
-    echo 'Unexpected DJANGO_DB variable "$DJANGO_DB", error';
-    exit 1;
-  fi
+  - coverage erase
+  - echo DJANGO_DB - "$DJANGO_DB";
+  - if [ "$DJANGO_DB" = "SQLITE" ]; then
+      tox sqlite;
+    elif [ "$DJANGO_DB" = "POSTGRES" ]; then
+      tox postgres-travis;
+    else
+      echo 'Unexpected DJANGO_DB variable "$DJANGO_DB", error';
+      exit 1;
+    fi
 
 after_success:
-- codecov
+  - coverage combine --append
+  - coverage report -m
+  - pip install codecov
+  - codecov
