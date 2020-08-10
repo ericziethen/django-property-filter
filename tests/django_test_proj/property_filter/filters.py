@@ -510,7 +510,7 @@ class VolumeTestFilterSet(PropertyFilterSet):
             ]
 
     def __init__(self, *args, **kwargs):
-        add_supported_filters(self, BooleanFilter, 'id', ['gt', 'lt'])
+        add_supported_filters(self, NumberFilter, 'id', ['gt', 'lt'])
         add_supported_filters(self, BooleanFilter, 'is_true', ['exact'])
         add_supported_filters(self, NumberFilter, 'number', ['exact', 'gt'])
         super().__init__(*args, **kwargs)
