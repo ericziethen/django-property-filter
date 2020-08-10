@@ -41,7 +41,8 @@ class Command(BaseCommand):
             bulk_list.append(
                 VolumeTestModel(
                     is_true=random.choice(is_true_range),
-                    number=random.choice(number_range),
+                    #number=random.choice(number_range),
+                    number=entry_count,
                     date=random.choice(date_range),
                     text=F'Entry {entry_count}'
                 )
