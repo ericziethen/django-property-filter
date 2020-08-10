@@ -8,7 +8,7 @@
 
 {% block content %}
 
-    <h1>Data</h1>
+    <h1>Data - {{ filter.qs|length }} items</h1>
 
     <div class="row">
         {% for obj in filter.qs %}
