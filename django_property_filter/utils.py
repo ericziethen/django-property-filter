@@ -27,6 +27,14 @@ def sort_queryset(sort_property, queryset):
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(value_list)])
     queryset = queryset.filter(pk__in=value_list).order_by(preserved)
 
+
+
+
+    # TODO - REVIEW filter for large number
+    # TODO - WE SHOULD HAVE A FILTER QS BY PK TO REUSE IT
+    # https://code.djangoproject.com/ticket/17788
+
+
     return queryset
 
 

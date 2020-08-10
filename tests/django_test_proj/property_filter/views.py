@@ -212,5 +212,5 @@ class UUIDFilterView(FilterView):
 
 class VolumeTestView(FilterView):
     model = VolumeTestModel
-    template_name = 'generic_filter.html'
+    template_name = 'generic_filter_filter_first.html'
     filterset_class = filters.VolumeTestFilterSet

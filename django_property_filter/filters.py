@@ -86,6 +86,11 @@ class PropertyBaseFilter(Filter):
                     wanted_ids.add(obj.pk)
             return qs.filter(pk__in=wanted_ids)
 
+            # TODO - REVIEW filter for large number
+            # TODO - WE SHOULD HAVE A FILTER QS BY PK TO REUSE IT
+            # https://code.djangoproject.com/ticket/17788
+
+
         return qs
 
     def verify_lookup(self, lookup_expr):

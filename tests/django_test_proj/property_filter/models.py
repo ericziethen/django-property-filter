@@ -399,6 +399,10 @@ class VolumeTestModel(models.Model):
     text = models.CharField(max_length=32)
 
     @property
+    def prop_id(self):
+        return self.id
+
+    @property
     def prop_date(self):
         return self.date
 

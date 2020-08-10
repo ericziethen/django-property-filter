@@ -28,7 +28,7 @@ class Command(BaseCommand):
     def setup_volume_test_model(self):
         print('Setup VolumeTestModel')
 
-        max_entries = 10000
+        max_entries = 2000
         is_true_range = [True, False]
         number_range = range(10)
         date_range = [timezone.now().date()]

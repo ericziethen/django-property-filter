@@ -504,11 +504,13 @@ class VolumeTestFilterSet(PropertyFilterSet):
         model = models.VolumeTestModel
         exclude = ['id', 'date', 'is_true', 'numberv', 'text']
         property_fields = [
+            ('prop_id', PropertyNumberFilter, ['gt', 'lt']),
             ('prop_is_true', PropertyBooleanFilter, ['exact']),
-            ('prop_number', PropertyNumberFilter, ['exact']),
+            ('prop_number', PropertyNumberFilter, ['exact', 'gt']),
             ]
 
     def __init__(self, *args, **kwargs):
+        add_supported_filters(self, BooleanFilter, 'id', ['gt', 'lt'])
         add_supported_filters(self, BooleanFilter, 'is_true', ['exact'])
-        add_supported_filters(self, NumberFilter, 'number', ['exact'])
+        add_supported_filters(self, NumberFilter, 'number', ['exact', 'gt'])
         super().__init__(*args, **kwargs)
