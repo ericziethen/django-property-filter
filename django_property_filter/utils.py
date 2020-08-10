@@ -3,6 +3,10 @@
 from django.db.models import Case, When
 
 
+def filter_qs_by_pk_list(queryset, pk_list):
+    return queryset.filter(pk__in=pk_list)
+
+
 def sort_queryset(sort_property, queryset):
     """Sort the queryset by the given property name. "-" for descending is supported."""
     # Identify the sort order
@@ -25,10 +29,7 @@ def sort_queryset(sort_property, queryset):
 
     # Sort the Queryset
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(value_list)])
-    queryset = queryset.filter(pk__in=value_list).order_by(preserved)
-
-
-
+    queryset = filter_qs_by_pk_list(queryset, value_list).order_by(preserved)
 
     # TODO - REVIEW filter for large number
     # TODO - WE SHOULD HAVE A FILTER QS BY PK TO REUSE IT

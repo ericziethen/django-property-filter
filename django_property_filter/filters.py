@@ -37,6 +37,7 @@ from django_filters.filters import (
 
 from django_property_filter.utils import (
     compare_by_lookup_expression,
+    filter_qs_by_pk_list,
     get_value_for_db_field,
     sort_queryset
 )
@@ -79,12 +80,12 @@ class PropertyBaseFilter(Filter):
     def filter(self, qs, value):
         """Filter the queryset by property."""
         if value or value == 0:
-            wanted_ids = set()
+            wanted_pks = set()
             for obj in qs:
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
                 if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
-                    wanted_ids.add(obj.pk)
-            return qs.filter(pk__in=wanted_ids)
+                    wanted_pks.add(obj.pk)
+            return filter_qs_by_pk_list(qs, wanted_pks)
 
             # TODO - REVIEW filter for large number
             # TODO - WE SHOULD HAVE A FILTER QS BY PK TO REUSE IT
