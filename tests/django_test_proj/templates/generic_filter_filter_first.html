@@ -1,0 +1,12 @@
+{% extends "generic_filter.html" %}
+{% block content %}
+
+    {% block query_filter %}
+        {{ block.super }}
+    {% endblock query_filter %}
+
+    {% block query_data %}
+        {{ block.super }}
+    {% endblock query_data %}
+
+{% endblock %}

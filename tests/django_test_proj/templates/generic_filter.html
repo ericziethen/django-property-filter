@@ -8,6 +8,7 @@
 
 {% block content %}
 
+    {% block query_data %}
     <h1>Data - {{ filter.qs|length }} items</h1>
 
     <div class="row">
@@ -19,7 +20,9 @@
             {% endif %}
         {% endfor %}
     </div>
+    {% endblock query_data %}
 
+    {% block query_filter %}
     <h1>Filter</h1>
 
     <form action="" method="get">
@@ -37,5 +40,6 @@
             {% endfor %}
         </div>
     </form>
+    {% endblock query_filter %}
 
 {% endblock %}

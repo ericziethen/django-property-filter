@@ -33,6 +33,7 @@ from property_filter.models import (
     TypedChoiceFilterModel,
     TypedMultipleChoiceFilterModel,
     UUIDFilterModel,
+    VolumeTestModel,
 )
 
 from . import filters
@@ -207,3 +208,9 @@ class UUIDFilterView(FilterView):
     model = UUIDFilterModel
     template_name = 'generic_filter.html'
     filterset_class = filters.PropertyUUIDFilterSet
+
+
+class VolumeTestView(FilterView):
+    model = VolumeTestModel
+    template_name = 'generic_filter.html'
+    filterset_class = filters.VolumeTestFilterSet
