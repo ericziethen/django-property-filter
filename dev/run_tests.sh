@@ -30,15 +30,15 @@ run_tester () {
 # ${1,,} - Using Lowercase comparison
 if [ "${1,,}" == "sqlite" ];
 then
-    echo Argument "$1" passed, use postgresql as db
+    echo 'Argument "$1" passed, use postgresql as db'
     export DJANGO_SETTINGS_MODULE=django_test_proj.settings
 elif [ "${1,,}" == "postgres-travis" ];
 then
-    echo Argument "$1" passed, use postgresql as db
+    echo 'Argument "$1" passed, use postgresql for travis as db'
     export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
 elif [ "${1,,}" == "postgres-local" ];
 then
-    echo Argument "$1" passed, use postgresql as db
+    echo 'Argument "$1" passed, use postgresql for local dev as db'
     export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
 else
     echo No or unexpected Argument "$1" Passed

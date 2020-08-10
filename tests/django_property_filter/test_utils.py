@@ -1,11 +1,13 @@
 
 import pytest
 
+from django.db import transaction
 from django.test import TestCase
 
 from django_property_filter.utils import (
     get_value_for_db_field,
     compare_by_lookup_expression,
+    filter_qs_by_pk_list,
     sort_queryset,
 )
 
@@ -141,3 +143,33 @@ class SortQuerysetTests(TestCase):
         sorted_qs = sort_queryset('-prop_age', qs)
 
         assert list(sorted_qs.values_list('id', flat=True)) == [2, 5, 1, 4, 3]
+
+
+class VolumeTestQsFilteringByPkList(TestCase):
+
+    def setUp(self):
+        self.entry_count = 100000
+        bulk_list = []
+
+        with transaction.atomic():
+            for _ in range(1, self.entry_count + 1):
+                bulk_list.append(Delivery(address='My Home'))
+            Delivery.objects.bulk_create(bulk_list)
+
+    @pytest.mark.debug
+    def test_filter_return_all(self):
+        self.assertEqual(Delivery.objects.all().count(), self.entry_count)
+
+        pk_list = Delivery.objects.all().values_list('pk', flat=True)
+        self.assertEqual(len(pk_list), self.entry_count)
+
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), pk_list)
+        self.assertEqual(len(result_qs), self.entry_count)
+
+        self.assertEqual(
+            set(result_qs.values_list('id', flat=True)),
+            set(Delivery.objects.all().values_list('id', flat=True)),
+        )
+
+        # Todo - Why is it not failing by default for sqlite???
+        assert False
