@@ -21,7 +21,14 @@ def filter_qs_by_pk_list(queryset, pk_list):
     '''
     # TODO - Either detect the max from SQL if possible or use 999 to be backwards compatible
 
-    return queryset.filter(pk__in=pk_list)
+    #return queryset.filter(pk__in=pk_list)
+    print('#################### BEFORE FILTER #######################')
+    #qs = queryset.filter(pk__in=pk_list)
+    print('pk_list[:600]',pk_list[:600])
+    qs = queryset.filter(pk__in=pk_list[:499]) | queryset.filter(pk__in=pk_list[600:1101])
+    print('qs.query', queryset.query)
+    print('#################### AFTER FILTER #######################')
+    return qs
 
 
 def sort_queryset(sort_property, queryset):

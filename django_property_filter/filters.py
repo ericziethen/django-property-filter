@@ -85,7 +85,7 @@ class PropertyBaseFilter(Filter):
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
                 if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                     wanted_pks.add(obj.pk)
-            return filter_qs_by_pk_list(qs, wanted_pks)
+            return filter_qs_by_pk_list(qs, list(wanted_pks))
 
             # TODO - REVIEW filter for large number
             # TODO - WE SHOULD HAVE A FILTER QS BY PK TO REUSE IT
