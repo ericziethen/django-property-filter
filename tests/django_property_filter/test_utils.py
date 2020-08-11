@@ -1,14 +1,19 @@
 
+import sqlite3
+
+from unittest.mock import patch, PropertyMock
+
 import pytest
 
-from django.db import transaction
+from django.db import connection, transaction
 from django.db.utils import OperationalError
 from django.test import TestCase
 
 from django_property_filter.utils import (
-    get_value_for_db_field,
     compare_by_lookup_expression,
     filter_qs_by_pk_list,
+    get_max_params_for_db,
+    get_value_for_db_field,
     sort_queryset,
 )
 
@@ -122,6 +127,20 @@ def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, property_valu
     assert not compare_by_lookup_expression(lookup_xpr, lookup_val, property_value)
 
 
+DB_PARAM_LIMITS = [
+    ('sqlite', '3.31.1', 999),
+    ('sqlite', '3.32.0', 32766),
+    ('postgresql', '1.0.0', None),
+    ('postgresql', '9.9.9', None),
+]
+@pytest.mark.debug
+@pytest.mark.parametrize('db_name, db_version, max_params', DB_PARAM_LIMITS)
+@pytest.mark.django_db
+def test_get_max_db_param_values(db_name, db_version, max_params):
+    with patch.object(connection, 'vendor', db_name), patch.object(sqlite3, 'sqlite_version', db_version):
+        assert get_max_params_for_db() == max_params
+
+
 class SortQuerysetTests(TestCase):
 
     def setUp(self):
@@ -148,6 +167,17 @@ class SortQuerysetTests(TestCase):
         assert list(sorted_qs.values_list('id', flat=True)) == [2, 5, 1, 4, 3]
 
 
+
+
+
+
+
+
+
+
+
+
+"""
 class VolumeTestQsFilteringByPkList(TestCase):
 
     def setUp(self):
@@ -201,3 +231,4 @@ class VolumeTestQsFilteringByPkList(TestCase):
             set(result_qs.values_list('id', flat=True)),
             set(Delivery.objects.all().values_list('id', flat=True)),
         )
+"""

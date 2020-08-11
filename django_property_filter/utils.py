@@ -1,6 +1,24 @@
 """Utility functionality."""
 
+import sqlite3
+
 from django.db.models import Case, When
+from django.db import connection
+
+
+def get_max_params_for_db():
+    max_params = None
+
+    if connection.vendor == 'sqlite':
+        # Bit of a hack but should work for sqlite rather than using a dependancy like "packaging" package
+        major, minor, _ = sqlite3.sqlite_version.split('.')
+        # Limit was increased from version 3.32.0 onwards
+        if (int(major) > 3) or (int(major) == 3 and int(minor) >= 32):
+            max_params = 32766
+        else:
+            max_params = 999
+
+    return max_params
 
 
 def filter_qs_by_pk_list(queryset, pk_list):
@@ -33,63 +51,7 @@ def filter_qs_by_pk_list(queryset, pk_list):
     # TODO - Either detect the max from SQL if possible or use 999 to be backwards compatible
 
     #return queryset.filter(pk__in=pk_list)
-    print('#################### BEFORE FILTER #######################')
-    #qs = queryset.filter(pk__in=pk_list)
-    print('pk_list[:600]',pk_list[:600])
-    qs1 = queryset.filter(pk__in=pk_list[:499])
-    print('##### 1 qs1._result_cache', qs1._result_cache)
-    qs1.count()
-    print('##### 2 qs1._result_cache', qs1._result_cache)
-    for entry in qs1:
-        pass
-    print('##### 3 qs1._result_cache', qs1._result_cache)
-    qs2 = queryset.filter(pk__in=pk_list[600:1101])
-    qs2.count()
-
-
-    qs1 = queryset.filter(pk__in=pk_list[:1])
-    qs2 = queryset.filter(pk__in=pk_list[1:2])
-    print('>>>>>> 111 qs1, qs2, qs1 | qs2', qs1, qs2, qs1 | qs2)
-    for entry in qs1:
-        pass
-    for entry in qs2:
-        pass
-    print('>>>>>> 222 qs1, qs2, qs1 | qs2', qs1, qs2, qs1 | qs2)
-
-    print('##### qs1._result_cache is None', qs1._result_cache is None)
-    print('##### qs2._result_cache is None', qs2._result_cache is None)
-    qs1 = queryset.filter(pk__in=pk_list[:499])
-    qs2 = queryset.filter(pk__in=pk_list[600:1101])
-    for entry in qs1:
-        pass
-    for entry in qs2:
-        pass
-    print('##### qs1._result_cache is None', qs1._result_cache is None)
-    print('##### qs2._result_cache is None', qs2._result_cache is None)
-    qs = qs1 | qs2
-    print('##### qs._result_cache is None', qs._result_cache is None)
-    #list(qs)
-    #print('##### qs._result_cache is None', qs._result_cache is None)
-
-    '''
-    print('##### qs._result_cache is None', qs._result_cache is None)
-    qs1 = qs1.union(qs2)
-    print('##### qs1._result_cache is None', qs1._result_cache is None)
-    #print('##### qs1.count()', qs1.count())
-
-    for entry in qs:
-        pass
-    print('##### qs._result_cache is None', qs._result_cache is None)
-    '''
-    '''
-    qs = queryset.filter(pk__in=pk_list[:499]) | queryset.filter(pk__in=pk_list[600:1101])
-    for entry in qs:
-        pass
-    '''
-    print('qs.query', queryset.query)
-    print('#################### AFTER FILTER #######################')
-    return qs
-
+    return queryset.filter(pk__range=[10000, 90000])
 
 def sort_queryset(sort_property, queryset):
     """Sort the queryset by the given property name. "-" for descending is supported."""
