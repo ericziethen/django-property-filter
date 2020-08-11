@@ -133,7 +133,6 @@ DB_PARAM_LIMITS = [
     ('postgresql', '1.0.0', None),
     ('postgresql', '9.9.9', None),
 ]
-@pytest.mark.debug
 @pytest.mark.parametrize('db_name, db_version, max_params', DB_PARAM_LIMITS)
 @pytest.mark.django_db
 def test_get_max_db_param_values(db_name, db_version, max_params):
@@ -197,22 +196,36 @@ class TestSqliteLimitParams(TestCase):
 
     @pytest.mark.debug
     def test_below_limit_ok(self):
-        qs = Delivery.objects.all().filter(pk__in=self.pk_list[:999])
+        test_list = self.pk_list[:999]
+        qs = Delivery.objects.all().filter(pk__in=test_list)
+        qs.count()
+
+        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
         qs.count()
 
     @pytest.mark.debug
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
     def test_reached_sqlite_limit_sqlite_fail(self):
-        qs = Delivery.objects.all().filter(pk__in=self.pk_list)
+        test_list = self.pk_list[:1000]
+        qs = Delivery.objects.all().filter(pk__in=test_list)
         with self.assertRaises(OperationalError, msg='expect "To many Sqlite Operations"'):
             qs.count()
+
+        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
+        with self.assertRaises(OperationalError, msg='expect "To many Sqlite Operations"'):
+            qs.count()
+
 
     @pytest.mark.debug
     # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
     def test_reached_sqlite_limit_non_sqlite_ok(self):
-        qs = Delivery.objects.all().filter(pk__in=self.pk_list)
+        test_list = self.pk_list[:1000]
+        qs = Delivery.objects.all().filter(pk__in=test_list)
+        qs.count()
+
+        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
         qs.count()
 
 

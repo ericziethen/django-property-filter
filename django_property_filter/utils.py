@@ -51,7 +51,7 @@ def filter_qs_by_pk_list(queryset, pk_list):
     # TODO - Either detect the max from SQL if possible or use 999 to be backwards compatible
 
     #return queryset.filter(pk__in=pk_list)
-    return queryset.filter(pk__range=[10000, 90000])
+    return queryset.filter(pk__in=pk_list)
 
 def sort_queryset(sort_property, queryset):
     """Sort the queryset by the given property name. "-" for descending is supported."""
