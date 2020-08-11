@@ -171,29 +171,21 @@ class SortQuerysetTests(TestCase):
 
 
 
+class TestSqliteLimitParams(TestCase):
+    '''
+    SQLite has a limit which effects bulk actions e.g. filter(pk__in=large_list)
+    https://www.sqlite.org/limits.html
+        - Maximum Number Of Host Parameters In A Single SQL Statement
+        "the maximum value of a host parameter number is SQLITE_MAX_VARIABLE_NUMBER,
+        which defaults to 999 for SQLite versions prior to 3.32.0 (2020-05-22) or
+        32766 for SQLite versions after 3.32.0"
 
-
-
-
-
-
-"""
-class VolumeTestQsFilteringByPkList(TestCase):
+    We choose 50000 for our volume test to cover once python comes with
+    newer sqlite versions
+    '''
 
     def setUp(self):
-
-        '''
-        SQLite has a limit which effects bulk actions e.g. filter(pk__in=large_list)
-        https://www.sqlite.org/limits.html
-            - Maximum Number Of Host Parameters In A Single SQL Statement
-            "the maximum value of a host parameter number is SQLITE_MAX_VARIABLE_NUMBER,
-            which defaults to 999 for SQLite versions prior to 3.32.0 (2020-05-22) or
-            32766 for SQLite versions after 3.32.0"
-
-        We choose 50000 for our volume test to cover once python comes with
-        newer sqlite versions
-        '''
-        self.entry_count = 50000
+        self.entry_count = 1000
         bulk_list = []
 
         with transaction.atomic():
@@ -204,11 +196,14 @@ class VolumeTestQsFilteringByPkList(TestCase):
         self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
 
     @pytest.mark.debug
+    def test_below_limit_ok(self):
+        qs = Delivery.objects.all().filter(pk__in=self.pk_list[:999])
+        qs.count()
+
+    @pytest.mark.debug
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
-    def test_filter_sqlite_filter_in_error(self):
-        print('type(self.pk_list), len(self.pk_list)', type(self.pk_list), len(self.pk_list))
-        print('Delivery.objects.all().count()', Delivery.objects.all().count())
+    def test_reached_sqlite_limit_sqlite_fail(self):
         qs = Delivery.objects.all().filter(pk__in=self.pk_list)
         with self.assertRaises(OperationalError, msg='expect "To many Sqlite Operations"'):
             qs.count()
@@ -216,11 +211,31 @@ class VolumeTestQsFilteringByPkList(TestCase):
     @pytest.mark.debug
     # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
-    def test_filter_postgres_filter_in_ok(self):
+    def test_reached_sqlite_limit_non_sqlite_ok(self):
         qs = Delivery.objects.all().filter(pk__in=self.pk_list)
         qs.count()
 
-    @pytest.mark.debug
+
+
+
+
+
+class VolumeTestQsFilteringByPkList(TestCase):
+
+    def setUp(self):
+
+
+        self.entry_count = 50000
+        bulk_list = []
+
+        with transaction.atomic():
+            for _ in range(1, self.entry_count + 1):
+                bulk_list.append(Delivery(address='My Home'))
+            Delivery.objects.bulk_create(bulk_list)
+
+        self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
+
+    #@pytest.mark.debug
     def test_volume_filtering(self):
         self.assertEqual(Delivery.objects.all().count(), self.entry_count)
 
@@ -231,4 +246,3 @@ class VolumeTestQsFilteringByPkList(TestCase):
             set(result_qs.values_list('id', flat=True)),
             set(Delivery.objects.all().values_list('id', flat=True)),
         )
-"""
