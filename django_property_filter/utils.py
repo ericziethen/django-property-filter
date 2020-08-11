@@ -6,6 +6,17 @@ from django.db.models import Case, When
 def filter_qs_by_pk_list(queryset, pk_list):
 
 
+
+    # TODO - ReEvaluate
+    '''
+        Our current approach to use "pk__in" has a big drawback in sqlite where by default
+        we can only have 999 parameters, i.e. if the result is more than that it will fail,
+
+        - Maybe we need to get the SQL from filter if possible and then apply as well
+
+
+    '''
+
     '''
     https://www.sqlite.org/limits.html#:~:text=To%20prevent%20excessive%20memory%20allocations,0.
 
@@ -25,7 +36,56 @@ def filter_qs_by_pk_list(queryset, pk_list):
     print('#################### BEFORE FILTER #######################')
     #qs = queryset.filter(pk__in=pk_list)
     print('pk_list[:600]',pk_list[:600])
+    qs1 = queryset.filter(pk__in=pk_list[:499])
+    print('##### 1 qs1._result_cache', qs1._result_cache)
+    qs1.count()
+    print('##### 2 qs1._result_cache', qs1._result_cache)
+    for entry in qs1:
+        pass
+    print('##### 3 qs1._result_cache', qs1._result_cache)
+    qs2 = queryset.filter(pk__in=pk_list[600:1101])
+    qs2.count()
+
+
+    qs1 = queryset.filter(pk__in=pk_list[:1])
+    qs2 = queryset.filter(pk__in=pk_list[1:2])
+    print('>>>>>> 111 qs1, qs2, qs1 | qs2', qs1, qs2, qs1 | qs2)
+    for entry in qs1:
+        pass
+    for entry in qs2:
+        pass
+    print('>>>>>> 222 qs1, qs2, qs1 | qs2', qs1, qs2, qs1 | qs2)
+
+    print('##### qs1._result_cache is None', qs1._result_cache is None)
+    print('##### qs2._result_cache is None', qs2._result_cache is None)
+    qs1 = queryset.filter(pk__in=pk_list[:499])
+    qs2 = queryset.filter(pk__in=pk_list[600:1101])
+    for entry in qs1:
+        pass
+    for entry in qs2:
+        pass
+    print('##### qs1._result_cache is None', qs1._result_cache is None)
+    print('##### qs2._result_cache is None', qs2._result_cache is None)
+    qs = qs1 | qs2
+    print('##### qs._result_cache is None', qs._result_cache is None)
+    #list(qs)
+    #print('##### qs._result_cache is None', qs._result_cache is None)
+
+    '''
+    print('##### qs._result_cache is None', qs._result_cache is None)
+    qs1 = qs1.union(qs2)
+    print('##### qs1._result_cache is None', qs1._result_cache is None)
+    #print('##### qs1.count()', qs1.count())
+
+    for entry in qs:
+        pass
+    print('##### qs._result_cache is None', qs._result_cache is None)
+    '''
+    '''
     qs = queryset.filter(pk__in=pk_list[:499]) | queryset.filter(pk__in=pk_list[600:1101])
+    for entry in qs:
+        pass
+    '''
     print('qs.query', queryset.query)
     print('#################### AFTER FILTER #######################')
     return qs
@@ -39,7 +99,7 @@ def sort_queryset(sort_property, queryset):
         descending = True
         sort_property = sort_property[1:]
 
-    # Build a list of pk and value, this might become very large depending on data type
+        # Build a list of pk and value, this might become very large depending on data type
     value_list = []
     for obj in queryset:
         property_value = get_value_for_db_field(obj, sort_property)
