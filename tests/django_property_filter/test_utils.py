@@ -257,6 +257,31 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
         self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
 
+
+
+
+
+
+
+    def test_when_sqlite_limit_starts(self):
+
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:999]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:1000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:2000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:5000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:10000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:15000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:20000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:25000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:30000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:35000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:40000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:45000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:50000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[]).count())
+        assert False
+
+
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
     def test_volume_filtering_sqlite(self):
