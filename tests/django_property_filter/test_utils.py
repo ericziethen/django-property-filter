@@ -207,8 +207,7 @@ class TestSqliteLimitParams(TestCase):
             qs.count()
 
         qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
-        with self.assertRaises(OperationalError, msg='expect "To many Sqlite Operations"'):
-            qs.count()
+        self.assertEqual(qs.count(), get_max_params_for_db())
 
     # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
@@ -234,8 +233,6 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
         self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
 
-
-    @pytest.mark.debug
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
     def test_volume_filtering_sqlite(self):
@@ -247,8 +244,6 @@ class VolumeTestQsFilteringByPkList(TestCase):
             set(self.pk_list[:999]),
         )
 
-
-    @pytest.mark.debug
     # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
     def test_volume_filtering_non_sqlite(self):

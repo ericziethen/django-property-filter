@@ -10,17 +10,13 @@ set TEST_DIR=%SCRIPT_DIR%Testing
 set ERROR_FOUND=
 set ERROR_LIST=
 
-echo 1
 if /I "%1"=="sqlite" (
     echo Argument "%1" passed, use sqlite as db
     set DJANGO_SETTINGS_MODULE=django_test_proj.settings
     goto run_tests
 )
-echo 2
 if /I "%1"=="postgres-travis" (
-    echo 3
     echo Argument "%1" passed, use postgresql for travis as db
-    echo 4
     set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
     goto run_tests
 )

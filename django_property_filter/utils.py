@@ -1,17 +1,28 @@
 """Utility functionality."""
 
+import logging
 import sqlite3
 
 from django.db.models import Case, When
 from django.db import connection
 
 
+def get_db_vendor():
+    return connection.vendor
+
+
+def get_db_version():
+    if get_db_vendor() == 'sqlite':
+        return sqlite3.sqlite_version
+    return 'Unknown'
+
+
 def get_max_params_for_db():
     max_params = None
 
-    if connection.vendor == 'sqlite':
+    if get_db_vendor() == 'sqlite':
         # Bit of a hack but should work for sqlite rather than using a dependancy like "packaging" package
-        major, minor, _ = sqlite3.sqlite_version.split('.')
+        major, minor, _ = get_db_version().split('.')
         # Limit was increased from version 3.32.0 onwards
         if (int(major) > 3) or (int(major) == 3 and int(minor) >= 32):
             max_params = 32766
@@ -23,19 +34,10 @@ def get_max_params_for_db():
 
 def filter_qs_by_pk_list(queryset, pk_list):
 
-
-
-    # TODO - ReEvaluate
     '''
-        Our current approach to use "pk__in" has a big drawback in sqlite where by default
-        we can only have 999 parameters, i.e. if the result is more than that it will fail,
+    Our current approach to use "pk__in" has a big drawback in sqlite where by default
+    we can only have 999 parameters, i.e. if the result is more than that it will fail,
 
-        - Maybe we need to get the SQL from filter if possible and then apply as well
-
-
-    '''
-
-    '''
     https://www.sqlite.org/limits.html#:~:text=To%20prevent%20excessive%20memory%20allocations,0.
 
     9. Maximum Number Of Host Parameters In A Single SQL Statement
@@ -48,10 +50,15 @@ def filter_qs_by_pk_list(queryset, pk_list):
 
     The maximum host parameter number can be lowered at run-time using the sqlite3_limit(db,SQLITE_LIMIT_VARIABLE_NUMBER,size) interface.
     '''
-    # TODO - Either detect the max from SQL if possible or use 999 to be backwards compatible
 
-    #return queryset.filter(pk__in=pk_list)
+    max_params = get_max_params_for_db()
+    if max_params is not None and len(pk_list) > max_params:
+        logging.warning(F'Only returning the first {len(pk_list)} items because of limitations of used '
+                        F'Database "{get_db_vendor()}" with version "{get_db_version()}"')
+        pk_list = pk_list[:max_params]
+
     return queryset.filter(pk__in=pk_list)
+
 
 def sort_queryset(sort_property, queryset):
     """Sort the queryset by the given property name. "-" for descending is supported."""
