@@ -12,6 +12,8 @@ from django.test import TestCase
 from django_property_filter.utils import (
     compare_by_lookup_expression,
     filter_qs_by_pk_list,
+    get_db_vendor,
+    get_db_version,
     get_max_params_for_db,
     get_value_for_db_field,
     sort_queryset,
@@ -127,6 +129,20 @@ def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, property_valu
     assert not compare_by_lookup_expression(lookup_xpr, lookup_val, property_value)
 
 
+class TestGetDbVendorVersion(TestCase):
+    def test_get_db_vendor(self):
+        with patch.object(connection, 'vendor', 'DATABASE_NAME'):
+            assert get_db_vendor() == 'DATABASE_NAME'
+
+    def test_get_db_version_sqlite(self):
+        with patch.object(connection, 'vendor', 'sqlite'), patch.object(sqlite3, 'sqlite_version', '2.5.4'):
+            assert get_db_version() == '2.5.4'
+
+    def test_get_db_version_postgresql(self):
+        with patch.object(connection, 'vendor', 'postgresql'):
+            assert get_db_version() == 'Unknown'
+
+
 DB_PARAM_LIMITS = [
     ('sqlite', '3.31.1', 999),
     ('sqlite', '3.32.0', 32766),
@@ -218,6 +234,15 @@ class TestSqliteLimitParams(TestCase):
 
         qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
         qs.count()
+
+    @pytest.mark.skipif(db_is_sqlite(), reason='Fake Postgres Limit for coverage')
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_postgress_max_for_coverage(self, mock_function):
+        mock_function.return_value = 1
+
+        test_list = self.pk_list[:1000]
+        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
+        self.assertEqual(qs.count(), 1)
 
 
 VOLUME_TEST_MAX = 100000
