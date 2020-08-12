@@ -244,7 +244,7 @@ class TestSqliteLimitParams(TestCase):
         qs.count()
 
 
-VOLUME_TEST_MAX = 100000
+VOLUME_TEST_MAX = 1000000
 class VolumeTestQsFilteringByPkList(TestCase):
 
     def setUp(self):
@@ -279,6 +279,12 @@ class VolumeTestQsFilteringByPkList(TestCase):
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:40000]).count())
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:45000]).count())
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:50000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:100000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:200000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:300000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:500000]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list[:1000000]).count())
+
         print('Count', Delivery.objects.all().filter(pk__in=test_list).count())
         assert False
 
