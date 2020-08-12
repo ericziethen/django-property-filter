@@ -214,6 +214,14 @@ class TestSqliteLimitParams(TestCase):
         qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
         qs.count()
 
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_limit_reached_mocked(self, mock_function):
+        mock_function.return_value = 1
+
+        test_list = self.pk_list[:1000]
+        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
+        self.assertEqual(qs.count(), 1)
+
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
     def test_reached_sqlite_limit_sqlite_fail(self):
@@ -234,15 +242,6 @@ class TestSqliteLimitParams(TestCase):
 
         qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
         qs.count()
-
-    @pytest.mark.skipif(db_is_sqlite(), reason='Fake Postgres Limit for coverage')
-    @patch('django_property_filter.utils.get_max_params_for_db')
-    def test_postgress_max_for_coverage(self, mock_function):
-        mock_function.return_value = 1
-
-        test_list = self.pk_list[:1000]
-        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
-        self.assertEqual(qs.count(), 1)
 
 
 VOLUME_TEST_MAX = 100000
