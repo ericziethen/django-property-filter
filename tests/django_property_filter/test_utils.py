@@ -262,9 +262,10 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
 
 
-
+    @pytest.mark.debug
     def test_when_sqlite_limit_starts(self):
 
+        test_list = self.pk_list
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:999]).count())
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:1000]).count())
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:2000]).count())
@@ -278,7 +279,7 @@ class VolumeTestQsFilteringByPkList(TestCase):
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:40000]).count())
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:45000]).count())
         print('Count', Delivery.objects.all().filter(pk__in=test_list[:50000]).count())
-        print('Count', Delivery.objects.all().filter(pk__in=test_list[]).count())
+        print('Count', Delivery.objects.all().filter(pk__in=test_list).count())
         assert False
 
 
