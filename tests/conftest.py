@@ -14,4 +14,5 @@ def pytest_collection_modifyitems(items):
 
         # Skip if run on Travis
         if is_travis_build():
+            print(F'Skip {item} because is Travis Build')
             item.add_marker(pytest.mark.skip)
