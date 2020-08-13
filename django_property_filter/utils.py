@@ -51,6 +51,14 @@ def filter_qs_by_pk_list(queryset, pk_list):
     The maximum host parameter number can be lowered at run-time using the sqlite3_limit(db,SQLITE_LIMIT_VARIABLE_NUMBER,size) interface.
     '''
 
+
+
+    # TODO
+    #- Try first and see if it fails
+    #    - if it fails fallback to a configured limit, if that raises then we let it raise
+
+
+
     max_params = get_max_params_for_db()
     if max_params is not None and len(pk_list) > max_params:
         logging.warning(F'Only returning the first {len(pk_list)} items because of limitations of used '
