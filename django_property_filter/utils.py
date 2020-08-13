@@ -3,8 +3,9 @@
 import logging
 import sqlite3
 
-from django.db.models import Case, When
 from django.db import connection
+from django.db.models import Case, When
+from django.db.utils import OperationalError
 
 
 def get_db_vendor():
@@ -51,21 +52,27 @@ def filter_qs_by_pk_list(queryset, pk_list):
     The maximum host parameter number can be lowered at run-time using the sqlite3_limit(db,SQLITE_LIMIT_VARIABLE_NUMBER,size) interface.
     '''
 
+    result_qs = queryset.filter(pk__in=pk_list)
+    '''
+    Only evaluate if we know how to limit the list
 
-
-    # TODO
-    #- Try first and see if it fails
-    #    - if it fails fallback to a configured limit, if that raises then we let it raise
-
-
-
+    e.g. For sqlite we know the default limits per version, if we exceed those we can limit how much we return.
+    For other DBs we currently don't know so if there is a limit we just let the exception be passed on
+    '''
     max_params = get_max_params_for_db()
-    if max_params is not None and len(pk_list) > max_params:
-        logging.warning(F'Only returning the first {len(pk_list)} items because of limitations of used '
-                        F'Database "{get_db_vendor()}" with version "{get_db_version()}"')
-        pk_list = pk_list[:max_params]
+    # No need to try again if we don't know the safe max or we have less items than the safe max in the first place
+    if max_params is not None and max_params < len(pk_list):
+        try:
+            # Evaluate the Result
+            result_qs.count()
+        except OperationalError:
+            max_params = get_max_params_for_db()
+            if max_params is not None and max_params < len(pk_list):
+                logging.warning(F'Only returning the first {max_params} items because of max parameter limitations of '
+                                F'Database "{get_db_vendor()}" with version "{get_db_version()}"')
+                result_qs = queryset.filter(pk__in=pk_list[:max_params])
 
-    return queryset.filter(pk__in=pk_list)
+    return result_qs
 
 
 def sort_queryset(sort_property, queryset):

@@ -182,7 +182,7 @@ class SortQuerysetTests(TestCase):
         assert list(sorted_qs.values_list('id', flat=True)) == [2, 5, 1, 4, 3]
 
 
-class TestSqliteLimitParams(TestCase):
+class TestMaxParamLimits(TestCase):
     '''
     SQLite has a limit which effects bulk actions e.g. filter(pk__in=large_list)
     https://www.sqlite.org/limits.html
@@ -214,7 +214,6 @@ class TestSqliteLimitParams(TestCase):
         qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
         qs.count()
 
-    @pytest.mark.debug
     @patch('django_property_filter.utils.get_max_params_for_db')
     def test_limit_reached_mocked(self, mock_function):
         mock_function.return_value = 1
@@ -223,9 +222,9 @@ class TestSqliteLimitParams(TestCase):
         qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
         self.assertEqual(qs.count(), 1)
 
-    @pytest.mark.debug
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
+    @pytest.mark.skipif(is_travis_build(), reason='Travis seems to use a non default LIMIT for sqlite3')
     def test_reached_sqlite_limit_sqlite_fail(self):
         test_list = self.pk_list[:1000]
         qs = Delivery.objects.all().filter(pk__in=test_list)
@@ -235,7 +234,6 @@ class TestSqliteLimitParams(TestCase):
         qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
         self.assertEqual(qs.count(), get_max_params_for_db())
 
-    @pytest.mark.debug
     # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
     def test_reached_sqlite_limit_non_sqlite_ok(self):
@@ -260,7 +258,6 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
         self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
 
-    @pytest.mark.debug
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
     @pytest.mark.skipif(is_travis_build(), reason='Travis seems to use a non default LIMIT for sqlite3')
@@ -273,7 +270,6 @@ class VolumeTestQsFilteringByPkList(TestCase):
             set(self.pk_list[:999]),
         )
 
-    @pytest.mark.debug
     # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
     def test_volume_filtering_non_sqlite(self):
