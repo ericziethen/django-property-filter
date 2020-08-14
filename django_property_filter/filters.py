@@ -87,11 +87,6 @@ class PropertyBaseFilter(Filter):
                     wanted_pks.add(obj.pk)
             return filter_qs_by_pk_list(qs, list(wanted_pks))
 
-            # TODO - REVIEW filter for large number
-            # TODO - WE SHOULD HAVE A FILTER QS BY PK TO REUSE IT
-            # https://code.djangoproject.com/ticket/17788
-
-
         return qs
 
     def verify_lookup(self, lookup_expr):

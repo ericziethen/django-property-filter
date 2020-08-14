@@ -9,16 +9,19 @@ from django.db.utils import OperationalError
 
 
 def get_db_vendor():
+    """Get the vendor of the Database used."""
     return connection.vendor
 
 
 def get_db_version():
+    """Get the version of the database used."""
     if get_db_vendor() == 'sqlite':
         return sqlite3.sqlite_version
     return 'Unknown'
 
 
 def get_max_params_for_db():
+    """Get the allowed number of maximum parameters for the database used, ot None if no limit."""
     max_params = None
 
     if get_db_vendor() == 'sqlite':
@@ -34,31 +37,21 @@ def get_max_params_for_db():
 
 
 def filter_qs_by_pk_list(queryset, pk_list):
+    """Filter the given queryset by the given list of primary keys.
 
-    '''
     Our current approach to use "pk__in" has a big drawback in sqlite where by default
-    we can only have 999 parameters, i.e. if the result is more than that it will fail,
+    we can only have 999 or 32766 (depending on version) parameters, i.e. if the result is more than that it will fail,
 
+    For details see
     https://www.sqlite.org/limits.html#:~:text=To%20prevent%20excessive%20memory%20allocations,0.
-
     9. Maximum Number Of Host Parameters In A Single SQL Statement
-
-    A host parameter is a place-holder in an SQL statement that is filled in using one of the sqlite3_bind_XXXX() interfaces. Many SQL programmers are familiar with using a question mark ("?") as a host parameter. SQLite also supports named host parameters prefaced by ":", "$", or "@" and numbered host parameters of the form "?123".
-
-    Each host parameter in an SQLite statement is assigned a number. The numbers normally begin with 1 and increase by one with each new parameter. However, when the "?123" form is used, the host parameter number is the number that follows the question mark.
-
-    SQLite allocates space to hold all host parameters between 1 and the largest host parameter number used. Hence, an SQL statement that contains a host parameter like ?1000000000 would require gigabytes of storage. This could easily overwhelm the resources of the host machine. To prevent excessive memory allocations, the maximum value of a host parameter number is SQLITE_MAX_VARIABLE_NUMBER, which defaults to 999 for SQLite versions prior to 3.32.0 (2020-05-22) or 32766 for SQLite versions after 3.32.0.
-
-    The maximum host parameter number can be lowered at run-time using the sqlite3_limit(db,SQLITE_LIMIT_VARIABLE_NUMBER,size) interface.
-    '''
-
+    """
     result_qs = queryset.filter(pk__in=pk_list)
-    '''
-    Only evaluate if we know how to limit the list
 
-    e.g. For sqlite we know the default limits per version, if we exceed those we can limit how much we return.
-    For other DBs we currently don't know so if there is a limit we just let the exception be passed on
-    '''
+    # Only evaluate if we know how to limit the list
+    # e.g. For sqlite we know the default limits per version, if we exceed those we can limit how much we return.
+    # For other DBs we currently don't know so if there is a limit we just let the exception be passed on
+
     max_params = get_max_params_for_db()
     # No need to try again if we don't know the safe max or we have less items than the safe max in the first place
     if max_params is not None and max_params < len(pk_list):
@@ -83,7 +76,7 @@ def sort_queryset(sort_property, queryset):
         descending = True
         sort_property = sort_property[1:]
 
-        # Build a list of pk and value, this might become very large depending on data type
+    # Build a list of pk and value, this might become very large depending on data type
     value_list = []
     for obj in queryset:
         property_value = get_value_for_db_field(obj, sort_property)
@@ -98,11 +91,6 @@ def sort_queryset(sort_property, queryset):
     # Sort the Queryset
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(value_list)])
     queryset = filter_qs_by_pk_list(queryset, value_list).order_by(preserved)
-
-    # TODO - REVIEW filter for large number
-    # TODO - WE SHOULD HAVE A FILTER QS BY PK TO REUSE IT
-    # https://code.djangoproject.com/ticket/17788
-
 
     return queryset
 
