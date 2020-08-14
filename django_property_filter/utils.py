@@ -30,7 +30,8 @@ def convert_int_list_to_range_lists(int_list):
     single_item_list = []
     range_list = []
 
-
+    for num in int_list:
+        single_item_list.append(num)
 
 
 
