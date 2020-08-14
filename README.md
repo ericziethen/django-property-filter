@@ -39,9 +39,20 @@ For more details and examples check the [documentation](https://django-property-
 
 ## Requirements
 
-* Python: 3.6, 3.7, 3.8
+* Python: 3.6, 3.7, 3.8, 3.9
 * Django: 2.2, 3.0, 3.1
 * Django-filter: 2.3
+
+## Limitations
+
+### Performance
+Because this app preserved Django Filtersets and filters them agains fields that are not Database fields all filtering happens in memory.
+Compared with direct sql optimized queries that might be slower and more memory intensive.
+
+### Limit on returned results
+In theory there is no limit for most databases how many results can be returned from a filter query unless the database implements a limit which will impact how many results django-property-filter can return.
+Sqlite3 defines different limits depending on the version used.
+For further details see the documentation for [limitations](https://django-property-filter.readthedocs.io/en/stable/guide/overview.html#limitations)
 
 ## Installation
 
