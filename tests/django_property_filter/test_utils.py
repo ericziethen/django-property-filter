@@ -12,6 +12,7 @@ from django.test import TestCase
 
 from django_property_filter.utils import (
     compare_by_lookup_expression,
+    convert_int_list_to_range_lists,
     filter_qs_by_pk_list,
     get_db_vendor,
     get_db_version,
@@ -284,3 +285,36 @@ class VolumeTestQsFilteringByPkList(TestCase):
             set(result_qs.values_list('pk', flat=True)),
             set(Delivery.objects.all().values_list('pk', flat=True)),
         )
+
+
+RANGE_TEST_DATA = [
+    ([], [], []),
+    ([1], [1], []),
+    #([1,2], [], [(1,2)]),
+    #([2,1], [], [(1,2)]),
+    #([1,3], [1, 3], []),
+    #([3,1], [1, 3], []),
+    #([1, 2, 4], [4], [(1, 2)]),
+    #([1, 2, 3], [], [(1,3)]),
+    #([-1, 0, 1, 4, 6, 7, 8, 9], [4], [(-1, 1), (6, 9)]),
+    #([1, 2, 3, 10, 21, 22, 24], [10, 24], [(1, 3), (21, 22)]),
+]
+@pytest.mark.debug
+@pytest.mark.parametrize('input_list, expected_single_list, expected_range_list', RANGE_TEST_DATA)
+def test_range_data_convertion(input_list, expected_single_list, expected_range_list):
+    single_list, range_list = convert_int_list_to_range_lists(input_list)
+
+    assert single_list == expected_single_list
+    assert range_list == expected_range_list
+
+
+#@pytest.mark.debug
+def test_large_number_range_convertion():
+    assert False
+
+
+#@pytest.mark.debug
+def test_filtering_with_range_convertion():
+    # TODO - Mock the max number
+    assert False
+

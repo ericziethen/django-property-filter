@@ -20,6 +20,22 @@ def get_db_version():
     return 'Unknown'
 
 
+def convert_int_list_to_range_lists(int_list):
+    """
+    Converts a list of numbers to ranges and returns 2 lists
+        single_item_list - A list of numbers that are not part of a range
+        range_list - A tuple with the range of numbers
+
+    """
+    single_item_list = []
+    range_list = []
+
+
+
+
+
+    return (single_item_list, range_list)
+
 def get_max_params_for_db():
     """Get the allowed number of maximum parameters for the database used, ot None if no limit."""
     max_params = None
