@@ -30,12 +30,46 @@ def convert_int_list_to_range_lists(int_list):
     single_item_list = []
     range_list = []
 
-    for num in int_list:
-        single_item_list.append(num)
+    # TODO - PSEUDO CODE
+    '''
+    #########################################################
 
+    1 2 3 5 7
+    [[1]]
+    [[1]]
 
+    1 2 3 5 7
+    1               [[1,1]]  # Single Item List
+      2             [[1,2]]  # Append to list because == +1
+        3           [[1,3]]  # Append to list because == +1
+          5         [[1,3], [5,5]]  # Append new List because (can add Previous to Range list)
+            7       [[1,3], [5,5],[7,7]]
+
+    Split [[1,3], [5,5],[7,7]] into
+        [5, 7]
+        [(1, 3)]
+    '''
+    # Build a list of lists first
+    tmp_list = []
+    for num in sorted(int_list):
+        if tmp_list:
+            # Check if Part of range
+            if tmp_list[-1][1] + 1 == num:  # Continuing a range
+                tmp_list[-1][1] = num  # Update Range End
+            else:  # Not continuing range
+                tmp_list.append([num, num])
+        else:
+            tmp_list.append([num, num])
+
+    # Convert list to separate ranges
+    for num_tup in tmp_list:
+        if num_tup[0] == num_tup[1]:
+            single_item_list.append(num_tup[0])
+        else:
+            range_list.append((num_tup[0], num_tup[1]))
 
     return (single_item_list, range_list)
+
 
 def get_max_params_for_db():
     """Get the allowed number of maximum parameters for the database used, ot None if no limit."""
