@@ -1,6 +1,71 @@
 """Utility functionality."""
 
+import logging
+import sqlite3
+
+from django.db import connection
 from django.db.models import Case, When
+from django.db.utils import OperationalError
+
+
+def get_db_vendor():
+    """Get the vendor of the Database used."""
+    return connection.vendor
+
+
+def get_db_version():
+    """Get the version of the database used."""
+    if get_db_vendor() == 'sqlite':
+        return sqlite3.sqlite_version
+    return 'Unknown'
+
+
+def get_max_params_for_db():
+    """Get the allowed number of maximum parameters for the database used, ot None if no limit."""
+    max_params = None
+
+    if get_db_vendor() == 'sqlite':
+        # Bit of a hack but should work for sqlite rather than using a dependancy like "packaging" package
+        major, minor, _ = get_db_version().split('.')
+        # Limit was increased from version 3.32.0 onwards
+        if (int(major) > 3) or (int(major) == 3 and int(minor) >= 32):
+            max_params = 32766
+        else:
+            max_params = 999
+
+    return max_params
+
+
+def filter_qs_by_pk_list(queryset, pk_list):
+    """Filter the given queryset by the given list of primary keys.
+
+    Our current approach to use "pk__in" has a big drawback in sqlite where by default
+    we can only have 999 or 32766 (depending on version) parameters, i.e. if the result is more than that it will fail,
+
+    For details see
+    https://www.sqlite.org/limits.html#:~:text=To%20prevent%20excessive%20memory%20allocations,0.
+    9. Maximum Number Of Host Parameters In A Single SQL Statement
+    """
+    result_qs = queryset.filter(pk__in=pk_list)
+
+    # Only evaluate if we know how to limit the list
+    # e.g. For sqlite we know the default limits per version, if we exceed those we can limit how much we return.
+    # For other DBs we currently don't know so if there is a limit we just let the exception be passed on
+
+    max_params = get_max_params_for_db()
+    # No need to try again if we don't know the safe max or we have less items than the safe max in the first place
+    if max_params is not None and max_params < len(pk_list):
+        try:
+            # Evaluate the Result
+            result_qs.count()
+        except OperationalError:
+            max_params = get_max_params_for_db()
+            if max_params is not None and max_params < len(pk_list):
+                logging.warning(F'Only returning the first {max_params} items because of max parameter limitations of '
+                                F'Database "{get_db_vendor()}" with version "{get_db_version()}"')
+                result_qs = queryset.filter(pk__in=pk_list[:max_params])
+
+    return result_qs
 
 
 def sort_queryset(sort_property, queryset):
@@ -25,7 +90,7 @@ def sort_queryset(sort_property, queryset):
 
     # Sort the Queryset
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(value_list)])
-    queryset = queryset.filter(pk__in=value_list).order_by(preserved)
+    queryset = filter_qs_by_pk_list(queryset, value_list).order_by(preserved)
 
     return queryset
 

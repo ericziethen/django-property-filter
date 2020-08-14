@@ -1,5 +1,5 @@
 
-@echo on
+@echo off
 
 echo ##### Calling: "%~nx0" (%0)
 
@@ -15,15 +15,13 @@ if /I "%1"=="sqlite" (
     set DJANGO_SETTINGS_MODULE=django_test_proj.settings
     goto run_tests
 )
-
 if /I "%1"=="postgres-travis" (
-    echo Argument "%1" passed, use postgresql (for travis) as db
+    echo Argument "%1" passed, use postgresql for travis as db
     set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_travis
     goto run_tests
 )
-
 if /I "%1"=="postgres-local" (
-    echo Argument "%1" passed, use postgresql (local dev) as db
+    echo Argument "%1" passed, use postgresql for local dev as db
     set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
     goto run_tests
 )

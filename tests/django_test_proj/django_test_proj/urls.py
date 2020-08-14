@@ -49,4 +49,5 @@ urlpatterns = [
     path('typed_choice_filter/', views.TypedChoiceFilterView.as_view(), name='typed_choice_filter'),
     path('typed_mutiple_choice_filter/', views.TypedMultipleChoiceFilterView.as_view(), name='typed_mutiple_choice_filter'),
     path('uuid_filter/', views.UUIDFilterView.as_view(), name='uuid_filter'),
+    path('volume_test/', views.VolumeTestView.as_view(), name='volume_test'),
 ]

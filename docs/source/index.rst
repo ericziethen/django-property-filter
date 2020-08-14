@@ -10,6 +10,7 @@ Welcome to Django Property Filter's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   guide/overview
    guide/install
    guide/usage
 

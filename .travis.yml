@@ -11,6 +11,7 @@ branches:
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
 python:
+  - '3.9-dev'
   - '3.8'
   - '3.7'
   - '3.6'
@@ -45,6 +46,7 @@ before_install:
   - pip --version
 
   - python --version --version
+  - python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
   - pip list
 
   - python -m pip install --upgrade pip pipenv

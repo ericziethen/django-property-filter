@@ -496,3 +496,19 @@ class PropertyUUIDFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         add_supported_filters(self, UUIDFilter, 'uuid', PropertyUUIDFilter.supported_lookups)
         super().__init__(*args, **kwargs)
+
+
+class VolumeTestFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.VolumeTestModel
+        exclude = ['id', 'date', 'is_true', 'numberv', 'text']
+        property_fields = [
+            ('prop_is_true', PropertyBooleanFilter, ['exact']),
+            ('prop_number', PropertyNumberFilter, ['exact', 'lt', 'gt']),
+            ]
+
+    def __init__(self, *args, **kwargs):
+        add_supported_filters(self, BooleanFilter, 'is_true', ['exact'])
+        add_supported_filters(self, NumberFilter, 'number', ['exact', 'lt', 'gt'])
+        super().__init__(*args, **kwargs)

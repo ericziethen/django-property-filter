@@ -1,4 +1,6 @@
- 
+
+import os
+
 from django.db import connection
 from django_filters import FilterSet
 
@@ -52,3 +54,7 @@ def db_is_sqlite():
 
 def db_is_postgresql():
     return connection.vendor == 'postgresql'
+
+
+def is_travis_build():
+    return 'TRAVIS_OS_NAME' in os.environ

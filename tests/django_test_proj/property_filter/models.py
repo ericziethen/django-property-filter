@@ -390,3 +390,29 @@ class UUIDFilterModel(models.Model):
 
     def __str__(self):
         return F'{self.uuid} ({self.id})'
+
+
+class VolumeTestModel(models.Model):
+    date = models.DateField()
+    is_true = models.BooleanField(null=True)
+    number = models.IntegerField(null=True)
+    text = models.CharField(max_length=32)
+
+    @property
+    def prop_date(self):
+        return self.date
+
+    @property
+    def prop_is_true(self):
+        return self.is_true
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    @property
+    def prop_text(self):
+        return self.text
+
+    def __str__(self):
+        return F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - ({self.id})'
