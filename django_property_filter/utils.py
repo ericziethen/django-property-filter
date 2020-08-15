@@ -62,6 +62,19 @@ def convert_int_list_to_range_lists(int_list):
     # Convert to a list of tuples, could do with list of lists but not really any real overhead
     range_list = [(x[0], x[1]) for x in range_list]
 
+
+
+    # TODO
+        !!! 
+        1.) Return Ranges sorted by size to help returning maximum number of items
+        2.) FOr this, maybe initially create a dictionary of range lists, dic key is number of elements in range
+            - THen when creating Tuple List iterate over sorted dict keys
+    # TODO 3.) Optimize Tests, Reduce number of same tests and function calls
+    # TODO 4.) Optimize, simplify code
+
+
+
+
     return range_list
 
 
