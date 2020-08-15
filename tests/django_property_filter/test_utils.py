@@ -1,4 +1,5 @@
 
+import random
 import sqlite3
 
 from unittest.mock import patch, PropertyMock
@@ -299,7 +300,6 @@ RANGE_TEST_DATA = [
     ([-1, 0, 1, 4, 6, 7, 8, 9], [4], [(-1, 1), (6, 9)]),
     ([1, 2, 3, 10, 21, 22, 24], [10, 24], [(1, 3), (21, 22)]),
 ]
-@pytest.mark.debug
 @pytest.mark.parametrize('input_list, expected_single_list, expected_range_list', RANGE_TEST_DATA)
 def test_range_data_convertion(input_list, expected_single_list, expected_range_list):
     single_list, range_list = convert_int_list_to_range_lists(input_list)
@@ -308,13 +308,71 @@ def test_range_data_convertion(input_list, expected_single_list, expected_range_
     assert range_list == expected_range_list
 
 
-#@pytest.mark.debug
 def test_large_number_range_convertion():
-    assert False
+
+    rand_list = [random.randint(0, 1000000) for x in range(10000)]
+    print('len(rand_list)', len(rand_list))
+
+    single_list, range_list = convert_int_list_to_range_lists(rand_list)
+    print('len(single_list)', len(single_list))
+    print('len(range_list)', len(range_list))
+
+    num_covers = len(single_list)
+    for entry in range_list:
+        num_covers += entry[1] - entry[0] + 1
+
+    assert num_covers == len(rand_list)
 
 
-#@pytest.mark.debug
-def test_filtering_with_range_convertion():
-    # TODO - Mock the max number
-    assert False
+class TestFilteringWithRangeConvertion(TestCase):
+    def setUp(self):
+        Delivery.objects.create(pk=0, address='')
+        Delivery.objects.create(pk=1, address='')
+        Delivery.objects.create(pk=3, address='')
+        Delivery.objects.create(pk=5, address='')
+        Delivery.objects.create(pk=6, address='')
+        Delivery.objects.create(pk=7, address='')
+        Delivery.objects.create(pk=9, address='')
+        Delivery.objects.create(pk=10, address='')
+        Delivery.objects.create(pk=20, address='')
+        Delivery.objects.create(pk=30, address='')
 
+        self.pk_list = [deliv.pk for deliv in Delivery.objects.all()]
+
+    def test_range_convertion(self):
+        print(self.pk_list)
+        single_list, range_list = convert_int_list_to_range_lists(self.pk_list)
+        assert single_list == [3, 20, 30]
+        assert range_list == [(0, 1), (5, 7), (9, 10)]
+
+    @pytest.mark.debug
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_single_item(self, mock_max_params):
+        mock_max_params.return_value = 1
+
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+        assert list(result_qs.values_list('pk', flat=True)) == [0]
+
+    @pytest.mark.debug
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_single_range(self, mock_max_params):
+        mock_max_params.return_value = 2
+
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+        assert list(result_qs.values_list('pk', flat=True)) == [0, 1]
+
+    @pytest.mark.debug
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_split_range(self, mock_max_params):
+        mock_max_params.return_value = 4
+
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+        assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5]
+
+    @pytest.mark.debug
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_inside_range(self, mock_max_params):
+        mock_max_params.return_value = 5
+
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+        assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5, 6, 7]
