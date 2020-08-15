@@ -300,14 +300,13 @@ RANGE_TEST_DATA = [
     ([-1, 0, 1, 4, 6, 7, 8, 9], [(-1, 1), (4, 4), (6, 9)]),
     ([1, 2, 3, 10, 21, 22, 24], [(1, 3), (10, 10), (21, 22), (24, 24)]),
 ]
-@pytest.mark.debug
 @pytest.mark.parametrize('input_list, expected_result_list', RANGE_TEST_DATA)
 def test_range_data_convertion(input_list, expected_result_list):
     result_list = convert_int_list_to_range_lists(input_list)
 
     assert result_list == expected_result_list
 
-@pytest.mark.debug
+
 def test_large_number_range_convertion():
 
     rand_list = [random.randint(0, 1000000) for x in range(10000)]
@@ -323,17 +322,6 @@ def test_large_number_range_convertion():
     assert num_covers == len(rand_list)
 
 
-
-
-
-
-
-
-
-
-
-# TODO - RESTRUCTURE, Parametrize???
-'''
 class TestFilteringWithRangeConvertion(TestCase):
     def setUp(self):
         Delivery.objects.create(pk=0, address='')
@@ -355,35 +343,41 @@ class TestFilteringWithRangeConvertion(TestCase):
         assert single_list == [3, 20, 30]
         assert range_list == [(0, 1), (5, 7), (9, 10)]
 
-    @pytest.mark.debug
     @patch('django_property_filter.utils.get_max_params_for_db')
     def test_filtering_with_range_convertion_single_item(self, mock_max_params):
         mock_max_params.return_value = 1
 
-        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-        assert list(result_qs.values_list('pk', flat=True)) == [0]
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert list(result_qs.values_list('pk', flat=True)) == [0]
 
     @pytest.mark.debug
     @patch('django_property_filter.utils.get_max_params_for_db')
     def test_filtering_with_range_convertion_single_range(self, mock_max_params):
         mock_max_params.return_value = 2
 
-        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-        assert list(result_qs.values_list('pk', flat=True)) == [0, 1]
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert list(result_qs.values_list('pk', flat=True)) == [0, 1]
 
-    @pytest.mark.debug
+    #@pytest.mark.debug
     @patch('django_property_filter.utils.get_max_params_for_db')
     def test_filtering_with_range_convertion_split_range(self, mock_max_params):
         mock_max_params.return_value = 4
 
-        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-        assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5]
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5]
 
-    @pytest.mark.debug
+    #@pytest.mark.debug
     @patch('django_property_filter.utils.get_max_params_for_db')
     def test_filtering_with_range_convertion_inside_range(self, mock_max_params):
         mock_max_params.return_value = 5
 
-        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-        assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5, 6, 7]
-'''
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5, 6, 7]

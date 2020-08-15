@@ -3,8 +3,11 @@
 import logging
 import sqlite3
 
+from functools import reduce
+from operator import or_
+
 from django.db import connection
-from django.db.models import Case, When
+from django.db.models import Case, When, Q
 from django.db.utils import OperationalError
 
 
@@ -103,9 +106,36 @@ def filter_qs_by_pk_list(queryset, pk_list):
         except OperationalError:
             max_params = get_max_params_for_db()
             if max_params is not None and max_params < len(pk_list):
-                logging.warning(F'Only returning the first {max_params} items because of max parameter limitations of '
+                # Create the Filter Query with list of ranges and in list based on 
+                # https://stackoverflow.com/questions/44067134/django-query-an-unknown-number-of-multiple-date-ranges
+
+                # Just go until we used up max_params parameters
+                in_range_list = []      # Each entry takes up 2 parameters
+                in_list = []            # Each entry takes up 1 parameter
+
+                params_used = 0
+                for entry in convert_int_list_to_range_lists(pk_list):
+                    last_param_avail = params_used + 1 >= max_params
+
+                    if entry[0] == entry[1]:  # single item
+                        in_list.append(entry[0])
+                        params_used += 1
+                    else:  # Range item
+                        if last_param_avail:  # Only space for a single param left
+                            in_list.append(entry[0])
+                            params_used += 1
+                        else:
+                            in_range_list.append(Q(pk__range=[entry[0], entry[1]]))
+                            params_used += 2
+
+                    if last_param_avail:
+                        break
+
+                range_filter_expr = reduce(or_, in_range_list, Q())
+                result_qs = queryset.filter(range_filter_expr, pk__in=in_list)
+
+                logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter limitations of '
                                 F'Database "{get_db_vendor()}" with version "{get_db_version()}"')
-                result_qs = queryset.filter(pk__in=pk_list[:max_params])
 
     return result_qs
 
