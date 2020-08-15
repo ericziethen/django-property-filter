@@ -360,9 +360,9 @@ class TestFilteringWithRangeConvertion(TestCase):
         with patch.object(QuerySet, 'count') as mock_method:
             mock_method.side_effect = (OperationalError(), None)
             result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-            assert list(result_qs.values_list('pk', flat=True)) == [0, 1]
+            assert set(result_qs.values_list('pk', flat=True)) == set([0, 1])
 
-    #@pytest.mark.debug
+    @pytest.mark.debug
     @patch('django_property_filter.utils.get_max_params_for_db')
     def test_filtering_with_range_convertion_split_range(self, mock_max_params):
         mock_max_params.return_value = 4
@@ -370,9 +370,9 @@ class TestFilteringWithRangeConvertion(TestCase):
         with patch.object(QuerySet, 'count') as mock_method:
             mock_method.side_effect = (OperationalError(), None)
             result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-            assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5]
+            assert set(result_qs.values_list('pk', flat=True)) == set([0, 1, 3, 5])
 
-    #@pytest.mark.debug
+    @pytest.mark.debug
     @patch('django_property_filter.utils.get_max_params_for_db')
     def test_filtering_with_range_convertion_inside_range(self, mock_max_params):
         mock_max_params.return_value = 5
@@ -380,4 +380,4 @@ class TestFilteringWithRangeConvertion(TestCase):
         with patch.object(QuerySet, 'count') as mock_method:
             mock_method.side_effect = (OperationalError(), None)
             result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-            assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5, 6, 7]
+            assert set(result_qs.values_list('pk', flat=True)) == set([0, 1, 5, 6, 7, 3])

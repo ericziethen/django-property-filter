@@ -115,25 +115,34 @@ def filter_qs_by_pk_list(queryset, pk_list):
                 in_list = []            # Each entry takes up 1 parameter
 
                 params_used = 0
+                print('pk_list',pk_list)
+                print('convert_int_list_to_range_lists(pk_list)',convert_int_list_to_range_lists(pk_list))
                 for entry in convert_int_list_to_range_lists(pk_list):
-                    last_param_avail = params_used + 1 >= max_params
-
                     if entry[0] == entry[1]:  # single item
                         in_list.append(entry[0])
                         params_used += 1
+                        print('aaa')
                     else:  # Range item
-                        if last_param_avail:  # Only space for a single param left
+                        if params_used + 1 >= max_params:  # Only space for a single param left
                             in_list.append(entry[0])
                             params_used += 1
+                            print('bbb')
                         else:
                             in_range_list.append(Q(pk__range=[entry[0], entry[1]]))
                             params_used += 2
+                            print('ccc')
 
-                    if last_param_avail:
+                    if params_used + 1 >= max_params:
                         break
 
+                # Combine the range__ and in__ queries
+                in_range_list.append(Q(pk__in=in_list))
+                
+                # Create the Filter Expression
                 range_filter_expr = reduce(or_, in_range_list, Q())
-                result_qs = queryset.filter(range_filter_expr, pk__in=in_list)
+                print('range_filter_expr',range_filter_expr)
+
+                result_qs = queryset.filter(range_filter_expr)
 
                 logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter limitations of '
                                 F'Database "{get_db_vendor()}" with version "{get_db_version()}"')
