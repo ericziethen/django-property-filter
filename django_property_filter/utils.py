@@ -104,6 +104,7 @@ def filter_qs_by_pk_list(queryset, pk_list):
             # Evaluate the Result
             result_qs.count()
         except OperationalError:
+            print('333')
             max_params = get_max_params_for_db()
             if max_params is not None and max_params < len(pk_list):
                 # Create the Filter Query with list of ranges and in list based on 
