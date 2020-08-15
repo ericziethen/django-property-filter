@@ -22,15 +22,10 @@ def get_db_version():
 
 def convert_int_list_to_range_lists(int_list):
     """
-    Converts a list of numbers to ranges and returns 2 lists
-        single_item_list - A list of numbers that are not part of a range
-        range_list - A tuple with the range of numbers
-
+    Converts a list of numbers to ranges and returns a list of tuples
+    representing the ranges. Single numbers will be represented as
+    (3, 3), while ranges will be (4, 8)
     """
-    single_item_list = []
-    range_list = []
-
-    # TODO - PSEUDO CODE
     '''
     #########################################################
 
@@ -49,26 +44,22 @@ def convert_int_list_to_range_lists(int_list):
         [5, 7]
         [(1, 3)]
     '''
-    # Build a list of lists first
-    tmp_list = []
+    # Build a list of lists
+    range_list = []
     for num in sorted(int_list):
-        if tmp_list:
+        if range_list:
             # Check if Part of range
-            if tmp_list[-1][1] + 1 == num:  # Continuing a range
-                tmp_list[-1][1] = num  # Update Range End
+            if range_list[-1][1] + 1 == num:  # Continuing a range
+                range_list[-1][1] = num  # Update Range End
             else:  # Not continuing range
-                tmp_list.append([num, num])
+                range_list.append([num, num])
         else:
-            tmp_list.append([num, num])
+            range_list.append([num, num])
 
-    # Convert list to separate ranges
-    for num_tup in tmp_list:
-        if num_tup[0] == num_tup[1]:
-            single_item_list.append(num_tup[0])
-        else:
-            range_list.append((num_tup[0], num_tup[1]))
+    # Convert to a list of tuples, could do with list of lists but not really any real overhead
+    range_list = [(x[0], x[1]) for x in range_list]
 
-    return (single_item_list, range_list)
+    return range_list
 
 
 def get_max_params_for_db():

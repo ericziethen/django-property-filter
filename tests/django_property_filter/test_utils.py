@@ -264,7 +264,6 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
         self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
 
-    @pytest.mark.debug
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
     @pytest.mark.skiptravis
@@ -290,41 +289,51 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
 
 RANGE_TEST_DATA = [
-    ([], [], []),
-    ([1], [1], []),
-    ([1, 2], [], [(1, 2)]),
-    ([2, 1], [], [(1, 2)]),
-    ([1, 3], [1, 3], []),
-    ([3, 1], [1, 3], []),
-    ([1, 2, 4], [4], [(1, 2)]),
-    ([1, 2, 3], [], [(1, 3)]),
-    ([-1, 0, 1, 4, 6, 7, 8, 9], [4], [(-1, 1), (6, 9)]),
-    ([1, 2, 3, 10, 21, 22, 24], [10, 24], [(1, 3), (21, 22)]),
+    ([], []),
+    ([1], [(1,1)]),
+    ([1, 2], [(1, 2)]),
+    ([2, 1], [(1, 2)]),
+    ([1, 3], [(1, 1), (3, 3)]),
+    ([3, 1], [(1, 1), (3, 3)]),
+    ([1, 2, 4], [(1, 2), (4, 4)]),
+    ([1, 2, 3], [(1, 3)]),
+    ([-1, 0, 1, 4, 6, 7, 8, 9], [(-1, 1), (4, 4), (6, 9)]),
+    ([1, 2, 3, 10, 21, 22, 24], [(1, 3), (10, 10), (21, 22), (24, 24)]),
 ]
-@pytest.mark.parametrize('input_list, expected_single_list, expected_range_list', RANGE_TEST_DATA)
-def test_range_data_convertion(input_list, expected_single_list, expected_range_list):
-    single_list, range_list = convert_int_list_to_range_lists(input_list)
+@pytest.mark.debug
+@pytest.mark.parametrize('input_list, expected_result_list', RANGE_TEST_DATA)
+def test_range_data_convertion(input_list, expected_result_list):
+    result_list = convert_int_list_to_range_lists(input_list)
 
-    assert single_list == expected_single_list
-    assert range_list == expected_range_list
+    assert result_list == expected_result_list
 
-
+@pytest.mark.debug
 def test_large_number_range_convertion():
 
     rand_list = [random.randint(0, 1000000) for x in range(10000)]
     print('len(rand_list)', len(rand_list))
 
-    single_list, range_list = convert_int_list_to_range_lists(rand_list)
-    print('len(single_list)', len(single_list))
-    print('len(range_list)', len(range_list))
+    result_list = convert_int_list_to_range_lists(rand_list)
+    print('len(result_list)', len(result_list))
 
-    num_covers = len(single_list)
-    for entry in range_list:
+    num_covers = 0
+    for entry in result_list:
         num_covers += entry[1] - entry[0] + 1
 
     assert num_covers == len(rand_list)
 
 
+
+
+
+
+
+
+
+
+
+# TODO - RESTRUCTURE, Parametrize???
+'''
 class TestFilteringWithRangeConvertion(TestCase):
     def setUp(self):
         Delivery.objects.create(pk=0, address='')
@@ -377,3 +386,4 @@ class TestFilteringWithRangeConvertion(TestCase):
 
         result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
         assert list(result_qs.values_list('pk', flat=True)) == [0, 1, 3, 5, 6, 7]
+'''
