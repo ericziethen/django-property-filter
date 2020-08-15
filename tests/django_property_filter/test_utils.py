@@ -264,6 +264,7 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
         self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
 
+    @pytest.mark.debug
     # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
     @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
     @pytest.mark.skiptravis
