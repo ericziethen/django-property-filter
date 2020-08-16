@@ -4,11 +4,32 @@ import logging
 import sqlite3
 
 from functools import reduce
-from operator import or_
+from operator import itemgetter, or_
 
 from django.db import connection
 from django.db.models import Case, When, Q
 from django.db.utils import OperationalError
+
+
+
+
+
+
+'''
+# TODO
+    !!! 
+    1.) Return Ranges sorted by size to help returning maximum number of items
+    2.) FOr this, maybe initially create a dictionary of range lists, dic key is number of elements in range
+        - THen when creating Tuple List iterate over sorted dict keys
+# TODO 3.) Optimize Tests, Reduce number of same tests and function calls
+# TODO 4.) Optimize, simplify code
+'''
+
+
+
+
+
+
 
 
 def get_db_vendor():
@@ -62,19 +83,6 @@ def convert_int_list_to_range_lists(int_list):
     # Convert to a list of tuples, could do with list of lists but not really any real overhead
     range_list = [(x[0], x[1]) for x in range_list]
 
-
-
-    # TODO
-        !!! 
-        1.) Return Ranges sorted by size to help returning maximum number of items
-        2.) FOr this, maybe initially create a dictionary of range lists, dic key is number of elements in range
-            - THen when creating Tuple List iterate over sorted dict keys
-    # TODO 3.) Optimize Tests, Reduce number of same tests and function calls
-    # TODO 4.) Optimize, simplify code
-
-
-
-
     return range_list
 
 
@@ -92,6 +100,16 @@ def get_max_params_for_db():
             max_params = 999
 
     return max_params
+
+
+def sort_range_list(range_list, *, descending=False):
+    """Sorts the given list of ranges based on range size. Descending by default."""
+
+    def compare_range(iterable):
+        return abs(iterable[1] - iterable[0]) + 1
+
+    range_list.sort(key=compare_range, reverse=descending)  # Can't return sort() directly, would return None,
+    return range_list
 
 
 def filter_qs_by_pk_list(queryset, pk_list):

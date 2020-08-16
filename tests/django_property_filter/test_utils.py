@@ -20,6 +20,7 @@ from django_property_filter.utils import (
     get_max_params_for_db,
     get_value_for_db_field,
     sort_queryset,
+    sort_range_list,
 )
 
 from property_filter.models import (
@@ -185,6 +186,67 @@ class SortQuerysetTests(TestCase):
         assert list(sorted_qs.values_list('id', flat=True)) == [2, 5, 1, 4, 3]
 
 
+RANGE_TEST_DATA = [
+    ([], []),
+    ([1], [(1,1)]),
+    ([1, 2], [(1, 2)]),
+    ([2, 1], [(1, 2)]),
+    ([1, 3], [(1, 1), (3, 3)]),
+    ([3, 1], [(1, 1), (3, 3)]),
+    ([1, 2, 4], [(1, 2), (4, 4)]),
+    ([1, 2, 3], [(1, 3)]),
+    ([-1, 0, 1, 4, 6, 7, 8, 9], [(-1, 1), (4, 4), (6, 9)]),
+    ([1, 2, 3, 10, 21, 22, 24], [(1, 3), (10, 10), (21, 22), (24, 24)]),
+]
+@pytest.mark.parametrize('input_list, expected_result_list', RANGE_TEST_DATA)
+def test_range_data_convertion(input_list, expected_result_list):
+    result_list = convert_int_list_to_range_lists(input_list)
+
+    assert result_list == expected_result_list
+
+
+def test_large_number_range_convertion():
+
+    rand_list = [random.randint(0, 1000000) for x in range(10000)]
+    print('len(rand_list)', len(rand_list))
+
+    result_list = convert_int_list_to_range_lists(rand_list)
+    print('len(result_list)', len(result_list))
+
+    num_covers = 0
+    for entry in result_list:
+        num_covers += entry[1] - entry[0] + 1
+
+    assert num_covers == len(rand_list)
+
+
+RANGE_SORT_TEST_DATA = [
+    ([], [], True),
+    ([(1, 2)], [(1, 2)], True),
+    ([(1, 2)], [(1, 2)], False),
+    ([(1, 2), (4, 8)], [(4, 8), (1, 2)], True),
+    ([(1, 2), (4, 8)], [(1, 2), (4, 8)], False),
+    ([(4, 8), (1, 2)], [(4, 8), (1, 2)], True),
+    ([(4, 8), (1, 2)], [(1, 2), (4, 8)], False),
+    ([(2, 1), (8, 4)], [(8, 4), (2, 1)], True),
+    ([(1, 3), (5, 5), (7, 8)], [(1, 3), (7, 8), (5, 5)], True),
+]
+@pytest.mark.parametrize('unsorted_range_list, sorted_range_list, descending', RANGE_SORT_TEST_DATA)
+def test_range_data_convertion(unsorted_range_list, sorted_range_list, descending):
+    result_list = sort_range_list(unsorted_range_list, descending=descending)
+
+    assert result_list == sorted_range_list
+
+
+@pytest.mark.debug
+def test_large_number_range_sorting():
+    test_list = [(1, random.randint(1, 100000)) for x in range(100000)]
+    print('len(TEST_LIST)', len(test_list))
+    result_list = sort_range_list(test_list, descending=False)
+    print('len(result_list)', len(result_list))
+    print('len(result_list)', result_list[0:3], '...', result_list[-3:])
+
+
 class TestMaxParamLimits(TestCase):
     '''
     SQLite has a limit which effects bulk actions e.g. filter(pk__in=large_list)
@@ -251,6 +313,22 @@ class TestMaxParamLimits(TestCase):
         qs.count()
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+
 VOLUME_TEST_MAX = 100000
 class VolumeTestQsFilteringByPkList(TestCase):
 
@@ -286,40 +364,6 @@ class VolumeTestQsFilteringByPkList(TestCase):
             set(result_qs.values_list('pk', flat=True)),
             set(Delivery.objects.all().values_list('pk', flat=True)),
         )
-
-
-RANGE_TEST_DATA = [
-    ([], []),
-    ([1], [(1,1)]),
-    ([1, 2], [(1, 2)]),
-    ([2, 1], [(1, 2)]),
-    ([1, 3], [(1, 1), (3, 3)]),
-    ([3, 1], [(1, 1), (3, 3)]),
-    ([1, 2, 4], [(1, 2), (4, 4)]),
-    ([1, 2, 3], [(1, 3)]),
-    ([-1, 0, 1, 4, 6, 7, 8, 9], [(-1, 1), (4, 4), (6, 9)]),
-    ([1, 2, 3, 10, 21, 22, 24], [(1, 3), (10, 10), (21, 22), (24, 24)]),
-]
-@pytest.mark.parametrize('input_list, expected_result_list', RANGE_TEST_DATA)
-def test_range_data_convertion(input_list, expected_result_list):
-    result_list = convert_int_list_to_range_lists(input_list)
-
-    assert result_list == expected_result_list
-
-
-def test_large_number_range_convertion():
-
-    rand_list = [random.randint(0, 1000000) for x in range(10000)]
-    print('len(rand_list)', len(rand_list))
-
-    result_list = convert_int_list_to_range_lists(rand_list)
-    print('len(result_list)', len(result_list))
-
-    num_covers = 0
-    for entry in result_list:
-        num_covers += entry[1] - entry[0] + 1
-
-    assert num_covers == len(rand_list)
 
 
 class TestFilteringWithRangeConvertion(TestCase):
@@ -381,3 +425,4 @@ class TestFilteringWithRangeConvertion(TestCase):
             mock_method.side_effect = (OperationalError(), None)
             result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
             assert set(result_qs.values_list('pk', flat=True)) == set([0, 1, 5, 6, 7, 3])
+'''
