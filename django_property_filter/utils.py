@@ -13,7 +13,7 @@ from django.db.utils import OperationalError
 
 
 
-
+# TODO - REMOVE ALL PRINTS
 
 '''
 # TODO
@@ -102,7 +102,7 @@ def get_max_params_for_db():
     return max_params
 
 
-def sort_range_list(range_list, *, descending=False):
+def sort_range_list(range_list, *, descending=True):
     """Sorts the given list of ranges based on range size. Descending by default."""
 
     def compare_range(iterable):
@@ -135,7 +135,6 @@ def filter_qs_by_pk_list(queryset, pk_list):
             # Evaluate the Result
             result_qs.count()
         except OperationalError:
-            print('333')
             max_params = get_max_params_for_db()
             if max_params is not None and max_params < len(pk_list):
                 # Create the Filter Query with list of ranges and in list based on 
@@ -146,24 +145,19 @@ def filter_qs_by_pk_list(queryset, pk_list):
                 in_list = []            # Each entry takes up 1 parameter
 
                 params_used = 0
-                print('pk_list',pk_list)
-                print('convert_int_list_to_range_lists(pk_list)',convert_int_list_to_range_lists(pk_list))
-                for entry in convert_int_list_to_range_lists(pk_list):
+                for entry in sort_range_list(convert_int_list_to_range_lists(pk_list), descending=True):
                     if entry[0] == entry[1]:  # single item
                         in_list.append(entry[0])
                         params_used += 1
-                        print('aaa')
                     else:  # Range item
                         if params_used + 1 >= max_params:  # Only space for a single param left
                             in_list.append(entry[0])
                             params_used += 1
-                            print('bbb')
                         else:
                             in_range_list.append(Q(pk__range=[entry[0], entry[1]]))
                             params_used += 2
-                            print('ccc')
 
-                    if params_used + 1 >= max_params:
+                    if params_used >= max_params:
                         break
 
                 # Combine the range__ and in__ queries
@@ -171,7 +165,6 @@ def filter_qs_by_pk_list(queryset, pk_list):
                 
                 # Create the Filter Expression
                 range_filter_expr = reduce(or_, in_range_list, Q())
-                print('range_filter_expr',range_filter_expr)
 
                 result_qs = queryset.filter(range_filter_expr)
 

@@ -238,7 +238,6 @@ def test_range_data_convertion(unsorted_range_list, sorted_range_list, descendin
     assert result_list == sorted_range_list
 
 
-@pytest.mark.debug
 def test_large_number_range_sorting():
     test_list = [(1, random.randint(1, 100000)) for x in range(100000)]
     print('len(TEST_LIST)', len(test_list))
@@ -286,48 +285,62 @@ class TestMaxParamLimits(TestCase):
         test_list = self.pk_list[:2]
 
         with patch.object(QuerySet, 'count') as mock_method:
-            mock_method.side_effect = OperationalError()
+            mock_method.side_effect = (OperationalError(), None)
             qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
             self.assertEqual(len(qs), 1)
 
-    # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
-    @pytest.mark.skiptravis
-    @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
-    def test_reached_sqlite_limit_sqlite_fail(self):
-        test_list = self.pk_list[:1000]
-        qs = Delivery.objects.all().filter(pk__in=test_list)
-        with self.assertRaises(OperationalError, msg='expect "To many Sqlite Operations"'):
-            qs.count()
+class TestFilteringWithRangeConvertion(TestCase):
+    def setUp(self):
+        Delivery.objects.create(pk=0, address='')
+        Delivery.objects.create(pk=3, address='')
+        Delivery.objects.create(pk=5, address='')
+        Delivery.objects.create(pk=6, address='')
+        Delivery.objects.create(pk=7, address='')
+        Delivery.objects.create(pk=9, address='')
+        Delivery.objects.create(pk=10, address='')
+        Delivery.objects.create(pk=20, address='')
+        Delivery.objects.create(pk=30, address='')
 
-        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
-        self.assertEqual(qs.count(), get_max_params_for_db())
+        self.pk_list = [deliv.pk for deliv in Delivery.objects.all()]
 
-    # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
-    @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
-    def test_reached_sqlite_limit_non_sqlite_ok(self):
-        test_list = self.pk_list[:1000]
-        qs = Delivery.objects.all().filter(pk__in=test_list)
-        qs.count()
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_single_item(self, mock_max_params):
+        mock_max_params.return_value = 1
 
-        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
-        qs.count()
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert list(result_qs.values_list('pk', flat=True)) == [5]  # First item of longest range
 
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_single_range(self, mock_max_params):
+        mock_max_params.return_value = 2
 
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert set(result_qs.values_list('pk', flat=True)) == set([5, 6, 7])  # Longest Range
 
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_split_range(self, mock_max_params):
+        mock_max_params.return_value = 4
 
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert set(result_qs.values_list('pk', flat=True)) == set([5, 6, 7, 9, 10])
 
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_inside_range(self, mock_max_params):
+        mock_max_params.return_value = 5
 
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
 
+            assert len(result_qs) == 6  # 2 Ranges (4 params, 5 values) + 1 single values
+            assert set(result_qs.values_list('pk', flat=True)[:5]) == set([5, 6, 7, 9, 10])  # First 5 items from 2 ranges
 
-
-
-
-
-
-
-
-
-'''
 
 VOLUME_TEST_MAX = 100000
 class VolumeTestQsFilteringByPkList(TestCase):
@@ -342,20 +355,6 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
         self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
 
-    # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
-    @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
-    @pytest.mark.skiptravis
-    def test_volume_filtering_sqlite(self):
-        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-        self.assertEqual(result_qs.count(), 999)
-
-        self.assertEqual(
-            set(result_qs.values_list('pk', flat=True)),
-            set(self.pk_list[:999]),
-        )
-
-    # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
-    @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
     def test_volume_filtering_non_sqlite(self):
         result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
         self.assertEqual(result_qs.count(), VOLUME_TEST_MAX)
@@ -364,65 +363,3 @@ class VolumeTestQsFilteringByPkList(TestCase):
             set(result_qs.values_list('pk', flat=True)),
             set(Delivery.objects.all().values_list('pk', flat=True)),
         )
-
-
-class TestFilteringWithRangeConvertion(TestCase):
-    def setUp(self):
-        Delivery.objects.create(pk=0, address='')
-        Delivery.objects.create(pk=1, address='')
-        Delivery.objects.create(pk=3, address='')
-        Delivery.objects.create(pk=5, address='')
-        Delivery.objects.create(pk=6, address='')
-        Delivery.objects.create(pk=7, address='')
-        Delivery.objects.create(pk=9, address='')
-        Delivery.objects.create(pk=10, address='')
-        Delivery.objects.create(pk=20, address='')
-        Delivery.objects.create(pk=30, address='')
-
-        self.pk_list = [deliv.pk for deliv in Delivery.objects.all()]
-
-    def test_range_convertion(self):
-        print(self.pk_list)
-        single_list, range_list = convert_int_list_to_range_lists(self.pk_list)
-        assert single_list == [3, 20, 30]
-        assert range_list == [(0, 1), (5, 7), (9, 10)]
-
-    @patch('django_property_filter.utils.get_max_params_for_db')
-    def test_filtering_with_range_convertion_single_item(self, mock_max_params):
-        mock_max_params.return_value = 1
-
-        with patch.object(QuerySet, 'count') as mock_method:
-            mock_method.side_effect = (OperationalError(), None)
-            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-            assert list(result_qs.values_list('pk', flat=True)) == [0]
-
-    @pytest.mark.debug
-    @patch('django_property_filter.utils.get_max_params_for_db')
-    def test_filtering_with_range_convertion_single_range(self, mock_max_params):
-        mock_max_params.return_value = 2
-
-        with patch.object(QuerySet, 'count') as mock_method:
-            mock_method.side_effect = (OperationalError(), None)
-            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-            assert set(result_qs.values_list('pk', flat=True)) == set([0, 1])
-
-    @pytest.mark.debug
-    @patch('django_property_filter.utils.get_max_params_for_db')
-    def test_filtering_with_range_convertion_split_range(self, mock_max_params):
-        mock_max_params.return_value = 4
-
-        with patch.object(QuerySet, 'count') as mock_method:
-            mock_method.side_effect = (OperationalError(), None)
-            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-            assert set(result_qs.values_list('pk', flat=True)) == set([0, 1, 3, 5])
-
-    @pytest.mark.debug
-    @patch('django_property_filter.utils.get_max_params_for_db')
-    def test_filtering_with_range_convertion_inside_range(self, mock_max_params):
-        mock_max_params.return_value = 5
-
-        with patch.object(QuerySet, 'count') as mock_method:
-            mock_method.side_effect = (OperationalError(), None)
-            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-            assert set(result_qs.values_list('pk', flat=True)) == set([0, 1, 5, 6, 7, 3])
-'''
