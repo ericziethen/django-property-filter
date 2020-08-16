@@ -4,32 +4,11 @@ import logging
 import sqlite3
 
 from functools import reduce
-from operator import itemgetter, or_
+from operator import or_
 
 from django.db import connection
 from django.db.models import Case, When, Q
 from django.db.utils import OperationalError
-
-
-
-
-# TODO - REMOVE ALL PRINTS
-
-'''
-# TODO
-    !!! 
-    1.) Return Ranges sorted by size to help returning maximum number of items
-    2.) FOr this, maybe initially create a dictionary of range lists, dic key is number of elements in range
-        - THen when creating Tuple List iterate over sorted dict keys
-# TODO 3.) Optimize Tests, Reduce number of same tests and function calls
-# TODO 4.) Optimize, simplify code
-'''
-
-
-
-
-
-
 
 
 def get_db_vendor():
@@ -46,28 +25,10 @@ def get_db_version():
 
 def convert_int_list_to_range_lists(int_list):
     """
-    Converts a list of numbers to ranges and returns a list of tuples
-    representing the ranges. Single numbers will be represented as
-    (3, 3), while ranges will be (4, 8)
+    Convert a list of numbers to ranges and returns a list of tuples representing the ranges.
+
+    Single numbers will be represented as (3, 3), while ranges will be (4, 8)
     """
-    '''
-    #########################################################
-
-    1 2 3 5 7
-    [[1]]
-    [[1]]
-
-    1 2 3 5 7
-    1               [[1,1]]  # Single Item List
-      2             [[1,2]]  # Append to list because == +1
-        3           [[1,3]]  # Append to list because == +1
-          5         [[1,3], [5,5]]  # Append new List because (can add Previous to Range list)
-            7       [[1,3], [5,5],[7,7]]
-
-    Split [[1,3], [5,5],[7,7]] into
-        [5, 7]
-        [(1, 3)]
-    '''
     # Build a list of lists
     range_list = []
     for num in sorted(int_list):
@@ -137,7 +98,7 @@ def filter_qs_by_pk_list(queryset, pk_list):
         except OperationalError:
             max_params = get_max_params_for_db()
             if max_params is not None and max_params < len(pk_list):
-                # Create the Filter Query with list of ranges and in list based on 
+                # Create the Filter Query with list of ranges and in list based on
                 # https://stackoverflow.com/questions/44067134/django-query-an-unknown-number-of-multiple-date-ranges
 
                 # Just go until we used up max_params parameters
@@ -162,14 +123,14 @@ def filter_qs_by_pk_list(queryset, pk_list):
 
                 # Combine the range__ and in__ queries
                 in_range_list.append(Q(pk__in=in_list))
-                
+
                 # Create the Filter Expression
                 range_filter_expr = reduce(or_, in_range_list, Q())
 
                 result_qs = queryset.filter(range_filter_expr)
 
-                logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter limitations of '
-                                F'Database "{get_db_vendor()}" with version "{get_db_version()}"')
+                logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter'
+                                F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
 
     return result_qs
 
