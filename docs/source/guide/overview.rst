@@ -32,4 +32,6 @@ many results django-property-filter can return.
     https://www.sqlite.org/limits.html for further details.
 
 Django-property-filter will try to return all values if possible, but if not
-possible it will try to return as many as possible.
+possible it will try to return as many as possible and log a warning message
+similar to::
+    WARNING:root:Only returning the first 3746 items because of max parameter limitations of Database "sqlite" with version "3.31.1"
