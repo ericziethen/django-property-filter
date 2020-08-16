@@ -155,7 +155,6 @@ DB_PARAM_LIMITS = [
     ('postgresql', '1.0.0', None),
     ('postgresql', '9.9.9', None),
 ]
-@pytest.mark.debug
 @pytest.mark.parametrize('db_name, db_version, max_params', DB_PARAM_LIMITS)
 def test_get_max_db_param_values(db_name, db_version, max_params):
     with patch.object(connection, 'vendor', db_name), patch.object(sqlite3, 'sqlite_version', db_version):
@@ -168,7 +167,6 @@ DB_PARAM_LIMIT_USER_SET = [
     ('postgresql', '1.0.0', 1000),
     ('postgresql', '9.9.9', 5000),
 ]
-@pytest.mark.debug
 @pytest.mark.parametrize('db_name, db_version, user_limit', DB_PARAM_LIMIT_USER_SET)
 def test_get_max_db_param_values_user_values(db_name, db_version, user_limit):
     os.environ['USER_DB_MAX_PARAMS'] = str(user_limit)
@@ -177,7 +175,6 @@ def test_get_max_db_param_values_user_values(db_name, db_version, user_limit):
         assert get_max_params_for_db() == user_limit
 
 
-@pytest.mark.debug
 def test_get_max_db_param_values_user_values_invalid(caplog):
     os.environ['USER_DB_MAX_PARAMS'] = 'not int invalid'
 

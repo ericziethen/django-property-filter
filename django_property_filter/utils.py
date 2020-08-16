@@ -59,7 +59,7 @@ def get_max_params_for_db():
         except ValueError:
             logging.error(F'Invalid Environment Variable "USER_DB_MAX_PARAMS", int expected but got "{user_limit}".')
 
-    if max_params is not None and get_db_vendor() == 'sqlite':
+    if max_params is None and get_db_vendor() == 'sqlite':
         # Bit of a hack but should work for sqlite rather than using a dependancy like "packaging" package
         major, minor, _ = get_db_version().split('.')
         # Limit was increased from version 3.32.0 onwards
