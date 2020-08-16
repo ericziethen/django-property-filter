@@ -339,7 +339,7 @@ class TestFilteringWithRangeConvertion(TestCase):
             result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
 
             assert len(result_qs) == 6  # 2 Ranges (4 params, 5 values) + 1 single values
-            assert set(result_qs.values_list('pk', flat=True)[:5]) == set([5, 6, 7, 9, 10])  # First 5 items from 2 ranges
+            assert set([5, 6, 7, 9, 10]).issubset(set(result_qs.values_list('pk', flat=True)))  # First 5 items from 2 ranges
 
 
 VOLUME_TEST_MAX = 100000
