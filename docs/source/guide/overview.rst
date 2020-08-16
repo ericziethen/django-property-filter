@@ -31,7 +31,7 @@ many results django-property-filter can return.
     See "Maximum Number Of Host Parameters In A Single SQL Statement" at
     https://www.sqlite.org/limits.html for further details.
 
-To overcome this issue, django-property-filter will try to return all values if
-possible, but if that is not possible it will return the first 
-SQLITE_MAX_VARIABLE_NUMBER results specified by default for the used sqlite
-version.
+Django-property-filter will try to return all values if possible, but if not
+possible it will try to return as many as possible and log a warning message
+similar to::
+    WARNING:root:Only returning the first 3746 items because of max parameter limitations of Database "sqlite" with version "3.31.1"

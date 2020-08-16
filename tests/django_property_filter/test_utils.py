@@ -1,4 +1,5 @@
 
+import random
 import sqlite3
 
 from unittest.mock import patch, PropertyMock
@@ -12,12 +13,14 @@ from django.test import TestCase
 
 from django_property_filter.utils import (
     compare_by_lookup_expression,
+    convert_int_list_to_range_lists,
     filter_qs_by_pk_list,
     get_db_vendor,
     get_db_version,
     get_max_params_for_db,
     get_value_for_db_field,
     sort_queryset,
+    sort_range_list,
 )
 
 from property_filter.models import (
@@ -183,6 +186,66 @@ class SortQuerysetTests(TestCase):
         assert list(sorted_qs.values_list('id', flat=True)) == [2, 5, 1, 4, 3]
 
 
+RANGE_TEST_DATA = [
+    ([], []),
+    ([1], [(1,1)]),
+    ([1, 2], [(1, 2)]),
+    ([2, 1], [(1, 2)]),
+    ([1, 3], [(1, 1), (3, 3)]),
+    ([3, 1], [(1, 1), (3, 3)]),
+    ([1, 2, 4], [(1, 2), (4, 4)]),
+    ([1, 2, 3], [(1, 3)]),
+    ([-1, 0, 1, 4, 6, 7, 8, 9], [(-1, 1), (4, 4), (6, 9)]),
+    ([1, 2, 3, 10, 21, 22, 24], [(1, 3), (10, 10), (21, 22), (24, 24)]),
+]
+@pytest.mark.parametrize('input_list, expected_result_list', RANGE_TEST_DATA)
+def test_range_data_convertion(input_list, expected_result_list):
+    result_list = convert_int_list_to_range_lists(input_list)
+
+    assert result_list == expected_result_list
+
+
+def test_large_number_range_convertion():
+
+    rand_list = [random.randint(0, 1000000) for x in range(10000)]
+    print('len(rand_list)', len(rand_list))
+
+    result_list = convert_int_list_to_range_lists(rand_list)
+    print('len(result_list)', len(result_list))
+
+    num_covers = 0
+    for entry in result_list:
+        num_covers += entry[1] - entry[0] + 1
+
+    assert num_covers == len(rand_list)
+
+
+RANGE_SORT_TEST_DATA = [
+    ([], [], True),
+    ([(1, 2)], [(1, 2)], True),
+    ([(1, 2)], [(1, 2)], False),
+    ([(1, 2), (4, 8)], [(4, 8), (1, 2)], True),
+    ([(1, 2), (4, 8)], [(1, 2), (4, 8)], False),
+    ([(4, 8), (1, 2)], [(4, 8), (1, 2)], True),
+    ([(4, 8), (1, 2)], [(1, 2), (4, 8)], False),
+    ([(2, 1), (8, 4)], [(8, 4), (2, 1)], True),
+    ([(1, 3), (5, 5), (7, 8)], [(1, 3), (7, 8), (5, 5)], True),
+]
+@pytest.mark.parametrize('unsorted_range_list, sorted_range_list, descending', RANGE_SORT_TEST_DATA)
+def test_range_data_convertion(unsorted_range_list, sorted_range_list, descending):
+    result_list = sort_range_list(unsorted_range_list, descending=descending)
+
+    assert result_list == sorted_range_list
+
+
+def test_large_number_range_sorting():
+    test_list = [(1, random.randint(1, 100000)) for x in range(100000)]
+    print('len(TEST_LIST)', len(test_list))
+    result_list = sort_range_list(test_list, descending=False)
+    print('len(result_list)', len(result_list))
+    print('len(result_list)', result_list[0:3], '...', result_list[-3:])
+
+
 class TestMaxParamLimits(TestCase):
     '''
     SQLite has a limit which effects bulk actions e.g. filter(pk__in=large_list)
@@ -222,31 +285,61 @@ class TestMaxParamLimits(TestCase):
         test_list = self.pk_list[:2]
 
         with patch.object(QuerySet, 'count') as mock_method:
-            mock_method.side_effect = OperationalError()
+            mock_method.side_effect = (OperationalError(), None)
             qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
             self.assertEqual(len(qs), 1)
 
-    # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
-    @pytest.mark.skiptravis
-    @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
-    def test_reached_sqlite_limit_sqlite_fail(self):
-        test_list = self.pk_list[:1000]
-        qs = Delivery.objects.all().filter(pk__in=test_list)
-        with self.assertRaises(OperationalError, msg='expect "To many Sqlite Operations"'):
-            qs.count()
+class TestFilteringWithRangeConvertion(TestCase):
+    def setUp(self):
+        Delivery.objects.create(pk=0, address='')
+        Delivery.objects.create(pk=3, address='')
+        Delivery.objects.create(pk=5, address='')
+        Delivery.objects.create(pk=6, address='')
+        Delivery.objects.create(pk=7, address='')
+        Delivery.objects.create(pk=9, address='')
+        Delivery.objects.create(pk=10, address='')
+        Delivery.objects.create(pk=20, address='')
+        Delivery.objects.create(pk=30, address='')
 
-        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
-        self.assertEqual(qs.count(), get_max_params_for_db())
+        self.pk_list = [deliv.pk for deliv in Delivery.objects.all()]
 
-    # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
-    @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
-    def test_reached_sqlite_limit_non_sqlite_ok(self):
-        test_list = self.pk_list[:1000]
-        qs = Delivery.objects.all().filter(pk__in=test_list)
-        qs.count()
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_single_item(self, mock_max_params):
+        mock_max_params.return_value = 1
 
-        qs = filter_qs_by_pk_list(Delivery.objects.all(), test_list)
-        qs.count()
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert list(result_qs.values_list('pk', flat=True)) == [5]  # First item of longest range
+
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_single_range(self, mock_max_params):
+        mock_max_params.return_value = 2
+
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert set(result_qs.values_list('pk', flat=True)) == set([5, 6, 7])  # Longest Range
+
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_split_range(self, mock_max_params):
+        mock_max_params.return_value = 4
+
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+            assert set(result_qs.values_list('pk', flat=True)) == set([5, 6, 7, 9, 10])
+
+    @patch('django_property_filter.utils.get_max_params_for_db')
+    def test_filtering_with_range_convertion_inside_range(self, mock_max_params):
+        mock_max_params.return_value = 5
+
+        with patch.object(QuerySet, 'count') as mock_method:
+            mock_method.side_effect = (OperationalError(), None)
+            result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
+
+            assert len(result_qs) == 6  # 2 Ranges (4 params, 5 values) + 1 single values
+            assert set([5, 6, 7, 9, 10]).issubset(set(result_qs.values_list('pk', flat=True)))  # First 5 items from 2 ranges
 
 
 VOLUME_TEST_MAX = 100000
@@ -262,20 +355,6 @@ class VolumeTestQsFilteringByPkList(TestCase):
 
         self.pk_list = list(Delivery.objects.all().values_list('pk', flat=True))
 
-    # Tests for sqlite (checking as not for postgresql in case adding more databases so not to skip)
-    @pytest.mark.skipif(db_is_postgresql(), reason='Sqlite has a limit of maximum params in can handle')
-    @pytest.mark.skiptravis
-    def test_volume_filtering_sqlite(self):
-        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
-        self.assertEqual(result_qs.count(), 999)
-
-        self.assertEqual(
-            set(result_qs.values_list('pk', flat=True)),
-            set(self.pk_list[:999]),
-        )
-
-    # Tests for postgresql (checking as not for sqlite in case adding more databases so not to skip)
-    @pytest.mark.skipif(db_is_sqlite(), reason='Postgres doesnt have the same limit as Sqlite')
     def test_volume_filtering_non_sqlite(self):
         result_qs = filter_qs_by_pk_list(Delivery.objects.all(), self.pk_list)
         self.assertEqual(result_qs.count(), VOLUME_TEST_MAX)

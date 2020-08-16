@@ -3,8 +3,11 @@
 import logging
 import sqlite3
 
+from functools import reduce
+from operator import or_
+
 from django.db import connection
-from django.db.models import Case, When
+from django.db.models import Case, When, Q
 from django.db.utils import OperationalError
 
 
@@ -18,6 +21,30 @@ def get_db_version():
     if get_db_vendor() == 'sqlite':
         return sqlite3.sqlite_version
     return 'Unknown'
+
+
+def convert_int_list_to_range_lists(int_list):
+    """
+    Convert a list of numbers to ranges and returns a list of tuples representing the ranges.
+
+    Single numbers will be represented as (3, 3), while ranges will be (4, 8)
+    """
+    # Build a list of lists
+    range_list = []
+    for num in sorted(int_list):
+        if range_list:
+            # Check if Part of range
+            if range_list[-1][1] + 1 == num:  # Continuing a range
+                range_list[-1][1] = num  # Update Range End
+            else:  # Not continuing range
+                range_list.append([num, num])
+        else:
+            range_list.append([num, num])
+
+    # Convert to a list of tuples, could do with list of lists but not really any real overhead
+    range_list = [(x[0], x[1]) for x in range_list]
+
+    return range_list
 
 
 def get_max_params_for_db():
@@ -34,6 +61,46 @@ def get_max_params_for_db():
             max_params = 999
 
     return max_params
+
+
+def sort_range_list(range_list, *, descending=True):
+    """Sorts the given list of ranges based on range size. Descending by default."""
+
+    def compare_range(iterable):
+        return abs(iterable[1] - iterable[0]) + 1
+
+    range_list.sort(key=compare_range, reverse=descending)  # Can't return sort() directly, would return None,
+    return range_list
+
+
+def build_limited_filter_expr(pk_list, max_params):
+    """Build the filter expression for the limited pk list."""
+    # Create the Filter Query with list of ranges and in list based on
+    # https://stackoverflow.com/questions/44067134/django-query-an-unknown-number-of-multiple-date-ranges
+
+    # Just go until we used up max_params parameters
+    in_range_list = []      # Each entry takes up 2 parameters
+    in_list = []            # Each entry takes up 1 parameter
+
+    params_used = 0
+    for entry in sort_range_list(convert_int_list_to_range_lists(pk_list), descending=True):
+        if entry[0] == entry[1] or params_used + 1 >= max_params:  # single item or space for only 1 param
+            in_list.append(entry[0])
+            params_used += 1
+        else:  # Range item and enough space for whole range
+            in_range_list.append(Q(pk__range=[entry[0], entry[1]]))
+            params_used += 2
+
+        if params_used >= max_params:
+            break
+
+    # Combine the range__ and in__ queries
+    in_range_list.append(Q(pk__in=in_list))
+
+    # Create the Filter Expression
+    range_filter_expr = reduce(or_, in_range_list, Q())
+
+    return range_filter_expr
 
 
 def filter_qs_by_pk_list(queryset, pk_list):
@@ -61,9 +128,11 @@ def filter_qs_by_pk_list(queryset, pk_list):
         except OperationalError:
             max_params = get_max_params_for_db()
             if max_params is not None and max_params < len(pk_list):
-                logging.warning(F'Only returning the first {max_params} items because of max parameter limitations of '
-                                F'Database "{get_db_vendor()}" with version "{get_db_version()}"')
-                result_qs = queryset.filter(pk__in=pk_list[:max_params])
+                range_filter_expr = build_limited_filter_expr(pk_list, max_params)
+                result_qs = queryset.filter(range_filter_expr)
+
+                logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter'
+                                F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
 
     return result_qs
 
