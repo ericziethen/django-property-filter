@@ -73,6 +73,36 @@ def sort_range_list(range_list, *, descending=True):
     return range_list
 
 
+def build_limited_filter_expr(pk_list, max_params):
+    """Build the filter expression for the limited pk list."""
+    # Create the Filter Query with list of ranges and in list based on
+    # https://stackoverflow.com/questions/44067134/django-query-an-unknown-number-of-multiple-date-ranges
+
+    # Just go until we used up max_params parameters
+    in_range_list = []      # Each entry takes up 2 parameters
+    in_list = []            # Each entry takes up 1 parameter
+
+    params_used = 0
+    for entry in sort_range_list(convert_int_list_to_range_lists(pk_list), descending=True):
+        if entry[0] == entry[1] or params_used + 1 >= max_params:  # single item or space for only 1 param
+            in_list.append(entry[0])
+            params_used += 1
+        else:  # Range item and enough space for whole range
+            in_range_list.append(Q(pk__range=[entry[0], entry[1]]))
+            params_used += 2
+
+        if params_used >= max_params:
+            break
+
+    # Combine the range__ and in__ queries
+    in_range_list.append(Q(pk__in=in_list))
+
+    # Create the Filter Expression
+    range_filter_expr = reduce(or_, in_range_list, Q())
+
+    return range_filter_expr
+
+
 def filter_qs_by_pk_list(queryset, pk_list):
     """Filter the given queryset by the given list of primary keys.
 
@@ -98,35 +128,7 @@ def filter_qs_by_pk_list(queryset, pk_list):
         except OperationalError:
             max_params = get_max_params_for_db()
             if max_params is not None and max_params < len(pk_list):
-                # Create the Filter Query with list of ranges and in list based on
-                # https://stackoverflow.com/questions/44067134/django-query-an-unknown-number-of-multiple-date-ranges
-
-                # Just go until we used up max_params parameters
-                in_range_list = []      # Each entry takes up 2 parameters
-                in_list = []            # Each entry takes up 1 parameter
-
-                params_used = 0
-                for entry in sort_range_list(convert_int_list_to_range_lists(pk_list), descending=True):
-                    if entry[0] == entry[1]:  # single item
-                        in_list.append(entry[0])
-                        params_used += 1
-                    else:  # Range item
-                        if params_used + 1 >= max_params:  # Only space for a single param left
-                            in_list.append(entry[0])
-                            params_used += 1
-                        else:
-                            in_range_list.append(Q(pk__range=[entry[0], entry[1]]))
-                            params_used += 2
-
-                    if params_used >= max_params:
-                        break
-
-                # Combine the range__ and in__ queries
-                in_range_list.append(Q(pk__in=in_list))
-
-                # Create the Filter Expression
-                range_filter_expr = reduce(or_, in_range_list, Q())
-
+                range_filter_expr = build_limited_filter_expr(pk_list, max_params)
                 result_qs = queryset.filter(range_filter_expr)
 
                 logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter'
