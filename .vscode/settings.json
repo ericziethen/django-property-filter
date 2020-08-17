@@ -9,6 +9,7 @@
     "[python]": {
         "editor.rulers": [79, 120]
     },
+    "editor.rulers": [79],
     "editor.renderWhitespace": "all",
 
     "python.linting.enabled": true,

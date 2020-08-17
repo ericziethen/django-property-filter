@@ -1,6 +1,7 @@
 """Utility functionality."""
 
 import logging
+import os
 import sqlite3
 
 from functools import reduce
@@ -51,7 +52,14 @@ def get_max_params_for_db():
     """Get the allowed number of maximum parameters for the database used, ot None if no limit."""
     max_params = None
 
-    if get_db_vendor() == 'sqlite':
+    if 'USER_DB_MAX_PARAMS' in os.environ:
+        user_limit = os.environ['USER_DB_MAX_PARAMS']
+        try:
+            max_params = int(user_limit)
+        except ValueError:
+            logging.error(F'Invalid Environment Variable "USER_DB_MAX_PARAMS", int expected but got "{user_limit}".')
+
+    if max_params is None and get_db_vendor() == 'sqlite':
         # Bit of a hack but should work for sqlite rather than using a dependancy like "packaging" package
         major, minor, _ = get_db_version().split('.')
         # Limit was increased from version 3.32.0 onwards

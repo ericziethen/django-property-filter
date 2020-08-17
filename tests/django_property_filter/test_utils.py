@@ -1,4 +1,6 @@
 
+import logging
+import os
 import random
 import sqlite3
 
@@ -154,10 +156,34 @@ DB_PARAM_LIMITS = [
     ('postgresql', '9.9.9', None),
 ]
 @pytest.mark.parametrize('db_name, db_version, max_params', DB_PARAM_LIMITS)
-@pytest.mark.django_db
 def test_get_max_db_param_values(db_name, db_version, max_params):
     with patch.object(connection, 'vendor', db_name), patch.object(sqlite3, 'sqlite_version', db_version):
         assert get_max_params_for_db() == max_params
+
+
+DB_PARAM_LIMIT_USER_SET = [
+    ('sqlite', '3.31.1', 1000),
+    ('sqlite', '3.32.0', 5000),
+    ('postgresql', '1.0.0', 1000),
+    ('postgresql', '9.9.9', 5000),
+]
+@pytest.mark.parametrize('db_name, db_version, user_limit', DB_PARAM_LIMIT_USER_SET)
+def test_get_max_db_param_values_user_values(db_name, db_version, user_limit):
+    os.environ['USER_DB_MAX_PARAMS'] = str(user_limit)
+
+    with patch.object(connection, 'vendor', db_name), patch.object(sqlite3, 'sqlite_version', db_version):
+        assert get_max_params_for_db() == user_limit
+
+
+def test_get_max_db_param_values_user_values_invalid(caplog):
+    os.environ['USER_DB_MAX_PARAMS'] = 'not int invalid'
+
+    with patch.object(connection, 'vendor', 'sqlite'),\
+         patch.object(sqlite3, 'sqlite_version', '3.32.0'),\
+         caplog.at_level(logging.ERROR):
+
+        assert get_max_params_for_db() == 32766
+        assert F'Invalid Environment Variable "USER_DB_MAX_PARAMS", int expected but got "not int invalid".' in caplog.text
 
 
 class SortQuerysetTests(TestCase):
