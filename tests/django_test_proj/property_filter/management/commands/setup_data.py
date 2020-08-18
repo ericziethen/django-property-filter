@@ -352,44 +352,29 @@ class Command(BaseCommand):
         tz = timezone.get_default_timezone()
 
         MultiFilterTestModel.objects.create(
-            id=1,
-            number=5,
-            text='Five',
-            is_true=True,
+            id=1, number=5, text='Five', is_true=True,
             date=datetime.date(2018, 2, 1),
             date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
-
         MultiFilterTestModel.objects.create(
-            id=2,
-            number=5,
-            text='Five',
-            is_true=False,
+            id=2, number=999, text='Five', is_true=True,  # Different number
             date=datetime.date(2018, 2, 1),
             date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
-
         MultiFilterTestModel.objects.create(
-            id=3,
-            number=5,
-            text='Also Five',
-            is_true=True,
-            date=datetime.date(2020, 2, 6),
-            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
-
-        MultiFilterTestModel.objects.create(
-            id=4,
-            number=6,
-            text='Six',
-            is_true=False,
+            id=3, number=5, text='One Million', is_true=True,  # Different text
             date=datetime.date(2018, 2, 1),
-            date_time=datetime.datetime(2020, 2, 6, 13, 30, tzinfo=tz))
-
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
         MultiFilterTestModel.objects.create(
-            id=5,
-            number=6,
-            text='Six',
-            is_true=True,
-            date=datetime.date(2020, 2, 6),
-            date_time=datetime.datetime(2020, 2, 6, 13, 30, tzinfo=tz))
+            id=4, number=5, text='Five', is_true=False,  # Different is_true
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
+        MultiFilterTestModel.objects.create(
+            id=5, number=5, text='Five', is_true=True,
+            date=datetime.date(2050, 2, 1),  # Different date
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
+        MultiFilterTestModel.objects.create(
+            id=6, number=5, text='Five', is_true=True,
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2066, 3, 2, 12, tzinfo=tz))  # Different DateTime
 
     def setup_multiple_choice_filter_model(self):
         print('Setup MultipleChoiceFilterModel')
