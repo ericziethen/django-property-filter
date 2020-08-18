@@ -41,11 +41,11 @@ class PropertyMultiFilterFilterSet(PropertyFilterSet):
         exclude = ['id']
         property_fields = [
             ('prop_number', PropertyNumberFilter, ['exact']),
-            #('prop_text', PropertyCharFilter, ['exact']),
-            #('prop_is_true', PropertyBooleanFilter, ['exact']),
-            #('prop_date', PropertyDateFilter, ['exact']),
-            #('prop_date_time', PropertyDateTimeFilter, ['exact']),
-            ]
+            ('prop_text', PropertyCharFilter, ['exact']),
+            ('prop_is_true', PropertyBooleanFilter, ['exact']),
+            ('prop_date', PropertyDateFilter, ['exact']),
+            ('prop_date_time', PropertyDateTimeFilter, ['exact']),
+        ]
 
 
 class MixedFilterFilterSet(PropertyFilterSet):
@@ -57,10 +57,10 @@ class MixedFilterFilterSet(PropertyFilterSet):
             ('prop_text', PropertyCharFilter, ['exact']),
             ('prop_is_true', PropertyBooleanFilter, ['exact']),
             ('prop_date', PropertyDateFilter, ['exact']),
-            ]
+        ]
 
 
-class SequentialFilterTests(TestCase):
+class SequentialMultipleFilterTests(TestCase):
 
     def setUp(self):
         tz = timezone.get_default_timezone()
@@ -118,23 +118,45 @@ class SequentialFilterTests(TestCase):
         # Using property filter
         property_filter_fs = PropertyMultiFilterFilterSet(
             {
-                'prop_number': self.filter_number#,
-                #'prop_text': self.filter_text,
-                #'prop_is_true': self.filter_is_true,
-                #'prop_date': self.filter_date,
-                #'prop_date_time': self.filter_date_time
+                'prop_number__exact': self.filter_number,
+                'prop_text__exact': self.filter_text,
+                'prop_is_true__exact': self.filter_is_true,
+                'prop_date__exact': self.filter_date,
+                'prop_date_time__exact': self.filter_date_time
             },
             queryset=MultiFilterTestModel.objects.all()
         )
 
-        for entry in property_filter_fs.qs:
-            print(entry)
-        assert False
-
-
-
         assert set(filter_fs.qs) == set(property_filter_fs.qs)
 
+        # Using mixed filters
+        mixed_filter_fs = MixedFilterFilterSet(
+            {
+                'number': self.filter_number,
+                'prop_text__exact': self.filter_text,
+                'prop_is_true__exact': self.filter_is_true,
+                'prop_date__exact': self.filter_date,
+                'date_time': self.filter_date_time
+            },
+            queryset=MultiFilterTestModel.objects.all()
+        )
+
+        assert set(filter_fs.qs) == set(mixed_filter_fs.qs)
+
+
+class VolumeMultipleFilterTests(TestCase):
+
+    def setUp(self):
+        # TODO - Setup Vulume Data, e.g. 100000
+        pass
+
+    @pytest.mark.debug
+    def test_volume_test_comparison(self):
+
+        # Using a normal Filter
+
+        # Using property filter
 
         # Using mixed filters
 
+        assert False
