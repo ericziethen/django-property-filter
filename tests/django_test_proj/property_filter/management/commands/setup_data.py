@@ -27,6 +27,7 @@ from property_filter.models import (
     LookupChoiceFilterModel,
     ModelChoiceFilterModel,
     ModelChoiceFilterRelatedModel,
+    MultiFilterTestModel,
     MultipleChoiceFilterModel,
     NumberFilterModel,
     OrderingFilterModel,
@@ -66,6 +67,7 @@ class Command(BaseCommand):
             self.setup_iso_date_time_from_to_range_filter_model()
             self.setup_lookup_choice_filter_model()
             self.setup_model_choice_filter_model()
+            self.setup_multi_filter_test_model()
             self.setup_multiple_choice_filter_model()
             self.setup_number_filter_model()
             self.setup_ordering_filter_model()
@@ -343,6 +345,51 @@ class Command(BaseCommand):
         ModelChoiceFilterModel.objects.create(id=4, related=related_c)
         ModelChoiceFilterModel.objects.create(id=5, related=related_c)
         ModelChoiceFilterModel.objects.create(id=6, related=related_d)
+
+    def setup_multi_filter_test_model(self):
+        print('Setup MultiFilterTestModel')
+
+        tz = timezone.get_default_timezone()
+
+        MultiFilterTestModel.objects.create(
+            id=1,
+            number=5,
+            text='Five',
+            is_true=True,
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
+
+        MultiFilterTestModel.objects.create(
+            id=2,
+            number=5,
+            text='Five',
+            is_true=False,
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
+
+        MultiFilterTestModel.objects.create(
+            id=3,
+            number=5,
+            text='Also Five',
+            is_true=True,
+            date=datetime.date(2020, 2, 6),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
+
+        MultiFilterTestModel.objects.create(
+            id=4,
+            number=6,
+            text='Six',
+            is_true=False,
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2020, 2, 6, 13, 30, tzinfo=tz))
+
+        MultiFilterTestModel.objects.create(
+            id=5,
+            number=6,
+            text='Six',
+            is_true=True,
+            date=datetime.date(2020, 2, 6),
+            date_time=datetime.datetime(2020, 2, 6, 13, 30, tzinfo=tz))
 
     def setup_multiple_choice_filter_model(self):
         print('Setup MultipleChoiceFilterModel')
