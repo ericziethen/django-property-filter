@@ -115,9 +115,10 @@ class PropertyBaseFilter(Filter):
 
                 !!! IMPLICATIONS
                     - Some Tests might Fail
-                    - Using the normal Filterset will not work anymore since the def filter_queryset() will change
+                    - Using the normal Filterset will not work in those cases, recommended to use PropertyFilterSet
                     - Need to Document
-                        - Filterset not working
+                        - Filterset not working for those cases
+                        - PropertyFilterset works around the Issue
                         - Might have to adjust all tests
                     - N
 
