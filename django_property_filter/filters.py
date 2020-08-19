@@ -98,7 +98,7 @@ class PropertyBaseFilter(Filter):
                     This will make the SQL with multiple AND Statements for each Filter
                     and have Duplicate Values
 
-                POSSIBLE SOLUTION
+                !!! NOT POSSIBLE SOLUTION - NOT GOOD - filer() MUST always return a qs
                     Filterset:
                         pk_list = Object.all(pks)
                         for each Filter:
@@ -112,6 +112,15 @@ class PropertyBaseFilter(Filter):
                         make a set out of the list
                         -> Create Expression from List
                         -> Filter List
+
+                - POSSIBLE IDEA
+                    - we could store the current PK list in the parent.filterset()
+                        -> How will it be set/cleared
+                            -> Maybe need PropertyFilterSet to clear in qs()
+                    - when calling filter_qs_by_pk_list we could pass the modified version if one exists (not None?)
+
+                    ??? THink about other implications !!!
+
 
                 !!! IMPLICATIONS
                     - Some Tests might Fail
