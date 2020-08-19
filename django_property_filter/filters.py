@@ -85,6 +85,41 @@ class PropertyBaseFilter(Filter):
                 property_value = get_value_for_db_field(obj, self.property_fld_name)
                 if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                     wanted_pks.add(obj.pk)
+
+
+
+            # TODO Rething !!!
+            '''
+                CURRENTLY
+                    Filterset:
+                        for each Filter:
+                            filter(qs) -> Reusing the QS
+                ==>> ISSUE:
+                    This will make the SQL with multiple AND Statements for each Filter
+                    and have Duplicate Values
+
+                POSSIBLE SOLUTION
+                    Filterset:
+                        for each Filter:
+                            get matching PKs
+                              -> Reuse Same PK List,
+                        make a set out of the list
+                        -> Create Expression from List
+                        -> Filter List
+
+                !!! IMPLICATIONS
+                    - Some Tests might Fail
+                    - Using the normal Filterset will not work anymore since the def filter_queryset() will change
+                    - Need to Document
+                        - Filterset not working
+                        - Might have to adjust all tests
+                    - N
+
+            '''
+
+
+
+
             qs = filter_qs_by_pk_list(qs, list(wanted_pks))
 
         return qs
