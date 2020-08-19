@@ -100,9 +100,15 @@ class PropertyBaseFilter(Filter):
 
                 POSSIBLE SOLUTION
                     Filterset:
+                        pk_list = Object.all(pks)
                         for each Filter:
-                            get matching PKs
-                              -> Reuse Same PK List,
+                            if pklist not empty
+                                get matching PKs
+                                    for each entry in current_pkList (Start from all, and use the one passed)
+                                        if pk meets criteria
+                                            add to new pk_list
+                                    return new_pk_list
+                                -> Reuse Same PK List,
                         make a set out of the list
                         -> Create Expression from List
                         -> Filter List
