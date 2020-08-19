@@ -121,6 +121,18 @@ class PropertyBaseFilter(Filter):
 
                     ??? THink about other implications !!!
 
+                - Better Idea
+                    - filter() function returns a list of PKs instead of a QS
+                    - PropertyFilterset.filter_queryset calls all the Filters with the updating PKs list
+                        - Once all filters processed, will create the SQL Expression and return the new Queryset
+
+
+                TODO - Before Starting to Change Things
+                    - Define a test that Filtering a Property Filter against normal Filterset Fails
+                    - if PropertyFilter.filter() returns a list instead of a queryset and Filterset handles this then
+                        - PropertyLookupChoiceFilter -> overwrites Filter
+                        - PropertyMultipleChoiceFilter -> overwrites Filter (some work needed here)
+
 
                 !!! IMPLICATIONS
                     - Some Tests might Fail

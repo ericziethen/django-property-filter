@@ -50,6 +50,13 @@ class PropertyMultiFilterFilterSet(PropertyFilterSet):
         ]
 
 
+
+
+
+
+
+
+
     @property
     def qs(self):
         if not hasattr(self, '_qs'):
