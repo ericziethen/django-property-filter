@@ -38,7 +38,6 @@ from django_filters.filters import (
 
 from django_property_filter.utils import (
     compare_by_lookup_expression,
-    filter_qs_by_pk_list,
     get_value_for_db_field,
     sort_queryset
 )
@@ -83,86 +82,63 @@ class PropertyBaseFilter(Filter):
         # Filtering is done via filter_pks() via PropertyFilterset, raise Exception if wrongly configured
         raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet')
 
+        # TODO Rething !!!
+        '''
+            CURRENTLY
+                Filterset:
+                    for each Filter:
+                        filter(qs) -> Reusing the QS
+            ==>> ISSUE:
+                This will make the SQL with multiple AND Statements for each Filter
+                and have Duplicate Values
+
+            !!! NOT POSSIBLE SOLUTION - NOT GOOD - filer() MUST always return a qs
+                Filterset:
+                    pk_list = Object.all(pks)
+                    for each Filter:
+                        if pklist not empty
+                            get matching PKs
+                                for each entry in current_pkList (Start from all, and use the one passed)
+                                    if pk meets criteria
+                                        add to new pk_list
+                                return new_pk_list
+                            -> Reuse Same PK List,
+                    make a set out of the list
+                    -> Create Expression from List
+                    -> Filter List
+
+            - POSSIBLE IDEA
+                - we could store the current PK list in the parent.filterset()
+                    -> How will it be set/cleared
+                        -> Maybe need PropertyFilterSet to clear in qs()
+                - when calling filter_qs_by_pk_list we could pass the modified version if one exists (not None?)
+
+                ??? THink about other implications !!!
+
+            - Better Idea
+                - filter() function returns a list of PKs instead of a QS
+                - PropertyFilterset.filter_queryset calls all the Filters with the updating PKs list
+                    - Once all filters processed, will create the SQL Expression and return the new Queryset
 
 
+            TODO - Before Starting to Change Things
+                - Define a test that Filtering a Property Filter against normal Filterset Fails
+                - if PropertyFilter.filter() returns a list instead of a queryset and Filterset handles this then
+                    - PropertyLookupChoiceFilter -> overwrites Filter
+                    - PropertyMultipleChoiceFilter -> overwrites Filter (some work needed here)
 
 
+            !!! IMPLICATIONS
+                - Some Tests might Fail
+                - Using the normal Filterset will not work in those cases, recommended to use PropertyFilterSet
+                - Need to Document
+                    - Filterset not working for those cases
+                    - PropertyFilterset works around the Issue
+                    - Might have to adjust all tests
+                - N
 
+        '''
 
-        # TODO - Shis shouldn't be here
-        """Filter the queryset by property."""
-        if value or value == 0:
-            wanted_pks = set()
-            for obj in qs:
-                property_value = get_value_for_db_field(obj, self.property_fld_name)
-                if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
-                    wanted_pks.add(obj.pk)
-
-
-
-            # TODO Rething !!!
-            '''
-                CURRENTLY
-                    Filterset:
-                        for each Filter:
-                            filter(qs) -> Reusing the QS
-                ==>> ISSUE:
-                    This will make the SQL with multiple AND Statements for each Filter
-                    and have Duplicate Values
-
-                !!! NOT POSSIBLE SOLUTION - NOT GOOD - filer() MUST always return a qs
-                    Filterset:
-                        pk_list = Object.all(pks)
-                        for each Filter:
-                            if pklist not empty
-                                get matching PKs
-                                    for each entry in current_pkList (Start from all, and use the one passed)
-                                        if pk meets criteria
-                                            add to new pk_list
-                                    return new_pk_list
-                                -> Reuse Same PK List,
-                        make a set out of the list
-                        -> Create Expression from List
-                        -> Filter List
-
-                - POSSIBLE IDEA
-                    - we could store the current PK list in the parent.filterset()
-                        -> How will it be set/cleared
-                            -> Maybe need PropertyFilterSet to clear in qs()
-                    - when calling filter_qs_by_pk_list we could pass the modified version if one exists (not None?)
-
-                    ??? THink about other implications !!!
-
-                - Better Idea
-                    - filter() function returns a list of PKs instead of a QS
-                    - PropertyFilterset.filter_queryset calls all the Filters with the updating PKs list
-                        - Once all filters processed, will create the SQL Expression and return the new Queryset
-
-
-                TODO - Before Starting to Change Things
-                    - Define a test that Filtering a Property Filter against normal Filterset Fails
-                    - if PropertyFilter.filter() returns a list instead of a queryset and Filterset handles this then
-                        - PropertyLookupChoiceFilter -> overwrites Filter
-                        - PropertyMultipleChoiceFilter -> overwrites Filter (some work needed here)
-
-
-                !!! IMPLICATIONS
-                    - Some Tests might Fail
-                    - Using the normal Filterset will not work in those cases, recommended to use PropertyFilterSet
-                    - Need to Document
-                        - Filterset not working for those cases
-                        - PropertyFilterset works around the Issue
-                        - Might have to adjust all tests
-                    - N
-
-            '''
-
-
-
-
-            qs = filter_qs_by_pk_list(qs, list(wanted_pks))
-
-        return qs
 
     def filter_pks(self, initial_pk_list, queryset, value):
         """
