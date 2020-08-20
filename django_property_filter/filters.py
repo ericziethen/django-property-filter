@@ -80,65 +80,7 @@ class PropertyBaseFilter(Filter):
     def filter(self, qs, value):
 
         # Filtering is done via filter_pks() via PropertyFilterset, raise Exception if wrongly configured
-        raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet')
-
-        # TODO Rething !!!
-        '''
-            CURRENTLY
-                Filterset:
-                    for each Filter:
-                        filter(qs) -> Reusing the QS
-            ==>> ISSUE:
-                This will make the SQL with multiple AND Statements for each Filter
-                and have Duplicate Values
-
-            !!! NOT POSSIBLE SOLUTION - NOT GOOD - filer() MUST always return a qs
-                Filterset:
-                    pk_list = Object.all(pks)
-                    for each Filter:
-                        if pklist not empty
-                            get matching PKs
-                                for each entry in current_pkList (Start from all, and use the one passed)
-                                    if pk meets criteria
-                                        add to new pk_list
-                                return new_pk_list
-                            -> Reuse Same PK List,
-                    make a set out of the list
-                    -> Create Expression from List
-                    -> Filter List
-
-            - POSSIBLE IDEA
-                - we could store the current PK list in the parent.filterset()
-                    -> How will it be set/cleared
-                        -> Maybe need PropertyFilterSet to clear in qs()
-                - when calling filter_qs_by_pk_list we could pass the modified version if one exists (not None?)
-
-                ??? THink about other implications !!!
-
-            - Better Idea
-                - filter() function returns a list of PKs instead of a QS
-                - PropertyFilterset.filter_queryset calls all the Filters with the updating PKs list
-                    - Once all filters processed, will create the SQL Expression and return the new Queryset
-
-
-            TODO - Before Starting to Change Things
-                - Define a test that Filtering a Property Filter against normal Filterset Fails
-                - if PropertyFilter.filter() returns a list instead of a queryset and Filterset handles this then
-                    - PropertyLookupChoiceFilter -> overwrites Filter
-                    - PropertyMultipleChoiceFilter -> overwrites Filter (some work needed here)
-
-
-            !!! IMPLICATIONS
-                - Some Tests might Fail
-                - Using the normal Filterset will not work in those cases, recommended to use PropertyFilterSet
-                - Need to Document
-                    - Filterset not working for those cases
-                    - PropertyFilterset works around the Issue
-                    - Might have to adjust all tests
-                - N
-
-        '''
-
+        raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet instead of Filterset')
 
     def filter_pks(self, initial_pk_list, queryset, value):
         """
@@ -300,46 +242,42 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Look
 
         return lookup_tup_list
 
-    def filter(self, qs, value):
+    def filter_pks(self, initial_pk_list, queryset, value):
         """Perform the custom filtering."""
         if not value:
-            return super().filter(qs, None)
+            return super().filter_pks(initial_pk_list, queryset, None)
 
         self.lookup_expr = value.lookup_expr
-        return super().filter(qs, value.value)
+        return super().filter_pks(initial_pk_list, queryset, value.value)
 
 
 class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
 
-    def filter(self, qs, value):
+    def filter_pks(self, initial_pk_list, queryset, value):
         """Filter Multiple Choice Property Values."""
-        # If no or empty qs there is nothing to filter, leave the qs untouched
-        if not qs or not value:
-            return qs
 
-        result_qs = None
+        # If no Value given we don't need to filter at all
+        if not value:
+            return initial_pk_list
 
+        # Not None but empty List, Nothing to do, No chance for a find
+        if initial_pk_list is not None and not initial_pk_list:
+            return []
+
+        result_pks = None
         for sub_value in value:
-            sub_result_qs = super().filter(qs, sub_value)
+            filter_result = set(super().filter_pks(None, queryset, sub_value))
+            if self.conjoined:  # AND
+                if result_pks is None:
+                    result_pks = set(initial_pk_list)
+                result_pks &= filter_result
+            else:  # OR
+                if result_pks is None:
+                    result_pks = set()
+                result_pks |= filter_result
 
-            if self.conjoined:
-                if result_qs is None:
-                    # For 'AND' start from the first qs found
-                    result_qs = sub_result_qs
-
-                if sub_result_qs:
-                    result_qs = result_qs & sub_result_qs
-                else:  # Result QS empty, 'AND' will always be False, return empty qs
-                    result_qs = sub_result_qs
-            else:
-                if result_qs is None:
-                    # For 'OR' start from an empty qs
-                    result_qs = self.model.objects.none()  # pylint: disable=no-member
-
-                result_qs = result_qs | sub_result_qs
-
-        return result_qs if result_qs is not None else self.model.objects.none()  # pylint: disable=no-member
+        return list(result_pks) if result_pks is not None else []
 
 
 class PropertyNumberFilter(PropertyBaseFilter, NumberFilter):
@@ -524,14 +462,20 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
 
     supported_lookups = ['exact']
 
-    def filter(self, qs, value):
+    def filter_pks(self, initial_pk_list, queryset, value):
         """Filter the PropertyOrderingFilter."""
         # If no value is set just return this queryset
         if not value:
-            return qs
+            return initial_pk_list
 
         # Only sort by the first parameter
-        return sort_queryset(self.get_ordering_value(value[0]), qs)
+        sorted_qs = sort_queryset(self.get_ordering_value(value[0]), queryset)
+        print('SORT_ORDER', value[0], queryset)
+        print('SORTED', value[0], sorted_qs)
+
+
+        # TODO - The Issue might be because now filterset will query the pks, changing the order
+        return list(sorted_qs.values_list('pk', flat=True))
 
 
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):

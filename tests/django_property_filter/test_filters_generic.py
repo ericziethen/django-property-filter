@@ -38,14 +38,12 @@ class FilterFunctionalityTests(TestCase):
         NumberFilterModel.objects.create(id=4, number=4)
         NumberFilterModel.objects.create(id=5, number=5)
 
-    @pytest.mark.debug
     def test_calling_filter_directly_raises_exception(self):
         my_filter = PropertyNumberFilter(label='test label', field_name='prop_number', lookup_expr='gte')
 
         with pytest.raises(ImproperlyConfigured):
             my_filter.filter(NumberFilterModel.objects.all(), 15)
 
-    @pytest.mark.debug
     def test_filter_pks_no_initial_list(self):
         my_filter = PropertyNumberFilter(field_name='prop_number', lookup_expr='gt')
         initial_pk_list = None
@@ -53,7 +51,6 @@ class FilterFunctionalityTests(TestCase):
 
         assert set(pk_list) == set([3, 4, 5])
 
-    @pytest.mark.debug
     def test_filter_pks_initial_list(self):
         my_filter = PropertyNumberFilter(field_name='prop_number', lookup_expr='gt')
         initial_pk_list = [1, 4, 5]
@@ -61,7 +58,6 @@ class FilterFunctionalityTests(TestCase):
 
         assert set(pk_list) == set([4, 5])
 
-    @pytest.mark.debug
     def test_filter_pks_initial_list_empty(self):
         my_filter = PropertyNumberFilter(field_name='prop_number', lookup_expr='gt')
         initial_pk_list = []
@@ -69,7 +65,6 @@ class FilterFunctionalityTests(TestCase):
 
         assert pk_list == []  # Specific test for an Empty List
 
-    @pytest.mark.debug
     def test_filter_pks_no_testing_value(self):
         my_filter = PropertyNumberFilter(field_name='prop_number', lookup_expr='gt')
         initial_pk_list = [1, 5, 9]

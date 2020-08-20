@@ -100,7 +100,6 @@ class SequentialMultipleFilterTests(TestCase):
 
         self.expected_id_list_left = [1]
 
-    @pytest.mark.debug
     def test_multiple_filters_applied(self):
 
         # Using a normal Filter
@@ -184,8 +183,6 @@ class VolumeMultipleFilterTests(TestCase):
 
             MultiFilterTestModel.objects.bulk_create(bulk_list)
 
-
-    @pytest.mark.debug
     def test_volume_same_result(self):
 
         filter_fs = MultiFilterFilterSet(
@@ -228,12 +225,3 @@ class VolumeMultipleFilterTests(TestCase):
 
         assert set(fs_qs) == set(pfs_qs)
         assert set(fs_qs) == set(mixed_qs)
-
-        assert fs_qs.count() == pfs_qs.count()
-        assert fs_qs.count() == mixed_qs.count()
-        print('RESULT fs_qs', fs_qs.count())
-        print('RESULT pfs_qs', pfs_qs.count())
-        print('RESULT mixed_qs', mixed_qs.count())
-        assert False
-
-        # TODO - Add Mixed Volume Filter

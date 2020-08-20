@@ -59,18 +59,6 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, look
     # Keep order
     assert list(filter_fs.qs.values_list('id', flat=True)) == list(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyOrderingFilterSet(FilterSet):
-        prop_age = PropertyOrderingFilter(fields=('prop_age', 'prop_age'))
-
-        class Meta:
-            model = OrderingFilterModel
-            exclude = ['first_name', 'last_name', 'username', 'age']
-
-    prop_filter_fs = PropertyOrderingFilterSet({'prop_age': lookup_val_prop}, queryset=OrderingFilterModel.objects.all())
-
-    assert list(prop_filter_fs.qs) == list(filter_fs.qs)
-
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyOrderingFilterSet(PropertyFilterSet):
         prop_age = PropertyOrderingFilter(fields=('prop_age', 'prop_age'))
@@ -80,7 +68,9 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, look
             exclude = ['first_name', 'last_name', 'username', 'age']
 
     prop_filter_fs = PropertyOrderingFilterSet({'prop_age': lookup_val_prop}, queryset=OrderingFilterModel.objects.all())
-    assert list(prop_filter_fs.qs) == list(filter_fs.qs)
+
+    assert list(prop_filter_fs.qs.values_list('id', flat=True)) == list(result_list)
+    #assert list(prop_filter_fs.qs) == list(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):

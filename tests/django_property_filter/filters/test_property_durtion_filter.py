@@ -64,17 +64,6 @@ def test_lookup_xpr(fixture_property_duration_filter, lookup_xpr, lookup_val, re
     filter_fs = DurationFilterSet({'duration': lookup_val}, queryset=DurationFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyDurationFilterSet(FilterSet):
-        prop_duration = PropertyDurationFilter(field_name='prop_duration', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = DurationFilterModel
-            fields = ['prop_duration']
-
-    prop_filter_fs = PropertyDurationFilterSet({'prop_duration': lookup_val}, queryset=DurationFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDurationFilterSet(PropertyFilterSet):
         prop_duration = PropertyDurationFilter(field_name='prop_duration', lookup_expr=lookup_xpr)

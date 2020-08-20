@@ -79,18 +79,6 @@ def test_lookup_xpr(fixture_property_typed_choice_filter, lookup_xpr, lookup_val
     filter_fs = TypedChoiceFilterSet({'text': lookup_val}, queryset=TypedChoiceFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyTypedChoiceFilterSet(FilterSet):
-        prop_text = PropertyTypedChoiceFilter(field_name='prop_text', lookup_expr=lookup_xpr,
-                                              choices=LOOKUP_CHOICES, coerce=str)
-
-        class Meta:
-            model = TypedChoiceFilterModel
-            fields = ['prop_text']
-
-    prop_filter_fs = PropertyTypedChoiceFilterSet({'prop_text': lookup_val}, queryset=TypedChoiceFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyTypedChoiceFilterSet(PropertyFilterSet):
         prop_text = PropertyTypedChoiceFilter(field_name='prop_text', lookup_expr=lookup_xpr,

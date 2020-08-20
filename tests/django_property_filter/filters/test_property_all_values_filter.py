@@ -61,7 +61,6 @@ TEST_LOOKUPS = [
     ('iendswith', '3', [5]),
 ]
 
-
 @pytest.mark.parametrize('lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_choice_filter, lookup_xpr, lookup_val, result_list):
@@ -77,17 +76,6 @@ def test_lookup_xpr(fixture_property_choice_filter, lookup_xpr, lookup_val, resu
 
     filter_fs = AllValuesFilterSet({'number': lookup_val}, queryset=AllValuesFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
-
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyAllValuesFilterSet(FilterSet):
-        prop_number = PropertyAllValuesFilter(field_name='prop_number', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = AllValuesFilterModel
-            fields = ['prop_number']
-
-    prop_filter_fs = PropertyAllValuesFilterSet({'prop_number': lookup_val}, queryset=AllValuesFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyAllValuesFilterSet(PropertyFilterSet):

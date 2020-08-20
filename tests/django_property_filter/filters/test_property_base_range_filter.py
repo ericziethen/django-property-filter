@@ -64,17 +64,6 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
     filter_fs = BaseRangeFilterSet({'date': lookup_val}, queryset=BaseRangeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyBaseRangeFilterSet(FilterSet):
-        prop_date = PropertyBaseRangeFilterNumer(field_name='prop_date', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = BaseRangeFilterModel
-            fields = ['prop_date']
-
-    prop_filter_fs = PropertyBaseRangeFilterSet({'prop_date': lookup_val}, queryset=BaseRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyBaseRangeFilterSet(PropertyFilterSet):
         prop_date = PropertyBaseRangeFilterNumer(field_name='prop_date', lookup_expr=lookup_xpr)
@@ -109,7 +98,7 @@ def test_invalid_range(fixture_property_base_csv_filter, lookup_xpr, lookup_val)
     class PropertyBaseRangeFilterNumer(PropertyBaseRangeFilter, PropertyDateFilter):
         pass
 
-    class PropertyBaseRangeFilterSet(FilterSet):
+    class PropertyBaseRangeFilterSet(PropertyFilterSet):
         prop_date = PropertyBaseRangeFilterNumer(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:

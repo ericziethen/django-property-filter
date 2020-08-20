@@ -63,17 +63,6 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, resu
     filter_fs = RangeFilterSet({'number_min': lookup_val[0], 'number_max': lookup_val[1]}, queryset=RangeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyRangeFilterSet(FilterSet):
-        prop_number = PropertyRangeFilter(field_name='prop_number', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = RangeFilterModel
-            fields = ['prop_number']
-
-    prop_filter_fs = PropertyRangeFilterSet({'prop_number_min': lookup_val[0], 'prop_number_max': lookup_val[1]}, queryset=RangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyRangeFilterSet(PropertyFilterSet):
         prop_number = PropertyRangeFilter(field_name='prop_number', lookup_expr=lookup_xpr)

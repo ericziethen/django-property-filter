@@ -42,16 +42,6 @@ class PropertyFilterSet(FilterSet):
 
         return queryset
 
-
-
-
-
-
-
-
-
-
-
     def _add_filter(self, filter_class, field_name, lookup_expr):
         """Add a Filter."""
         filter_name = F'{field_name}__{lookup_expr}'
