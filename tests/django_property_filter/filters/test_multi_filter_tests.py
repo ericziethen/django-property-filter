@@ -50,48 +50,6 @@ class PropertyMultiFilterFilterSet(PropertyFilterSet):
         ]
 
 
-
-
-
-
-
-
-
-    @property
-    def qs(self):
-        if not hasattr(self, '_qs'):
-            qs = self.queryset.all()
-            if self.is_bound:
-                # ensure form validation before filtering
-                self.errors
-                qs = self.filter_queryset(qs)
-            self._qs = qs
-        return self._qs
-
-
-
-    def filter_queryset(self, queryset):
-        print('>>> PropertyMultiFilterFilterSet.filter_queryset')
-
-        print('>>>>> result_qs.query', queryset.query)
-
-        print('BEFORE CALL: super().filter_queryset(queryset)')
-        qs = super().filter_queryset(queryset)
-        print('AFTER CALL: super().filter_queryset(queryset)')
-
-        print('<<< PropertyMultiFilterFilterSet.filter_queryset')
-
-        return qs
-
- 
-
-
-
-
-
-
-
-
 class MixedFilterFilterSet(PropertyFilterSet):
 
     class Meta:

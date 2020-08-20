@@ -3,6 +3,7 @@
 import datetime
 import logging
 
+from django.core.exceptions import ImproperlyConfigured
 from django.utils import timezone
 
 from django_filters.filters import (
@@ -78,6 +79,17 @@ class PropertyBaseFilter(Filter):
         self.verify_lookup(lookup_expr)
 
     def filter(self, qs, value):
+
+        # Filtering is done via filter_pks() via PropertyFilterset, raise Exception if wrongly configured
+        raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet')
+
+
+
+
+
+
+
+        # TODO - Shis shouldn't be here
         """Filter the queryset by property."""
         if value or value == 0:
             wanted_pks = set()
@@ -151,6 +163,35 @@ class PropertyBaseFilter(Filter):
             qs = filter_qs_by_pk_list(qs, list(wanted_pks))
 
         return qs
+
+    def filter_pks(self, initial_pk_list, queryset, value):
+        """
+        Filter the Given Queryset against the given value and return a list of matching Primary Keys.
+
+        if initial_pk_list is not None only those Primary Keys will be considered
+        """
+
+        # If no Value given we don't need to filter at all
+        if not value and value != 0:
+            return initial_pk_list
+
+        # Not None but empty List, Nothing to do, No chance for a find
+        if initial_pk_list is not None and not initial_pk_list:
+            return []
+
+        # Filter all values from queryset, get the pk list
+        """Filter the queryset by property."""
+        wanted_pks = set()
+        for obj in queryset:
+            property_value = get_value_for_db_field(obj, self.property_fld_name)
+            if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
+                wanted_pks.add(obj.pk)
+
+        # Find Entries in both lists if original provided
+        if initial_pk_list is not None:  # We have initial pk list, only return joined results
+            wanted_pks = wanted_pks & set(initial_pk_list)
+
+        return list(wanted_pks)
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
