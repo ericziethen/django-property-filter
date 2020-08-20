@@ -150,7 +150,7 @@ class VolumeMultipleFilterTests(TestCase):
 
     def setUp(self):
         tz = timezone.get_default_timezone()
-        max_entries = 10000
+        max_entries = 40000
         self.number_range = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.text_range = ['One', 'Two', 'Three', 'Four', 'Five'' Six', 'Seven', 'Eight', 'Nine']
         self.is_true_range = [True, False]
@@ -184,8 +184,10 @@ class VolumeMultipleFilterTests(TestCase):
 
             MultiFilterTestModel.objects.bulk_create(bulk_list)
 
+
     @pytest.mark.debug
-    def test_volume_filter(self):
+    def test_volume_same_result(self):
+
         filter_fs = MultiFilterFilterSet(
             {
                 'number': self.number_range[0],
@@ -196,10 +198,8 @@ class VolumeMultipleFilterTests(TestCase):
             },
             queryset=MultiFilterTestModel.objects.all()
         )
-        filter_fs.qs
 
-    @pytest.mark.debug
-    def test_volume_property_filter(self):
+
         property_filter_fs = PropertyMultiFilterFilterSet(
             {
                 'prop_number__exact': self.number_range[0],
@@ -210,4 +210,30 @@ class VolumeMultipleFilterTests(TestCase):
             },
             queryset=MultiFilterTestModel.objects.all()
         )
-        property_filter_fs.qs
+
+        mixed_filter_fs = MixedFilterFilterSet(
+            {
+                'number': self.number_range[0],
+                'prop_text__exact': self.text_range[0],
+                'prop_is_true__exact': self.is_true_range[0],
+                'prop_date__exact': self.date_range[0],
+                'date_time': self.date_time_range[0]
+            },
+            queryset=MultiFilterTestModel.objects.all()
+        )
+
+        fs_qs = filter_fs.qs
+        pfs_qs = property_filter_fs.qs
+        mixed_qs = mixed_filter_fs.qs
+
+        assert set(fs_qs) == set(pfs_qs)
+        assert set(fs_qs) == set(mixed_qs)
+
+        assert fs_qs.count() == pfs_qs.count()
+        assert fs_qs.count() == mixed_qs.count()
+        print('RESULT fs_qs', fs_qs.count())
+        print('RESULT pfs_qs', pfs_qs.count())
+        print('RESULT mixed_qs', mixed_qs.count())
+        assert False
+
+        # TODO - Add Mixed Volume Filter
