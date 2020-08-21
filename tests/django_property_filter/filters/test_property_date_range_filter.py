@@ -126,17 +126,6 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
 
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyDateRangeFilterSet(FilterSet):
-        prop_date = PropertyDateRangeFilter(field_name='prop_date', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = DateRangeFilterModel
-            fields = ['prop_date']
-
-    prop_filter_fs = PropertyDateRangeFilterSet({'prop_date': lookup_val}, queryset=DateRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateRangeFilterSet(PropertyFilterSet):
         prop_date = PropertyDateRangeFilter(field_name='prop_date', lookup_expr=lookup_xpr)
@@ -194,17 +183,6 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
 
     filter_fs = DateRangeFilterSet({'date_time': lookup_val}, queryset=DateRangeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
-
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyDateRangeFilterSet(FilterSet):
-        prop_date_time = PropertyDateRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = DateRangeFilterModel
-            fields = ['prop_date_time']
-
-    prop_filter_fs = PropertyDateRangeFilterSet({'prop_date_time': lookup_val}, queryset=DateRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateRangeFilterSet(PropertyFilterSet):

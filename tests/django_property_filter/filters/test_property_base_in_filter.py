@@ -61,17 +61,6 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
     filter_fs = BaseInFilterSet({'number': lookup_val}, queryset=BaseInFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyBaseInFilterSet(FilterSet):
-        prop_number = PropertyBaseInFilterNumer(field_name='prop_number', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = BaseInFilterModel
-            fields = ['prop_number']
-
-    prop_filter_fs = PropertyBaseInFilterSet({'prop_number': lookup_val}, queryset=BaseInFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyBaseInFilterSet(PropertyFilterSet):
         prop_number = PropertyBaseInFilterNumer(field_name='prop_number', lookup_expr=lookup_xpr)
@@ -105,7 +94,7 @@ def test_invalid_range_for_numbers(fixture_property_base_csv_filter, lookup_xpr,
     class PropertyBaseInFilterNumer(PropertyBaseInFilter, PropertyCharFilter):
         pass
 
-    class PropertyBaseInFilterSet(FilterSet):
+    class PropertyBaseInFilterSet(PropertyFilterSet):
         prop_number = PropertyBaseInFilterNumer(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:

@@ -65,28 +65,6 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
     filter_fs = IsoDateTimeFromToRangeFilterSet({'date_time_after': lookup_val[0], 'date_time_before': lookup_val[1]}, queryset=IsoDateTimeFromToRangeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyIsoDateTimeFromToRangeFilterSet(FilterSet):
-        prop_date_time = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = IsoDateTimeFromToRangeFilterModel
-            fields = ['prop_date_time']
-
-    prop_filter_fs = PropertyIsoDateTimeFromToRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=IsoDateTimeFromToRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyIsoDateTimeFromToRangeFilterSet(FilterSet):
-        prop_date_time = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = IsoDateTimeFromToRangeFilterModel
-            fields = ['prop_date_time']
-
-    prop_filter_fs = PropertyIsoDateTimeFromToRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=IsoDateTimeFromToRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyIsoDateTimeFromToRangeFilterSet(PropertyFilterSet):
         prop_date_time = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)

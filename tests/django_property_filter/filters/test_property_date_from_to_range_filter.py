@@ -86,17 +86,6 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
     filter_fs = DateFromToRangeFilterSet({'date_after': lookup_val[0], 'date_before': lookup_val[1]}, queryset=DateFromToRangeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyDateFromToRangeFilterSet(FilterSet):
-        prop_date = PropertyDateFromToRangeFilter(field_name='prop_date', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = DateFromToRangeFilterModel
-            fields = ['prop_date']
-
-    prop_filter_fs = PropertyDateFromToRangeFilterSet({'prop_date_after': lookup_val[0], 'prop_date_before': lookup_val[1]}, queryset=DateFromToRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateFromToRangeFilterSet(PropertyFilterSet):
         prop_date = PropertyDateFromToRangeFilter(field_name='prop_date', lookup_expr=lookup_xpr)
@@ -150,17 +139,6 @@ def test_lookup_xpr_date_time(fixture_property_filter, lookup_xpr, lookup_val, r
 
     filter_fs = DateFromToRangeFilterSet({'date_time_after': lookup_val[0], 'date_time_before': lookup_val[1]}, queryset=DateFromToRangeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
-
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyDateFromToRangeFilterSet(FilterSet):
-        prop_date_time = PropertyDateFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = DateFromToRangeFilterModel
-            fields = ['prop_date_time']
-
-    prop_filter_fs = PropertyDateFromToRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=DateFromToRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateFromToRangeFilterSet(PropertyFilterSet):

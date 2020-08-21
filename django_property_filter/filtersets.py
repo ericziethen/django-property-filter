@@ -1,8 +1,11 @@
 """Filterstest for Property Filtering."""
 
+from django.db import models
 
 from django_filters import Filter, FilterSet
-from django_property_filter.filters import EXPLICIT_ONLY_FILTERS
+
+from django_property_filter.filters import EXPLICIT_ONLY_FILTERS, PropertyBaseFilter
+from django_property_filter.utils import filter_qs_by_pk_list
 
 
 class PropertyFilterSet(FilterSet):
@@ -12,6 +15,32 @@ class PropertyFilterSet(FilterSet):
         """Construct a PropertyFilterSet."""
         self._setup_property_filters()
         super().__init__(*args, **kwargs)
+
+    def filter_queryset(self, queryset):
+        """Filter the Given Queryset."""
+        property_filter_list = []
+
+        # Filter by django_filter filters first so we can control the number of sql parameters
+        for name, value in self.form.cleaned_data.items():
+            if isinstance(self.filters[name], PropertyBaseFilter):
+                property_filter_list.append((name, value))
+            else:
+                queryset = self.filters[name].filter(queryset, value)
+                assert isinstance(  # Assert taken from parent function #nosec
+                    queryset, models.QuerySet), \
+                    "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
+                    % (type(self).__name__, name, type(queryset).__name__)
+
+        # Filter By Property Filters
+        if property_filter_list:
+            pk_list = list(queryset.model.objects.all().values_list('pk', flat=True))
+            for name, value in property_filter_list:
+                pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
+
+            # Generate the SQL for the property filter result
+            queryset = filter_qs_by_pk_list(queryset, list(pk_list))
+
+        return queryset
 
     def _add_filter(self, filter_class, field_name, lookup_expr):
         """Add a Filter."""

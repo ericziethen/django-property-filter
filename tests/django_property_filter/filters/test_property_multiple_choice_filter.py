@@ -117,17 +117,6 @@ def test_lookup_xpr(fixture_property_multiple_choice_filter, lookup_xpr, lookup_
     filter_fs = MultipleChoiceFilterSet({'number': lookup_val}, queryset=MultipleChoiceFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyMultipleChoiceFilterSet(FilterSet):
-        prop_number = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr=lookup_xpr, conjoined=conjoined, choices=LOOKUP_CHOICES)
-
-        class Meta:
-            model = MultipleChoiceFilterModel
-            fields = ['prop_number']
-
-    prop_filter_fs = PropertyMultipleChoiceFilterSet({'prop_number': lookup_val}, queryset=MultipleChoiceFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyMultipleChoiceFilterSet(PropertyFilterSet):
         prop_number = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr=lookup_xpr, conjoined=conjoined, choices=LOOKUP_CHOICES)

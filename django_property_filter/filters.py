@@ -3,6 +3,7 @@
 import datetime
 import logging
 
+from django.core.exceptions import ImproperlyConfigured
 from django.utils import timezone
 
 from django_filters.filters import (
@@ -37,7 +38,6 @@ from django_filters.filters import (
 
 from django_property_filter.utils import (
     compare_by_lookup_expression,
-    filter_qs_by_pk_list,
     get_value_for_db_field,
     sort_queryset
 )
@@ -78,16 +78,36 @@ class PropertyBaseFilter(Filter):
         self.verify_lookup(lookup_expr)
 
     def filter(self, qs, value):
-        """Filter the queryset by property."""
-        if value or value == 0:
-            wanted_pks = set()
-            for obj in qs:
-                property_value = get_value_for_db_field(obj, self.property_fld_name)
-                if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
-                    wanted_pks.add(obj.pk)
-            return filter_qs_by_pk_list(qs, list(wanted_pks))
+        """Filter the queryset, stub to raise exception for misuse."""
+        # Filtering is done via filter_pks() via PropertyFilterset, raise Exception if wrongly configured
+        raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet instead of Filterset')
 
-        return qs
+    def filter_pks(self, initial_pk_list, queryset, value):
+        """
+        Filter the Given Queryset against the given value and return a list of matching Primary Keys.
+
+        if initial_pk_list is not None only those Primary Keys will be considered
+        """
+        # If no Value given we don't need to filter at all
+        if not value and value != 0:
+            return initial_pk_list
+
+        # Not None but empty List, Nothing to do, No chance for a find
+        if initial_pk_list is not None and not initial_pk_list:
+            return []
+
+        # Filter all values from queryset, get the pk list
+        wanted_pks = set()
+        for obj in queryset:
+            property_value = get_value_for_db_field(obj, self.property_fld_name)
+            if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
+                wanted_pks.add(obj.pk)
+
+        # Find Entries in both lists if original provided
+        if initial_pk_list is not None:  # We have initial pk list, only return joined results
+            wanted_pks = wanted_pks & set(initial_pk_list)
+
+        return list(wanted_pks)
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
@@ -220,46 +240,41 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Look
 
         return lookup_tup_list
 
-    def filter(self, qs, value):
+    def filter_pks(self, initial_pk_list, queryset, value):
         """Perform the custom filtering."""
         if not value:
-            return super().filter(qs, None)
+            return super().filter_pks(initial_pk_list, queryset, None)
 
         self.lookup_expr = value.lookup_expr
-        return super().filter(qs, value.value)
+        return super().filter_pks(initial_pk_list, queryset, value.value)
 
 
 class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
 
-    def filter(self, qs, value):
+    def filter_pks(self, initial_pk_list, queryset, value):
         """Filter Multiple Choice Property Values."""
-        # If no or empty qs there is nothing to filter, leave the qs untouched
-        if not qs or not value:
-            return qs
+        # If no Value given we don't need to filter at all
+        if not value:
+            return initial_pk_list
 
-        result_qs = None
+        # Not None but empty List, Nothing to do, No chance for a find
+        if not queryset:
+            return []
 
+        result_pks = None
         for sub_value in value:
-            sub_result_qs = super().filter(qs, sub_value)
+            filter_result = set(super().filter_pks(None, queryset, sub_value))
+            if self.conjoined:  # AND
+                if result_pks is None:
+                    result_pks = set(initial_pk_list)
+                result_pks &= filter_result
+            else:  # OR
+                if result_pks is None:
+                    result_pks = set()
+                result_pks |= filter_result
 
-            if self.conjoined:
-                if result_qs is None:
-                    # For 'AND' start from the first qs found
-                    result_qs = sub_result_qs
-
-                if sub_result_qs:
-                    result_qs = result_qs & sub_result_qs
-                else:  # Result QS empty, 'AND' will always be False, return empty qs
-                    result_qs = sub_result_qs
-            else:
-                if result_qs is None:
-                    # For 'OR' start from an empty qs
-                    result_qs = self.model.objects.none()  # pylint: disable=no-member
-
-                result_qs = result_qs | sub_result_qs
-
-        return result_qs if result_qs is not None else self.model.objects.none()  # pylint: disable=no-member
+        return list(result_pks) if result_pks is not None else []
 
 
 class PropertyNumberFilter(PropertyBaseFilter, NumberFilter):
@@ -444,14 +459,16 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
 
     supported_lookups = ['exact']
 
-    def filter(self, qs, value):
+    def filter_pks(self, initial_pk_list, queryset, value):
         """Filter the PropertyOrderingFilter."""
         # If no value is set just return this queryset
         if not value:
-            return qs
+            return initial_pk_list
 
         # Only sort by the first parameter
-        return sort_queryset(self.get_ordering_value(value[0]), qs)
+        sorted_qs = sort_queryset(self.get_ordering_value(value[0]), queryset)
+
+        return list(sorted_qs.values_list('pk', flat=True))
 
 
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):

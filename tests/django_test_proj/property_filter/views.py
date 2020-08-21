@@ -24,6 +24,7 @@ from property_filter.models import (
     LookupChoiceFilterModel,
     ModelChoiceFilterModel,
     ModelChoiceFilterRelatedModel,
+    MultiFilterTestModel,
     MultipleChoiceFilterModel,
     NumberFilterModel,
     OrderingFilterModel,
@@ -214,3 +215,9 @@ class VolumeTestView(FilterView):
     model = VolumeTestModel
     template_name = 'generic_filter_filter_first.html'
     filterset_class = filters.VolumeTestFilterSet
+
+
+class MultiFilterTestView(FilterView):
+    model = MultiFilterTestModel
+    template_name = 'generic_filter_filter_first.html'
+    filterset_class = filters.MultiFilterTestFilterSet

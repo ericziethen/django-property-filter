@@ -502,7 +502,7 @@ class VolumeTestFilterSet(PropertyFilterSet):
 
     class Meta:
         model = models.VolumeTestModel
-        exclude = ['id', 'date', 'is_true', 'numberv', 'text']
+        exclude = ['id', 'date', 'is_true', 'number', 'text']
         property_fields = [
             ('prop_is_true', PropertyBooleanFilter, ['exact']),
             ('prop_number', PropertyNumberFilter, ['exact', 'lt', 'gt']),
@@ -512,3 +512,17 @@ class VolumeTestFilterSet(PropertyFilterSet):
         add_supported_filters(self, BooleanFilter, 'is_true', ['exact'])
         add_supported_filters(self, NumberFilter, 'number', ['exact', 'lt', 'gt'])
         super().__init__(*args, **kwargs)
+
+
+class MultiFilterTestFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.MultiFilterTestModel
+        fields = ['number', 'text', 'is_true', 'date', 'date_time']
+        property_fields = [
+            ('prop_number', PropertyNumberFilter, ['exact',]),
+            ('prop_text', PropertyCharFilter, ['exact']),
+            ('prop_is_true', PropertyBooleanFilter, ['exact']),
+            ('prop_date', PropertyDateFilter, ['exact']),
+            ('prop_date_time', PropertyDateTimeFilter, ['exact']),
+            ]

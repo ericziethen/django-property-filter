@@ -121,7 +121,8 @@ def filter_qs_by_pk_list(queryset, pk_list):
     https://www.sqlite.org/limits.html#:~:text=To%20prevent%20excessive%20memory%20allocations,0.
     9. Maximum Number Of Host Parameters In A Single SQL Statement
     """
-    result_qs = queryset.filter(pk__in=pk_list)
+    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(pk_list)])
+    result_qs = queryset.filter(pk__in=pk_list).order_by(preserved)
 
     # Only evaluate if we know how to limit the list
     # e.g. For sqlite we know the default limits per version, if we exceed those we can limit how much we return.

@@ -84,24 +84,7 @@ The "property_fields" is a list of tuples with 3 values.
 Explicit Filter Creation
 ------------------------
 
-It is also possible to create Filters explicitely.
-To do this we can either use FilterSet or PropertyFilterSet.
-
-Using Filterset::
-
-    from django_filters import FilterSet
-    from django_property_filter import PropertyNumberFilter
-
-    class BookFilterSet(FilterSet):
-        prop_number = PropertyNumberFilter(field_name='discounted_price', lookup_expr='gte')
-
-        class Meta:
-            model = NumberClass
-            fields = ['prop_number']
-
-This creates a "greater than or equel" filter for the discounted_price property
-
-The same can be achieved using a PropertyFilterSet::
+It is also possible to create Filters explicitely::
 
     from django_property_filter import PropertyNumberFilter, PropertyFilterSet
 
@@ -111,3 +94,5 @@ The same can be achieved using a PropertyFilterSet::
         class Meta:
             model = NumberClass
             fields = ['prop_number']
+
+This creates a "greater than or equel" filter for the discounted_price property

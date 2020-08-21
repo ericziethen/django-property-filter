@@ -60,17 +60,6 @@ def test_lookup_xpr(fixture_property_time_filter, lookup_xpr, lookup_val, result
     filter_fs = TimeFilterSet({'time': lookup_val}, queryset=TimeFilterModel.objects.all())
     assert set(filter_fs.qs.values_list('id', flat=True)) == set(result_list)
 
-    # Compare with Explicit Filter using a normal Filterset
-    class PropertyTimeFilterSet(FilterSet):
-        prop_time = PropertyTimeFilter(field_name='prop_time', lookup_expr=lookup_xpr)
-
-        class Meta:
-            model = TimeFilterModel
-            fields = ['prop_time']
-
-    prop_filter_fs = PropertyTimeFilterSet({'prop_time': lookup_val}, queryset=TimeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
-
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyTimeFilterSet(PropertyFilterSet):
         prop_time = PropertyTimeFilter(field_name='prop_time', lookup_expr=lookup_xpr)
