@@ -26,10 +26,10 @@ class PropertyFilterSet(FilterSet):
                 property_filter_list.append((name, value))
             else:
                 queryset = self.filters[name].filter(queryset, value)
-                if not isinstance(queryset, models.QuerySet):
-                    raise RuntimeError(
-                        "Expected '%s.%s' to return a QuerySet, but got a %s instead."
-                        % (type(self).__name__, name, type(queryset).__name__))
+                assert isinstance(  # Assert taken from parent function #nosec
+                    queryset, models.QuerySet), \
+                    "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
+                    % (type(self).__name__, name, type(queryset).__name__)
 
         # Filter By Property Filters
         if property_filter_list:
