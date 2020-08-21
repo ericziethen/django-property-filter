@@ -18,18 +18,7 @@ class PropertyFilterSet(FilterSet):
 
     def filter_queryset(self, queryset):
         """Filter the Given Queryset."""
-
         property_filter_list = []
-
-
-
-        # TODO ??? ADD A TEST
-        # What happens if a Filter is defined but not filtered against i.e. no value?
-        # Will property filter still get [] instead of None for Empty pk list?
-        # If so, then it would not filter anything? 
-        # 
-
-
 
         # Filter by django_filter filters first so we can control the number of sql parameters
         for name, value in self.form.cleaned_data.items():
@@ -37,9 +26,10 @@ class PropertyFilterSet(FilterSet):
                 property_filter_list.append((name, value))
             else:
                 queryset = self.filters[name].filter(queryset, value)
-                assert isinstance(queryset, models.QuerySet), \
-                    "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
-                    % (type(self).__name__, name, type(queryset).__name__)
+                if not isinstance(queryset, models.QuerySet):
+                    raise RuntimeError(
+                        "Expected '%s.%s' to return a QuerySet, but got a %s instead."
+                        % (type(self).__name__, name, type(queryset).__name__))
 
         # Filter By Property Filters
         if property_filter_list:

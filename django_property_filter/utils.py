@@ -108,10 +108,6 @@ def build_limited_filter_expr(pk_list, max_params):
     # Create the Filter Expression
     range_filter_expr = reduce(or_, in_range_list, Q())
 
-
-    # TODO
-    print('>>>>> PARAMS_USED', params_used, range_filter_expr)
-
     return range_filter_expr
 
 
@@ -127,7 +123,6 @@ def filter_qs_by_pk_list(queryset, pk_list):
     """
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(pk_list)])
     result_qs = queryset.filter(pk__in=pk_list).order_by(preserved)
-
 
     # Only evaluate if we know how to limit the list
     # e.g. For sqlite we know the default limits per version, if we exceed those we can limit how much we return.
@@ -147,9 +142,6 @@ def filter_qs_by_pk_list(queryset, pk_list):
 
                 logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter'
                                 F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
-
-    # TODO
-    #print('>>>>> result_qs.query', result_qs.query)
 
     return result_qs
 

@@ -78,7 +78,7 @@ class PropertyBaseFilter(Filter):
         self.verify_lookup(lookup_expr)
 
     def filter(self, qs, value):
-
+        """Filter the queryset, stub to raise exception for misuse."""
         # Filtering is done via filter_pks() via PropertyFilterset, raise Exception if wrongly configured
         raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet instead of Filterset')
 
@@ -88,7 +88,6 @@ class PropertyBaseFilter(Filter):
 
         if initial_pk_list is not None only those Primary Keys will be considered
         """
-
         # If no Value given we don't need to filter at all
         if not value and value != 0:
             return initial_pk_list
@@ -98,7 +97,6 @@ class PropertyBaseFilter(Filter):
             return []
 
         # Filter all values from queryset, get the pk list
-        """Filter the queryset by property."""
         wanted_pks = set()
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
@@ -256,7 +254,6 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
 
     def filter_pks(self, initial_pk_list, queryset, value):
         """Filter Multiple Choice Property Values."""
-
         # If no Value given we don't need to filter at all
         if not value:
             return initial_pk_list
@@ -470,11 +467,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
 
         # Only sort by the first parameter
         sorted_qs = sort_queryset(self.get_ordering_value(value[0]), queryset)
-        print('SORT_ORDER', value[0], queryset)
-        print('SORTED', value[0], sorted_qs)
 
-
-        # TODO - The Issue might be because now filterset will query the pks, changing the order
         return list(sorted_qs.values_list('pk', flat=True))
 
 
