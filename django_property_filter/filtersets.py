@@ -21,6 +21,16 @@ class PropertyFilterSet(FilterSet):
 
         property_filter_list = []
 
+
+
+        # TODO ??? ADD A TEST
+        # What happens if a Filter is defined but not filtered against i.e. no value?
+        # Will property filter still get [] instead of None for Empty pk list?
+        # If so, then it would not filter anything? 
+        # 
+
+
+
         # Filter by django_filter filters first so we can control the number of sql parameters
         for name, value in self.form.cleaned_data.items():
             if isinstance(self.filters[name], PropertyBaseFilter):

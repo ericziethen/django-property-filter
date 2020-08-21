@@ -262,7 +262,7 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
             return initial_pk_list
 
         # Not None but empty List, Nothing to do, No chance for a find
-        if initial_pk_list is not None and not initial_pk_list:
+        if not queryset:
             return []
 
         result_pks = None
