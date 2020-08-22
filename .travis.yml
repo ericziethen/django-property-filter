@@ -15,7 +15,7 @@ branches:
 
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
-python:
+#python:
 #  - '3.9-dev'
 #  - '3.8'
 #  - '3.7'
