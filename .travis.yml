@@ -8,7 +8,7 @@ branches:
   only:
   - master      # Build if the branch is the master branch
   - feature/auto-release-pypi  # FOR TESTING PURPOSE
-
+  - /^.*$/     # FOR TESTING PURPOSE
 
 
 
