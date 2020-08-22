@@ -8,19 +8,18 @@ branches:
   only:
   - master                      # master branch
   - /^[0-9]+\.[0-9]+\.[0-9]+$/  # tagged release branch
-  - feature/auto-release-pypi  # tagged release branch
 
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
-#python:
-#  - '3.9-dev'
-#  - '3.8'
-#  - '3.7'
-#  - '3.6'
+python:
+  - '3.9-dev'
+  - '3.8'
+  - '3.7'
+  - '3.6'
 
-#env:
-#  - DJANGO_DB=SQLITE
-#  - DJANGO_DB=POSTGRES
+env:
+  - DJANGO_DB=SQLITE
+  - DJANGO_DB=POSTGRES
 
 jobs:
   include:
@@ -59,10 +58,8 @@ jobs:
         server: https://test.pypi.org/legacy/  # Disable to deploy to Proper PyTest
         user: __token__
         password:
-          # PyPi-Test Token
-          secure: eImISXDaOdi8UdZu5mqNphRy7sc7/sPJ7Ki7bRVMVZyHQaohUTWhCFTPhr5tz+kvEICLW8e9wEjJwmdKnSagjPZrGGC/HytiQV6DBhYscQSvSEcJxuWL3xTlQe6+3JBvT6kCrXRIvZp9suK/RCosJyF6t4yzVvWCsa0DvQSINy5zCtQFDSCNbhtwkzn1JgOoAwgF0PpHF7g+queLLjTPNUkFYPQpPg+3LxwCo2HF1EY4oqwZE9cp4pOkx++dNJsZr7T3dN97coxqZ+puWA83ioUYHCsAy6XwA5qihbKEc0+azMZwVeKKhSygLLdCf0qXfK7DDCMZHVrvG2a9y9dr8GAH0FjSYXBsqaLa7kSo9/zq5mORcahj40VvXvgS7afMuiF36DN4ORC+bie7V+vqfeMD75g4M4/3o8fHMc41OV+UMpVXiWfQz/BMMrDxUk5rUXXC31CpUGyW8OoN2aMas5+mzGM1YFYI5j62AXQIo3WySasTk0JZ0aUYehfT0vwCBWVhNW0XvjX43pr4gigW8yOLxnubiFN24aODD3JoNL5cbs26YLQtiTOJYOa94Wlh9KpGY2/NoHRQDWJHvkJQOS1Pbp9R8q94RNQJFZNSeEHr3htxrIiqD0Ug2POX4DkwaNBLu9vAghZj3QNVVPBJN5AG6Yit4Ub59FIZV/1//8U=
-          # PyPi Token
-          #secure: N0wJ46a8ACWMtYvE123jQqBf49E/txBXnxZ7AKq9yV2eYYmg/7JCefnUVO/V1XAG9bPngFcPg4OjF5carU70UEXdiXjdaR4L/sowInt1uq4MbFrqznx8Z8ALUsOT61E7uGoCHfNpqR4AdlCE3h+q7HRv1bJ9TtjJ7wjJpDo+k4/xgabJgjxPxNSYcJZTh6JVhAIlDRTt7gcr4quoqiQHWx2la4HeQbmJJPUAe6ZO1QBsahBNIjc9nKHgGMGpR3iuWMEwK/oEmzIEjuSqnzXn7jL0AxjvhNTRYwij4rhDAS9JogXxagCIrDZSQTrl7pUTiM9bgY/NDvkHeLRibiiYLI2SinH/eezk3TQwKuigP47Nmu6dL2SI0j/aPB9SyAKBdiPlbAGlivuCaEQS/OlJjmim4jTQt6+dtvfhxhgb3aR1IZrfG7DxwrqxsRaiYkLSUGVR71TdlqmEVcyMp/zS1RA5rN0F2xLMpoiilH7GFJqR4ue5JWgTFbnf2lSIaP5z0MqKRk2AUw4nJ3MtzqK3A4YmLUhcjyBcrCWXqlf/L5OhVGI20bIahBppJpVAOL+z0g2MWy5EohgIa+pyc+piup9+wdUVQPe7OGwuE519QvqwSOlhR9FoxRLuoZ3EF31SVuJs0irqkH+ax5sczu6AeKUCGptiZ7b49uYXAuRYJTk=
+          # PyPi Token for this project only
+          secure: N0wJ46a8ACWMtYvE123jQqBf49E/txBXnxZ7AKq9yV2eYYmg/7JCefnUVO/V1XAG9bPngFcPg4OjF5carU70UEXdiXjdaR4L/sowInt1uq4MbFrqznx8Z8ALUsOT61E7uGoCHfNpqR4AdlCE3h+q7HRv1bJ9TtjJ7wjJpDo+k4/xgabJgjxPxNSYcJZTh6JVhAIlDRTt7gcr4quoqiQHWx2la4HeQbmJJPUAe6ZO1QBsahBNIjc9nKHgGMGpR3iuWMEwK/oEmzIEjuSqnzXn7jL0AxjvhNTRYwij4rhDAS9JogXxagCIrDZSQTrl7pUTiM9bgY/NDvkHeLRibiiYLI2SinH/eezk3TQwKuigP47Nmu6dL2SI0j/aPB9SyAKBdiPlbAGlivuCaEQS/OlJjmim4jTQt6+dtvfhxhgb3aR1IZrfG7DxwrqxsRaiYkLSUGVR71TdlqmEVcyMp/zS1RA5rN0F2xLMpoiilH7GFJqR4ue5JWgTFbnf2lSIaP5z0MqKRk2AUw4nJ3MtzqK3A4YmLUhcjyBcrCWXqlf/L5OhVGI20bIahBppJpVAOL+z0g2MWy5EohgIa+pyc+piup9+wdUVQPe7OGwuE519QvqwSOlhR9FoxRLuoZ3EF31SVuJs0irqkH+ax5sczu6AeKUCGptiZ7b49uYXAuRYJTk=
         on:
           tags: true
           branch: master
