@@ -8,6 +8,7 @@ branches:
   only:
   - master                      # master branch
   - /^[0-9]+\.[0-9]+\.[0-9]+$/  # tagged release branch
+  - feature/auto-release-pypi  # tagged release branch
 
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
