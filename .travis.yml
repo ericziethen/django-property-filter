@@ -7,6 +7,11 @@ cache: pip
 branches:
   only:
   - master      # Build if the branch is the master branch
+  - feature/auto-release-pypi  # FOR TESTING PURPOSE
+
+
+
+
 
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
@@ -37,6 +42,33 @@ jobs:
 
       # Run Package Safety
       - ./dev/check_package_safety.sh
+
+    - stage: Deploy
+      # to test conditions see https://docs.travis-ci.com/user/conditions-testing
+      # Only create a deployment stage for properly tagged branches
+      if: (tag =~ ^[0-9]+\.[0-9]+\.[0-9]+$)
+      install: 
+      - echo PHASE - install - skip, nothing to do
+      script: 
+      - echo PHASE - script - skip, nothing to do
+      after_success: 
+      - echo PHASE - after_success - skip, nothing to do
+      before_deploy:
+      - ./dev/Packaging/check_travis_release.sh
+      deploy:
+      - provider: pypi
+        skip_cleanup: true
+        distributions: sdist bdist_wheel
+        server: https://test.pypi.org/legacy/  # Disable to deploy to Proper PyTest
+        user: __token__
+        password:
+          # PyPi-Test Token
+          secure: ds2sytqAYPw5sl0h7hIkVo7LOpoUOfn2vFk3+arxNAS8kQ50wSJqNMtaxS/69Bozc24p0eU5Y5Zt4PZl0Y9/cHRllP6i1TIJ0Pxau14fNWbEbM4b23JXwoKgCvGPyS8Jrxl+3BrEWJ+VApFe91WN1wvMUq/Z2ia0bXktskL2WpYeqeBCVvLjk5m7duQLLkrjRxxY0Ss9VlpSczUkyNA6Qg7rlkz8OYZ9UkZWCEMx51LVQSj1vIWWR7/o8viJZo92GIHIp/lMrtNtw1rboYhsoLZJMrGA0ZEdIQccRCLts1hzj0W5GucA5SjnIyfOXjTomoDqKWdDV216PxgNmOS4VxTrEQuai/sckh25UOzcKIJynXhVaDrOh3b6+EX4MbeyRxOq7jPuviJOZM7Uk+VD+CU9rEfVocjfuDFpUJWhe+g8Hjp03HhJaGW0cr2rYMmsjmBQNe5RhGsqMxNX83mhQoBdQFhlfoN4HOKmyncPsjbB15I36RJgSCPwCdRrwCPCXD069Czqa9qzj2OcvKpEAWhMRazmRHoMu0UDKOuqt5DSjlP37ZIuqLNReAiogG0RngIYOqJ6jdxV82w13wmBlSWRqk3Ct0ZYzE8ozX5jtj03kqUYv4t29EVk9CGu5P4lCOAcs0H8yu6Cl32o3vVGyY1qMWA4+SyP74fh+Z+hHjc=
+          # PyPi Token
+          #secure: N0wJ46a8ACWMtYvE123jQqBf49E/txBXnxZ7AKq9yV2eYYmg/7JCefnUVO/V1XAG9bPngFcPg4OjF5carU70UEXdiXjdaR4L/sowInt1uq4MbFrqznx8Z8ALUsOT61E7uGoCHfNpqR4AdlCE3h+q7HRv1bJ9TtjJ7wjJpDo+k4/xgabJgjxPxNSYcJZTh6JVhAIlDRTt7gcr4quoqiQHWx2la4HeQbmJJPUAe6ZO1QBsahBNIjc9nKHgGMGpR3iuWMEwK/oEmzIEjuSqnzXn7jL0AxjvhNTRYwij4rhDAS9JogXxagCIrDZSQTrl7pUTiM9bgY/NDvkHeLRibiiYLI2SinH/eezk3TQwKuigP47Nmu6dL2SI0j/aPB9SyAKBdiPlbAGlivuCaEQS/OlJjmim4jTQt6+dtvfhxhgb3aR1IZrfG7DxwrqxsRaiYkLSUGVR71TdlqmEVcyMp/zS1RA5rN0F2xLMpoiilH7GFJqR4ue5JWgTFbnf2lSIaP5z0MqKRk2AUw4nJ3MtzqK3A4YmLUhcjyBcrCWXqlf/L5OhVGI20bIahBppJpVAOL+z0g2MWy5EohgIa+pyc+piup9+wdUVQPe7OGwuE519QvqwSOlhR9FoxRLuoZ3EF31SVuJs0irqkH+ax5sczu6AeKUCGptiZ7b49uYXAuRYJTk=
+        on:
+          tags: true
+          branch: master
 
 services:
   - postgresql
