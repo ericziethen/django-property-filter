@@ -55,7 +55,7 @@ jobs:
       - provider: pypi
         skip_cleanup: true
         distributions: sdist bdist_wheel
-        server: https://test.pypi.org/legacy/  # Disable to deploy to Proper PyTest
+        #server: https://test.pypi.org/legacy/  # Disable to deploy to Proper PyTest
         user: __token__
         password:
           # PyPi Token for this project only
