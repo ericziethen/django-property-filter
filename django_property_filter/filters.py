@@ -1,4 +1,4 @@
-"""Filters to extend Django-FIlter filters to support property filtering."""
+"""Filters to extend Django-Filter filters to support property filtering."""
 
 import datetime
 import logging
