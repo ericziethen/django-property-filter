@@ -118,8 +118,7 @@ class MultiFilterFilterSet(FilterSet):
         choices=NUMBER_CHOICES)
     class Meta:
         model = MultiFilterTestModel
-        exclude = ['id']
-        #fields = ['text', 'is_true', 'date', 'date_time']
+        fields = ['text', 'is_true', 'date', 'date_time']
 
 
 class PropertyMultiFilterFilterSet(PropertyFilterSet):
@@ -129,15 +128,15 @@ class PropertyMultiFilterFilterSet(PropertyFilterSet):
 
     class Meta:
         model = MultiFilterTestModel
+        fields = ['prop_number']
         exclude = ['number', 'text', 'is_true', 'date', 'date_time']
-        '''
         property_fields = [
             ('prop_text', PropertyCharFilter, ['exact']),
             ('prop_is_true', PropertyBooleanFilter, ['exact']),
             ('prop_date', PropertyDateFilter, ['exact']),
             ('prop_date_time', PropertyDateTimeFilter, ['exact']),
         ]
-        '''
+
 
 class Command(BaseCommand):
 
@@ -191,10 +190,10 @@ class Command(BaseCommand):
         # Setup the Filtersets
         filter_fs = MultiFilterFilterSet(
             {
-                #'number': [NUMBER_RANGE[0], NUMBER_RANGE[1]],
-                #'text': TEXT_RANGE[0],
-                #'is_true': IS_TRUE_RANGE[0],
-                #'date': DATE_RANGE[0],
+                'number': [NUMBER_RANGE[0], NUMBER_RANGE[1]],
+                'text': TEXT_RANGE[0],
+                'is_true': IS_TRUE_RANGE[0],
+                'date': DATE_RANGE[0],
                 'date_time': DATE_TIME_RANGE[0]
             },
             queryset=MultiFilterTestModel.objects.all()
@@ -202,10 +201,10 @@ class Command(BaseCommand):
 
         property_filter_fs = PropertyMultiFilterFilterSet(
             {
-                #'prop_number': [NUMBER_RANGE[0], NUMBER_RANGE[1]],
-                #'prop_text__exact': TEXT_RANGE[0],
-                #'prop_is_true__exact': IS_TRUE_RANGE[0],
-                #'prop_date__exact': DATE_RANGE[0],
+                'prop_number': [NUMBER_RANGE[0], NUMBER_RANGE[1]],
+                'prop_text__exact': TEXT_RANGE[0],
+                'prop_is_true__exact': IS_TRUE_RANGE[0],
+                'prop_date__exact': DATE_RANGE[0],
                 'prop_date_time__exact': DATE_TIME_RANGE[0]
             },
             queryset=MultiFilterTestModel.objects.all()
@@ -215,19 +214,25 @@ class Command(BaseCommand):
         filter_start_time = timezone.now()
         fs_qs = filter_fs.qs
         filter_end_time = timezone.now()
+        filer_duration = (filter_end_time - filter_start_time).total_seconds()
 
         # Property Filtering
         property_filter_start_time = timezone.now()
         pfs_qs = property_filter_fs.qs
         property_filter_end_time = timezone.now()
+        property_filer_duration = (property_filter_end_time - property_filter_start_time).total_seconds()
 
-        assert fs_qs.count() == pfs_qs.count(), F'Counts "{fs_qs.count()}" and "{pfs_qs.count()}" differ'
+        #print(fs_qs.query)
+        #print(pfs_qs.query)
+        if fs_qs or pfs_qs:
+            assert fs_qs.count() == pfs_qs.count(), F'Counts "{fs_qs.count()}" and "{pfs_qs.count()}" differ'
 
         # Update Results
         test_dic['Filter Result Count'] = fs_qs.count()
-        test_dic['Filter Time'] = filter_end_time - filter_start_time
+        test_dic['Filter Time'] = F'{filer_duration} seconds'
         test_dic['Property Filter Result Count'] = pfs_qs.count()
-        test_dic['Property Filter Time'] = property_filter_end_time - property_filter_start_time
+        test_dic['Property Filter Time'] = F'{property_filer_duration} seconds'
+        test_dic['Property Time Factor'] = property_filer_duration / filer_duration
 
 def append_data_to_csv(csv_file_path, data):
         print(data)

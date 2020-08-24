@@ -14,10 +14,10 @@ set CSV_FILE_PATH=%PROJ_MAIN_DIR%\benchmarks.csv
 pushd "%DJANGO_DIR%"
 
 call:run_benchmarks "10"
-rem call:run_benchmarks "100"
-rem call:run_benchmarks "1000"
-rem call:run_benchmarks "10000"
-rem call:run_benchmarks "50000"
+call:run_benchmarks "100"
+call:run_benchmarks "1000"
+call:run_benchmarks "10000"
+call:run_benchmarks "50000"
 rem call:run_benchmarks "100000"
 goto end
 
