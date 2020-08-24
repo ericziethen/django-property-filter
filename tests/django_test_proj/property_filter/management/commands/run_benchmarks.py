@@ -187,6 +187,12 @@ class Command(BaseCommand):
                 MultiFilterTestModel.objects.bulk_create(bulk_list)
 
     def run_filters(self, test_dic):
+
+
+        # TODO - Run Multiple Times and Take Average
+        # TODO - Try with other Combinations of Filters???, single filter...
+
+
         # Setup the Filtersets
         filter_fs = MultiFilterFilterSet(
             {
@@ -224,15 +230,19 @@ class Command(BaseCommand):
 
         #print(fs_qs.query)
         #print(pfs_qs.query)
-        if fs_qs or pfs_qs:
-            assert fs_qs.count() == pfs_qs.count(), F'Counts "{fs_qs.count()}" and "{pfs_qs.count()}" differ'
+        #if fs_qs or pfs_qs:
+        #    assert fs_qs.count() == pfs_qs.count(), F'Counts "{fs_qs.count()}" and "{pfs_qs.count()}" differ'
 
         # Update Results
         test_dic['Filter Result Count'] = fs_qs.count()
         test_dic['Filter Time'] = F'{filer_duration} seconds'
         test_dic['Property Filter Result Count'] = pfs_qs.count()
         test_dic['Property Filter Time'] = F'{property_filer_duration} seconds'
-        test_dic['Property Time Factor'] = property_filer_duration / filer_duration
+
+        if filer_duration:
+            test_dic['Property Time Factor'] = property_filer_duration / filer_duration
+        else:
+            test_dic['Property Time Factor'] = 'Null Time for Filter'
 
 def append_data_to_csv(csv_file_path, data):
         print(data)
