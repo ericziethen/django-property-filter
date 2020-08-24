@@ -24,7 +24,7 @@ set Sec=%DateTime:~12,2%
 
 set datetimef=%Yr%.%Mon%.%Day%_%Hr%-%Min%-%Sec%
 
-set PROFILE_LOG=%PROJ_MAIN_DIR%\profile_%datetimef%.txt
+set PROFILE_LOG=%PROJ_MAIN_DIR%\profile_%datetimef%.html
 
 pushd "%DJANGO_DIR%"
 
@@ -55,7 +55,7 @@ goto:eof
 set DB_ENTRIES=%~1
 echo %data%-%time% ### RUN BENCHMARK - %DB_ENTRIES% entries - Settings: "%DJANGO_SETTINGS_MODULE%" ###
 echo Command: 'python -m pyinstrument manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%"' > "%PROFILE_LOG%"
-python -m pyinstrument manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%" > "%PROFILE_LOG%"
+python -m pyinstrument -r html --show-all manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%" > "%PROFILE_LOG%"
 echo %data%-%time% ### BENCHMARK END ###
 echo[
 goto:eof
