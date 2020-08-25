@@ -1,6 +1,13 @@
 '''
 TODO - FEATURES
 
+
+    # TODO
+      - Add Simple Tests To Filter Every Filter
+        - Start with the Intfield Initially
+        - Loop through Each Filter
+        - Run the same test as
+
     - Script Calls
         - 1000 Entries
         - 10000 Entries
