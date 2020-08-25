@@ -198,7 +198,11 @@ class Command(BaseCommand):
 
         # TODO - Run Multiple Times and Take Average
         # TODO - Try with other Combinations of Filters???, single filter...
-
+        # TODO - Have a loop to run basic tests on every Filter Separately
+        #   - Can have 1 Big Filterset with each Filter (2, for Filter and Property)
+        #       - Each filter for the same field/prop_filed
+        #       - Name the Filter based on FilterName so loop can pick up, 
+        #   - Then the Loop Can Filter for 1 of the Items for each of the filters and compare the 2
 
         # Setup the Filtersets
         filter_fs = MultiFilterFilterSet(
