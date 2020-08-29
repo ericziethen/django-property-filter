@@ -72,7 +72,7 @@ from property_filter import models
 
 def add_filter(filterset_ref, filter_class, field_name, lookup_expr, **kwargs):
     filter_name = field_name + lookup_expr
-    label = F'{field_name} [{lookup_expr}]'
+    label = F'{field_name} [{lookup_expr}] ({str(filter_class.__name__)})'
     filterset_ref.base_filters[filter_name] = filter_class(label=label, field_name=field_name,
                                                            lookup_expr=lookup_expr, **kwargs)
 
@@ -89,7 +89,7 @@ def add_property_filter(filterset_ref, filter_class, field_name, lookup_expr, **
 
 def add_supported_property_filters(filterset_ref, filter_class, field_name, expression_list, **kwargs):
     for lookup in expression_list:
-        add_property_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
+        add_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
 
 
 class PropertyAllValuesFilterSet(PropertyFilterSet):
