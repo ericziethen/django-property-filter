@@ -15,8 +15,8 @@ pushd "%DJANGO_DIR%"
 
 rem call:run_benchmarks "10"
 rem call:run_benchmarks "100"
-rem call:run_benchmarks "1000"
-call:run_benchmarks "10000"
+call:run_benchmarks "1000"
+rem call:run_benchmarks "10000"
 rem call:run_benchmarks "50000"
 rem call:run_benchmarks "100000"
 goto end

@@ -68,7 +68,7 @@ from django_property_filter import (
     PropertyUUIDFilter,
 )
 
-from property_filter.models import MultiFilterTestModel
+from property_filter.models import MultiFilterTestModel as BenchmarkModel
 
 
 NUMBER_RANGE = [1, 2, 3]
@@ -92,7 +92,7 @@ class MultiFilterFilterSet(FilterSet):
         field_name='number', lookup_expr='exact', conjoined=False,  # OR
         choices=NUMBER_CHOICES)
     class Meta:
-        model = MultiFilterTestModel
+        model = BenchmarkModel
         fields = ['text', 'is_true', 'date', 'date_time']
 
 
@@ -102,7 +102,7 @@ class PropertyMultiFilterFilterSet(PropertyFilterSet):
         choices=NUMBER_CHOICES)
 
     class Meta:
-        model = MultiFilterTestModel
+        model = BenchmarkModel
         fields = ['prop_number']
         exclude = ['number', 'text', 'is_true', 'date', 'date_time']
         property_fields = [
@@ -111,3 +111,23 @@ class PropertyMultiFilterFilterSet(PropertyFilterSet):
             ('prop_date', PropertyDateFilter, ['exact']),
             ('prop_date_time', PropertyDateTimeFilter, ['exact']),
         ]
+
+class AllFiltersNumberFilterSet(FilterSet):
+    number_AllValuesFilter = AllValuesFilter(field_name='number', lookup_expr='exact')
+
+    class Meta:
+        model = BenchmarkModel
+        exclude = ['number', 'text', 'is_true', 'date', 'date_time']
+
+
+class AllFiltersNumberPropertyFilterSet(PropertyFilterSet):
+    prop_number_AllValuesFilter = PropertyAllValuesFilter(field_name='prop_number', lookup_expr='exact')
+
+    class Meta:
+        model = BenchmarkModel
+        exclude = ['number', 'text', 'is_true', 'date', 'date_time']
+
+ALL_VALUE_FILTER_LOOKUP_LIST = [
+    ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
+]
+

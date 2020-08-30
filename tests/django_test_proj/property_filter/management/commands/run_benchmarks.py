@@ -74,18 +74,14 @@ from django.utils import timezone
 
 sys.path.insert(1, '../../')  # Find our main project
 
-from django_filters import *
-
-from django_property_filter import *
 from django_property_filter.utils import get_db_vendor, get_db_version
 
 from property_filter.benchmark_utils import (
     NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE,
-    MultiFilterFilterSet, PropertyMultiFilterFilterSet
+    BenchmarkModel, ALL_VALUE_FILTER_LOOKUP_LIST,
+    MultiFilterFilterSet, PropertyMultiFilterFilterSet,
+    AllFiltersNumberFilterSet, AllFiltersNumberPropertyFilterSet,
 )
-from property_filter.filters import add_supported_filters, add_supported_property_filters
-from property_filter.models import MultiFilterTestModel
-
 
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
@@ -112,7 +108,7 @@ class Command(BaseCommand):
         base_test_dic['version'] = get_plugin_version()
         base_test_dic['database'] = F'{get_db_vendor()} ({get_db_version()})'
         base_test_dic['Target DB Entries'] = db_entry_count
-        base_test_dic['Actual DB Entries'] = MultiFilterTestModel.objects.all().count()
+        base_test_dic['Actual DB Entries'] = BenchmarkModel.objects.all().count()
 
         # Run the Tests for each Filter as a Single Filter
         result_dic_list += self.run_all_filter_tests(base_test_dic.copy())
@@ -126,14 +122,14 @@ class Command(BaseCommand):
     def setup_test_db(self, db_entry_count):
         with transaction.atomic():
             # Clear Existing DB
-            MultiFilterTestModel.objects.all().delete()
+            BenchmarkModel.objects.all().delete()
 
             # Generate Random Data
             bulk_list = []
             with transaction.atomic():
                 for _ in range(1, db_entry_count + 1):
                     bulk_list.append(
-                        MultiFilterTestModel(
+                        BenchmarkModel(
                             number=random.choice(NUMBER_RANGE),
                             text=random.choice(TEXT_RANGE),
                             is_true=random.choice(IS_TRUE_RANGE),
@@ -142,38 +138,23 @@ class Command(BaseCommand):
                         )
                     )
 
-                MultiFilterTestModel.objects.bulk_create(bulk_list)
+                BenchmarkModel.objects.bulk_create(bulk_list)
 
     def run_all_filter_tests(self, base_data_dic):
         result_list = []
 
-        #tmp_fs = AllFiltersNumberFilterSet()
-        #tmp_prop_fs = AllFiltersNumberPropertyFilterSet()
+        for filter_name, prop_filter_name, lookup_value in ALL_VALUE_FILTER_LOOKUP_LIST:
+            filter_fs = AllFiltersNumberFilterSet(
+                {filter_name: lookup_value},
+                queryset=BenchmarkModel.objects.all()
+            )
+            property_filter_fs = AllFiltersNumberPropertyFilterSet(
+                {prop_filter_name: lookup_value},
+                queryset=BenchmarkModel.objects.all()
+            )
 
-        #print(sorted([f.__class__.__name__ for f in tmp_fs.filters]))
-        #print(sorted([f.__class__.__name__ for f in tmp_prop_fs.filters]))
+            result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
 
-
-        '''
-        tmp_fs = AllFiltersNumberFilterSet()
-        for name in tmp_fs.filters:
-            test_filter = AllFiltersNumberFilterSet({name: NUMBER_RANGE[0]})
-
-
-            self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic)
-
-        create a fake fs
-        for each filter in fs
-            create a fs with data fir this filter
-
-
-
-        # TODO - Create a List of Filter Named when Creating the Base Filterset with all Filters
-        # TODO - LOOP All filters
-        #filter_fs = 
-
-        #property_filter_fs = 
-        '''
         return result_list
 
     def run_multi_filter_comparison(self, base_data_dic):
@@ -185,7 +166,7 @@ class Command(BaseCommand):
                 'date': DATE_RANGE[0],
                 'date_time': DATE_TIME_RANGE[0]
             },
-            queryset=MultiFilterTestModel.objects.all()
+            queryset=BenchmarkModel.objects.all()
         )
 
         property_filter_fs = PropertyMultiFilterFilterSet(
@@ -196,12 +177,10 @@ class Command(BaseCommand):
                 'prop_date__exact': DATE_RANGE[0],
                 'prop_date_time__exact': DATE_TIME_RANGE[0]
             },
-            queryset=MultiFilterTestModel.objects.all()
+            queryset=BenchmarkModel.objects.all()
         )
 
-        self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic)
-
-        return [base_data_dic]
+        return [self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic)]
 
     def _run_filter_comparison(self, filter_fs, property_filter_fs, test_dic):
         # TODO - Run Multiple Times and Take Average
@@ -242,6 +221,7 @@ class Command(BaseCommand):
 
         assert test_dic['Filter Result Count'] == test_dic['Property Filter Result Count']
 
+        return test_dic
 
 def append_data_to_csv(csv_file_path, data_dic):
     for data in data_dic:
@@ -271,141 +251,3 @@ def get_filter_types_from_filter_names(filterset, filter_name_list):
             type_list.append(F'Unknown Type for "{name}"')
 
     return type_list
-
-
-
-
-
-
-
-
-
-
-FILTER_LIST = [
-    AllValuesFilter,
-    AllValuesMultipleFilter,
-    BaseCSVFilter,
-    BaseInFilter,
-    BaseRangeFilter,
-    BooleanFilter,
-    CharFilter,
-    DateFilter,
-    DateFromToRangeFilter,
-    DateRangeFilter,
-    DateTimeFilter,
-    DateTimeFromToRangeFilter,
-    DurationFilter,
-    IsoDateTimeFilter,
-    IsoDateTimeFromToRangeFilter,
-    LookupChoiceFilter,
-    ModelChoiceFilter,
-    ModelMultipleChoiceFilter,
-    NumberFilter,
-    OrderingFilter,
-    RangeFilter,
-    TimeFilter,
-    TimeRangeFilter,
-    UUIDFilter,
-]
-
-CHOICE_FILTER_LIST = [
-    ChoiceFilter,
-    MultipleChoiceFilter,
-    TypedChoiceFilter,
-    TypedMultipleChoiceFilter,
-]
-
-PROPERTY_FILTER_LIST = [
-    PropertyAllValuesFilter,
-    PropertyAllValuesMultipleFilter,
-    PropertyBaseCSVFilter,
-    PropertyBaseInFilter,
-    PropertyBaseRangeFilter,
-    PropertyBooleanFilter,
-    PropertyCharFilter,
-    PropertyDateFilter,
-    PropertyDateFromToRangeFilter,
-    PropertyDateRangeFilter,
-    PropertyDateTimeFilter,
-    PropertyDateTimeFromToRangeFilter,
-    PropertyDurationFilter,
-    PropertyIsoDateTimeFilter,
-    PropertyIsoDateTimeFromToRangeFilter,
-    PropertyLookupChoiceFilter,
-    PropertyNumberFilter,
-    PropertyOrderingFilter,
-    PropertyRangeFilter,
-    PropertyTimeFilter,
-    PropertyTimeRangeFilter,
-    PropertyUUIDFilter,
-]
-
-PROPERTY_CHOICE_FILTER_LIST = [
-    PropertyChoiceFilter,
-    PropertyMultipleChoiceFilter,
-    PropertyTypedChoiceFilter,
-    PropertyTypedMultipleChoiceFilter,
-]
-
-class AllFiltersNumberFilterSet(FilterSet):
-
-    class Meta:
-        model = MultiFilterTestModel
-        exclude = ['number', 'text', 'is_true', 'date', 'date_time']
-
-    def __init__(self, *args, **kwargs):
-        for filt in FILTER_LIST + CHOICE_FILTER_LIST:
-            lookup = 'exact'
-
-            choices = None
-            if filt in CHOICE_FILTER_LIST:
-                choices = NUMBER_CHOICES
-            add_supported_filters(self, filt, 'number', [lookup], choices=choices)
-
-        super().__init__(*args, **kwargs)
-        #print('##### self.filter', self.filters)
-
-        filter_type_list = [f.__class__.__name__ for n, f in self.filters.items()]
-        for filt in FILTER_LIST + CHOICE_FILTER_LIST:
-            name = filt.__name__
-            assert name in filter_type_list, F'{name} not in {filter_type_list}'
-
-
-class AllFiltersNumberPropertyFilterSet(PropertyFilterSet):
-
-    class Meta:
-        model = MultiFilterTestModel
-        exclude = ['number', 'text', 'is_true', 'date', 'date_time']
-
-    def __init__(self, *args, **kwargs):
-        for filt in PROPERTY_FILTER_LIST + PROPERTY_CHOICE_FILTER_LIST:
-            lookup = 'exact'
-            if lookup not in filt.supported_lookups:
-                lookup = filt.supported_lookups[0]
-
-            choices = None
-            if filt in CHOICE_FILTER_LIST:
-                choices = PROPERTY_CHOICE_FILTER_LIST
-            add_supported_filters(self, filt, 'number', [lookup], choices=choices)
-
-        super().__init__(*args, **kwargs)
-
-        filter_type_list = [f.__class__.__name__ for n, f in self.filters.items()]
-        for filt in PROPERTY_FILTER_LIST + PROPERTY_CHOICE_FILTER_LIST:
-            name = filt.__name__
-            assert name in filter_type_list, F'{name} not in {filter_type_list}'
-
-
-
-
-
-'''
-!!! Create benchmark_utils.py
-    - Declare all COnstants there
-    - Declare Explicit Filtersets There
-    - Create dic with name: filtervalue there
-'''
-
-
-
-
