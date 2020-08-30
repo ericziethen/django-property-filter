@@ -71,20 +71,15 @@ from property_filter import models
 
 
 def add_filter(filterset_ref, filter_class, field_name, lookup_expr, **kwargs):
-    filter_name = field_name + lookup_expr
+    filter_name = field_name + lookup_expr + str(filter_class.__name__)
     label = F'{field_name} [{lookup_expr}] ({str(filter_class.__name__)})'
     filterset_ref.base_filters[filter_name] = filter_class(label=label, field_name=field_name,
                                                            lookup_expr=lookup_expr, **kwargs)
 
+
 def add_supported_filters(filterset_ref, filter_class, field_name, expression_list, **kwargs):
     for lookup in expression_list:
         add_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
-
-
-def add_property_filter(filterset_ref, filter_class, field_name, lookup_expr, **kwargs):
-    filter_name = field_name + lookup_expr
-    filterset_ref.base_filters[filter_name] = filter_class(
-        field_name=field_name, lookup_expr=lookup_expr, **kwargs)
 
 
 def add_supported_property_filters(filterset_ref, filter_class, field_name, expression_list, **kwargs):
