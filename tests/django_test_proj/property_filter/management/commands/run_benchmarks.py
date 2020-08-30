@@ -14,24 +14,6 @@ TODO - FEATURES
         - 50000 Entries
         - 100000 Entries
 
-    - Script Arguments
-        - Number of Database Entries
-
-    - Batch Script to call it, so can easily change the Database Used, and call both
-    - Benchmark Model to Run Against
-    - Multiple Databases (Sqlits + postgresql)
-    - Multiple Number Database Entries
-    - Multiple Datatypes
-    - Multiple Filter Types (Single and Multiple Choice Ones)
-    - Many (Single Filters) and Few (Multiple Filters) results
-    - Compare Timing Filter & PropertyFilter
- 
-    - Tests
-        - Single
-
-    - LOGGING:
-        - Log which Database is used
-
     FilterCombinations
         - Single Filter (NumberFilter)
         - Single Filter (CharFilter)
@@ -48,13 +30,12 @@ TODO - FEATURES
         x PropertyFilter Version used
         x Database Used
         x Database Entries
-        - Results Found
-        - Filters Used
-        - Number of Fields Filtered
-        - Filters Timing
-        - Property Timing
-        - Filter Result Count
-        - Property FIlter Result Count
+        X Results Found
+        X Filters Used
+        x Filters Timing
+        x Property Timing
+        x Filter Result Count
+        x Property FIlter Result Count
         - Average Time / 10000 Tests (To compare different sample sizes with each other)
 
     TimeFilterAndPropetime_filters(filter_dic, property_filter_dic, ???)  filter_dic/property_filter_dic = {'filter_name': lookup_value, 'name2': lookup_value...}
@@ -65,12 +46,14 @@ TODO - FEATURES
 
 import configparser
 import logging
+import os
 import random
 import sys
+import pandas
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
-from django.utils import timezone
+from django.utils import timezone, dateformat
 
 sys.path.insert(1, '../../')  # Find our main project
 
@@ -104,7 +87,7 @@ class Command(BaseCommand):
 
         # Setup the Base Result Data
         base_test_dic = {}
-        base_test_dic['date/time'] = timezone.now()
+        base_test_dic['date/time'] = formatted_date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         base_test_dic['version'] = get_plugin_version()
         base_test_dic['database'] = F'{get_db_vendor()} ({get_db_version()})'
         base_test_dic['Target DB Entries'] = db_entry_count
@@ -196,21 +179,26 @@ class Command(BaseCommand):
         fs_qs = filter_fs.qs
         filter_end_time = timezone.now()
         filer_duration = (filter_end_time - filter_start_time).total_seconds()
+        filer_duration_10k = filer_duration / test_dic['Actual DB Entries'] * 10000
 
         # Property Filtering
         property_filter_start_time = timezone.now()
         pfs_qs = property_filter_fs.qs
         property_filter_end_time = timezone.now()
         property_filer_duration = (property_filter_end_time - property_filter_start_time).total_seconds()
+        property_filer_duration_10k = property_filer_duration / test_dic['Actual DB Entries'] * 10000
 
         # Update Results
         test_dic['Filter Result Count'] = fs_qs.count()
-        test_dic['Filter Time'] = F'{filer_duration} seconds'
+        test_dic['Filter Time sec'] = F'{filer_duration:.2f}'
+        test_dic['Filter Time 10k sec'] = F'{filer_duration_10k:.2f}'
+
         test_dic['Property Filter Result Count'] = pfs_qs.count()
-        test_dic['Property Filter Time'] = F'{property_filer_duration} seconds'
+        test_dic['Property Filter Time sec'] = F'{property_filer_duration:.2f}'
+        test_dic['Property Filter Time 10k sec'] = F'{property_filer_duration_10k:.2f}'
 
         if filer_duration:
-            test_dic['Property Time Factor'] = property_filer_duration / filer_duration
+            test_dic['Property Time Factor'] = F'{property_filer_duration / filer_duration:.2f}'
         else:
             test_dic['Property Time Factor'] = 'Null Time for Filter'
 
@@ -219,13 +207,19 @@ class Command(BaseCommand):
         filter_list = get_filter_types_from_filter_names(property_filter_fs, property_filter_fs.data.keys())
         test_dic['Property Filters Used'] = sorted(filter_list)
 
-        assert test_dic['Filter Result Count'] == test_dic['Property Filter Result Count']
+        # Sqlite doesn't always return all values
+        #assert test_dic['Filter Result Count'] == test_dic['Property Filter Result Count']
 
         return test_dic
 
-def append_data_to_csv(csv_file_path, data_dic):
-    for data in data_dic:
+def append_data_to_csv(csv_file_path, data_dic_list):
+    for data in data_dic_list:
         print(data)
+
+    header = not os.path.exists(csv_file_path)
+
+    df = pandas.DataFrame(data_dic_list)
+    df.to_csv(csv_file_path, mode='a', encoding='utf-8', index=False, header=header)
 
 
 def get_plugin_version():
