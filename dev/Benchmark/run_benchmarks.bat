@@ -41,9 +41,9 @@ goto:eof
 
 :run_benchmark
 set DB_ENTRIES=%~1
-echo %data%-%time% ### RUN BENCHMARK - %DB_ENTRIES% entries - Settings: "%DJANGO_SETTINGS_MODULE%" ###
+echo %date%-%time% ### RUN BENCHMARK - %DB_ENTRIES% entries - Settings: "%DJANGO_SETTINGS_MODULE%" ###
 python manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%"
-echo %data%-%time% ### BENCHMARK END ###
+echo %date%-%time% ### BENCHMARK END ###
 echo[
 goto:eof
 
