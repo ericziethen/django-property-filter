@@ -63,7 +63,7 @@ from property_filter.benchmark_utils import (
     NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE,
     BenchmarkModel, ALL_VALUE_FILTER_LOOKUP_LIST,
     MultiFilterFilterSet, PropertyMultiFilterFilterSet,
-    AllFiltersNumberFilterSet, AllFiltersNumberPropertyFilterSet,
+    AllFiltersFilterSet, AllFiltersPropertyFilterSet,
 )
 
 
@@ -127,11 +127,11 @@ class Command(BaseCommand):
         result_list = []
 
         for filter_name, prop_filter_name, lookup_value in ALL_VALUE_FILTER_LOOKUP_LIST:
-            filter_fs = AllFiltersNumberFilterSet(
+            filter_fs = AllFiltersFilterSet(
                 {filter_name: lookup_value},
                 queryset=BenchmarkModel.objects.all()
             )
-            property_filter_fs = AllFiltersNumberPropertyFilterSet(
+            property_filter_fs = AllFiltersPropertyFilterSet(
                 {prop_filter_name: lookup_value},
                 queryset=BenchmarkModel.objects.all()
             )
