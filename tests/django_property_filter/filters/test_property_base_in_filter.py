@@ -45,14 +45,14 @@ TEST_LOOKUPS = [
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, result_list):
 
-    class BaseInFilterNumer(BaseInFilter, CharFilter):
+    class BaseInFilterNumber(BaseInFilter, CharFilter):
         pass
-    class PropertyBaseInFilterNumer(PropertyBaseInFilter, PropertyCharFilter):
+    class PropertyBaseInFilterNumber(PropertyBaseInFilter, PropertyCharFilter):
         pass
 
     # Test using Normal Django Filter
     class BaseInFilterSet(FilterSet):
-        number = BaseInFilterNumer(field_name='number', lookup_expr=lookup_xpr)
+        number = BaseInFilterNumber(field_name='number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseInFilterModel
@@ -63,7 +63,7 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyBaseInFilterSet(PropertyFilterSet):
-        prop_number = PropertyBaseInFilterNumer(field_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyBaseInFilterNumber(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseInFilterModel
@@ -78,7 +78,7 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
         class Meta:
             model = BaseInFilterModel
             exclude = ['number']
-            property_fields = [('prop_number', PropertyBaseInFilterNumer, [lookup_xpr])]
+            property_fields = [('prop_number', PropertyBaseInFilterNumber, [lookup_xpr])]
 
     implicit_filter_fs = ImplicitFilterSet({F'prop_number__{lookup_xpr}': lookup_val}, queryset=BaseInFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
@@ -91,11 +91,11 @@ INVALID_VALUES_FOR_NUMBER = [
 @pytest.mark.parametrize('lookup_xpr, lookup_val', INVALID_VALUES_FOR_NUMBER)
 @pytest.mark.django_db
 def test_invalid_range_for_numbers(fixture_property_base_csv_filter, lookup_xpr, lookup_val):
-    class PropertyBaseInFilterNumer(PropertyBaseInFilter, PropertyCharFilter):
+    class PropertyBaseInFilterNumber(PropertyBaseInFilter, PropertyCharFilter):
         pass
 
     class PropertyBaseInFilterSet(PropertyFilterSet):
-        prop_number = PropertyBaseInFilterNumer(field_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyBaseInFilterNumber(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseInFilterModel

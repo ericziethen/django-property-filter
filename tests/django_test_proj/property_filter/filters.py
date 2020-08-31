@@ -115,9 +115,9 @@ class PropertyAllValuesMultipleFilterSet(PropertyFilterSet):
         super().__init__(*args, **kwargs)
 
 
-class BaseCSVFilterNumer(BaseCSVFilter, CharFilter):
+class BaseCSVFilterNumber(BaseCSVFilter, CharFilter):
     pass
-class PropertyBaseCSVFilterNumer(PropertyBaseCSVFilter, PropertyCharFilter):
+class PropertyBaseCSVFilterNumber(PropertyBaseCSVFilter, PropertyCharFilter):
     pass
 class PropertyBaseCSVFilterSet(PropertyFilterSet):
 
@@ -125,28 +125,28 @@ class PropertyBaseCSVFilterSet(PropertyFilterSet):
         model = models.BaseCSVFilterModel
         exclude = ['number', 'text']
         property_fields = [
-            ('prop_number', PropertyBaseCSVFilterNumer, PropertyBaseCSVFilter.supported_lookups),
-            ('prop_text', PropertyBaseCSVFilterNumer, PropertyBaseCSVFilter.supported_lookups)]
+            ('prop_number', PropertyBaseCSVFilterNumber, PropertyBaseCSVFilter.supported_lookups),
+            ('prop_text', PropertyBaseCSVFilterNumber, PropertyBaseCSVFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        add_supported_filters(self, BaseCSVFilterNumer, 'number', PropertyBaseCSVFilter.supported_lookups)
-        add_supported_filters(self, BaseCSVFilterNumer, 'text', PropertyBaseCSVFilter.supported_lookups)
+        add_supported_filters(self, BaseCSVFilterNumber, 'number', PropertyBaseCSVFilter.supported_lookups)
+        add_supported_filters(self, BaseCSVFilterNumber, 'text', PropertyBaseCSVFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 
-class BaseInFilterNumer(BaseInFilter, CharFilter):
+class BaseInFilterNumber(BaseInFilter, CharFilter):
     pass
-class PropertyBaseInFilterNumer(PropertyBaseInFilter, PropertyCharFilter):
+class PropertyBaseInFilterNumber(PropertyBaseInFilter, PropertyCharFilter):
     pass
 class PropertyBaseInFilterSet(PropertyFilterSet):
 
     class Meta:
         model = models.BaseInFilterModel
         exclude = ['number']
-        property_fields = [('prop_number', PropertyBaseInFilterNumer, PropertyBaseInFilter.supported_lookups)]
+        property_fields = [('prop_number', PropertyBaseInFilterNumber, PropertyBaseInFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        add_supported_filters(self, BaseInFilterNumer, 'number', PropertyBaseInFilter.supported_lookups)
+        add_supported_filters(self, BaseInFilterNumber, 'number', PropertyBaseInFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 

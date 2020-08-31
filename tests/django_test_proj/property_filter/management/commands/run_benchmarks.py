@@ -210,6 +210,11 @@ class Command(BaseCommand):
         # Sqlite doesn't always return all values
         #assert test_dic['Filter Result Count'] == test_dic['Property Filter Result Count']
 
+        assert 0 < test_dic['Filter Result Count'] < test_dic['Actual DB Entries'], test_dic['Filters Used']
+        assert 0 < test_dic['Property Filter Result Count'] < test_dic['Actual DB Entries'], test_dic['Property Filters Used']
+
+
+
         return test_dic
 
 def append_data_to_csv(csv_file_path, data_dic_list):

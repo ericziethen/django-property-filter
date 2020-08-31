@@ -48,14 +48,14 @@ TEST_LOOKUPS = [
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, result_list):
 
-    class BaseRangeFilterNumer(BaseRangeFilter, DateFilter):
+    class BaseRangeFilterNumber(BaseRangeFilter, DateFilter):
         pass
-    class PropertyBaseRangeFilterNumer(PropertyBaseRangeFilter, PropertyDateFilter):
+    class PropertyBaseRangeFilterNumber(PropertyBaseRangeFilter, PropertyDateFilter):
         pass
 
     # Test using Normal Django Filter
     class BaseRangeFilterSet(FilterSet):
-        date = BaseRangeFilterNumer(field_name='date', lookup_expr=lookup_xpr)
+        date = BaseRangeFilterNumber(field_name='date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseRangeFilterModel
@@ -66,7 +66,7 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyBaseRangeFilterSet(PropertyFilterSet):
-        prop_date = PropertyBaseRangeFilterNumer(field_name='prop_date', lookup_expr=lookup_xpr)
+        prop_date = PropertyBaseRangeFilterNumber(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseRangeFilterModel
@@ -81,7 +81,7 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
         class Meta:
             model = BaseRangeFilterModel
             exclude = ['date']
-            property_fields = [('prop_date', PropertyBaseRangeFilterNumer, [lookup_xpr])]
+            property_fields = [('prop_date', PropertyBaseRangeFilterNumber, [lookup_xpr])]
 
     implicit_filter_fs = ImplicitFilterSet({F'prop_date__{lookup_xpr}': lookup_val}, queryset=BaseRangeFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
@@ -95,11 +95,11 @@ INVALID_VALUES = [
 @pytest.mark.parametrize('lookup_xpr, lookup_val', INVALID_VALUES)
 @pytest.mark.django_db
 def test_invalid_range(fixture_property_base_csv_filter, lookup_xpr, lookup_val):
-    class PropertyBaseRangeFilterNumer(PropertyBaseRangeFilter, PropertyDateFilter):
+    class PropertyBaseRangeFilterNumber(PropertyBaseRangeFilter, PropertyDateFilter):
         pass
 
     class PropertyBaseRangeFilterSet(PropertyFilterSet):
-        prop_date = PropertyBaseRangeFilterNumer(field_name='prop_date', lookup_expr=lookup_xpr)
+        prop_date = PropertyBaseRangeFilterNumber(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseRangeFilterModel

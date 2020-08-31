@@ -87,6 +87,20 @@ DATE_TIME_RANGE = [
 NUMBER_CHOICES = [(c, F'Number: {c}') for c in NUMBER_RANGE]
 
 
+class BaseCSVFilterNumber(BaseCSVFilter, CharFilter):
+    pass
+class PropertyBaseCSVFilterNumber(PropertyBaseCSVFilter, PropertyCharFilter):
+    pass
+class BaseInFilterNumber(BaseInFilter, CharFilter):
+    pass
+class PropertyBaseInFilterNumber(PropertyBaseInFilter, PropertyCharFilter):
+    pass
+class BaseRangeFilterNumber(BaseRangeFilter, DateFilter):
+    pass
+class PropertyBaseRangeFilterNumber(PropertyBaseRangeFilter, PropertyDateFilter):
+    pass
+
+
 class MultiFilterFilterSet(FilterSet):
     number = MultipleChoiceFilter(
         field_name='number', lookup_expr='exact', conjoined=False,  # OR
@@ -114,6 +128,11 @@ class PropertyMultiFilterFilterSet(PropertyFilterSet):
 
 class AllFiltersNumberFilterSet(FilterSet):
     number_AllValuesFilter = AllValuesFilter(field_name='number', lookup_expr='exact')
+    number_AllValuesMultipleFilter = AllValuesMultipleFilter(field_name='number', lookup_expr='exact', conjoined=False)  # OR
+    number_BaseCSVFilterNumber = BaseCSVFilterNumber(field_name='number', lookup_expr='in')
+    number_BaseInFilterNumber = BaseInFilterNumber(field_name='number', lookup_expr='in')
+    number_BaseRangeFilterNumber = BaseRangeFilterNumber(field_name='date', lookup_expr='range')
+    is_true_BooleanFilter = BooleanFilter(field_name='is_true', lookup_expr='exact')
 
     class Meta:
         model = BenchmarkModel
@@ -122,6 +141,11 @@ class AllFiltersNumberFilterSet(FilterSet):
 
 class AllFiltersNumberPropertyFilterSet(PropertyFilterSet):
     prop_number_AllValuesFilter = PropertyAllValuesFilter(field_name='prop_number', lookup_expr='exact')
+    prop_number_PropertyAllValuesMultipleFilter = PropertyAllValuesMultipleFilter(field_name='prop_number', lookup_expr='exact', conjoined=False)  # OR
+    prop_number_PropertyBaseCSVFilterNumber = PropertyBaseCSVFilterNumber(field_name='prop_number', lookup_expr='in')
+    prop_number_PropertyBaseInFilterNumber = PropertyBaseInFilterNumber(field_name='prop_number', lookup_expr='in')
+    prop_number_PropertyBaseRangeFilterNumber = PropertyBaseRangeFilterNumber(field_name='prop_date', lookup_expr='range')
+    prop_is_true_PropertyBooleanFilter = PropertyBooleanFilter(field_name='prop_is_true', lookup_expr='exact')
 
     class Meta:
         model = BenchmarkModel
@@ -129,5 +153,60 @@ class AllFiltersNumberPropertyFilterSet(PropertyFilterSet):
 
 ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
+    ('number_AllValuesMultipleFilter', 'prop_number_PropertyAllValuesMultipleFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
+    ('number_BaseCSVFilterNumber', 'prop_number_PropertyBaseCSVFilterNumber', str(NUMBER_RANGE[0])),
+    ('number_BaseInFilterNumber', 'prop_number_PropertyBaseInFilterNumber', str(NUMBER_RANGE[0])),
+    ('number_BaseRangeFilterNumber', 'prop_number_PropertyBaseRangeFilterNumber', F'{NUMBER_RANGE[0]},{NUMBER_RANGE[1]}'),
+    ('is_true_BooleanFilter', 'prop_is_true_PropertyBooleanFilter', IS_TRUE_RANGE[0]),
 ]
 
+
+'''
+from django_filters import (
+    CharFilter,
+    ChoiceFilter,
+    DateFilter,
+    DateFromToRangeFilter,
+    DateRangeFilter,
+    DateTimeFilter,
+    DateTimeFromToRangeFilter,
+    DurationFilter,
+    IsoDateTimeFilter,
+    IsoDateTimeFromToRangeFilter,
+    LookupChoiceFilter,
+    ModelChoiceFilter,
+    ModelMultipleChoiceFilter,
+    MultipleChoiceFilter,
+    NumberFilter,
+    OrderingFilter,
+    RangeFilter,
+    TimeFilter,
+    TimeRangeFilter,
+    TypedChoiceFilter,
+    TypedMultipleChoiceFilter,
+    UUIDFilter,
+)
+
+from django_property_filter import (
+    PropertyCharFilter,
+    PropertyChoiceFilter,
+    PropertyDateFilter,
+    PropertyDateFromToRangeFilter,
+    PropertyDateRangeFilter,
+    PropertyDateTimeFilter,
+    PropertyDateTimeFromToRangeFilter,
+    PropertyDurationFilter,
+    PropertyIsoDateTimeFilter,
+    PropertyIsoDateTimeFromToRangeFilter,
+    PropertyLookupChoiceFilter,
+    PropertyMultipleChoiceFilter,
+    PropertyNumberFilter,
+    PropertyOrderingFilter,
+    PropertyRangeFilter,
+    PropertyTimeFilter,
+    PropertyTimeRangeFilter,
+    PropertyTypedChoiceFilter,
+    PropertyTypedMultipleChoiceFilter,
+    PropertyUUIDFilter,
+)
+'''

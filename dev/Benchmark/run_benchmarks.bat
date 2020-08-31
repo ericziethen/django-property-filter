@@ -23,8 +23,8 @@ goto end
 
 :run_benchmarks
 set DB_ENTRIES=%~1
-call:run_benchmark_sqlite "%DB_ENTRIES%"
 call:run_benchmark_postgres "%DB_ENTRIES%"
+call:run_benchmark_sqlite "%DB_ENTRIES%"
 goto:eof
 
 :run_benchmark_sqlite
