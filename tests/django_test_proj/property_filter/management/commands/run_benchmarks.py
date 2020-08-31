@@ -180,23 +180,23 @@ class Command(BaseCommand):
         fs_qs = filter_fs.qs
         filter_end_time = timezone.now()
         filer_duration = (filter_end_time - filter_start_time).total_seconds()
-        filer_duration_10k = filer_duration / test_dic['Actual DB Entries'] * 10000
+        filer_duration_100k = filer_duration / test_dic['Actual DB Entries'] * 100000
 
         # Property Filtering
         property_filter_start_time = timezone.now()
         pfs_qs = property_filter_fs.qs
         property_filter_end_time = timezone.now()
         property_filer_duration = (property_filter_end_time - property_filter_start_time).total_seconds()
-        property_filer_duration_10k = property_filer_duration / test_dic['Actual DB Entries'] * 10000
+        property_filer_duration_100k = property_filer_duration / test_dic['Actual DB Entries'] * 100000
 
         # Update Results
         test_dic['Filter Result Count'] = fs_qs.count()
         test_dic['Filter Time sec'] = F'{filer_duration:.2f}'
-        test_dic['Filter Time 10k sec'] = F'{filer_duration_10k:.2f}'
+        test_dic['Filter Time sec / 100k'] = F'{filer_duration_100k:.2f}'
 
         test_dic['Property Filter Result Count'] = pfs_qs.count()
         test_dic['Property Filter Time sec'] = F'{property_filer_duration:.2f}'
-        test_dic['Property Filter Time 10k sec'] = F'{property_filer_duration_10k:.2f}'
+        test_dic['Property Filter Time sec / 100k'] = F'{property_filer_duration_100k:.2f}'
 
         if filer_duration:
             test_dic['Property Time Factor'] = F'{property_filer_duration / filer_duration:.2f}'
