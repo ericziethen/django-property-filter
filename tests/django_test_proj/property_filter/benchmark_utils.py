@@ -234,14 +234,12 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
 
 '''
 from django_filters import (
-    TypedMultipleChoiceFilter,
     UUIDFilter,
 
     LookupChoiceFilter,
 )
 
 from django_property_filter import (
-    PropertyTypedMultipleChoiceFilter,
     PropertyUUIDFilter,
 
     PropertyLookupChoiceFilter,
