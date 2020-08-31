@@ -60,7 +60,7 @@ sys.path.insert(1, '../../')  # Find our main project
 from django_property_filter.utils import get_db_vendor, get_db_version
 
 from property_filter.benchmark_utils import (
-    NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE,
+    NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE, DURATION_RANGE,
     BenchmarkModel, ALL_VALUE_FILTER_LOOKUP_LIST,
     MultiFilterFilterSet, PropertyMultiFilterFilterSet,
     AllFiltersFilterSet, AllFiltersPropertyFilterSet,
@@ -117,7 +117,8 @@ class Command(BaseCommand):
                             text=random.choice(TEXT_RANGE),
                             is_true=random.choice(IS_TRUE_RANGE),
                             date=random.choice(DATE_RANGE),
-                            date_time=random.choice(DATE_TIME_RANGE)
+                            date_time=random.choice(DATE_TIME_RANGE),
+                            duration=random.choice(DURATION_RANGE)
                         )
                     )
 

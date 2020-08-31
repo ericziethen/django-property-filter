@@ -30,3 +30,14 @@ date/time,version,database,Target DB Entries,Actual DB Entries,Filter Result Cou
 2020-08-31 03:19:37,0.7.1,sqlite (3.31.1),1000,1000,250,0.01,0.07,250,0.11,1.12,16.00,['DateFilter'],['PropertyDateFilter']
 2020-08-31 03:19:37,0.7.1,sqlite (3.31.1),1000,1000,249,0.00,0.02,249,0.09,0.95,47.50,['DateRangeFilter'],['PropertyDateRangeFilter']
 2020-08-31 03:19:37,0.7.1,sqlite (3.31.1),1000,1000,13,0.00,0.01,13,0.04,0.43,43.02,"['BooleanFilter', 'CharFilter', 'DateFilter', 'DateTimeFilter', 'MultipleChoiceFilter']","['PropertyBooleanFilter', 'PropertyCharFilter', 'PropertyDateFilter', 'PropertyDateTimeFilter', 'PropertyMultipleChoiceFilter']"
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,316,0.00,0.04,316,0.09,0.89,22.26,['AllValuesFilter'],['PropertyAllValuesFilter']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,687,0.01,0.05,687,0.09,0.86,17.14,['AllValuesMultipleFilter'],['PropertyAllValuesMultipleFilter']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,316,0.00,0.03,316,0.08,0.84,28.00,['BaseCSVFilterNumber'],['PropertyBaseCSVFilterNumber']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,316,0.00,0.03,316,0.11,1.07,35.67,['BaseInFilterNumber'],['PropertyBaseInFilterNumber']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,499,0.00,0.03,499,0.08,0.80,26.55,['BooleanFilter'],['PropertyBooleanFilter']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,322,0.00,0.03,322,0.08,0.77,25.67,['CharFilter'],['PropertyCharFilter']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,316,0.00,0.02,316,0.09,0.88,43.89,['ChoiceFilter'],['PropertyChoiceFilter']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,237,0.01,0.08,237,0.10,1.05,13.12,['DateFilter'],['PropertyDateFilter']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,253,0.00,0.03,253,0.09,0.86,28.67,['DateRangeFilter'],['PropertyDateRangeFilter']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,318,0.00,0.03,318,0.08,0.82,27.34,['DurationFilter'],['PropertyDurationFilter']
+2020-08-31 03:52:27,0.7.1,sqlite (3.31.1),1000,1000,3,0.00,0.02,3,0.04,0.45,22.70,"['BooleanFilter', 'CharFilter', 'DateFilter', 'DateTimeFilter', 'MultipleChoiceFilter']","['PropertyBooleanFilter', 'PropertyCharFilter', 'PropertyDateFilter', 'PropertyDateTimeFilter', 'PropertyMultipleChoiceFilter']"

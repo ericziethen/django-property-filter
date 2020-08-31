@@ -447,3 +447,39 @@ class MultiFilterTestModel(models.Model):
 
     def __str__(self):
         return F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - "{self.date_time}" - ({self.id})'
+
+
+class BenchmarkTestModel(models.Model):
+    date = models.DateField()
+    date_time = models.DateTimeField()
+    is_true = models.BooleanField(null=True)
+    number = models.IntegerField(null=True)
+    text = models.CharField(max_length=32)
+    duration = models.DurationField()
+
+    @property
+    def prop_date(self):
+        return self.date
+
+    @property
+    def prop_date_time(self):
+        return self.date_time
+
+    @property
+    def prop_is_true(self):
+        return self.is_true
+
+    @property
+    def prop_number(self):
+        return self.number
+
+    @property
+    def prop_text(self):
+        return self.text
+
+    @property
+    def prop_duration(self):
+        return self.duration
+
+    def __str__(self):
+        return F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - "{self.date_time}" - "{self.duration}" ({self.id})'

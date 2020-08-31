@@ -68,7 +68,7 @@ from django_property_filter import (
     PropertyUUIDFilter,
 )
 
-from property_filter.models import MultiFilterTestModel as BenchmarkModel
+from property_filter.models import BenchmarkTestModel as BenchmarkModel
 
 
 NUMBER_RANGE = [1, 2, 3]
@@ -86,6 +86,11 @@ DATE_TIME_RANGE = [
     datetime.datetime(2066, 3, 4, 12, tzinfo=timezone.get_default_timezone())
 ]
 NUMBER_CHOICES = [(c, F'Number: {c}') for c in NUMBER_RANGE]
+DURATION_RANGE = [
+    datetime.timedelta(days=15),
+    datetime.timedelta(days=30),
+    datetime.timedelta(days=200)
+]
 
 
 class BaseCSVFilterNumber(BaseCSVFilter, CharFilter):
@@ -139,6 +144,9 @@ class AllFiltersFilterSet(FilterSet):
     date_DateFilter = DateFilter(field_name='date', lookup_expr='exact')
     date_DateFromToRangeFilter = DateFromToRangeFilter(field_name='date', lookup_expr='range')
     date_DateRangeFilter = DateRangeFilter(field_name='date', lookup_expr='exact')
+    date_time_DateTimeFilter = DateTimeFilter(field_name='date_time', lookup_expr='exact')
+    date_time_DateTimeFromToRangeFilter = DateTimeFromToRangeFilter(field_name='date_time', lookup_expr='range')
+    duration_DurationFilter = DurationFilter(field_name='duration', lookup_expr='exact')
 
 
 
@@ -159,7 +167,9 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
     prop_date_PropertyDateFilter = PropertyDateFilter(field_name='prop_date', lookup_expr='exact')
     prop_date_PropertyDateFromToRangeFilter = PropertyDateFromToRangeFilter(field_name='prop_date', lookup_expr='range')
     prop_date_PropertyDateRangeFilter = PropertyDateRangeFilter(field_name='prop_date', lookup_expr='exact')
-
+    prop_date_time_PropertyDateTimeFilter = PropertyDateTimeFilter(field_name='prop_date_time', lookup_expr='exact')
+    prop_date_time_PropertyDateTimeFromToRangeFilter = PropertyDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr='range')
+    prop_duration_PropertyDurationFilter = PropertyDurationFilter(field_name='prop_duration', lookup_expr='exact')
 
 
 
@@ -179,9 +189,9 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('date_DateFilter', 'prop_date_PropertyDateFilter', str(DATE_RANGE[0])),
     #('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter', (str(DATE_RANGE[0]), str(DATE_RANGE[1]))),
     ('date_DateRangeFilter', 'prop_date_PropertyDateRangeFilter', 'year'),
-    #('', '', ),
-    #('', '', ),
-    #('', '', ),
+    #('date_time_DateTimeFilter', 'prop_date_time_PropertyDateTimeFilter', str(DATE_TIME_RANGE[0])),
+    #('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter', (str(DATE_TIME_RANGE[0]), str(DATE_TIME_RANGE[1]))),
+    ('duration_DurationFilter', 'prop_duration_PropertyDurationFilter', '15 00:00:00'),
     #('', '', ),
     #('', '', ),
     #('', '', ),
@@ -195,7 +205,6 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
 
 '''
 from django_filters import (
-    DateTimeFilter,
     DateTimeFromToRangeFilter,
     DurationFilter,
     IsoDateTimeFilter,
@@ -213,11 +222,9 @@ from django_filters import (
     TypedMultipleChoiceFilter,
     UUIDFilter,
 
-    BaseRangeFilterNumber
 )
 
 from django_property_filter import (
-    PropertyDateTimeFilter,
     PropertyDateTimeFromToRangeFilter,
     PropertyDurationFilter,
     PropertyIsoDateTimeFilter,
@@ -233,6 +240,5 @@ from django_property_filter import (
     PropertyTypedMultipleChoiceFilter,
     PropertyUUIDFilter,
 
-    PropertyBaseRangeFilterNumber
 )
 '''
