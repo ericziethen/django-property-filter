@@ -82,8 +82,8 @@ DATE_RANGE = [
 ]
 DATE_TIME_RANGE = [
     datetime.datetime(2066, 3, 2, 12, tzinfo=timezone.get_default_timezone()),
-    datetime.datetime(2066, 3, 3, 12, tzinfo=timezone.get_default_timezone()),
-    datetime.datetime(2066, 3, 4, 12, tzinfo=timezone.get_default_timezone())
+    datetime.datetime(2070, 3, 3, 15, tzinfo=timezone.get_default_timezone()),
+    datetime.datetime(2076, 3, 4, 18, tzinfo=timezone.get_default_timezone())
 ]
 NUMBER_CHOICES = [(c, F'Number: {c}') for c in NUMBER_RANGE]
 DURATION_RANGE = [
@@ -113,7 +113,7 @@ class MultiFilterFilterSet(FilterSet):
         choices=NUMBER_CHOICES)
     class Meta:
         model = BenchmarkModel
-        fields = ['text', 'is_true', 'date', 'date_time']
+        fields = ['text', 'is_true', 'date', 'date_time', 'duration']
 
 
 class PropertyMultiFilterFilterSet(PropertyFilterSet):
@@ -124,7 +124,7 @@ class PropertyMultiFilterFilterSet(PropertyFilterSet):
     class Meta:
         model = BenchmarkModel
         fields = ['prop_number']
-        exclude = ['number', 'text', 'is_true', 'date', 'date_time']
+        exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
         property_fields = [
             ('prop_text', PropertyCharFilter, ['exact']),
             ('prop_is_true', PropertyBooleanFilter, ['exact']),
@@ -147,12 +147,21 @@ class AllFiltersFilterSet(FilterSet):
     date_time_DateTimeFilter = DateTimeFilter(field_name='date_time', lookup_expr='exact')
     date_time_DateTimeFromToRangeFilter = DateTimeFromToRangeFilter(field_name='date_time', lookup_expr='range')
     duration_DurationFilter = DurationFilter(field_name='duration', lookup_expr='exact')
-
+    date_time_IsoDateTimeFilter = IsoDateTimeFilter(field_name='date_time', lookup_expr='lt')
+    date_time_IsoDateTimeFromToRangeFilter = IsoDateTimeFromToRangeFilter(field_name='date_time', lookup_expr='range')
+    number_MultipleChoiceFilter = MultipleChoiceFilter(field_name='number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
+    number_NumberFilter = NumberFilter(field_name='number', lookup_expr='exact')
+    number_OrderingFilter = OrderingFilter(fields=('number', 'number'))
+    number_RangeFilter = RangeFilter(field_name='number', lookup_expr='range')
+    date_time_TimeFilter = TimeFilter(field_name='date_time', lookup_expr='exact')
+    date_time_TimeRangeFilter = TimeRangeFilter(field_name='date_time', lookup_expr='range')
+    number_TypedChoiceFilter = TypedChoiceFilter(field_name='number', lookup_expr='exact', choices=NUMBER_CHOICES)
+    text_TypedMultipleChoiceFilter = TypedMultipleChoiceFilter(field_name='number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
 
 
     class Meta:
         model = BenchmarkModel
-        exclude = ['number', 'text', 'is_true', 'date', 'date_time']
+        exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
 
 
 class AllFiltersPropertyFilterSet(PropertyFilterSet):
@@ -170,12 +179,22 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
     prop_date_time_PropertyDateTimeFilter = PropertyDateTimeFilter(field_name='prop_date_time', lookup_expr='exact')
     prop_date_time_PropertyDateTimeFromToRangeFilter = PropertyDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr='range')
     prop_duration_PropertyDurationFilter = PropertyDurationFilter(field_name='prop_duration', lookup_expr='exact')
+    prop_date_time_PropertyIsoDateTimeFilter = PropertyIsoDateTimeFilter(field_name='prop_date_time', lookup_expr='lt')
+    prop_date_time_PropertyIsoDateTimeFromToRangeFilter = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr='range')
+    prop_number_PropertyMultipleChoiceFilter = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
+    prop_number_PropertyNumberFilter = PropertyNumberFilter(field_name='prop_number', lookup_expr='exact')
+    prop_number_PropertyOrderingFilter = PropertyOrderingFilter(fields=('prop_number', 'prop_number'))
+    prop_number_PropertyRangeFilter = PropertyRangeFilter(field_name='prop_number', lookup_expr='range')
+    prop_date_time_PropertyTimeFilter = PropertyTimeFilter(field_name='prop_date_time', lookup_expr='exact')
+    prop_date_time_PropertyTimeRangeFilter = PropertyTimeRangeFilter(field_name='prop_date_time', lookup_expr='range')
+    prop_number_PropertyTypedChoiceFilter = PropertyTypedChoiceFilter(field_name='prop_number', lookup_expr='exact', choices=NUMBER_CHOICES)
+    prop_number_PropertyTypedMultipleChoiceFilter = PropertyTypedMultipleChoiceFilter(field_name='prop_number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
 
 
 
     class Meta:
         model = BenchmarkModel
-        exclude = ['number', 'text', 'is_true', 'date', 'date_time']
+        exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
 
 ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
@@ -192,12 +211,22 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     #('date_time_DateTimeFilter', 'prop_date_time_PropertyDateTimeFilter', str(DATE_TIME_RANGE[0])),
     #('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter', (str(DATE_TIME_RANGE[0]), str(DATE_TIME_RANGE[1]))),
     ('duration_DurationFilter', 'prop_duration_PropertyDurationFilter', '15 00:00:00'),
-    #('', '', ),
-    #('', '', ),
-    #('', '', ),
-    #('', '', ),
+    ('date_time_IsoDateTimeFilter', 'prop_date_time_PropertyIsoDateTimeFilter',
+        DATE_TIME_RANGE[0] + datetime.timedelta(days=2)),
+    #('date_time_IsoDateTimeFromToRangeFilter', 'prop_date_time_PropertyIsoDateTimeFromToRangeFilter',
+    #    (DATE_TIME_RANGE[0] - datetime.timedelta(days=2), DATE_TIME_RANGE[0] + datetime.timedelta(days=2))),
+    ('number_MultipleChoiceFilter', 'prop_number_PropertyMultipleChoiceFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
+    ('number_NumberFilter', 'prop_number_PropertyNumberFilter', NUMBER_RANGE[0]),
+    #('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', 'number'),
+    #('number_RangeFilter', 'prop_number_PropertyRangeFilter', (NUMBER_RANGE[0], NUMBER_RANGE[1])),
+    #('date_time_TimeFilter', 'prop_date_time_PropertyTimeFilter', str(DATE_TIME_RANGE[0].time())),
+    #('date_time_TimeRangeFilter', 'prop_date_time_PropertyTimeRangeFilter',
+    #    (str(DATE_TIME_RANGE[0].time()), str(DATE_TIME_RANGE[1].time()))),
+    ('number_TypedChoiceFilter', 'prop_number_PropertyTypedChoiceFilter', NUMBER_RANGE[0]),
+    ('text_TypedMultipleChoiceFilter', 'prop_number_PropertyTypedMultipleChoiceFilter', [NUMBER_RANGE[0], NUMBER_RANGE[1]]),
 
-
+    #('', '', ),
+    #('', '', ),
 
     #('', '', ),
 ]
@@ -205,40 +234,16 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
 
 '''
 from django_filters import (
-    DateTimeFromToRangeFilter,
-    DurationFilter,
-    IsoDateTimeFilter,
-    IsoDateTimeFromToRangeFilter,
-    LookupChoiceFilter,
-    ModelChoiceFilter,
-    ModelMultipleChoiceFilter,
-    MultipleChoiceFilter,
-    NumberFilter,
-    OrderingFilter,
-    RangeFilter,
-    TimeFilter,
-    TimeRangeFilter,
-    TypedChoiceFilter,
     TypedMultipleChoiceFilter,
     UUIDFilter,
 
+    LookupChoiceFilter,
 )
 
 from django_property_filter import (
-    PropertyDateTimeFromToRangeFilter,
-    PropertyDurationFilter,
-    PropertyIsoDateTimeFilter,
-    PropertyIsoDateTimeFromToRangeFilter,
-    PropertyLookupChoiceFilter,
-    PropertyMultipleChoiceFilter,
-    PropertyNumberFilter,
-    PropertyOrderingFilter,
-    PropertyRangeFilter,
-    PropertyTimeFilter,
-    PropertyTimeRangeFilter,
-    PropertyTypedChoiceFilter,
     PropertyTypedMultipleChoiceFilter,
     PropertyUUIDFilter,
 
+    PropertyLookupChoiceFilter,
 )
 '''
