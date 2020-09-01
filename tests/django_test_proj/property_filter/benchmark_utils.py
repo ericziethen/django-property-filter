@@ -161,6 +161,8 @@ class AllFiltersFilterSet(FilterSet):
     date_time_TimeRangeFilter = TimeRangeFilter(field_name='date_time', lookup_expr='range')
     number_TypedChoiceFilter = TypedChoiceFilter(field_name='number', lookup_expr='exact', choices=NUMBER_CHOICES)
     text_TypedMultipleChoiceFilter = TypedMultipleChoiceFilter(field_name='number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
+    uuid_UUIDFilter = UUIDFilter(field_name='uuid', lookup_expr='exact')
+    number_LookupChoiceFilter = LookupChoiceFilter(field_name='number')
 
 
     class Meta:
@@ -193,6 +195,8 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
     prop_date_time_PropertyTimeRangeFilter = PropertyTimeRangeFilter(field_name='prop_date_time', lookup_expr='range')
     prop_number_PropertyTypedChoiceFilter = PropertyTypedChoiceFilter(field_name='prop_number', lookup_expr='exact', choices=NUMBER_CHOICES)
     prop_number_PropertyTypedMultipleChoiceFilter = PropertyTypedMultipleChoiceFilter(field_name='prop_number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
+    prop_uuid_PropertyUUIDFilter = PropertyUUIDFilter(field_name='prop_uuid', lookup_expr='exact')
+    prop_number_PropertyLookupChoiceFilter = PropertyLookupChoiceFilter(field_name='prop_number')
 
 
 
@@ -228,23 +232,27 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     #    (str(DATE_TIME_RANGE[0].time()), str(DATE_TIME_RANGE[1].time()))),
     ('number_TypedChoiceFilter', 'prop_number_PropertyTypedChoiceFilter', NUMBER_RANGE[0]),
     ('text_TypedMultipleChoiceFilter', 'prop_number_PropertyTypedMultipleChoiceFilter', [NUMBER_RANGE[0], NUMBER_RANGE[1]]),
+    ('uuid_UUIDFilter', 'prop_uuid_PropertyUUIDFilter', UUID_RANGE[0]),
 
-    #('', '', ),
-    #('', '', ),
 
     #('', '', ),
 ]
 
+# Special case
+LOOKUP_CHOICE_FILTER_LOOKUP_LIST = [
+    ('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', NUMBER_RANGE[0], 'exact')
+]
+
+
+
 
 '''
 from django_filters import (
-    UUIDFilter,
 
     LookupChoiceFilter,
 )
 
 from django_property_filter import (
-    PropertyUUIDFilter,
 
     PropertyLookupChoiceFilter,
 )

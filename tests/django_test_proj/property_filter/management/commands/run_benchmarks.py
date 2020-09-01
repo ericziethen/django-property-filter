@@ -61,7 +61,7 @@ from django_property_filter.utils import get_db_vendor, get_db_version
 
 from property_filter.benchmark_utils import (
     NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE, DURATION_RANGE, UUID_RANGE,
-    BenchmarkModel, ALL_VALUE_FILTER_LOOKUP_LIST,
+    BenchmarkModel, ALL_VALUE_FILTER_LOOKUP_LIST, LOOKUP_CHOICE_FILTER_LOOKUP_LIST,
     MultiFilterFilterSet, PropertyMultiFilterFilterSet,
     AllFiltersFilterSet, AllFiltersPropertyFilterSet,
 )
@@ -128,6 +128,7 @@ class Command(BaseCommand):
     def run_all_filter_tests(self, base_data_dic):
         result_list = []
 
+        # Normal Filter
         for filter_name, prop_filter_name, lookup_value in ALL_VALUE_FILTER_LOOKUP_LIST:
             filter_fs = AllFiltersFilterSet(
                 {filter_name: lookup_value},
@@ -137,7 +138,18 @@ class Command(BaseCommand):
                 {prop_filter_name: lookup_value},
                 queryset=BenchmarkModel.objects.all()
             )
+            result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
 
+        # Special Case - Lookup CHoice Filter
+        for filter_name, prop_filter_name, lookup_value, lookup_expr in LOOKUP_CHOICE_FILTER_LOOKUP_LIST:
+            filter_fs = AllFiltersFilterSet(
+                {filter_name: lookup_value, F'{filter_name}_lookup': lookup_expr},
+                queryset=BenchmarkModel.objects.all()
+            )
+            property_filter_fs = AllFiltersPropertyFilterSet(
+                {prop_filter_name: lookup_value, F'{prop_filter_name}_lookup': lookup_expr},
+                queryset=BenchmarkModel.objects.all()
+            )
             result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
 
         return result_list
@@ -237,6 +249,7 @@ def get_plugin_version():
 
 def get_filter_types_from_filter_names(filterset, filter_name_list):
     type_list = []
+    unknown_list = []
 
     for name in filter_name_list:
         qualified_name = None
@@ -249,6 +262,10 @@ def get_filter_types_from_filter_names(filterset, filter_name_list):
         if qualified_name:
             type_list.append(filterset.filters[qualified_name].__class__.__name__)
         else:
-            type_list.append(F'Unknown Type for "{name}"')
+            unknown_list.append(F'Unknown Type for "{name}"')
+
+    # In some cases  has multiple entries, not all are the filternames but could be expressions
+    if not type_list:
+        type_list = unknown_list
 
     return type_list
