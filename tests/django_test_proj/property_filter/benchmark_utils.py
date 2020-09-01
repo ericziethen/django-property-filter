@@ -214,7 +214,7 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
     ('number_ChoiceFilter', 'prop_number_PropertyChoiceFilter', str(NUMBER_RANGE[0])),
     ('date_DateFilter', 'prop_date_PropertyDateFilter', str(DATE_RANGE[0])),
-    #('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter', (str(DATE_RANGE[0]), str(DATE_RANGE[1]))),
+    ('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter', (str(DATE_RANGE[0]), str(DATE_RANGE[1]))),
     ('date_DateRangeFilter', 'prop_date_PropertyDateRangeFilter', 'year'),
     #('date_time_DateTimeFilter', 'prop_date_time_PropertyDateTimeFilter', str(DATE_TIME_RANGE[0])),
     #('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter', (str(DATE_TIME_RANGE[0]), str(DATE_TIME_RANGE[1]))),
