@@ -61,7 +61,8 @@ from django_property_filter.utils import get_db_vendor, get_db_version
 
 from property_filter.benchmark_utils import (
     NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE, DURATION_RANGE, UUID_RANGE,
-    BenchmarkModel, ALL_VALUE_FILTER_LOOKUP_LIST, LOOKUP_CHOICE_FILTER_LOOKUP_LIST,
+    BenchmarkModel,
+    ALL_VALUE_FILTER_LOOKUP_LIST, LOOKUP_CHOICE_FILTER_LOOKUP_LIST, FROM_TO_RANGE_FILTER_LOOKUP_LIST,
     MultiFilterFilterSet, PropertyMultiFilterFilterSet,
     AllFiltersFilterSet, AllFiltersPropertyFilterSet,
 )
@@ -140,7 +141,7 @@ class Command(BaseCommand):
             )
             result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
 
-        # Special Case - Lookup CHoice Filter
+        # Special Case - Lookup Choice Filter
         for filter_name, prop_filter_name, lookup_value, lookup_expr in LOOKUP_CHOICE_FILTER_LOOKUP_LIST:
             filter_fs = AllFiltersFilterSet(
                 {filter_name: lookup_value, F'{filter_name}_lookup': lookup_expr},
@@ -148,6 +149,18 @@ class Command(BaseCommand):
             )
             property_filter_fs = AllFiltersPropertyFilterSet(
                 {prop_filter_name: lookup_value, F'{prop_filter_name}_lookup': lookup_expr},
+                queryset=BenchmarkModel.objects.all()
+            )
+            result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
+
+        # Special Case - Range Filter
+        for filter_name, prop_filter_name, from_name, range_from, to_name, range_to in FROM_TO_RANGE_FILTER_LOOKUP_LIST:
+            filter_fs = AllFiltersFilterSet(
+                {F'{filter_name}_{from_name}': range_from, F'{filter_name}_{to_name}': range_to},
+                queryset=BenchmarkModel.objects.all()
+            )
+            property_filter_fs = AllFiltersPropertyFilterSet(
+                {F'{prop_filter_name}_{from_name}': range_from, F'{prop_filter_name}_{to_name}': range_to},
                 queryset=BenchmarkModel.objects.all()
             )
             result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
@@ -216,9 +229,9 @@ class Command(BaseCommand):
         else:
             test_dic['Property Time Factor'] = 'Null Time for Filter'
 
-        filter_list = get_filter_types_from_filter_names(filter_fs, filter_fs.data.keys())
+        filter_list = get_filter_types_from_filter_names(filter_fs)
         test_dic['Filters Used'] = sorted(filter_list)
-        filter_list = get_filter_types_from_filter_names(property_filter_fs, property_filter_fs.data.keys())
+        filter_list = get_filter_types_from_filter_names(property_filter_fs)
         test_dic['Property Filters Used'] = sorted(filter_list)
 
         # Sqlite doesn't always return all values
@@ -249,9 +262,11 @@ def get_plugin_version():
     version = config.get('metadata', 'version')
     return version
 
-def get_filter_types_from_filter_names(filterset, filter_name_list):
+def get_filter_types_from_filter_names(filterset):
     type_list = []
     unknown_list = []
+
+    filter_name_list = filterset.data.keys()
 
     for name in filter_name_list:
         qualified_name = None
@@ -270,4 +285,12 @@ def get_filter_types_from_filter_names(filterset, filter_name_list):
     if not type_list:
         type_list = unknown_list
 
-    return type_list
+    # TODO
+        = Lookup FIlter even if has suffix e.g. after, from ...
+        = Only Return a Single one of Each i.e set
+    #print(filterset.filters.keys())
+    #print(filterset.data.keys())
+    #raise ValueError('ERIC')
+
+
+    return list(set(type_list))
