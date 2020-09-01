@@ -224,8 +224,10 @@ class Command(BaseCommand):
         # Sqlite doesn't always return all values
         #assert test_dic['Filter Result Count'] == test_dic['Property Filter Result Count']
 
-        assert 0 < test_dic['Filter Result Count'] < test_dic['Actual DB Entries'], test_dic['Filters Used']
-        assert 0 < test_dic['Property Filter Result Count'] < test_dic['Actual DB Entries'], test_dic['Property Filters Used']
+        assert 0 < test_dic['Filter Result Count'] < test_dic['Actual DB Entries'],\
+            F'''{test_dic['Filters Used']}, {test_dic['Filter Result Count']}, {test_dic['Actual DB Entries']})'''
+        assert 0 < test_dic['Property Filter Result Count'] < test_dic['Actual DB Entries'],\
+            F'''{test_dic['Property Filters Used']}, {test_dic['Property Filter Result Count']}, {test_dic['Actual DB Entries']}'''
 
 
 

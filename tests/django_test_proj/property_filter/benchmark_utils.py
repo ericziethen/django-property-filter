@@ -105,9 +105,9 @@ class BaseInFilterNumber(BaseInFilter, CharFilter):
     pass
 class PropertyBaseInFilterNumber(PropertyBaseInFilter, PropertyCharFilter):
     pass
-class BaseRangeFilterNumber(BaseRangeFilter, DateFilter):
+class BaseRangeFilterNumber(BaseRangeFilter, NumberFilter):
     pass
-class PropertyBaseRangeFilterNumber(PropertyBaseRangeFilter, PropertyDateFilter):
+class PropertyBaseRangeFilterNumber(PropertyBaseRangeFilter, PropertyNumberFilter):
     pass
 
 
@@ -209,7 +209,7 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('number_AllValuesMultipleFilter', 'prop_number_PropertyAllValuesMultipleFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_BaseCSVFilterNumber', 'prop_number_PropertyBaseCSVFilterNumber', str(NUMBER_RANGE[0])),
     ('number_BaseInFilterNumber', 'prop_number_PropertyBaseInFilterNumber', str(NUMBER_RANGE[0])),
-    #('number_BaseRangeFilterNumber', 'prop_number_PropertyBaseRangeFilterNumber', F'{NUMBER_RANGE[0]},{NUMBER_RANGE[1]}'),
+    ('number_BaseRangeFilterNumber', 'prop_number_PropertyBaseRangeFilterNumber', F'{NUMBER_RANGE[0]},{NUMBER_RANGE[1]}'),
     ('is_true_BooleanFilter', 'prop_is_true_PropertyBooleanFilter', IS_TRUE_RANGE[0]),
     ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
     ('number_ChoiceFilter', 'prop_number_PropertyChoiceFilter', str(NUMBER_RANGE[0])),
@@ -242,18 +242,3 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
 LOOKUP_CHOICE_FILTER_LOOKUP_LIST = [
     ('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', NUMBER_RANGE[0], 'exact')
 ]
-
-
-
-
-'''
-from django_filters import (
-
-    LookupChoiceFilter,
-)
-
-from django_property_filter import (
-
-    PropertyLookupChoiceFilter,
-)
-'''
