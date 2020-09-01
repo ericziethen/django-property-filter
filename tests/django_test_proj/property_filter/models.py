@@ -456,6 +456,7 @@ class BenchmarkTestModel(models.Model):
     number = models.IntegerField(null=True)
     text = models.CharField(max_length=32)
     duration = models.DurationField()
+    uuid = models.UUIDField(null=True)
 
     @property
     def prop_date(self):
@@ -481,5 +482,10 @@ class BenchmarkTestModel(models.Model):
     def prop_duration(self):
         return self.duration
 
+    @property
+    def prop_uuid(self):
+        return self.uuid
+
     def __str__(self):
-        return F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - "{self.date_time}" - "{self.duration}" ({self.id})'
+        return (F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - '
+                F'"{self.date_time}" - "{self.duration}" - "{self.uuid}"" ({self.id})')

@@ -91,7 +91,11 @@ DURATION_RANGE = [
     datetime.timedelta(days=30),
     datetime.timedelta(days=200)
 ]
-
+UUID_RANGE = [
+    '40828e84-66c7-46ee-a94a-1f2087970a68',
+    'df4078eb-67ca-49fe-b86d-742e0feaf3ad',
+    'aaaa78eb-67ca-49fe-b86d-742e0feaf3ad'
+]
 
 class BaseCSVFilterNumber(BaseCSVFilter, CharFilter):
     pass
