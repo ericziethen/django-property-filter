@@ -89,7 +89,7 @@ class Command(BaseCommand):
 
         # Setup the Base Result Data
         base_test_dic = {}
-        base_test_dic['date/time'] = formatted_date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+        base_test_dic['date/time'] = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         base_test_dic['version'] = get_plugin_version()
         base_test_dic['database'] = F'{get_db_vendor()} ({get_db_version()})'
         base_test_dic['Target DB Entries'] = db_entry_count
@@ -237,7 +237,7 @@ class Command(BaseCommand):
         if filer_duration:
             test_dic['Property Time Factor'] = F'{property_filer_duration / filer_duration:.2f}'
         else:
-            test_dic['Property Time Factor'] = 'Null Time for Filter'
+            test_dic['Property Time Factor'] = 'N/A'
 
         filter_list = get_filter_types_from_filter_names(filter_fs, filters_used)
         test_dic['Filters Used'] = sorted(filter_list)
