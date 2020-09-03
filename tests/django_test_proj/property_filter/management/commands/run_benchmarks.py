@@ -139,7 +139,9 @@ class Command(BaseCommand):
                 {prop_filter_name: lookup_value},
                 queryset=BenchmarkModel.objects.all()
             )
-            result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
+            result_list.append(
+                self._run_filter_comparison(
+                    filter_fs, property_filter_fs, base_data_dic.copy(), [filter_name], [prop_filter_name]))
 
         # Special Case - Lookup Choice Filter
         for filter_name, prop_filter_name, lookup_value, lookup_expr in LOOKUP_CHOICE_FILTER_LOOKUP_LIST:
@@ -151,7 +153,9 @@ class Command(BaseCommand):
                 {prop_filter_name: lookup_value, F'{prop_filter_name}_lookup': lookup_expr},
                 queryset=BenchmarkModel.objects.all()
             )
-            result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
+            result_list.append(
+                self._run_filter_comparison(
+                    filter_fs, property_filter_fs, base_data_dic.copy(), [filter_name], [prop_filter_name]))
 
         # Special Case - Range Filter
         for filter_name, prop_filter_name, from_name, range_from, to_name, range_to in FROM_TO_RANGE_FILTER_LOOKUP_LIST:
@@ -163,7 +167,9 @@ class Command(BaseCommand):
                 {F'{prop_filter_name}_{from_name}': range_from, F'{prop_filter_name}_{to_name}': range_to},
                 queryset=BenchmarkModel.objects.all()
             )
-            result_list.append(self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic.copy()))
+            result_list.append(
+                self._run_filter_comparison(
+                    filter_fs, property_filter_fs, base_data_dic.copy(), [filter_name], [prop_filter_name]))
 
         return result_list
 
@@ -190,9 +196,10 @@ class Command(BaseCommand):
             queryset=BenchmarkModel.objects.all()
         )
 
-        return [self._run_filter_comparison(filter_fs, property_filter_fs, base_data_dic)]
+        return [self._run_filter_comparison(
+            filter_fs, property_filter_fs, base_data_dic, filter_fs.data.keys(), property_filter_fs.data.keys())]
 
-    def _run_filter_comparison(self, filter_fs, property_filter_fs, test_dic):
+    def _run_filter_comparison(self, filter_fs, property_filter_fs, test_dic, filters_used, prop_filters_used):
         # TODO - Run Multiple Times and Take Average
         # TODO - Try with other Combinations of Filters???, single filter...
         # TODO - Have a loop to run basic tests on every Filter Separately
@@ -229,9 +236,9 @@ class Command(BaseCommand):
         else:
             test_dic['Property Time Factor'] = 'Null Time for Filter'
 
-        filter_list = get_filter_types_from_filter_names(filter_fs)
+        filter_list = get_filter_types_from_filter_names(filter_fs, filters_used)
         test_dic['Filters Used'] = sorted(filter_list)
-        filter_list = get_filter_types_from_filter_names(property_filter_fs)
+        filter_list = get_filter_types_from_filter_names(property_filter_fs, prop_filters_used)
         test_dic['Property Filters Used'] = sorted(filter_list)
 
         # Sqlite doesn't always return all values
@@ -262,11 +269,12 @@ def get_plugin_version():
     version = config.get('metadata', 'version')
     return version
 
-def get_filter_types_from_filter_names(filterset):
+def get_filter_types_from_filter_names(filterset, filter_name_list=None):
     type_list = []
     unknown_list = []
 
-    filter_name_list = filterset.data.keys()
+    if not filter_name_list:
+        filter_name_list = filterset.data.keys()
 
     for name in filter_name_list:
         qualified_name = None
@@ -286,8 +294,8 @@ def get_filter_types_from_filter_names(filterset):
         type_list = unknown_list
 
     # TODO
-        = Lookup FIlter even if has suffix e.g. after, from ...
-        = Only Return a Single one of Each i.e set
+    #    = Lookup FIlter even if has suffix e.g. after, from ...
+    #    = Only Return a Single one of Each i.e set
     #print(filterset.filters.keys())
     #print(filterset.data.keys())
     #raise ValueError('ERIC')
