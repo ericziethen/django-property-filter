@@ -86,6 +86,11 @@ DATE_TIME_RANGE = [
     datetime.datetime(2070, 3, 3, 15),
     datetime.datetime(2076, 3, 4, 18)
 ]
+ISO_DATE_TIME_RANGE = [
+    '2020-01-03T12:00:00+12:00',
+    '2020-01-03T12:00:00+11:00',
+    '2021-12-03T12:00:00+10:00'
+]
 TIME_RANGE = [
     datetime.time(8, 0, 0),
     datetime.time(15, 15, 15),
@@ -158,8 +163,8 @@ class AllFiltersFilterSet(FilterSet):
     date_time_DateTimeFilter = DateTimeFilter(field_name='date_time', lookup_expr='exact')
     date_time_DateTimeFromToRangeFilter = DateTimeFromToRangeFilter(field_name='date_time', lookup_expr='range')
     duration_DurationFilter = DurationFilter(field_name='duration', lookup_expr='exact')
-    date_time_IsoDateTimeFilter = IsoDateTimeFilter(field_name='date_time', lookup_expr='lt')
-    date_time_IsoDateTimeFromToRangeFilter = IsoDateTimeFromToRangeFilter(field_name='date_time', lookup_expr='range')
+    iso_date_time_IsoDateTimeFilter = IsoDateTimeFilter(field_name='iso_date_time', lookup_expr='lt')
+    iso_date_time_IsoDateTimeFromToRangeFilter = IsoDateTimeFromToRangeFilter(field_name='iso_date_time', lookup_expr='range')
     number_MultipleChoiceFilter = MultipleChoiceFilter(field_name='number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
     number_NumberFilter = NumberFilter(field_name='number', lookup_expr='exact')
     number_OrderingFilter = OrderingFilter(fields=('number', 'number'))
@@ -191,8 +196,8 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
     prop_date_time_PropertyDateTimeFilter = PropertyDateTimeFilter(field_name='prop_date_time', lookup_expr='exact')
     prop_date_time_PropertyDateTimeFromToRangeFilter = PropertyDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr='range')
     prop_duration_PropertyDurationFilter = PropertyDurationFilter(field_name='prop_duration', lookup_expr='exact')
-    prop_date_time_PropertyIsoDateTimeFilter = PropertyIsoDateTimeFilter(field_name='prop_date_time', lookup_expr='lt')
-    prop_date_time_PropertyIsoDateTimeFromToRangeFilter = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr='range')
+    prop_iso_date_time_PropertyIsoDateTimeFilter = PropertyIsoDateTimeFilter(field_name='prop_iso_date_time', lookup_expr='lt')
+    prop_iso_date_time_PropertyIsoDateTimeFromToRangeFilter = PropertyIsoDateTimeFromToRangeFilter(field_name='prop_iso_date_time', lookup_expr='range')
     prop_number_PropertyMultipleChoiceFilter = PropertyMultipleChoiceFilter(field_name='prop_number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
     prop_number_PropertyNumberFilter = PropertyNumberFilter(field_name='prop_number', lookup_expr='exact')
     prop_number_PropertyOrderingFilter = PropertyOrderingFilter(fields=('prop_number', 'prop_number'))
@@ -208,7 +213,7 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
         model = BenchmarkModel
         exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
 
-ALL_VALUE_FILTER_LOOKUP_LIST2 = [
+ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
     ('number_AllValuesMultipleFilter', 'prop_number_PropertyAllValuesMultipleFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_BaseCSVFilterNumber', 'prop_number_PropertyBaseCSVFilterNumber', str(NUMBER_RANGE[0])),
@@ -221,10 +226,8 @@ ALL_VALUE_FILTER_LOOKUP_LIST2 = [
     ('date_DateRangeFilter', 'prop_date_PropertyDateRangeFilter', 'year'),
     ('date_time_DateTimeFilter', 'prop_date_time_PropertyDateTimeFilter', str(DATE_TIME_RANGE[0])),
     ('duration_DurationFilter', 'prop_duration_PropertyDurationFilter', '15 00:00:00'),
-    ('date_time_IsoDateTimeFilter', 'prop_date_time_PropertyIsoDateTimeFilter',
-        DATE_TIME_RANGE[0] + datetime.timedelta(days=2)),
-    #('date_time_IsoDateTimeFromToRangeFilter', 'prop_date_time_PropertyIsoDateTimeFromToRangeFilter',
-    #    (DATE_TIME_RANGE[0] - datetime.timedelta(days=2), DATE_TIME_RANGE[0] + datetime.timedelta(days=2))),
+    ('iso_date_time_IsoDateTimeFilter', 'prop_iso_date_time_PropertyIsoDateTimeFilter',
+        ISO_DATE_TIME_RANGE[1]),
     ('number_MultipleChoiceFilter', 'prop_number_PropertyMultipleChoiceFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_NumberFilter', 'prop_number_PropertyNumberFilter', NUMBER_RANGE[0]),
     ('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', 'number'),
@@ -234,29 +237,19 @@ ALL_VALUE_FILTER_LOOKUP_LIST2 = [
     ('uuid_UUIDFilter', 'prop_uuid_PropertyUUIDFilter', UUID_RANGE[0]),
 ]
 
-
-
-ALL_VALUE_FILTER_LOOKUP_LIST = [
-    #('time_TimeRangeFilter', 'prop_time_PropertyTimeRangeFilter',
-    #    (str(TIME_RANGE[0]), str(TIME_RANGE[1]))),
-]
-
-
-
-
-
-
 # Special case
 LOOKUP_CHOICE_FILTER_LOOKUP_LIST = [
-    #('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', NUMBER_RANGE[0], 'exact'),
+    ('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', NUMBER_RANGE[0], 'exact'),
 ]
 
 FROM_TO_RANGE_FILTER_LOOKUP_LIST = [
-    #('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter',
-    #    'after', str(DATE_RANGE[0]), 'before', str(DATE_RANGE[1])),
-    #('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter',
-    #    'after', str(DATE_TIME_RANGE[0]), 'before', str(DATE_TIME_RANGE[1])),
-    #('number_RangeFilter', 'prop_number_PropertyRangeFilter', 'min', NUMBER_RANGE[0], 'max', NUMBER_RANGE[1]),
-    #('time_TimeRangeFilter', 'prop_time_PropertyTimeRangeFilter',
-    #    'after', str(TIME_RANGE[0]), 'before', str(TIME_RANGE[1])),
+    ('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter',
+        'after', str(DATE_RANGE[0]), 'before', str(DATE_RANGE[1])),
+    ('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter',
+        'after', str(DATE_TIME_RANGE[0]), 'before', str(DATE_TIME_RANGE[1])),
+    ('number_RangeFilter', 'prop_number_PropertyRangeFilter', 'min', NUMBER_RANGE[0], 'max', NUMBER_RANGE[1]),
+    ('time_TimeRangeFilter', 'prop_time_PropertyTimeRangeFilter',
+        'after', str(TIME_RANGE[0]), 'before', str(TIME_RANGE[1])),
+    ('iso_date_time_IsoDateTimeFromToRangeFilter', 'prop_iso_date_time_PropertyIsoDateTimeFromToRangeFilter',
+        'after', ISO_DATE_TIME_RANGE[0], 'before', ISO_DATE_TIME_RANGE[1]),
 ]

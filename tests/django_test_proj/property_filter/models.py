@@ -450,13 +450,14 @@ class MultiFilterTestModel(models.Model):
 
 
 class BenchmarkTestModel(models.Model):
-    date = models.DateField()
-    date_time = models.DateTimeField()
+    date = models.DateField(null=True)
+    date_time = models.DateTimeField(null=True)
+    iso_date_time = models.DateTimeField(null=True)
     time = models.TimeField(null=True)
     is_true = models.BooleanField(null=True)
     number = models.IntegerField(null=True)
     text = models.CharField(max_length=32)
-    duration = models.DurationField()
+    duration = models.DurationField(null=True)
     uuid = models.UUIDField(null=True)
 
     @property
@@ -466,6 +467,10 @@ class BenchmarkTestModel(models.Model):
     @property
     def prop_date_time(self):
         return self.date_time
+
+    @property
+    def prop_iso_date_time(self):
+        return self.iso_date_time
 
     @property
     def prop_time(self):
@@ -492,5 +497,5 @@ class BenchmarkTestModel(models.Model):
         return self.uuid
 
     def __str__(self):
-        return (F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - '
-                F'"{self.date_time}" - "{self.time}" - "{self.duration}" - "{self.uuid}"" ({self.id})')
+        return (F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - "{self.date_time}" - '
+                F'"{self.iso_date_time}" - "{self.time}" - "{self.duration}" - "{self.uuid}"" ({self.id})')

@@ -60,7 +60,8 @@ sys.path.insert(1, '../../')  # Find our main project
 from django_property_filter.utils import get_db_vendor, get_db_version
 
 from property_filter.benchmark_utils import (
-    NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE, TIME_RANGE, DURATION_RANGE, UUID_RANGE,
+    NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE, ISO_DATE_TIME_RANGE,
+    TIME_RANGE, DURATION_RANGE, UUID_RANGE,
     BenchmarkModel,
     ALL_VALUE_FILTER_LOOKUP_LIST, LOOKUP_CHOICE_FILTER_LOOKUP_LIST, FROM_TO_RANGE_FILTER_LOOKUP_LIST,
     MultiFilterFilterSet, PropertyMultiFilterFilterSet,
@@ -119,6 +120,7 @@ class Command(BaseCommand):
                             is_true=random.choice(IS_TRUE_RANGE),
                             date=random.choice(DATE_RANGE),
                             date_time=random.choice(DATE_TIME_RANGE),
+                            iso_date_time=random.choice(ISO_DATE_TIME_RANGE),
                             time=random.choice(TIME_RANGE),
                             duration=random.choice(DURATION_RANGE),
                             uuid=random.choice(UUID_RANGE)
@@ -132,8 +134,6 @@ class Command(BaseCommand):
 
         # Normal Filter
         for filter_name, prop_filter_name, lookup_value in ALL_VALUE_FILTER_LOOKUP_LIST:
-            print('#######################################')
-            print(filter_name, prop_filter_name, type(lookup_value), lookup_value)
             filter_fs = AllFiltersFilterSet(
                 {filter_name: lookup_value},
                 queryset=BenchmarkModel.objects.all()
