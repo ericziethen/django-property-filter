@@ -86,6 +86,12 @@ DATE_TIME_RANGE = [
     datetime.datetime(2070, 3, 3, 15),
     datetime.datetime(2076, 3, 4, 18)
 ]
+TIME_RANGE = [
+    datetime.time(8, 0, 0),
+    datetime.time(15, 15, 15),
+    datetime.time(18, 30)
+]
+
 NUMBER_CHOICES = [(c, F'Number: {c}') for c in NUMBER_RANGE]
 DURATION_RANGE = [
     datetime.timedelta(days=15),
@@ -158,8 +164,8 @@ class AllFiltersFilterSet(FilterSet):
     number_NumberFilter = NumberFilter(field_name='number', lookup_expr='exact')
     number_OrderingFilter = OrderingFilter(fields=('number', 'number'))
     number_RangeFilter = RangeFilter(field_name='number', lookup_expr='range')
-    date_time_TimeFilter = TimeFilter(field_name='date_time', lookup_expr='exact')
-    date_time_TimeRangeFilter = TimeRangeFilter(field_name='date_time', lookup_expr='range')
+    time_TimeFilter = TimeFilter(field_name='time', lookup_expr='exact')
+    time_TimeRangeFilter = TimeRangeFilter(field_name='time', lookup_expr='range')
     number_TypedChoiceFilter = TypedChoiceFilter(field_name='number', lookup_expr='exact', choices=NUMBER_CHOICES)
     text_TypedMultipleChoiceFilter = TypedMultipleChoiceFilter(field_name='number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
     uuid_UUIDFilter = UUIDFilter(field_name='uuid', lookup_expr='exact')
@@ -191,8 +197,8 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
     prop_number_PropertyNumberFilter = PropertyNumberFilter(field_name='prop_number', lookup_expr='exact')
     prop_number_PropertyOrderingFilter = PropertyOrderingFilter(fields=('prop_number', 'prop_number'))
     prop_number_PropertyRangeFilter = PropertyRangeFilter(field_name='prop_number', lookup_expr='range')
-    prop_date_time_PropertyTimeFilter = PropertyTimeFilter(field_name='prop_date_time', lookup_expr='exact')
-    prop_date_time_PropertyTimeRangeFilter = PropertyTimeRangeFilter(field_name='prop_date_time', lookup_expr='range')
+    prop_time_PropertyTimeFilter = PropertyTimeFilter(field_name='prop_time', lookup_expr='exact')
+    prop_time_PropertyTimeRangeFilter = PropertyTimeRangeFilter(field_name='prop_time', lookup_expr='range')
     prop_number_PropertyTypedChoiceFilter = PropertyTypedChoiceFilter(field_name='prop_number', lookup_expr='exact', choices=NUMBER_CHOICES)
     prop_number_PropertyTypedMultipleChoiceFilter = PropertyTypedMultipleChoiceFilter(field_name='prop_number', lookup_expr='exact', conjoined=False, choices=NUMBER_CHOICES)
     prop_uuid_PropertyUUIDFilter = PropertyUUIDFilter(field_name='prop_uuid', lookup_expr='exact')
@@ -202,7 +208,7 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
         model = BenchmarkModel
         exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
 
-ALL_VALUE_FILTER_LOOKUP_LIST = [
+ALL_VALUE_FILTER_LOOKUP_LIST2 = [
     ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
     ('number_AllValuesMultipleFilter', 'prop_number_PropertyAllValuesMultipleFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_BaseCSVFilterNumber', 'prop_number_PropertyBaseCSVFilterNumber', str(NUMBER_RANGE[0])),
@@ -222,24 +228,35 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('number_MultipleChoiceFilter', 'prop_number_PropertyMultipleChoiceFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_NumberFilter', 'prop_number_PropertyNumberFilter', NUMBER_RANGE[0]),
     ('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', 'number'),
-    #('date_time_TimeFilter', 'prop_date_time_PropertyTimeFilter', str(DATE_TIME_RANGE[0].time())),
-    #('date_time_TimeRangeFilter', 'prop_date_time_PropertyTimeRangeFilter',
-    #    (str(DATE_TIME_RANGE[0].time()), str(DATE_TIME_RANGE[1].time()))),
+    ('time_TimeFilter', 'prop_time_PropertyTimeFilter', str(TIME_RANGE[0])),
     ('number_TypedChoiceFilter', 'prop_number_PropertyTypedChoiceFilter', NUMBER_RANGE[0]),
     ('text_TypedMultipleChoiceFilter', 'prop_number_PropertyTypedMultipleChoiceFilter', [NUMBER_RANGE[0], NUMBER_RANGE[1]]),
     ('uuid_UUIDFilter', 'prop_uuid_PropertyUUIDFilter', UUID_RANGE[0]),
-
 ]
+
+
+
+ALL_VALUE_FILTER_LOOKUP_LIST = [
+    #('time_TimeRangeFilter', 'prop_time_PropertyTimeRangeFilter',
+    #    (str(TIME_RANGE[0]), str(TIME_RANGE[1]))),
+]
+
+
+
+
+
 
 # Special case
 LOOKUP_CHOICE_FILTER_LOOKUP_LIST = [
-    ('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', NUMBER_RANGE[0], 'exact'),
+    #('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', NUMBER_RANGE[0], 'exact'),
 ]
 
 FROM_TO_RANGE_FILTER_LOOKUP_LIST = [
-    ('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter',
-        'after', str(DATE_RANGE[0]), 'before', str(DATE_RANGE[1])),
-    ('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter',
-        'after', str(DATE_TIME_RANGE[0]), 'before', str(DATE_TIME_RANGE[1])),
-    ('number_RangeFilter', 'prop_number_PropertyRangeFilter', 'min', NUMBER_RANGE[0], 'max', NUMBER_RANGE[1]),
+    #('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter',
+    #    'after', str(DATE_RANGE[0]), 'before', str(DATE_RANGE[1])),
+    #('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter',
+    #    'after', str(DATE_TIME_RANGE[0]), 'before', str(DATE_TIME_RANGE[1])),
+    #('number_RangeFilter', 'prop_number_PropertyRangeFilter', 'min', NUMBER_RANGE[0], 'max', NUMBER_RANGE[1]),
+    #('time_TimeRangeFilter', 'prop_time_PropertyTimeRangeFilter',
+    #    'after', str(TIME_RANGE[0]), 'before', str(TIME_RANGE[1])),
 ]
