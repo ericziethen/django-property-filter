@@ -80,10 +80,11 @@ DATE_RANGE = [
     datetime.date(2018, 4, 1),
     timezone.now().date()
 ]
+# Unaware Times because not important for benchmarking, but easier for lookup because of str convertion
 DATE_TIME_RANGE = [
-    datetime.datetime(2066, 3, 2, 12, tzinfo=timezone.get_default_timezone()),
-    datetime.datetime(2070, 3, 3, 15, tzinfo=timezone.get_default_timezone()),
-    datetime.datetime(2076, 3, 4, 18, tzinfo=timezone.get_default_timezone())
+    datetime.datetime(2066, 3, 2, 12),
+    datetime.datetime(2070, 3, 3, 15),
+    datetime.datetime(2076, 3, 4, 18)
 ]
 NUMBER_CHOICES = [(c, F'Number: {c}') for c in NUMBER_RANGE]
 DURATION_RANGE = [
@@ -164,7 +165,6 @@ class AllFiltersFilterSet(FilterSet):
     uuid_UUIDFilter = UUIDFilter(field_name='uuid', lookup_expr='exact')
     number_LookupChoiceFilter = LookupChoiceFilter(field_name='number')
 
-
     class Meta:
         model = BenchmarkModel
         exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
@@ -198,8 +198,6 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
     prop_uuid_PropertyUUIDFilter = PropertyUUIDFilter(field_name='prop_uuid', lookup_expr='exact')
     prop_number_PropertyLookupChoiceFilter = PropertyLookupChoiceFilter(field_name='prop_number')
 
-
-
     class Meta:
         model = BenchmarkModel
         exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
@@ -215,7 +213,7 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('number_ChoiceFilter', 'prop_number_PropertyChoiceFilter', str(NUMBER_RANGE[0])),
     ('date_DateFilter', 'prop_date_PropertyDateFilter', str(DATE_RANGE[0])),
     ('date_DateRangeFilter', 'prop_date_PropertyDateRangeFilter', 'year'),
-    #('date_time_DateTimeFilter', 'prop_date_time_PropertyDateTimeFilter', str(DATE_TIME_RANGE[0])),
+    ('date_time_DateTimeFilter', 'prop_date_time_PropertyDateTimeFilter', str(DATE_TIME_RANGE[0])),
     ('duration_DurationFilter', 'prop_duration_PropertyDurationFilter', '15 00:00:00'),
     ('date_time_IsoDateTimeFilter', 'prop_date_time_PropertyIsoDateTimeFilter',
         DATE_TIME_RANGE[0] + datetime.timedelta(days=2)),
@@ -223,8 +221,7 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     #    (DATE_TIME_RANGE[0] - datetime.timedelta(days=2), DATE_TIME_RANGE[0] + datetime.timedelta(days=2))),
     ('number_MultipleChoiceFilter', 'prop_number_PropertyMultipleChoiceFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_NumberFilter', 'prop_number_PropertyNumberFilter', NUMBER_RANGE[0]),
-    #('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', 'number'),
-    #('number_RangeFilter', 'prop_number_PropertyRangeFilter', (NUMBER_RANGE[0], NUMBER_RANGE[1])),
+    ('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', 'number'),
     #('date_time_TimeFilter', 'prop_date_time_PropertyTimeFilter', str(DATE_TIME_RANGE[0].time())),
     #('date_time_TimeRangeFilter', 'prop_date_time_PropertyTimeRangeFilter',
     #    (str(DATE_TIME_RANGE[0].time()), str(DATE_TIME_RANGE[1].time()))),
@@ -232,8 +229,6 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('text_TypedMultipleChoiceFilter', 'prop_number_PropertyTypedMultipleChoiceFilter', [NUMBER_RANGE[0], NUMBER_RANGE[1]]),
     ('uuid_UUIDFilter', 'prop_uuid_PropertyUUIDFilter', UUID_RANGE[0]),
 
-
-    #('', '', ),
 ]
 
 # Special case
@@ -244,8 +239,7 @@ LOOKUP_CHOICE_FILTER_LOOKUP_LIST = [
 FROM_TO_RANGE_FILTER_LOOKUP_LIST = [
     ('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter',
         'after', str(DATE_RANGE[0]), 'before', str(DATE_RANGE[1])),
-    #('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter',
-    #    'after', str(DATE_TIME_RANGE[0]), 'before', str(DATE_TIME_RANGE[1])),
-
-
+    ('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter',
+        'after', str(DATE_TIME_RANGE[0]), 'before', str(DATE_TIME_RANGE[1])),
+    ('number_RangeFilter', 'prop_number_PropertyRangeFilter', 'min', NUMBER_RANGE[0], 'max', NUMBER_RANGE[1]),
 ]
