@@ -123,31 +123,6 @@ class PropertyBaseRangeFilterNumber(PropertyBaseRangeFilter, PropertyNumberFilte
     pass
 
 
-class MultiFilterFilterSet(FilterSet):
-    number = MultipleChoiceFilter(
-        field_name='number', lookup_expr='exact', conjoined=False,  # OR
-        choices=NUMBER_CHOICES)
-    class Meta:
-        model = BenchmarkModel
-        fields = ['text', 'is_true', 'date', 'date_time', 'duration', 'uuid']
-
-
-class PropertyMultiFilterFilterSet(PropertyFilterSet):
-    prop_number = PropertyMultipleChoiceFilter(
-        field_name='prop_number', lookup_expr='exact', conjoined=False,  # OR
-        choices=NUMBER_CHOICES)
-
-    class Meta:
-        model = BenchmarkModel
-        fields = ['prop_number']
-        exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration', 'uuid']
-        property_fields = [
-            ('prop_text', PropertyCharFilter, ['exact']),
-            ('prop_is_true', PropertyBooleanFilter, ['exact']),
-            ('prop_date', PropertyDateFilter, ['exact']),
-            ('prop_date_time', PropertyDateTimeFilter, ['exact']),
-        ]
-
 class AllFiltersFilterSet(FilterSet):
     number_AllValuesFilter = AllValuesFilter(field_name='number', lookup_expr='exact')
     number_AllValuesMultipleFilter = AllValuesMultipleFilter(field_name='number', lookup_expr='exact', conjoined=False)  # OR
@@ -235,21 +210,72 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
     ('number_TypedChoiceFilter', 'prop_number_PropertyTypedChoiceFilter', NUMBER_RANGE[0]),
     ('text_TypedMultipleChoiceFilter', 'prop_number_PropertyTypedMultipleChoiceFilter', [NUMBER_RANGE[0], NUMBER_RANGE[1]]),
     ('uuid_UUIDFilter', 'prop_uuid_PropertyUUIDFilter', UUID_RANGE[0]),
-]
 
-# Special case
-LOOKUP_CHOICE_FILTER_LOOKUP_LIST = [
-    ('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', NUMBER_RANGE[0], 'exact'),
-]
-
-FROM_TO_RANGE_FILTER_LOOKUP_LIST = [
-    ('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter',
-        'after', str(DATE_RANGE[0]), 'before', str(DATE_RANGE[1])),
+    # Range Filters
+    ('date_DateFromToRangeFilter', 'prop_date_PropertyDateFromToRangeFilter', (str(DATE_RANGE[0]), str(DATE_RANGE[1]))),
     ('date_time_DateTimeFromToRangeFilter', 'prop_date_time_PropertyDateTimeFromToRangeFilter',
-        'after', str(DATE_TIME_RANGE[0]), 'before', str(DATE_TIME_RANGE[1])),
-    ('number_RangeFilter', 'prop_number_PropertyRangeFilter', 'min', NUMBER_RANGE[0], 'max', NUMBER_RANGE[1]),
+        (str(DATE_TIME_RANGE[0]), str(DATE_TIME_RANGE[1]))),
+    ('number_RangeFilter', 'prop_number_PropertyRangeFilter', (NUMBER_RANGE[0], NUMBER_RANGE[1])),
     ('time_TimeRangeFilter', 'prop_time_PropertyTimeRangeFilter',
-        'after', str(TIME_RANGE[0]), 'before', str(TIME_RANGE[1])),
+        (str(TIME_RANGE[0]), str(TIME_RANGE[1]))),
     ('iso_date_time_IsoDateTimeFromToRangeFilter', 'prop_iso_date_time_PropertyIsoDateTimeFromToRangeFilter',
-        'after', ISO_DATE_TIME_RANGE[0], 'before', ISO_DATE_TIME_RANGE[1]),
+        (ISO_DATE_TIME_RANGE[0], ISO_DATE_TIME_RANGE[1])),
+
+    # Lookup Filters
+    ('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', (NUMBER_RANGE[0], 'exact')),
+
+
 ]
+
+LOOKUP_FILTER_TYPES = [
+    LookupChoiceFilter, PropertyLookupChoiceFilter
+]
+
+
+RANGE_FILTER_SUFFIXES = {
+    DateFromToRangeFilter: ('after', 'before'),
+    PropertyDateFromToRangeFilter: ('after', 'before'),
+    DateTimeFromToRangeFilter: ('after', 'before'),
+    PropertyDateTimeFromToRangeFilter: ('after', 'before'),
+    IsoDateTimeFromToRangeFilter: ('after', 'before'),
+    PropertyIsoDateTimeFromToRangeFilter: ('after', 'before'),
+    TimeRangeFilter: ('after', 'before'),
+    PropertyTimeRangeFilter: ('after', 'before'),
+    RangeFilter: ('min', 'max'),
+    PropertyRangeFilter: ('min', 'max'),
+}
+def get_range_suffixes_for_filter_type(filter_type):
+    from_suffix = None
+    to_suffix = None
+
+    if filter_type in RANGE_FILTER_SUFFIXES:
+        from_suffix, to_suffix = RANGE_FILTER_SUFFIXES[filter_type]
+
+    return (from_suffix, to_suffix)
+
+
+def get_filtertype_from_filter_name(filterset, filter_name):
+    if filter_name in filterset.filters:
+        return filterset.filters[filter_name].__class__
+
+    return None
+
+def get_filter_types_from_filter_names(filterset, filter_name_list):
+    type_list = []
+    unknown_list = []
+
+    for name in filter_name_list:
+        filter_type = get_filtertype_from_filter_name(filterset, name)
+
+        # Check name as is
+        if filter_type:
+            type_list.append(filter_type.__name__)
+        else:
+            #unknown_list.append(F'Unknown Type for "{name}"')
+            raise ValueError(F'Unknown Filter Type for Filter "{name}"')
+
+    # In some cases  has multiple entries, not all are the filternames but could be expressions
+    if not type_list:
+        type_list = unknown_list
+
+    return list(set(type_list))
