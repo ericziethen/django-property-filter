@@ -62,7 +62,7 @@ from django_property_filter.utils import get_db_vendor, get_db_version
 from property_filter.benchmark_utils import (
     NUMBER_RANGE, TEXT_RANGE, IS_TRUE_RANGE, DATE_RANGE, DATE_TIME_RANGE, ISO_DATE_TIME_RANGE,
     TIME_RANGE, DURATION_RANGE, UUID_RANGE,
-    ALL_VALUE_FILTER_LOOKUP_LIST, LOOKUP_FILTER_TYPES,
+    SINGLE_FILTER_LOOKUP_LIST, MULTI_FILTER_LOOKUP_LIST, LOOKUP_FILTER_TYPES,
     BenchmarkModel,
     AllFiltersFilterSet, AllFiltersPropertyFilterSet,
     get_filtertype_from_filter_name, get_filter_types_from_filter_names, get_range_suffixes_for_filter_type,
@@ -130,11 +130,11 @@ class Command(BaseCommand):
 
                 BenchmarkModel.objects.bulk_create(bulk_list)
 
-    def create_filter_dics(self, filter_info):
+    def create_filter_dics(self, filter_info_list):
         filter_dic = {}
         prop_filter_dic = {}
 
-        for filter_name, prop_filter_name, lookup_value in filter_info:
+        for filter_name, prop_filter_name, lookup_value in filter_info_list:
             filter_type = get_filtertype_from_filter_name(AllFiltersFilterSet(), filter_name)
             prop_filter_type = get_filtertype_from_filter_name(AllFiltersPropertyFilterSet(), prop_filter_name)
 
@@ -159,17 +159,23 @@ class Command(BaseCommand):
 
         return (filter_dic, prop_filter_dic)
 
-    def run_all_filter_tests(self, base_data_dic):
 
+    def create_test_filtersets(self, filter_info_list):
+        filter_dic, prop_filter_dic = self.create_filter_dics(filter_info_list)
+
+        # Create the Filtersets
+        filter_fs = AllFiltersFilterSet(filter_dic, queryset=BenchmarkModel.objects.all())
+        property_filter_fs = AllFiltersPropertyFilterSet(prop_filter_dic, queryset=BenchmarkModel.objects.all())
+
+        return (filter_fs, property_filter_fs)
+
+
+    def run_all_filter_tests(self, base_data_dic):
         # Normal Filter
-        for filter_name, prop_filter_name, lookup_value in ALL_VALUE_FILTER_LOOKUP_LIST:
+        for filter_name, prop_filter_name, lookup_value in SINGLE_FILTER_LOOKUP_LIST:
             result_list = []
 
-            filter_dic, prop_filter_dic = self.create_filter_dics([(filter_name, prop_filter_name, lookup_value)])
-
-            # Create the Filtersets
-            filter_fs = AllFiltersFilterSet(filter_dic, queryset=BenchmarkModel.objects.all())
-            property_filter_fs = AllFiltersPropertyFilterSet(prop_filter_dic, queryset=BenchmarkModel.objects.all())
+            filter_fs, property_filter_fs = self.create_test_filtersets([(filter_name, prop_filter_name, lookup_value)])
 
             # Run the Tests
             result_list.append(
@@ -178,6 +184,20 @@ class Command(BaseCommand):
 
             append_data_to_csv(self.csv_path, result_list)
 
+        '''
+        # Multi Filter
+        for filter_name, prop_filter_name, lookup_value in MULTI_FILTER_LOOKUP_LIST:
+            result_list = []
+
+            filter_fs, property_filter_fs = self.create_test_filtersets(filter_name, prop_filter_name, lookup_value)
+
+            # Run the Tests
+            result_list.append(
+                self._run_filter_comparison(
+                    filter_fs, property_filter_fs, base_data_dic.copy(), [filter_name], [prop_filter_name]))
+
+            append_data_to_csv(self.csv_path, result_list)
+        '''
 
     def run_multi_filter_comparison(self, base_data_dic):
         filter_fs = MultiFilterFilterSet(

@@ -188,7 +188,7 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
         model = BenchmarkModel
         exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
 
-ALL_VALUE_FILTER_LOOKUP_LIST = [
+SINGLE_FILTER_LOOKUP_LIST = [
     ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
     ('number_AllValuesMultipleFilter', 'prop_number_PropertyAllValuesMultipleFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_BaseCSVFilterNumber', 'prop_number_PropertyBaseCSVFilterNumber', str(NUMBER_RANGE[0])),
@@ -223,9 +223,16 @@ ALL_VALUE_FILTER_LOOKUP_LIST = [
 
     # Lookup Filters
     ('number_LookupChoiceFilter', 'prop_number_PropertyLookupChoiceFilter', (NUMBER_RANGE[0], 'exact')),
-
-
 ]
+
+
+MULTI_FILTER_LOOKUP_LIST = [
+    [
+        ('number_RangeFilter', 'prop_number_PropertyRangeFilter', (NUMBER_RANGE[0], NUMBER_RANGE[1])),
+        ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
+    ]
+]
+
 
 LOOKUP_FILTER_TYPES = [
     LookupChoiceFilter, PropertyLookupChoiceFilter
