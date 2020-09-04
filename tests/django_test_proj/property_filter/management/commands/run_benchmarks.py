@@ -1,49 +1,3 @@
-'''
-TODO - FEATURES
-
-
-    # TODO
-      - Add Simple Tests To Filter Every Filter
-        - Start with the Intfield Initially
-        - Loop through Each Filter
-        - Run the same test as
-
-    - Script Calls
-        - 1000 Entries
-        - 10000 Entries
-        - 50000 Entries
-        - 100000 Entries
-
-    FilterCombinations
-        - Single Filter (NumberFilter)
-        - Single Filter (CharFilter)
-        - Single Filter (MultipleChoiceFilter AND)
-        - Single Filter (MultipleChoiceFilter OR)
-        - Mixed Filter (Number and Char Filter)
-        - Mixed Filter (Number, Char Filter, Multiple Choice Filters)
-        - Mixed Filter (5 Filters)
-
-        call:TimeFilterAndPropetime_filters
-
-    - CSV Output (1 Row per test scenario)
-        x Date/Time
-        x PropertyFilter Version used
-        x Database Used
-        x Database Entries
-        X Results Found
-        X Filters Used
-        x Filters Timing
-        x Property Timing
-        x Filter Result Count
-        x Property FIlter Result Count
-        - Average Time / 10000 Tests (To compare different sample sizes with each other)
-
-    TimeFilterAndPropetime_filters(filter_dic, property_filter_dic, ???)  filter_dic/property_filter_dic = {'filter_name': lookup_value, 'name2': lookup_value...}
-        time filterset.qs
-        time propertyfilterset.qs
-        log timing
-'''
-
 import configparser
 import datetime
 import logging
@@ -208,18 +162,20 @@ class Command(BaseCommand):
 
         for _ in range(self.repeat_count):
             # Normal Filtering
-            fs_qs = filter_fs.qs
             filter_start_time = timezone.now()
-            fs_qs.count()
+            fs_qs = filter_fs.qs
             filter_end_time = timezone.now()
             filer_duration += (filter_end_time - filter_start_time)
 
             # Property Filtering
-            pfs_qs = property_filter_fs.qs
             property_filter_start_time = timezone.now()
-            pfs_qs.count()
+            pfs_qs = property_filter_fs.qs
             property_filter_end_time = timezone.now()
             property_filer_duration += (property_filter_end_time - property_filter_start_time)
+
+            # Reset the Queryset to run the filters again
+            delattr(filter_fs, '_qs')
+            delattr(property_filter_fs, '_qs')
 
         filer_duration = (filer_duration / self.repeat_count).total_seconds()
         property_filer_duration = (property_filer_duration / self.repeat_count).total_seconds()
