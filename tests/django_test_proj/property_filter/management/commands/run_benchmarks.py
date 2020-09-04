@@ -45,11 +45,12 @@ TODO - FEATURES
 '''
 
 import configparser
+import datetime
 import logging
 import os
+import pandas
 import random
 import sys
-import pandas
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -82,6 +83,11 @@ class Command(BaseCommand):
         self.csv_path = options['csv_out_path']
         db_entry_count = options['db_entry_count']
 
+        self.repeat_count = 5
+
+        # Use the same seed for each run, depending on number for consistent results
+        random.seed(db_entry_count)
+
         # Setup The Database for Tests
         self.setup_test_db(db_entry_count)
 
@@ -89,7 +95,6 @@ class Command(BaseCommand):
 
         # Setup the Base Result Data
         base_test_dic = {}
-        #base_test_dic['date/time'] = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         base_test_dic['version'] = get_plugin_version()
         base_test_dic['database'] = F'{get_db_vendor()} ({get_db_version()})'
         base_test_dic['Target DB Entries'] = db_entry_count
@@ -97,13 +102,6 @@ class Command(BaseCommand):
 
         # Run the Tests for each Filter as a Single Filter
         self.run_all_filter_tests(base_test_dic.copy())
-
-        # TODO - REMOVE
-        # Run The combined Test with multiple filters
-        #result_dic_list += self.run_multi_filter_comparison(base_test_dic.copy())
-
-        # Log the Result/Csv Entries
-        #append_data_to_csv(csv_path, result_dic_list)
 
     def setup_test_db(self, db_entry_count):
         with transaction.atomic():
@@ -204,59 +202,34 @@ class Command(BaseCommand):
 
             append_data_to_csv(self.csv_path, result_list)
 
-
-    def run_multi_filter_comparison(self, base_data_dic):
-        filter_fs = MultiFilterFilterSet(
-            {
-                'number': [NUMBER_RANGE[0], NUMBER_RANGE[1]],
-                'text': TEXT_RANGE[0],
-                'is_true': IS_TRUE_RANGE[0],
-                'date': DATE_RANGE[0],
-                'date_time': DATE_TIME_RANGE[0]
-            },
-            queryset=BenchmarkModel.objects.all()
-        )
-
-        property_filter_fs = PropertyMultiFilterFilterSet(
-            {
-                'prop_number': [NUMBER_RANGE[0], NUMBER_RANGE[1]],
-                'prop_text__exact': TEXT_RANGE[0],
-                'prop_is_true__exact': IS_TRUE_RANGE[0],
-                'prop_date__exact': DATE_RANGE[0],
-                'prop_date_time__exact': DATE_TIME_RANGE[0]
-            },
-            queryset=BenchmarkModel.objects.all()
-        )
-
-        return [self._run_filter_comparison(
-            filter_fs, property_filter_fs, base_data_dic, filter_fs.data.keys(), property_filter_fs.data.keys())]
-
     def _run_filter_comparison(self, filter_fs, property_filter_fs, test_dic, filters_used, prop_filters_used):
+        filer_duration = datetime.timedelta(0,0)
+        property_filer_duration = datetime.timedelta(0)
 
-        # TODO - Run Multiple Times and Take Average
-        # TODO - Try with other Combinations of Filters???, single filter...
-        # TODO - Have a loop to run basic tests on every Filter Separately
-        #   - Can have 1 Big Filterset with each Filter (2, for Filter and Property)
-        #       - Each filter for the same field/prop_filed
-        #       - Name the Filter based on FilterName so loop can pick up, 
-        #   - Then the Loop Can Filter for 1 of the Items for each of the filters and compare the 2
+        for _ in range(self.repeat_count):
+            # Normal Filtering
+            fs_qs = filter_fs.qs
+            filter_start_time = timezone.now()
+            fs_qs.count()
+            filter_end_time = timezone.now()
+            filer_duration += (filter_end_time - filter_start_time)
 
-        # Normal Filtering
-        filter_start_time = timezone.now()
-        fs_qs = filter_fs.qs
-        filter_end_time = timezone.now()
-        filer_duration = (filter_end_time - filter_start_time).total_seconds()
+            # Property Filtering
+            pfs_qs = property_filter_fs.qs
+            property_filter_start_time = timezone.now()
+            pfs_qs.count()
+            property_filter_end_time = timezone.now()
+            property_filer_duration += (property_filter_end_time - property_filter_start_time)
+
+        filer_duration = (filer_duration / self.repeat_count).total_seconds()
+        property_filer_duration = (property_filer_duration / self.repeat_count).total_seconds()
+
         filer_duration_100k = filer_duration / test_dic['Actual DB Entries'] * 100000
-
-        # Property Filtering
-        property_filter_start_time = timezone.now()
-        pfs_qs = property_filter_fs.qs
-        property_filter_end_time = timezone.now()
-        property_filer_duration = (property_filter_end_time - property_filter_start_time).total_seconds()
         property_filer_duration_100k = property_filer_duration / test_dic['Actual DB Entries'] * 100000
 
         # Update Results
         test_dic['date/time'] = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+        test_dic['Test Repetitions'] = self.repeat_count
         test_dic['Filter Result Count'] = fs_qs.count()
         test_dic['Filter Time sec'] = F'{filer_duration:.2f}'
         test_dic['Filter Time sec / 100k'] = F'{filer_duration_100k:.2f}'

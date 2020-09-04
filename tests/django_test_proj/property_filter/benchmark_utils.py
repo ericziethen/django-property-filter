@@ -188,6 +188,7 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
         model = BenchmarkModel
         exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
 
+
 SINGLE_FILTER_LOOKUP_LIST = [
     ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
     ('number_AllValuesMultipleFilter', 'prop_number_PropertyAllValuesMultipleFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
@@ -230,6 +231,9 @@ MULTI_FILTER_LOOKUP_LIST = [
     [
         ('number_RangeFilter', 'prop_number_PropertyRangeFilter', (NUMBER_RANGE[0], NUMBER_RANGE[1])),
         ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
+        ('is_true_BooleanFilter', 'prop_is_true_PropertyBooleanFilter', IS_TRUE_RANGE[0]),
+        ('date_DateFilter', 'prop_date_PropertyDateFilter', DATE_RANGE[0]),
+        ('date_time_DateTimeFilter', 'prop_date_time_PropertyDateTimeFilter', DATE_TIME_RANGE[0]),
     ]
 ]
 
