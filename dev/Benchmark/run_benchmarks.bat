@@ -9,15 +9,15 @@ set SCRIPT_DIR=%~dp0
 set PROJ_MAIN_DIR=%SCRIPT_DIR%..\..
 set MODULE_PATH=%PROJ_MAIN_DIR%\django_property_filter
 set DJANGO_DIR=%PROJ_MAIN_DIR%\tests\django_test_proj
-set CSV_FILE_PATH=%PROJ_MAIN_DIR%\benchmarks.csv
+set CSV_FILE_PATH=%SCRIPT_DIR%benchmarks.csv
 
 pushd "%DJANGO_DIR%"
 
-rem call:run_benchmarks "100"
-rem call:run_benchmarks "1000"
+call:run_benchmarks "100"
+call:run_benchmarks "1000"
 call:run_benchmarks "10000"
-rem call:run_benchmarks "50000"
-rem call:run_benchmarks "100000"
+call:run_benchmarks "50000"
+call:run_benchmarks "100000"
 goto end
 
 :run_benchmarks
