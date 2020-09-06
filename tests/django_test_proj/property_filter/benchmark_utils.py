@@ -189,8 +189,7 @@ class AllFiltersPropertyFilterSet(PropertyFilterSet):
         exclude = ['number', 'text', 'is_true', 'date', 'date_time', 'duration']
 
 
-SINGLE_FILTER_LOOKUP_LIST = []
-SINGLE_FILTER_LOOKUP_LIST2 = [
+SINGLE_FILTER_LOOKUP_LIST = [
     ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
     ('number_AllValuesMultipleFilter', 'prop_number_PropertyAllValuesMultipleFilter', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_BaseCSVFilterNumber', 'prop_number_PropertyBaseCSVFilterNumber', str(NUMBER_RANGE[0])),
