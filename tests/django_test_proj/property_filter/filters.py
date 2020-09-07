@@ -71,25 +71,20 @@ from property_filter import models
 
 
 def add_filter(filterset_ref, filter_class, field_name, lookup_expr, **kwargs):
-    filter_name = field_name + lookup_expr
-    label = F'{field_name} [{lookup_expr}]'
+    filter_name = field_name + lookup_expr + str(filter_class.__name__)
+    label = F'{field_name} [{lookup_expr}] ({str(filter_class.__name__)})'
     filterset_ref.base_filters[filter_name] = filter_class(label=label, field_name=field_name,
                                                            lookup_expr=lookup_expr, **kwargs)
+
 
 def add_supported_filters(filterset_ref, filter_class, field_name, expression_list, **kwargs):
     for lookup in expression_list:
         add_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
 
 
-def add_property_filter(filterset_ref, filter_class, field_name, lookup_expr, **kwargs):
-    filter_name = field_name + lookup_expr
-    filterset_ref.base_filters[filter_name] = filter_class(
-        field_name=field_name, lookup_expr=lookup_expr, **kwargs)
-
-
 def add_supported_property_filters(filterset_ref, filter_class, field_name, expression_list, **kwargs):
     for lookup in expression_list:
-        add_property_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
+        add_filter(filterset_ref, filter_class, field_name, lookup, **kwargs)
 
 
 class PropertyAllValuesFilterSet(PropertyFilterSet):
@@ -120,9 +115,9 @@ class PropertyAllValuesMultipleFilterSet(PropertyFilterSet):
         super().__init__(*args, **kwargs)
 
 
-class BaseCSVFilterNumer(BaseCSVFilter, CharFilter):
+class BaseCSVFilterNumber(BaseCSVFilter, CharFilter):
     pass
-class PropertyBaseCSVFilterNumer(PropertyBaseCSVFilter, PropertyCharFilter):
+class PropertyBaseCSVFilterNumber(PropertyBaseCSVFilter, PropertyCharFilter):
     pass
 class PropertyBaseCSVFilterSet(PropertyFilterSet):
 
@@ -130,28 +125,28 @@ class PropertyBaseCSVFilterSet(PropertyFilterSet):
         model = models.BaseCSVFilterModel
         exclude = ['number', 'text']
         property_fields = [
-            ('prop_number', PropertyBaseCSVFilterNumer, PropertyBaseCSVFilter.supported_lookups),
-            ('prop_text', PropertyBaseCSVFilterNumer, PropertyBaseCSVFilter.supported_lookups)]
+            ('prop_number', PropertyBaseCSVFilterNumber, PropertyBaseCSVFilter.supported_lookups),
+            ('prop_text', PropertyBaseCSVFilterNumber, PropertyBaseCSVFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        add_supported_filters(self, BaseCSVFilterNumer, 'number', PropertyBaseCSVFilter.supported_lookups)
-        add_supported_filters(self, BaseCSVFilterNumer, 'text', PropertyBaseCSVFilter.supported_lookups)
+        add_supported_filters(self, BaseCSVFilterNumber, 'number', PropertyBaseCSVFilter.supported_lookups)
+        add_supported_filters(self, BaseCSVFilterNumber, 'text', PropertyBaseCSVFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 
-class BaseInFilterNumer(BaseInFilter, CharFilter):
+class BaseInFilterNumber(BaseInFilter, CharFilter):
     pass
-class PropertyBaseInFilterNumer(PropertyBaseInFilter, PropertyCharFilter):
+class PropertyBaseInFilterNumber(PropertyBaseInFilter, PropertyCharFilter):
     pass
 class PropertyBaseInFilterSet(PropertyFilterSet):
 
     class Meta:
         model = models.BaseInFilterModel
         exclude = ['number']
-        property_fields = [('prop_number', PropertyBaseInFilterNumer, PropertyBaseInFilter.supported_lookups)]
+        property_fields = [('prop_number', PropertyBaseInFilterNumber, PropertyBaseInFilter.supported_lookups)]
 
     def __init__(self, *args, **kwargs):
-        add_supported_filters(self, BaseInFilterNumer, 'number', PropertyBaseInFilter.supported_lookups)
+        add_supported_filters(self, BaseInFilterNumber, 'number', PropertyBaseInFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 

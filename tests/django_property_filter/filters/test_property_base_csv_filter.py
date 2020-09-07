@@ -53,14 +53,14 @@ TEST_LOOKUPS = [
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, result_list):
 
-    class BaseCSVFilterNumer(BaseCSVFilter, CharFilter):
+    class BaseCSVFilterNumber(BaseCSVFilter, CharFilter):
         pass
-    class PropertyBaseCSVFilterNumer(PropertyBaseCSVFilter, PropertyCharFilter):
+    class PropertyBaseCSVFilterNumber(PropertyBaseCSVFilter, PropertyCharFilter):
         pass
 
     # Test using Normal Django Filter
     class BaseCSVFilterSet(FilterSet):
-        number = BaseCSVFilterNumer(field_name='number', lookup_expr=lookup_xpr)
+        number = BaseCSVFilterNumber(field_name='number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseCSVFilterModel
@@ -71,7 +71,7 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyBaseCSVFilterSet(PropertyFilterSet):
-        prop_number = PropertyBaseCSVFilterNumer(field_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyBaseCSVFilterNumber(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseCSVFilterModel
@@ -86,7 +86,7 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
         class Meta:
             model = BaseCSVFilterModel
             exclude = ['number']
-            property_fields = [('prop_number', PropertyBaseCSVFilterNumer, [lookup_xpr])]
+            property_fields = [('prop_number', PropertyBaseCSVFilterNumber, [lookup_xpr])]
 
     implicit_filter_fs = ImplicitFilterSet({F'prop_number__{lookup_xpr}': lookup_val}, queryset=BaseCSVFilterModel.objects.all())
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
@@ -104,11 +104,11 @@ INVALID_VALUES_FOR_NUMBER = [
 @pytest.mark.parametrize('lookup_xpr, lookup_val', INVALID_VALUES_FOR_NUMBER)
 @pytest.mark.django_db
 def test_invalid_range_for_numbers(fixture_property_base_csv_filter, lookup_xpr, lookup_val):
-    class PropertyBaseCSVFilterNumer(PropertyBaseCSVFilter, PropertyCharFilter):
+    class PropertyBaseCSVFilterNumber(PropertyBaseCSVFilter, PropertyCharFilter):
         pass
 
     class PropertyBaseCSVFilterSet(PropertyFilterSet):
-        prop_number = PropertyBaseCSVFilterNumer(field_name='prop_number', lookup_expr=lookup_xpr)
+        prop_number = PropertyBaseCSVFilterNumber(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseCSVFilterModel
@@ -129,11 +129,11 @@ VALID_VALUES_FOR_STRING = [
 @pytest.mark.django_db
 def test_valid_string_value_for_invalid_number_value(fixture_property_base_csv_filter, lookup_xpr, lookup_val):
 
-    class PropertyBaseCSVFilterNumer(PropertyBaseCSVFilter, PropertyCharFilter):
+    class PropertyBaseCSVFilterNumber(PropertyBaseCSVFilter, PropertyCharFilter):
         pass
 
     class PropertyBaseCSVFilterSet(PropertyFilterSet):
-        prop_text = PropertyBaseCSVFilterNumer(field_name='prop_text', lookup_expr=lookup_xpr)
+        prop_text = PropertyBaseCSVFilterNumber(field_name='prop_text', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseCSVFilterModel

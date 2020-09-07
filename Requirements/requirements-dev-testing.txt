@@ -26,3 +26,5 @@ sphinx-rtd-theme
 twine
 wheel
 
+# Misc
+pandas

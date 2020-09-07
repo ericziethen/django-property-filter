@@ -261,7 +261,7 @@ class VolumeMultipleFilterTests(TestCase):
         tz = timezone.get_default_timezone()
         max_entries = 40000
         self.number_range = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        self.text_range = ['One', 'Two', 'Three', 'Four', 'Five'' Six', 'Seven', 'Eight', 'Nine']
+        self.text_range = ['One', 'Two', 'Three', 'Four', 'Five', ' Six', 'Seven', 'Eight', 'Nine']
         self.is_true_range = [True, False]
         self.date_range = [
             datetime.date(2018, 2, 1),
