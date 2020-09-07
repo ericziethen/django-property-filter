@@ -9,7 +9,7 @@ set SCRIPT_DIR=%~dp0
 set PROJ_MAIN_DIR=%SCRIPT_DIR%..\..
 set MODULE_PATH=%PROJ_MAIN_DIR%\django_property_filter
 set DJANGO_DIR=%PROJ_MAIN_DIR%\tests\django_test_proj
-set CSV_FILE_PATH=%PROJ_MAIN_DIR%\benchmarks.csv
+set CSV_FILE_PATH=%SCRIPT_DIR%benchmarks.csv
 
 
 
@@ -24,7 +24,7 @@ set Sec=%DateTime:~12,2%
 
 set datetimef=%Yr%.%Mon%.%Day%_%Hr%-%Min%-%Sec%
 
-set PROFILE_LOG=%PROJ_MAIN_DIR%\profile_%datetimef%.html
+set PROFILE_LOG=%SCRIPT_DIR%profile_%datetimef%.html
 
 pushd "%DJANGO_DIR%"
 
@@ -53,10 +53,10 @@ goto:eof
 
 :run_benchmark
 set DB_ENTRIES=%~1
-echo %data%-%time% ### RUN BENCHMARK - %DB_ENTRIES% entries - Settings: "%DJANGO_SETTINGS_MODULE%" ###
-echo Command: 'python -m pyinstrument manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%"' > "%PROFILE_LOG%"
+echo %date%-%time% ### RUN BENCHMARK - %DB_ENTRIES% entries - Settings: "%DJANGO_SETTINGS_MODULE%" ###
+echo Command: 'python -m pyinstrument manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%"'
 python -m pyinstrument -r html --show-all manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%" > "%PROFILE_LOG%"
-echo %data%-%time% ### BENCHMARK END ###
+echo %date%-%time% ### BENCHMARK END ###
 echo[
 goto:eof
 
