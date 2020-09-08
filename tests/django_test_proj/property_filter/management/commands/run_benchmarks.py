@@ -20,7 +20,7 @@ from property_filter.benchmark_utils import (
     SINGLE_FILTER_LOOKUP_LIST, MULTI_FILTER_LOOKUP_LIST, LOOKUP_FILTER_TYPES,
     BenchmarkModel,
     get_filtertype_from_filter_name, get_filter_types_from_filter_names, get_range_suffixes_for_filter_type,
-    create_test_filtersets,
+    create_test_filtersets, remove_unneeded_filters_from_fs,
 )
 
 
@@ -79,8 +79,6 @@ class Command(BaseCommand):
 
                 BenchmarkModel.objects.bulk_create(bulk_list)
 
-
-
     def run_all_filter_tests(self, base_data_dic):
 
         # Normal Filter
@@ -110,66 +108,66 @@ class Command(BaseCommand):
 
             append_data_to_csv(self.csv_path, result_list)
 
-    def _run_filter_comparison(self, filter_fs, property_filter_fs, test_dic, filters_used, prop_filters_used):
-        filer_duration = datetime.timedelta(0,0)
-        property_filer_duration = datetime.timedelta(0)
+    def _time_filterset(self, fs, repeat_count):
+        duration = datetime.timedelta(0)
 
-        for _ in range(self.repeat_count):
-            # Normal Filtering
+        for _ in range(repeat_count):
+
             filter_start_time = timezone.now()
-            fs_qs = filter_fs.qs
+            fs_qs = fs.qs
             filter_end_time = timezone.now()
-            filer_duration += (filter_end_time - filter_start_time)
-
-            # Property Filtering
-            property_filter_start_time = timezone.now()
-            pfs_qs = property_filter_fs.qs
-            property_filter_end_time = timezone.now()
-            property_filer_duration += (property_filter_end_time - property_filter_start_time)
+            duration += (filter_end_time - filter_start_time)
+            print('duration<<<', filter_end_time - filter_start_time)
+            count = fs_qs.count()
 
             # Reset the Queryset to run the filters again
-            delattr(filter_fs, '_qs')
-            delattr(property_filter_fs, '_qs')
+            delattr(fs, '_qs')
 
-        filer_duration = (filer_duration / self.repeat_count).total_seconds()
-        property_filer_duration = (property_filer_duration / self.repeat_count).total_seconds()
+        return ((duration / repeat_count).total_seconds(), count)
 
-        filer_duration_100k = filer_duration / test_dic['Actual DB Entries'] * 100000
-        property_filer_duration_100k = property_filer_duration / test_dic['Actual DB Entries'] * 100000
+    def _run_filter_comparison(self, filter_fs, property_filter_fs, test_dic, filters_used, prop_filters_used):
+
+        # Filtering with all Filters Enabled
+        filer_duration, filter_count = self._time_filterset(filter_fs, self.repeat_count)
+        prop_filter_duration, prop_filter_count = self._time_filterset(property_filter_fs, self.repeat_count)
+
+        # Filtering with only a single Filter - This will remove Filters from the Filterset
+        remove_unneeded_filters_from_fs(filter_fs, filters_used)
+        single_filter_duration, _ = self._time_filterset(filter_fs, self.repeat_count)
+        remove_unneeded_filters_from_fs(property_filter_fs, prop_filters_used)
+        single_prop_filter_duration, _ = self._time_filterset(property_filter_fs, self.repeat_count)
+
 
         # Update Results
         test_dic['date/time'] = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
-        test_dic['Test Repetitions'] = self.repeat_count
-        test_dic['Filter Result Count'] = fs_qs.count()
-        test_dic['Filter Time sec'] = F'{filer_duration:.2f}'
-        test_dic['Filter Time sec / 100k'] = F'{filer_duration_100k:.2f}'
+        test_dic['Repetitions'] = self.repeat_count
+        test_dic['Filter Results'] = filter_count
+        test_dic['Filter Time large fs'] = F'{filer_duration:.2f}'
+        test_dic['Filter Time small fs'] = F'{single_filter_duration:.2f}'
 
-        test_dic['Property Filter Result Count'] = pfs_qs.count()
-        test_dic['Property Filter Time sec'] = F'{property_filer_duration:.2f}'
-        test_dic['Property Filter Time sec / 100k'] = F'{property_filer_duration_100k:.2f}'
+        test_dic['Prop Filter Results'] = prop_filter_count
+        test_dic['Prop Filter Time large fs'] = F'{prop_filter_duration:.2f}'
+        test_dic['Prop Filter Time small fs'] = F'{single_prop_filter_duration:.2f}'
 
         if filer_duration:
-            test_dic['Property Time Factor'] = F'{property_filer_duration / filer_duration:.2f}'
+            test_dic['Prop Time Factor'] = F'{prop_filter_duration / filer_duration:.2f}'
         else:
-            test_dic['Property Time Factor'] = 'N/A'
+            test_dic['Prop Time Factor'] = 'N/A'
 
         filter_list = get_filter_types_from_filter_names(filter_fs, filters_used)
         test_dic['Filters Used'] = sorted(filter_list)
         filter_list = get_filter_types_from_filter_names(property_filter_fs, prop_filters_used)
-        test_dic['Property Filters Used'] = sorted(filter_list)
-
-        # Sqlite doesn't always return all values
-        #assert test_dic['Filter Result Count'] == test_dic['Property Filter Result Count']
+        test_dic['Prop Filters Used'] = sorted(filter_list)
 
         full_qs_always = test_dic['Filters Used'] == ['OrderingFilter']
         if not full_qs_always:  # e.g. ordering Filter only sorts, doesn't filter
-            assert 0 < test_dic['Filter Result Count'] < test_dic['Actual DB Entries'],\
-                F'''{test_dic['Filters Used']}, {test_dic['Filter Result Count']}, {test_dic['Actual DB Entries']})'''
+            assert 0 < test_dic['Filter Results'] < test_dic['Actual DB Entries'],\
+                F'''{test_dic['Filters Used']}, {test_dic['Filter Results']}, {test_dic['Actual DB Entries']})'''
 
-        full_qs_always = test_dic['Property Filters Used'] == ['PropertyOrderingFilter']
+        full_qs_always = test_dic['Prop Filters Used'] == ['PropertyOrderingFilter']
         if not full_qs_always:  # e.g. ordering Filter only sorts, doesn't filter
-            assert 0 < test_dic['Property Filter Result Count'] < test_dic['Actual DB Entries'],\
-                F'''{test_dic['Property Filters Used']}, {test_dic['Property Filter Result Count']}, {test_dic['Actual DB Entries']}'''
+            assert 0 < test_dic['Prop Filter Results'] < test_dic['Actual DB Entries'],\
+                F'''{test_dic['Prop Filters Used']}, {test_dic['Prop Filter Results']}, {test_dic['Actual DB Entries']}'''
 
         return test_dic
 
