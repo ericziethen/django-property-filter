@@ -32,6 +32,9 @@ class PropertyFilterSet(FilterSet):
                     % (type(self).__name__, name, type(queryset).__name__)
 
 
+        # TODO - !!! Add Single FilterFilterset to Benchmarking to compare with Multiple as Well
+
+
 
         # TODO - REVIEW EFFICIENCY OF FILTERING IF NOTHING TO FILTER
         '''
@@ -40,10 +43,17 @@ class PropertyFilterSet(FilterSet):
                 and
             PropertyAllValuesMultipleFilter.field()
 
-            look like expensive calls, even if only called once
-            So if either is a filter on the filterset it adds a lot of time
-            something around 5 seconds each for 100000 entries
-            
+                look like expensive calls, even if only called once
+                So if either is a filter on the filterset it adds a lot of time
+                something around 5 seconds each for 100000 entries
+
+            PropertyMultipleChoiceFilter
+
+                looks like an expensive call, about 
+
+
+
+
         '''
 
         # Filter By Property Filters
