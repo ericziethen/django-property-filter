@@ -31,10 +31,26 @@ class PropertyFilterSet(FilterSet):
                     "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
                     % (type(self).__name__, name, type(queryset).__name__)
 
+
+
+        # TODO - REVIEW EFFICIENCY OF FILTERING IF NOTHING TO FILTER
+        '''
+            If many Filters defined of the queryset, even if nothing is there to filter it slows down
+            PropertyAllValuesFilter.field()
+                and
+            PropertyAllValuesMultipleFilter.field()
+
+            look like expensive calls, even if only called once
+            So if either is a filter on the filterset it adds a lot of time
+            something around 5 seconds each for 100000 entries
+            
+        '''
+
         # Filter By Property Filters
         if property_filter_list:
             pk_list = list(queryset.model.objects.all().values_list('pk', flat=True))
             for name, value in property_filter_list:
+                print(' FILTER NAME, VALUE', name, value)
                 pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
 
             # Generate the SQL for the property filter result

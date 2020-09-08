@@ -262,6 +262,10 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
         if not queryset:
             return []
 
+        # TODO
+        # THis is quite a slow operation
+
+
         result_pks = None
         for sub_value in value:
             filter_result = set(super().filter_pks(None, queryset, sub_value))
@@ -341,6 +345,9 @@ class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):
         """Filed Property to setup default choices."""
         queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
+        # TODO - This is very expensive
+
+        
         value_list = []
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
@@ -349,6 +356,9 @@ class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):
         value_list = sorted(value_list, key=lambda x: (x is None, x))
 
         self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
+
+        # TODO
+        print('PropertyAllValuesFilter.field')
 
         # Need to Call parent's Parent since our Parent uses DB fields directly
         return super(AllValuesFilter, self).field
@@ -362,6 +372,9 @@ class PropertyAllValuesMultipleFilter(PropertyMultipleChoiceFilter, AllValuesMul
         """Filed Property to setup default choices."""
         queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
+        # TODO - This is very expensive
+
+
         value_list = []
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
@@ -370,6 +383,9 @@ class PropertyAllValuesMultipleFilter(PropertyMultipleChoiceFilter, AllValuesMul
         value_list = sorted(set(value_list), key=lambda x: (x is None, x))
 
         self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
+
+        # TODO
+        print('PropertyAllValuesMultipleFilter.field')
 
         # Need to Call parent's Parent since our Parent uses DB fields directly
         return super(AllValuesMultipleFilter, self).field
