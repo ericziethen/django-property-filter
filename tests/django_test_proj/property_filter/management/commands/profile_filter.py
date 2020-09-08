@@ -96,6 +96,26 @@ class Command(BaseCommand):
 
         if not self.skip_property_filter:
             # Property Filtering
+
+
+
+
+
+
+            # TODO - Example for Removing Unwanted Filters
+            '''
+            print('### BEFORE', property_filter_fs.filters)
+            for name in list(property_filter_fs.filters.keys()):
+                if name not in prop_filter_names:
+                    del property_filter_fs.filters[name]
+            print('### AFTER', property_filter_fs.filters)
+            '''
+
+
+
+
+
+
             print('prop_filter_names', prop_filter_names)
             self.profile_filterset(property_filter_fs)
         else:
