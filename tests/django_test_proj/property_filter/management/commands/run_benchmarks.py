@@ -34,7 +34,7 @@ class Command(BaseCommand):
         self.csv_path = options['csv_out_path']
         db_entry_count = options['db_entry_count']
 
-        self.repeat_count = 5
+        self.repeat_count = 3
 
         # Use the same seed for each run, depending on number for consistent results
         random.seed(db_entry_count)
@@ -117,7 +117,6 @@ class Command(BaseCommand):
             fs_qs = fs.qs
             filter_end_time = timezone.now()
             duration += (filter_end_time - filter_start_time)
-            print('duration<<<', filter_end_time - filter_start_time)
             count = fs_qs.count()
 
             # Reset the Queryset to run the filters again

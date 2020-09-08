@@ -347,9 +347,7 @@ def create_test_filtersets(filter_info_list):
 
 def remove_unneeded_filters_from_fs(filter_set, filter_names):
     new_fs = deepcopy(filter_set)
-    print('### BEFORE', filter_names, len(new_fs.filters))
     for name in list(new_fs.filters.keys()):
         if name not in filter_names:
             del new_fs.filters[name]
-    print('### AFTER', len(new_fs.filters), new_fs.filters)
     return new_fs
