@@ -131,10 +131,10 @@ class Command(BaseCommand):
         prop_filter_duration, prop_filter_count = self._time_filterset(property_filter_fs, self.repeat_count)
 
         # Filtering with only a single Filter - This will remove Filters from the Filterset
-        remove_unneeded_filters_from_fs(filter_fs, filters_used)
-        single_filter_duration, _ = self._time_filterset(filter_fs, self.repeat_count)
-        remove_unneeded_filters_from_fs(property_filter_fs, prop_filters_used)
-        single_prop_filter_duration, _ = self._time_filterset(property_filter_fs, self.repeat_count)
+        cleaned_filter_fs = remove_unneeded_filters_from_fs(filter_fs, filters_used)
+        single_filter_duration, _ = self._time_filterset(cleaned_filter_fs, self.repeat_count)
+        cleaned_property_filter_fs = remove_unneeded_filters_from_fs(property_filter_fs, prop_filters_used)
+        single_prop_filter_duration, _ = self._time_filterset(cleaned_property_filter_fs, self.repeat_count)
 
 
         # Update Results

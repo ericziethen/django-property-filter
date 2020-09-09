@@ -45,21 +45,12 @@ goto:eof
 :run_benchmark
 echo %date%-%time% ### RUN PROFILER - Settings: "%DJANGO_SETTINGS_MODULE%" ###
 
-rem Setup DB
-echo Command: 'python manage.py profile_filter --skipPropertyFilter'
-python manage.py profile_filter --skipPropertyFilter --skipFilter
-
-rem Filter
-set PROFILE_LOG=%SCRIPT_DIR%profile_%datetimef%_FILTER.html
-echo Command: 'python -m pyinstrument -r html --show-all manage.py profile_filter --skipPropertyFilter'
-python -m pyinstrument -r html --show-all manage.py profile_filter --skipSetupDb --skipPropertyFilter >> "%PROFILE_LOG%"
-
-rem Property Filter
-
-set PROFILE_LOG=%SCRIPT_DIR%profile_%datetimef%_PROPERTY_FILTER.html
-echo Command: 'python -m pyinstrument -r html --show-all manage.py profile_filter --skipSetupDb --skip_filter'
-python -m pyinstrument -r html --show-all manage.py profile_filter --skipSetupDb --skipFilter >> "%PROFILE_LOG%"
-
+rem Run Benchmark
+set PROFILE_DIR=%SCRIPT_DIR%Profiling
+if not exist "%PROFILE_DIR%" md "%PROFILE_DIR%"
+set PROFILE_LOG_BASE_NAME=%PROFILE_DIR%\profile_%datetimef%
+echo Command: 'python manage.py profile_filter "%PROFILE_LOG_BASE_NAME%"'
+python manage.py profile_filter "%PROFILE_LOG_BASE_NAME%"
 
 echo %date%-%time% ### PROFILER END ###
 echo[
