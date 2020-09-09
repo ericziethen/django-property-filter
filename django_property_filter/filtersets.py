@@ -50,10 +50,6 @@ class PropertyFilterSet(FilterSet):
             PropertyMultipleChoiceFilter
 
                 looks like an expensive call, about 
-
-
-
-
         '''
 
         # Filter By Property Filters
@@ -63,6 +59,10 @@ class PropertyFilterSet(FilterSet):
                 # TODO
                 #print(' FILTER NAME, VALUE', name, value)
                 pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
+
+
+            # TODO - If Preserving the Order is expensive, maybe we can pass a flag
+            # here depending if we filtered by a specific filter the requires it?
 
             # Generate the SQL for the property filter result
             queryset = filter_qs_by_pk_list(queryset, list(pk_list))
