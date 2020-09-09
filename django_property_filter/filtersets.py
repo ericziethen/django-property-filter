@@ -56,8 +56,6 @@ class PropertyFilterSet(FilterSet):
         if property_filter_list:
             pk_list = list(queryset.model.objects.all().values_list('pk', flat=True))
             for name, value in property_filter_list:
-                # TODO
-                #print(' FILTER NAME, VALUE', name, value)
                 pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
 
 

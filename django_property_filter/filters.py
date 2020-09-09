@@ -42,6 +42,8 @@ from django_property_filter.utils import (
     sort_queryset
 )
 
+EMPTY_VALUES = ([], (), {}, '', None)
+
 logger = logging.getLogger(__name__)
 
 
@@ -89,7 +91,7 @@ class PropertyBaseFilter(Filter):
         if initial_pk_list is not None only those Primary Keys will be considered
         """
         # If no Value given we don't need to filter at all
-        if not value and value != 0:
+        if value in EMPTY_VALUES:
             return initial_pk_list
 
         # Not None but empty List, Nothing to do, No chance for a find
@@ -246,7 +248,7 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Look
 
     def filter_pks(self, initial_pk_list, queryset, value):
         """Perform the custom filtering."""
-        if not value:
+        if value in EMPTY_VALUES:
             return super().filter_pks(initial_pk_list, queryset, None)
 
         self.lookup_expr = value.lookup_expr
@@ -259,7 +261,7 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
     def filter_pks(self, initial_pk_list, queryset, value):
         """Filter Multiple Choice Property Values."""
         # If no Value given we don't need to filter at all
-        if not value:
+        if value in EMPTY_VALUES:
             return initial_pk_list
 
         # Not None but empty List, Nothing to do, No chance for a find
@@ -496,7 +498,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
     def filter_pks(self, initial_pk_list, queryset, value):
         """Filter the PropertyOrderingFilter."""
         # If no value is set just return this queryset
-        if not value:
+        if value in EMPTY_VALUES:
             return initial_pk_list
 
         # Only sort by the first parameter
