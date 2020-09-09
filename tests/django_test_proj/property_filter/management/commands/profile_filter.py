@@ -91,6 +91,11 @@ class Command(BaseCommand):
         filter_fs, filter_names, property_filter_fs, prop_filter_names = create_test_filtersets(
             [(filter_name, prop_filter_name, lookup_value)])
 
+
+
+
+
+        '''
         # Normal Filtering
         print('filter_names', filter_names)
         self.profile_filterset(filter_fs, filter_name)
@@ -98,6 +103,8 @@ class Command(BaseCommand):
         print('prop_filter_names', prop_filter_names)
         # Property Filtering large fs
         self.profile_filterset(property_filter_fs, prop_filter_name + '_large_fs')
+        '''
+
 
         # Property Filtering smnall fs
         cleaned_property_filter_fs = remove_unneeded_filters_from_fs(property_filter_fs, [prop_filter_name])

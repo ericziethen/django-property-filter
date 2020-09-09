@@ -347,9 +347,12 @@ def create_test_filtersets(filter_info_list):
 
 def remove_unneeded_filters_from_fs(filter_set, filter_names):
     new_fs = deepcopy(filter_set)
+
     for name in list(new_fs.filters.keys()):
         if name not in filter_names:
             del new_fs.filters[name]
-            del new_fs.form.cleaned_data[name]
+
+            if hasattr(new_fs, '_form') and hasattr(new_fs.form, 'cleaned_data'):
+                del new_fs.form.cleaned_data[name]
 
     return new_fs
