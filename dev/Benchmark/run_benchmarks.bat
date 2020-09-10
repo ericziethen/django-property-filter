@@ -13,7 +13,6 @@ set CSV_FILE_PATH=%SCRIPT_DIR%benchmarks.csv
 
 pushd "%DJANGO_DIR%"
 
-call:run_benchmarks "100"
 call:run_benchmarks "1000"
 call:run_benchmarks "10000"
 call:run_benchmarks "50000"

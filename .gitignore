@@ -1,6 +1,7 @@
 # Project specific
 .eric
 django_property_filter/logs/*
+dev/Benchmark/Profiling/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

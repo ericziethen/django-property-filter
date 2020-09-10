@@ -9,9 +9,6 @@ set SCRIPT_DIR=%~dp0
 set PROJ_MAIN_DIR=%SCRIPT_DIR%..\..
 set MODULE_PATH=%PROJ_MAIN_DIR%\django_property_filter
 set DJANGO_DIR=%PROJ_MAIN_DIR%\tests\django_test_proj
-set CSV_FILE_PATH=%PROJ_MAIN_DIR%\benchmarks.csv
-
-
 
 for /f "delims=" %%a in ('wmic OS Get localdatetime ^| find "."') do set DateTime=%%a
 
@@ -24,42 +21,40 @@ set Sec=%DateTime:~12,2%
 
 set datetimef=%Yr%.%Mon%.%Day%_%Hr%-%Min%-%Sec%
 
-set PROFILE_LOG=%PROJ_MAIN_DIR%\profile_%datetimef%.html
-
 pushd "%DJANGO_DIR%"
 
-
-call:run_benchmark_sqlite "10000"
+call:run_benchmark_sqlite
 
 goto end
 
 :run_benchmarks
-set DB_ENTRIES=%~1
-call:run_benchmark_sqlite "%DB_ENTRIES%"
-call:run_benchmark_postgres "%DB_ENTRIES%"
+call:run_benchmark_sqlite
+call:run_benchmark_postgres
 goto:eof
 
 :run_benchmark_sqlite
-set DB_ENTRIES=%~1
 set DJANGO_SETTINGS_MODULE=django_test_proj.settings
-call:run_benchmark "%DB_ENTRIES%"
+call:run_benchmark
 goto:eof
 
 :run_benchmark_postgres
-set DB_ENTRIES=%~1
 set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
-call:run_benchmark "%DB_ENTRIES%"
+call:run_benchmark
 goto:eof
 
 :run_benchmark
-set DB_ENTRIES=%~1
-echo %data%-%time% ### RUN BENCHMARK - %DB_ENTRIES% entries - Settings: "%DJANGO_SETTINGS_MODULE%" ###
-echo Command: 'python -m pyinstrument manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%"' > "%PROFILE_LOG%"
-python -m pyinstrument -r html --show-all manage.py run_benchmarks %DB_ENTRIES% "%CSV_FILE_PATH%" > "%PROFILE_LOG%"
-echo %data%-%time% ### BENCHMARK END ###
+echo %date%-%time% ### RUN PROFILER - Settings: "%DJANGO_SETTINGS_MODULE%" ###
+
+rem Run Benchmark
+set PROFILE_DIR=%SCRIPT_DIR%Profiling
+if not exist "%PROFILE_DIR%" md "%PROFILE_DIR%"
+set PROFILE_LOG_BASE_NAME=%PROFILE_DIR%\profile_%datetimef%
+echo Command: 'python manage.py profile_filter "%PROFILE_LOG_BASE_NAME%"'
+python manage.py profile_filter "%PROFILE_LOG_BASE_NAME%"
+
+echo %date%-%time% ### PROFILER END ###
 echo[
 goto:eof
-
 
 :end
 popd
