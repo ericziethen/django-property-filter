@@ -98,10 +98,6 @@ class PropertyBaseFilter(Filter):
         if initial_pk_list is not None and not initial_pk_list:
             return []
 
-
-        # TODO - This is probably the biggest bottleneck, the run through the whole queryset
-        # Probably unavoidable
-
         # Filter all values from queryset, get the pk list
         wanted_pks = set()
         for obj in queryset:
@@ -268,23 +264,6 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
         if not queryset:
             return []
 
-        # TODO
-        # THis is quite a slow operation
-        '''
-            filter_pks - could take another list, i.e. or list, do not even evaluate pk if in there
-            - we can call super() in 2 ways
-                - AND - with initial pk_list
-                - OR -  with or list
-                  - Then we don't need to to AND and OR here if parent function can do that
-
-        '''
-
-
-        # TODO - Some Generic Optimiztion THoughts
-        # https://medium.com/@hansonkd/performance-problems-in-the-django-orm-1f62b3d04785
-
-
-
         result_pks = None
         for sub_value in value:
             filter_result = set(super().filter_pks(None, queryset, sub_value))
@@ -365,9 +344,6 @@ class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):
         """Filed Property to setup default choices."""
         queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
-        # TODO - This is very expensive
-
-        
         value_list = []
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
@@ -376,9 +352,6 @@ class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):
         value_list = sorted(value_list, key=lambda x: (x is None, x))
 
         self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
-
-        # TODO
-        print('PropertyAllValuesFilter.field')
 
         # Need to Call parent's Parent since our Parent uses DB fields directly
         return super(AllValuesFilter, self).field
@@ -392,9 +365,6 @@ class PropertyAllValuesMultipleFilter(PropertyMultipleChoiceFilter, AllValuesMul
         """Filed Property to setup default choices."""
         queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
-        # TODO - This is very expensive
-
-
         value_list = []
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
@@ -403,9 +373,6 @@ class PropertyAllValuesMultipleFilter(PropertyMultipleChoiceFilter, AllValuesMul
         value_list = sorted(set(value_list), key=lambda x: (x is None, x))
 
         self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
-
-        # TODO
-        print('PropertyAllValuesMultipleFilter.field')
 
         # Need to Call parent's Parent since our Parent uses DB fields directly
         return super(AllValuesMultipleFilter, self).field

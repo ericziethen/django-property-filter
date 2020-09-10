@@ -77,17 +77,23 @@ class Command(BaseCommand):
         delattr(prof_fs, '_qs')
 
         # Write to HTML
-        with open(F'{self.html_base_name_no_ext}_{self.db_entry_count}_{html_name_suffix_no_ext}.html', 'w') as fptr:
+        with open(F'{self.html_base_name_no_ext}_{html_name_suffix_no_ext}_{self.db_entry_count}.html', 'w') as fptr:
             fptr.write(profiler.output_html())
 
         print('<<< profile_filterset')
 
     def run_profiler(self):
-        print('>>> run_filter')
-        filter_name = 'number_MultipleChoiceFilter_OR'
-        prop_filter_name = 'prop_number_PropertyMultipleChoiceFilter_OR'
-        lookup_value = [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]
+        profile_list = [
+            ('number_MultipleChoiceFilter_OR', 'prop_number_PropertyMultipleChoiceFilter_OR', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
+            ('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
+            ('number_AllValuesMultipleFilter_AND', 'prop_number_PropertyAllValuesMultipleFilter_AND', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[0])]),
+        ]
 
+        for filter_name, prop_filter_name, lookup_value in profile_list:
+            self.profile_filter(filter_name, prop_filter_name, lookup_value)
+
+    def profile_filter(self, filter_name, prop_filter_name, lookup_value):
+        print('>>> run_filter', filter_name, prop_filter_name, lookup_value)
         filter_fs, filter_names, property_filter_fs, prop_filter_names = create_test_filtersets(
             [(filter_name, prop_filter_name, lookup_value)])
 

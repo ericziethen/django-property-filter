@@ -122,8 +122,6 @@ def filter_qs_by_pk_list(queryset, pk_list):
     9. Maximum Number Of Host Parameters In A Single SQL Statement
     """
 
-    # TODO - THis List comprehension takes a long time, maybe for this case we could store the PKs in order???
-    # OR only preserve the order when we must, for specific filters
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(pk_list)])
     result_qs = queryset.filter(pk__in=pk_list).order_by(preserved)
 
@@ -168,10 +166,6 @@ def sort_queryset(sort_property, queryset):
 
     # Get a list of sorted primary keys
     value_list = [entry[0] for entry in value_list]
-
-
-    # TODO - THis List comprehension takes a long time, maybe for this case we could store the PKs in order???
-    # OR only preserve the order when we must, for specific filters
 
     # Sort the Queryset
     preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(value_list)])
