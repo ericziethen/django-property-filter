@@ -15,7 +15,7 @@ python:
   - '3.8'  # Latest Stable Version on Top so Linting and Deployment pick this one
   - '3.7'
   - '3.6'
-  - '3.9-dev'
+#  - '3.9-dev'  # Travis currently having some issues with the Dev Version to build
 
 env:
   - DJANGO_DB=SQLITE
