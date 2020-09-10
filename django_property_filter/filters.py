@@ -267,7 +267,7 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
         result_pks = None
         for sub_value in value:
             filter_result = set(super().filter_pks(None, queryset, sub_value))
-            
+
             if self.conjoined:  # AND
                 if result_pks is None:
                     result_pks = set(initial_pk_list)
