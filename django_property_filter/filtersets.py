@@ -31,11 +31,6 @@ class PropertyFilterSet(FilterSet):
                     "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
                     % (type(self).__name__, name, type(queryset).__name__)
 
-
-        # TODO - !!! Add Single FilterFilterset to Benchmarking to compare with Multiple as Well
-
-
-
         # TODO - REVIEW EFFICIENCY OF FILTERING IF NOTHING TO FILTER
         '''
             If many Filters defined of the queryset, even if nothing is there to filter it slows down
@@ -52,15 +47,21 @@ class PropertyFilterSet(FilterSet):
                 looks like an expensive call, about 
         '''
 
+        # TODO - SORT ORDER
+        '''
+            Since sorting is quite an expensive operation we need to only sort if needed
+                - 1.) We need to decide when to keep sort order, i.e. Only Ordering Filter, Ordering Mixed
+                        - Check what Filter does when it's mixed and do the same
+                - 2.) When calling filter_qs_by_pk_list -> build_limited_filter_expr
+                    - needs to handle sorting and not sorting
+
+        '''
+
         # Filter By Property Filters
         if property_filter_list:
             pk_list = list(queryset.model.objects.all().values_list('pk', flat=True))
             for name, value in property_filter_list:
                 pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
-
-
-            # TODO - If Preserving the Order is expensive, maybe we can pass a flag
-            # here depending if we filtered by a specific filter the requires it?
 
             # Generate the SQL for the property filter result
             queryset = filter_qs_by_pk_list(queryset, list(pk_list))
