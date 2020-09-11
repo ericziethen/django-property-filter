@@ -20,6 +20,37 @@ class PropertyFilterSet(FilterSet):
         """Filter the Given Queryset."""
         property_filter_list = []
 
+        # TODO - THINK !!!
+        # It would be easiest to do property filters first to let it decide on any Orderingfilters
+        # !!! BUT !!! then we can't know how many Parameters are on the sql so !!! CANT DO THAT !!!
+        # -> Therefore
+        '''
+            # Sort Filters
+            for each filter
+                sort filters
+                if OrderingFilter
+                    set keep_order=True
+
+            pk_list = Create Pk List (keep order)
+
+            order_list = None
+            if keep_order:
+                order_list = pk_list.copy()
+
+            for each property filter
+                if PropertyOrderingFilter
+                    pk_list = sort property filter
+
+                    set keep_order=True
+                    order_list = pk_list # Keep the latest order list
+
+            queryset = filter_qs_by_pk_list(queryset, list(pk_list), order_list)
+
+            -> filter_qs_by_pk_list needs to be able to keep the the order of order_list
+
+        '''
+
+
         # Filter by django_filter filters first so we can control the number of sql parameters
         for name, value in self.form.cleaned_data.items():
             if isinstance(self.filters[name], PropertyBaseFilter):
