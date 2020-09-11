@@ -419,8 +419,8 @@ class VolumeTestModel(models.Model):
 
 
 class MultiFilterTestModel(models.Model):
-    date = models.DateField()
-    date_time = models.DateTimeField()
+    date = models.DateField(null=True)
+    date_time = models.DateTimeField(null=True)
     is_true = models.BooleanField(null=True)
     number = models.IntegerField(null=True)
     text = models.CharField(max_length=32)

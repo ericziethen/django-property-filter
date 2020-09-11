@@ -37,6 +37,12 @@ class PropertyFilterSet(FilterSet):
             for name, value in property_filter_list:
                 pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
 
+
+            # TODO - This is interfering with Ordering Filter
+            # The call to filter_qs_by_pk_list screws with the sort order,
+            # So we MUST preserve the order if Ordering Filter is there
+            # TODO - Need some design thoughts
+
             # Generate the SQL for the property filter result
             queryset = filter_qs_by_pk_list(queryset, list(pk_list))
 

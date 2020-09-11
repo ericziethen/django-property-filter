@@ -464,6 +464,9 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
 
     def filter_pks(self, initial_pk_list, queryset, value):
         """Filter the PropertyOrderingFilter."""
+
+        print('value, initial_pk_list', value, initial_pk_list)
+
         # If no value is set just return this queryset
         if value in EMPTY_VALUES:
             return initial_pk_list

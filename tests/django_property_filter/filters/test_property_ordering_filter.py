@@ -41,7 +41,7 @@ TEST_LOOKUPS = [
     ('exact', '-age', '-prop_age', [0, 3, 4, 5, 2, -1, 1]),
 ]
 
-
+@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, lookup_val_prop, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, lookup_val_prop, result_list):
