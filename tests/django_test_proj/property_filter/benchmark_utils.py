@@ -216,7 +216,7 @@ SINGLE_FILTER_LOOKUP_LIST = [
     ('number_MultipleChoiceFilter_OR', 'prop_number_PropertyMultipleChoiceFilter_OR', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ('number_MultipleChoiceFilter_AND', 'prop_number_PropertyMultipleChoiceFilter_AND', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[0])]),
     ('number_NumberFilter', 'prop_number_PropertyNumberFilter', NUMBER_RANGE[0]),
-    ('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', 'number'),
+    ('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', ('number', 'prop_number')),
     ('time_TimeFilter', 'prop_time_PropertyTimeFilter', str(TIME_RANGE[0])),
     ('number_TypedChoiceFilter', 'prop_number_PropertyTypedChoiceFilter', NUMBER_RANGE[0]),
     ('text_TypedMultipleChoiceFilter_AND', 'prop_number_PropertyTypedMultipleChoiceFilter_AND', [NUMBER_RANGE[0], NUMBER_RANGE[0]]),
@@ -338,6 +338,8 @@ def create_filter_dics(filter_info_list):
             filter_dic = {F'{filter_name}_{from_suffix}': lookup_value[0], F'{filter_name}_{to_suffix}': lookup_value[1]}
         elif filter_type in LOOKUP_FILTER_TYPES:
             filter_dic = {filter_name: lookup_value[0], F'{filter_name}_lookup': lookup_value[1]}
+        elif isinstance(lookup_value, tuple):
+            filter_dic = {filter_name: lookup_value[0]}
         else:
             filter_dic = {filter_name: lookup_value}
 
@@ -346,6 +348,8 @@ def create_filter_dics(filter_info_list):
             prop_filter_dic = {F'{prop_filter_name}_{prop_from_suffix}': lookup_value[0], F'{prop_filter_name}_{prop_to_suffix}': lookup_value[1]}
         elif prop_filter_type in LOOKUP_FILTER_TYPES:
             prop_filter_dic = {prop_filter_name: lookup_value[0], F'{prop_filter_name}_lookup': lookup_value[1]}
+        elif isinstance(lookup_value, tuple):
+            prop_filter_dic = {prop_filter_name: lookup_value[1]}
         else:
             prop_filter_dic = {prop_filter_name: lookup_value}
 
