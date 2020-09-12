@@ -370,15 +370,20 @@ class TestFilteringWithRangeConvertion(TestCase):
 
 class TestFilteringAndOrdering(TestCase):
     def setUp(self):
-        pass
+        Delivery.objects.create(pk=1, address='A')
+        Delivery.objects.create(pk=2, address='B')
+        Delivery.objects.create(pk=3, address='C')
+        Delivery.objects.create(pk=4, address='D')
 
     @pytest.mark.debug
     def test_keep_order_full_qs_no_filtering(self):
-        assert False
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), [1, 2, 3, 4], preserve_order=[3, 1, 4, 2])
+        assert list(result_qs.values_list('pk', flat=True)) == [3, 1, 4, 2]
 
     @pytest.mark.debug
     def test_keep_order_with_filtering(self):
-        assert False
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), [3, 2, 4], preserve_order=[3, 1, 4, 2])
+        assert list(result_qs.values_list('pk', flat=True)) == [3, 4, 2]
 
 
 VOLUME_TEST_MAX = 10000
