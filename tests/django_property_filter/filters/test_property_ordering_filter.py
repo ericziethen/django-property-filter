@@ -41,7 +41,7 @@ TEST_LOOKUPS = [
     ('exact', '-age', '-prop_age', [0, 3, 4, 5, 2, -1, 1]),
 ]
 
-#@pytest.mark.debug
+@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, lookup_val_prop, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, lookup_val_prop, result_list):
@@ -82,8 +82,18 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, look
     with pytest.raises(ValueError):
         ImplicitFilterSet({F'prop_age__{lookup_xpr}': lookup_val_prop}, queryset=OrderingFilterModel.objects.all())
 
-    # Check PropertyFilterSet using both together
+    # Check PropertyFilterSet with Filter
+    class FilterWithPropFilterSet(PropertyFilterSet):
+        age = OrderingFilter(fields=('age', 'age'))
 
+        class Meta:
+            model = OrderingFilterModel
+            exclude = ['first_name', 'last_name', 'username', 'age']
+
+    legacy_filter_fs = FilterWithPropFilterSet({'age': lookup_val}, queryset=OrderingFilterModel.objects.all())
+    assert list(legacy_filter_fs.qs.values_list('id', flat=True)) == list(result_list)
+
+    # Check PropertyFilterSet using both together
     class MixedFilterSet(PropertyFilterSet):
         age = OrderingFilter(fields=('age', 'age'))
         prop_age = PropertyOrderingFilter(fields=('prop_age', 'prop_age'))

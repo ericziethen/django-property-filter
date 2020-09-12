@@ -36,13 +36,12 @@ from django_filters.filters import (
     UUIDFilter,
 )
 
+from django_property_filter.constants import EMPTY_VALUES
 from django_property_filter.utils import (
     compare_by_lookup_expression,
     get_value_for_db_field,
     sort_queryset
 )
-
-EMPTY_VALUES = ([], (), {}, '', None)
 
 logger = logging.getLogger(__name__)
 
@@ -492,4 +491,8 @@ EXPLICIT_ONLY_FILTERS = [
     PropertyOrderingFilter,
     PropertyTypedChoiceFilter,
     PropertyTypedMultipleChoiceFilter,
+]
+
+PRESERVE_ORDER_FILTERS = [
+    PropertyOrderingFilter,
 ]

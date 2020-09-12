@@ -144,6 +144,8 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
                 logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter'
                                 F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
 
+    # TODO
+    print('filter_qs_by_pk_list.preserve_order', preserve_order)
     if preserve_order:
         preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(preserve_order)])
         result_qs = result_qs.order_by(preserved)

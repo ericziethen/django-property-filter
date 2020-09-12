@@ -4,9 +4,12 @@ from django.db import models
 
 from django_filters import Filter, FilterSet
 
-from django_property_filter.filters import EXPLICIT_ONLY_FILTERS, PropertyBaseFilter
+from django_property_filter.constants import EMPTY_VALUES
+from django_property_filter.filters import EXPLICIT_ONLY_FILTERS, PRESERVE_ORDER_FILTERS, PropertyBaseFilter
 from django_property_filter.utils import filter_qs_by_pk_list
 
+
+KEEP_ORDER_FILTER = []
 
 class PropertyFilterSet(FilterSet):
     """Generic Filterset for Property Filters."""
@@ -19,6 +22,15 @@ class PropertyFilterSet(FilterSet):
     def filter_queryset(self, queryset):
         """Filter the Given Queryset."""
         property_filter_list = []
+
+
+
+
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+
+
+
+
 
         # TODO - THINK !!!
         # It would be easiest to do property filters first to let it decide on any Orderingfilters
@@ -62,11 +74,32 @@ class PropertyFilterSet(FilterSet):
                     "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
                     % (type(self).__name__, name, type(queryset).__name__)
 
+        print('AFTER NORMAL FILTERING PKs', list(queryset.values_list('id', flat=True)))
+
+
         # Filter By Property Filters
         if property_filter_list:
-            pk_list = list(queryset.model.objects.all().values_list('pk', flat=True))
+            #pk_list = list(queryset.model.objects.all().values_list('pk', flat=True))
+            pk_list = list(queryset.values_list('id', flat=True))
+            print('INITIAL PK LIST')
+
+            # Check if we need to preserve the order from the normal Filter filtering
+            preserve_order = None
+            if queryset.ordered:
+                preserve_order = pk_list.copy()
+
             for name, value in property_filter_list:
-                pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
+                if value not in EMPTY_VALUES:
+                    # TODO
+                    print(F'FILTER: "{self.filters[name].__class__.__name__}" START - "{pk_list}"')
+                    pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
+                    print(F'FILTER: "{self.filters[name].__class__.__name__}" END" - "{pk_list}"')
+
+
+                    # If we need to preserve order keep track of the latest order list
+                    if self.filters[name].__class__ in PRESERVE_ORDER_FILTERS:
+                        preserve_order = pk_list.copy()
+
 
 
             # TODO - This is interfering with Ordering Filter
@@ -75,8 +108,12 @@ class PropertyFilterSet(FilterSet):
             # TODO - Need some design thoughts
 
             # Generate the SQL for the property filter result
-            queryset = filter_qs_by_pk_list(queryset, list(pk_list))
+            print(F'### FILTER WORK, pk_list: "{pk_list}", preserve_order: "{preserve_order}"')
+            queryset = filter_qs_by_pk_list(queryset, list(pk_list), preserve_order=preserve_order)
+            print(F'''### AFTER FILTER WORK, pk_list: "{list(queryset.values_list('id', flat=True))}"''')
+            print(F'### AFTER FILTER WORK, qs: "{queryset}"')
 
+            print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
         return queryset
 
     def _add_filter(self, filter_class, field_name, lookup_expr):
