@@ -269,11 +269,12 @@ class MultiFilterWithOrderingFilterTests(TestCase):
         MultiFilterTestModel.objects.create(id=4, number=4)
         MultiFilterTestModel.objects.create(id=5, number=2)
 
-    @pytest.mark.debug
+    #@pytest.mark.debug
     def test_filtering(self):
         class TestFilterSet(PropertyFilterSet):
             prop_number_range = PropertyRangeFilter(field_name='prop_number', lookup_expr='range')
             number_order = OrderingFilter(fields=('number', 'number'))
+            prop_number_order = PropertyOrderingFilter(fields=('prop_number', 'prop_number'))
 
             class Meta:
                 model = MultiFilterTestModel
@@ -292,6 +293,12 @@ class MultiFilterWithOrderingFilterTests(TestCase):
             {'prop_number_range_min': 2, 'prop_number_range_max': 4, 'number_order': 'number'},
             queryset=MultiFilterTestModel.objects.all())
         assert list(mixed_fs.qs.values_list('id', flat=True)) == [5, 2, 4]
+
+        # Filter and Prop Filter
+        filter_fs_reverse_order = TestFilterSet(
+            {'number_order': 'number', 'prop_number_order': '-prop_number'},
+            queryset=MultiFilterTestModel.objects.all())
+        assert list(filter_fs_reverse_order.qs.values_list('id', flat=True)) == [3, 4, 2, 5, 1]
 
 
 class VolumeMultipleFilterTests(TestCase):

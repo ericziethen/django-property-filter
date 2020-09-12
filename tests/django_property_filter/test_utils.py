@@ -368,6 +368,19 @@ class TestFilteringWithRangeConvertion(TestCase):
             assert set([5, 6, 7, 9, 10]).issubset(set(result_qs.values_list('pk', flat=True)))  # First 5 items from 2 ranges
 
 
+class TestFilteringAndOrdering(TestCase):
+    def setUp(self):
+        pass
+
+    @pytest.mark.debug
+    def test_keep_order_full_qs_no_filtering(self):
+        assert False
+
+    @pytest.mark.debug
+    def test_keep_order_with_filtering(self):
+        assert False
+
+
 VOLUME_TEST_MAX = 10000
 class VolumeTestQsFilteringByPkList(TestCase):
 
