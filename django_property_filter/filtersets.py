@@ -4,8 +4,12 @@ from django.db import models
 
 from django_filters import Filter, FilterSet
 
-from django_property_filter.filters import EXPLICIT_ONLY_FILTERS, PropertyBaseFilter
+from django_property_filter.constants import EMPTY_VALUES
+from django_property_filter.filters import EXPLICIT_ONLY_FILTERS, PRESERVE_ORDER_FILTERS, PropertyBaseFilter
 from django_property_filter.utils import filter_qs_by_pk_list
+
+
+KEEP_ORDER_FILTER = []
 
 
 class PropertyFilterSet(FilterSet):
@@ -33,12 +37,22 @@ class PropertyFilterSet(FilterSet):
 
         # Filter By Property Filters
         if property_filter_list:
-            pk_list = list(queryset.model.objects.all().values_list('pk', flat=True))
-            for name, value in property_filter_list:
-                pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
+            pk_list = list(queryset.values_list('id', flat=True))
 
-            # Generate the SQL for the property filter result
-            queryset = filter_qs_by_pk_list(queryset, list(pk_list))
+            # Check if we need to preserve the order from the normal Filter filtering
+            preserve_order = None
+            if queryset.ordered:
+                preserve_order = pk_list.copy()
+
+            for name, value in property_filter_list:
+                if value not in EMPTY_VALUES:
+                    pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
+
+                    # If we need to preserve order keep track of the latest order list
+                    if self.filters[name].__class__ in PRESERVE_ORDER_FILTERS:
+                        preserve_order = pk_list.copy()
+
+            queryset = filter_qs_by_pk_list(queryset, list(pk_list), preserve_order=preserve_order)
 
         return queryset
 

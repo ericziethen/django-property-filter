@@ -14,7 +14,8 @@ from django_filters import (
     CharFilter,
     DateFilter,
     DateTimeFilter,
-    NumberFilter
+    NumberFilter,
+    OrderingFilter,
 )
 
 from django_property_filter import (
@@ -24,7 +25,9 @@ from django_property_filter import (
     PropertyDateFilter,
     PropertyDateTimeFilter,
     PropertyMultipleChoiceFilter,
-    PropertyNumberFilter
+    PropertyNumberFilter,
+    PropertyOrderingFilter,
+    PropertyRangeFilter,
 )
 
 from property_filter.models import MultiFilterTestModel
@@ -253,6 +256,48 @@ class MultiFilterMultipleChoiceTests(TestCase):
             queryset=MultiFilterTestModel.objects.all()
         )
         assert not mixed_multi_choice_filter_fs.qs
+
+
+class MultiFilterWithOrderingFilterTests(TestCase):
+
+    def setUp(self):
+        tz = timezone.get_default_timezone()
+
+        MultiFilterTestModel.objects.create(id=1, number=1)
+        MultiFilterTestModel.objects.create(id=2, number=3)
+        MultiFilterTestModel.objects.create(id=3, number=5)
+        MultiFilterTestModel.objects.create(id=4, number=4)
+        MultiFilterTestModel.objects.create(id=5, number=2)
+
+    def test_filtering(self):
+        class TestFilterSet(PropertyFilterSet):
+            prop_number_range = PropertyRangeFilter(field_name='prop_number', lookup_expr='range')
+            number_order = OrderingFilter(fields=('number', 'number'))
+            prop_number_order = PropertyOrderingFilter(fields=('prop_number', 'prop_number'))
+
+            class Meta:
+                model = MultiFilterTestModel
+                exclude = ['id']
+
+        # Filter Ordering
+        filter_fs_order = TestFilterSet({'number_order': 'number'}, queryset=MultiFilterTestModel.objects.all())
+        assert list(filter_fs_order.qs.values_list('id', flat=True)) == [1, 5, 2, 4, 3]
+
+        # Prop Range Filter
+        prop_filter_fs_order = TestFilterSet({'prop_number_range_min': 2, 'prop_number_range_max': 4}, queryset=MultiFilterTestModel.objects.all())
+        assert set(prop_filter_fs_order.qs.values_list('id', flat=True)) == set([2, 4, 5])
+
+        # Filter Ordering & Range Filter
+        mixed_fs = TestFilterSet(
+            {'prop_number_range_min': 2, 'prop_number_range_max': 4, 'number_order': 'number'},
+            queryset=MultiFilterTestModel.objects.all())
+        assert list(mixed_fs.qs.values_list('id', flat=True)) == [5, 2, 4]
+
+        # Filter and Prop Filter
+        filter_fs_reverse_order = TestFilterSet(
+            {'number_order': 'number', 'prop_number_order': '-prop_number'},
+            queryset=MultiFilterTestModel.objects.all())
+        assert list(filter_fs_reverse_order.qs.values_list('id', flat=True)) == [3, 4, 2, 5, 1]
 
 
 class VolumeMultipleFilterTests(TestCase):

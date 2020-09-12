@@ -368,6 +368,22 @@ class TestFilteringWithRangeConvertion(TestCase):
             assert set([5, 6, 7, 9, 10]).issubset(set(result_qs.values_list('pk', flat=True)))  # First 5 items from 2 ranges
 
 
+class TestFilteringAndOrdering(TestCase):
+    def setUp(self):
+        Delivery.objects.create(pk=1, address='A')
+        Delivery.objects.create(pk=2, address='B')
+        Delivery.objects.create(pk=3, address='C')
+        Delivery.objects.create(pk=4, address='D')
+
+    def test_keep_order_full_qs_no_filtering(self):
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), [1, 2, 3, 4], preserve_order=[3, 1, 4, 2])
+        assert list(result_qs.values_list('pk', flat=True)) == [3, 1, 4, 2]
+
+    def test_keep_order_with_filtering(self):
+        result_qs = filter_qs_by_pk_list(Delivery.objects.all(), [3, 2, 4], preserve_order=[3, 1, 4, 2])
+        assert list(result_qs.values_list('pk', flat=True)) == [3, 4, 2]
+
+
 VOLUME_TEST_MAX = 10000
 class VolumeTestQsFilteringByPkList(TestCase):
 

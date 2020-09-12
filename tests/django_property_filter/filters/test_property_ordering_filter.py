@@ -70,7 +70,6 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, look
     prop_filter_fs = PropertyOrderingFilterSet({'prop_age': lookup_val_prop}, queryset=OrderingFilterModel.objects.all())
 
     assert list(prop_filter_fs.qs.values_list('id', flat=True)) == list(result_list)
-    #assert list(prop_filter_fs.qs) == list(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
@@ -82,6 +81,32 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, look
 
     with pytest.raises(ValueError):
         ImplicitFilterSet({F'prop_age__{lookup_xpr}': lookup_val_prop}, queryset=OrderingFilterModel.objects.all())
+
+    # Check PropertyFilterSet with Filter
+    class FilterWithPropFilterSet(PropertyFilterSet):
+        age = OrderingFilter(fields=('age', 'age'))
+
+        class Meta:
+            model = OrderingFilterModel
+            exclude = ['first_name', 'last_name', 'username', 'age']
+
+    legacy_filter_fs = FilterWithPropFilterSet({'age': lookup_val}, queryset=OrderingFilterModel.objects.all())
+    assert list(legacy_filter_fs.qs.values_list('id', flat=True)) == list(result_list)
+
+    # Check PropertyFilterSet using both together
+    class MixedFilterSet(PropertyFilterSet):
+        age = OrderingFilter(fields=('age', 'age'))
+        prop_age = PropertyOrderingFilter(fields=('prop_age', 'prop_age'))
+
+        class Meta:
+            model = OrderingFilterModel
+            exclude = ['first_name', 'last_name', 'username']
+
+    filter_fs_mixed = MixedFilterSet({'age': lookup_val}, queryset=OrderingFilterModel.objects.all())
+    prop_filter_fs_mixed = MixedFilterSet({'prop_age': lookup_val_prop}, queryset=OrderingFilterModel.objects.all())
+
+    assert list(filter_fs_mixed.qs.values_list('id', flat=True)) == list(result_list)
+    assert list(prop_filter_fs_mixed.qs.values_list('id', flat=True)) == list(result_list)
 
 
 def test_all_expressions_tested():
