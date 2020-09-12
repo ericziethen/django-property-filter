@@ -139,7 +139,7 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
                 range_filter_expr = build_limited_filter_expr(pk_list, max_params)
                 result_qs = queryset.filter(range_filter_expr)
 
-                logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter'
+                logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter '
                                 F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
 
     if preserve_order:

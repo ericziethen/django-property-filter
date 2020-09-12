@@ -133,7 +133,7 @@ class AllFiltersFilterSet(FilterSet):
     number_BaseInFilterNumber = BaseInFilterNumber(field_name='number', lookup_expr='in')
     number_BaseRangeFilterNumber = BaseRangeFilterNumber(field_name='number', lookup_expr='range')
     is_true_BooleanFilter = BooleanFilter(field_name='is_true', lookup_expr='exact')
-    text_CharFilter_CharFilter = CharFilter(field_name='text', lookup_expr='exact')
+    text_CharFilter = CharFilter(field_name='text', lookup_expr='exact')
     number_ChoiceFilter = ChoiceFilter(field_name='number', lookup_expr='exact', choices=NUMBER_CHOICES)
     date_DateFilter = DateFilter(field_name='date', lookup_expr='exact')
     date_DateFromToRangeFilter = DateFromToRangeFilter(field_name='date', lookup_expr='range')
@@ -205,7 +205,7 @@ SINGLE_FILTER_LOOKUP_LIST = [
     ('number_BaseInFilterNumber', 'prop_number_PropertyBaseInFilterNumber', str(NUMBER_RANGE[0])),
     ('number_BaseRangeFilterNumber', 'prop_number_PropertyBaseRangeFilterNumber', F'{NUMBER_RANGE[0]},{NUMBER_RANGE[1]}'),
     ('is_true_BooleanFilter', 'prop_is_true_PropertyBooleanFilter', IS_TRUE_RANGE[0]),
-    ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
+    ('text_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
     ('number_ChoiceFilter', 'prop_number_PropertyChoiceFilter', str(NUMBER_RANGE[0])),
     ('date_DateFilter', 'prop_date_PropertyDateFilter', str(DATE_RANGE[0])),
     ('date_DateRangeFilter', 'prop_date_PropertyDateRangeFilter', 'year'),
@@ -240,25 +240,25 @@ SINGLE_FILTER_LOOKUP_LIST = [
 MULTI_FILTER_LOOKUP_LIST = [
     [
         ('number_RangeFilter', 'prop_number_PropertyRangeFilter', (NUMBER_RANGE[0], NUMBER_RANGE[1])),
-        ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
+        ('text_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
         ('is_true_BooleanFilter', 'prop_is_true_PropertyBooleanFilter', IS_TRUE_RANGE[0]),
         ('date_DateFilter', 'prop_date_PropertyDateFilter', DATE_RANGE[0]),
         ('date_time_DateTimeFilter', 'prop_date_time_PropertyDateTimeFilter', DATE_TIME_RANGE[0]),
     ],
     [
         ('number_MultipleChoiceFilter_OR', 'prop_number_PropertyMultipleChoiceFilter_OR', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
-        ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
+        ('text_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
     ],
     [
-        ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
+        ('text_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
         ('number_MultipleChoiceFilter_OR', 'prop_number_PropertyMultipleChoiceFilter_OR', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
     ],
     [
         ('number_MultipleChoiceFilter_AND', 'prop_number_PropertyMultipleChoiceFilter_AND', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[0])]),
-        ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
+        ('text_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
     ],
     [
-        ('text_CharFilter_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
+        ('text_CharFilter', 'prop_text_PropertyCharFilter', TEXT_RANGE[0]),
         ('number_MultipleChoiceFilter_AND', 'prop_number_PropertyMultipleChoiceFilter_AND', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[0])]),
     ],
 ]
