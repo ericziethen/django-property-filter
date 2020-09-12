@@ -21,7 +21,6 @@ from django_property_filter.utils import (
     get_db_version,
     get_max_params_for_db,
     get_value_for_db_field,
-    sort_queryset,
     sort_range_list,
 )
 
@@ -184,32 +183,6 @@ def test_get_max_db_param_values_user_values_invalid(caplog):
 
         assert get_max_params_for_db() == 32766
         assert F'Invalid Environment Variable "USER_DB_MAX_PARAMS", int expected but got "not int invalid".' in caplog.text
-
-
-class SortQuerysetTests(TestCase):
-
-    def setUp(self):
-        DoubleIntModel.objects.create(id=1, number=2, age=10)
-        DoubleIntModel.objects.create(id=2, number=2, age=12)
-        DoubleIntModel.objects.create(id=3, number=1, age=5)
-        DoubleIntModel.objects.create(id=4, number=4, age=9)
-        DoubleIntModel.objects.create(id=5, number=2, age=11)
-
-    def test_sort_single_value_ascending(self):
-        qs = DoubleIntModel.objects.all()
-        assert list(qs)[0].id == 1
-
-        sorted_qs = sort_queryset('prop_age', qs)
-
-        assert list(sorted_qs.values_list('id', flat=True)) == [3, 4, 1, 5, 2]
-
-    def test_sort_single_value_descending(self):
-        qs = DoubleIntModel.objects.all()
-        assert list(qs)[0].id == 1
-
-        sorted_qs = sort_queryset('-prop_age', qs)
-
-        assert list(sorted_qs.values_list('id', flat=True)) == [2, 5, 1, 4, 3]
 
 
 RANGE_TEST_DATA = [

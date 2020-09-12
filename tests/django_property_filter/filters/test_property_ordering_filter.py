@@ -1,6 +1,7 @@
 
 
 import pytest
+
 from django_filters import FilterSet, OrderingFilter
 
 from django_property_filter import PropertyFilterSet, PropertyOrderingFilter
@@ -33,6 +34,24 @@ def fixture_property_number_filter():
         OrderingFilterModel.objects.create(id=3, first_name='Lester', last_name='Nygaard', username='Innocent', age=45)
         OrderingFilterModel.objects.create(id=4, first_name='Lionel', last_name='Messi', username='Bola', age=35)
         OrderingFilterModel.objects.create(id=5, first_name='Misato', last_name='Katsuragi', username='Shinji', age=28)
+
+
+@pytest.mark.django_db
+def test_sorted_pk_list_ascending(fixture_property_number_filter):
+    qs = OrderingFilterModel.objects.all()
+    assert list(qs)[0].id == -1
+
+    sorted_pk_list = PropertyOrderingFilter(field_name='fake_field').sorted_pk_list_from_property('prop_age', qs)
+    assert sorted_pk_list == [1, -1, 2, 5, 4, 3, 0]
+
+
+@pytest.mark.django_db
+def test_sorted_pk_list_descending(fixture_property_number_filter):
+    qs = OrderingFilterModel.objects.all()
+    assert list(qs)[0].id == -1
+
+    sorted_pk_list = PropertyOrderingFilter(field_name='fake_field').sorted_pk_list_from_property('-prop_age', qs)
+    assert sorted_pk_list == [0, 3, 4, 5, 2, -1, 1]
 
 
 TEST_LOOKUPS = [

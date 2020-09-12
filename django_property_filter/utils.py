@@ -146,34 +146,10 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
         preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(preserve_order)])
         result_qs = result_qs.order_by(preserved)
 
+        # TODO
+        print(F'#####\n{result_qs.query}\n#####')
+
     return result_qs
-
-
-def sort_queryset(sort_property, queryset):
-    """Sort the queryset by the given property name. "-" for descending is supported."""
-    # Identify the sort order
-    descending = False
-    if sort_property.startswith('-'):
-        descending = True
-        sort_property = sort_property[1:]
-
-    # Build a list of pk and value, this might become very large depending on data type
-    value_list = []
-    for obj in queryset:
-        property_value = get_value_for_db_field(obj, sort_property)
-        value_list.append((obj.pk, property_value))
-
-    # Sort the list of tuples
-    value_list = sorted(value_list, key=lambda x: x[1], reverse=descending)
-
-    # Get a list of sorted primary keys
-    value_list = [entry[0] for entry in value_list]
-
-    # Sort the Queryset
-    preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(value_list)])
-    queryset = filter_qs_by_pk_list(queryset, value_list).order_by(preserved)
-
-    return queryset
 
 
 def get_value_for_db_field(obj, field_str):

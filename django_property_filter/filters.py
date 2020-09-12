@@ -40,7 +40,6 @@ from django_property_filter.constants import EMPTY_VALUES
 from django_property_filter.utils import (
     compare_by_lookup_expression,
     get_value_for_db_field,
-    sort_queryset
 )
 
 logger = logging.getLogger(__name__)
@@ -457,9 +456,33 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
     def filter_pks(self, initial_pk_list, queryset, value):
         """Filter the PropertyOrderingFilter."""
         # Only sort by the first parameter
-        sorted_qs = sort_queryset(self.get_ordering_value(value[0]), queryset)
+        return self.sorted_pk_list_from_property(self.get_ordering_value(value[0]), queryset)
 
-        return list(sorted_qs.values_list('pk', flat=True))
+
+
+    def sorted_pk_list_from_property(self, sort_property, queryset):
+        # Identify the sort order
+        descending = False
+        if sort_property.startswith('-'):
+            descending = True
+            sort_property = sort_property[1:]
+
+        # Build a list of pk and value, this might become very large depending on data type
+        value_list = []
+        for obj in queryset:
+            property_value = get_value_for_db_field(obj, sort_property)
+            value_list.append((obj.pk, property_value))
+
+        # Sort the list of tuples
+        value_list = sorted(value_list, key=lambda x: x[1], reverse=descending)
+
+        # Get a list of sorted primary keys
+        value_list = [entry[0] for entry in value_list]
+
+        return value_list
+
+
+
 
 
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
