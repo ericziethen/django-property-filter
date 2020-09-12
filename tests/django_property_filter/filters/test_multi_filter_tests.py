@@ -269,7 +269,6 @@ class MultiFilterWithOrderingFilterTests(TestCase):
         MultiFilterTestModel.objects.create(id=4, number=4)
         MultiFilterTestModel.objects.create(id=5, number=2)
 
-    #@pytest.mark.debug
     def test_filtering(self):
         class TestFilterSet(PropertyFilterSet):
             prop_number_range = PropertyRangeFilter(field_name='prop_number', lookup_expr='range')

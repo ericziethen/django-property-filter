@@ -243,9 +243,6 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Look
 
     def filter_pks(self, initial_pk_list, queryset, value):
         """Perform the custom filtering."""
-        if value in EMPTY_VALUES:
-            return super().filter_pks(initial_pk_list, queryset, None)
-
         self.lookup_expr = value.lookup_expr
         return super().filter_pks(initial_pk_list, queryset, value.value)
 
@@ -255,10 +252,6 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
 
     def filter_pks(self, initial_pk_list, queryset, value):
         """Filter Multiple Choice Property Values."""
-        # If no Value given we don't need to filter at all
-        if value in EMPTY_VALUES:
-            return initial_pk_list
-
         # Not None but empty List, Nothing to do, No chance for a find
         if not queryset:
             return []
@@ -463,13 +456,6 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
 
     def filter_pks(self, initial_pk_list, queryset, value):
         """Filter the PropertyOrderingFilter."""
-
-        print('value, initial_pk_list', value, initial_pk_list)
-
-        # If no value is set just return this queryset
-        if value in EMPTY_VALUES:
-            return initial_pk_list
-
         # Only sort by the first parameter
         sorted_qs = sort_queryset(self.get_ordering_value(value[0]), queryset)
 

@@ -23,46 +23,6 @@ class PropertyFilterSet(FilterSet):
         """Filter the Given Queryset."""
         property_filter_list = []
 
-
-
-
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-
-
-
-
-
-        # TODO - THINK !!!
-        # It would be easiest to do property filters first to let it decide on any Orderingfilters
-        # !!! BUT !!! then we can't know how many Parameters are on the sql so !!! CANT DO THAT !!!
-        # -> Therefore
-        '''
-            # Sort Filters
-            for each filter
-                sort filters
-                if OrderingFilter
-                    set keep_order=True
-
-            pk_list = Create Pk List (keep order)
-
-            order_list = None
-            if keep_order:
-                order_list = pk_list.copy()
-
-            for each property filter
-                if PropertyOrderingFilter
-                    pk_list = sort property filter
-
-                    set keep_order=True
-                    order_list = pk_list # Keep the latest order list
-
-            queryset = filter_qs_by_pk_list(queryset, list(pk_list), order_list)
-
-            -> filter_qs_by_pk_list needs to be able to keep the the order of order_list
-
-        '''
-
-
         # Filter by django_filter filters first so we can control the number of sql parameters
         for name, value in self.form.cleaned_data.items():
             if isinstance(self.filters[name], PropertyBaseFilter):
@@ -74,14 +34,9 @@ class PropertyFilterSet(FilterSet):
                     "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
                     % (type(self).__name__, name, type(queryset).__name__)
 
-        print('AFTER NORMAL FILTERING PKs', list(queryset.values_list('id', flat=True)))
-
-
         # Filter By Property Filters
         if property_filter_list:
-            #pk_list = list(queryset.model.objects.all().values_list('pk', flat=True))
             pk_list = list(queryset.values_list('id', flat=True))
-            print('INITIAL PK LIST')
 
             # Check if we need to preserve the order from the normal Filter filtering
             preserve_order = None
@@ -90,30 +45,14 @@ class PropertyFilterSet(FilterSet):
 
             for name, value in property_filter_list:
                 if value not in EMPTY_VALUES:
-                    # TODO
-                    print(F'FILTER: "{self.filters[name].__class__.__name__}" START - "{pk_list}"')
                     pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
-                    print(F'FILTER: "{self.filters[name].__class__.__name__}" END" - "{pk_list}"')
-
 
                     # If we need to preserve order keep track of the latest order list
                     if self.filters[name].__class__ in PRESERVE_ORDER_FILTERS:
                         preserve_order = pk_list.copy()
 
-
-
-            # TODO - This is interfering with Ordering Filter
-            # The call to filter_qs_by_pk_list screws with the sort order,
-            # So we MUST preserve the order if Ordering Filter is there
-            # TODO - Need some design thoughts
-
-            # Generate the SQL for the property filter result
-            print(F'### FILTER WORK, pk_list: "{pk_list}", preserve_order: "{preserve_order}"')
             queryset = filter_qs_by_pk_list(queryset, list(pk_list), preserve_order=preserve_order)
-            print(F'''### AFTER FILTER WORK, pk_list: "{list(queryset.values_list('id', flat=True))}"''')
-            print(F'### AFTER FILTER WORK, qs: "{queryset}"')
 
-            print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
         return queryset
 
     def _add_filter(self, filter_class, field_name, lookup_expr):
