@@ -11,6 +11,7 @@ from django_property_filter.utils import filter_qs_by_pk_list
 
 KEEP_ORDER_FILTER = []
 
+
 class PropertyFilterSet(FilterSet):
     """Generic Filterset for Property Filters."""
 
