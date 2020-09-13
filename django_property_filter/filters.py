@@ -458,9 +458,8 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
         # Only sort by the first parameter
         return self.sorted_pk_list_from_property(self.get_ordering_value(value[0]), queryset)
 
-
-
-    def sorted_pk_list_from_property(self, sort_property, queryset):
+    def sorted_pk_list_from_property(self, sort_property, queryset):  # pylint: disable=no-self-use
+        """Sorting the primary key list of the given queryset based on the given property."""
         # Identify the sort order
         descending = False
         if sort_property.startswith('-'):
@@ -480,9 +479,6 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
         value_list = [entry[0] for entry in value_list]
 
         return value_list
-
-
-
 
 
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
