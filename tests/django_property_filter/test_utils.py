@@ -154,6 +154,7 @@ DB_PARAM_LIMITS = [
     ('postgresql', '1.0.0', None),
     ('postgresql', '9.9.9', None),
 ]
+@pytest.mark.debug
 @pytest.mark.parametrize('db_name, db_version, max_params', DB_PARAM_LIMITS)
 def test_get_max_db_param_values(db_name, db_version, max_params):
     with patch.object(connection, 'vendor', db_name), patch.object(sqlite3, 'sqlite_version', db_version):
@@ -203,6 +204,18 @@ def test_range_data_convertion(input_list, expected_result_list):
 
     assert result_list == expected_result_list
 
+RANGE_TEST_DATA_UNSORTED = [
+    ([1, 4, 2], [(1, 1), (4, 4), (2, 2)]),
+    ([1, 4, 5, 6, 2], [(1, 1), (4, 6), (2, 2)]),
+]
+@pytest.mark.parametrize('input_list, expected_result_list', RANGE_TEST_DATA_UNSORTED)
+def test_range_data_convertion_unsorted(input_list, expected_result_list):
+    result_list = convert_int_list_to_range_lists(input_list, sort_list=False)
+
+    assert result_list == expected_result_list
+
+
+
 
 def test_large_number_range_convertion():
 
@@ -231,7 +244,7 @@ RANGE_SORT_TEST_DATA = [
     ([(1, 3), (5, 5), (7, 8)], [(1, 3), (7, 8), (5, 5)], True),
 ]
 @pytest.mark.parametrize('unsorted_range_list, sorted_range_list, descending', RANGE_SORT_TEST_DATA)
-def test_range_data_convertion(unsorted_range_list, sorted_range_list, descending):
+def test_sort_range_list(unsorted_range_list, sorted_range_list, descending):
     result_list = sort_range_list(unsorted_range_list, descending=descending)
 
     assert result_list == sorted_range_list

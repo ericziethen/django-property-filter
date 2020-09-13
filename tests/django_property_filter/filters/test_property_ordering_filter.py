@@ -1,10 +1,17 @@
 
+import os
 
 import pytest
+
+from unittest.mock import patch
+
+from django.db.models.query import QuerySet
+from django.db.utils import OperationalError
 
 from django_filters import FilterSet, OrderingFilter
 
 from django_property_filter import PropertyFilterSet, PropertyOrderingFilter
+from django_property_filter.utils import get_max_params_for_db
 
 from property_filter.models import OrderingFilterModel
 
@@ -126,6 +133,30 @@ def test_lookup_xpr(fixture_property_number_filter, lookup_xpr, lookup_val, look
 
     assert list(filter_fs_mixed.qs.values_list('id', flat=True)) == list(result_list)
     assert list(prop_filter_fs_mixed.qs.values_list('id', flat=True)) == list(result_list)
+
+MAX_PARAM_TESTS = [
+    (5, [1]),
+    (6, [1, -1]),
+]
+@pytest.mark.django_db
+@pytest.mark.parametrize('max_params, expected_result_list', MAX_PARAM_TESTS)
+def test_ordering_max_limit_exceeded(fixture_property_number_filter, monkeypatch, max_params, expected_result_list):
+    monkeypatch.setenv('USER_DB_MAX_PARAMS', str(max_params), prepend=False)
+
+    assert get_max_params_for_db() == max_params
+
+    class PropertyOrderingFilterSet(PropertyFilterSet):
+        prop_age = PropertyOrderingFilter(fields=('prop_age', 'prop_age'))
+
+        class Meta:
+            model = OrderingFilterModel
+            exclude = ['first_name', 'last_name', 'username', 'age']
+
+    prop_filter_fs = PropertyOrderingFilterSet({'prop_age': 'prop_age'}, queryset=OrderingFilterModel.objects.all())
+
+    with patch.object(QuerySet, 'count') as mock_method:
+        mock_method.side_effect = (OperationalError(), None)
+        assert list(prop_filter_fs.qs.values_list('id', flat=True)) == expected_result_list
 
 
 def test_all_expressions_tested():

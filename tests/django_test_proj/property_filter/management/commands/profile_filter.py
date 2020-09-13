@@ -79,9 +79,12 @@ class Command(BaseCommand):
         profiler.start()
 
         # code  profile
-        prof_fs.qs
+        result_qs = prof_fs.qs
 
         profiler.stop()
+
+        #print('>>>', result_qs.values_list('number', flat=True))
+        len(result_qs)  # Make sure no errors when evaluating the qs
 
         # Reset the Queryset to run the filters again
         delattr(prof_fs, '_qs')

@@ -24,7 +24,7 @@ def get_db_version():
     return 'Unknown'
 
 
-def convert_int_list_to_range_lists(int_list):
+def convert_int_list_to_range_lists(int_list, *, sort_list=True):
     """
     Convert a list of numbers to ranges and returns a list of tuples representing the ranges.
 
@@ -32,7 +32,11 @@ def convert_int_list_to_range_lists(int_list):
     """
     # Build a list of lists
     range_list = []
-    for num in sorted(int_list):
+    working_list = int_list
+    if sort_list:
+        working_list = sorted(int_list)
+
+    for num in working_list:
         if range_list:
             # Check if Part of range
             if range_list[-1][1] + 1 == num:  # Continuing a range
@@ -91,6 +95,7 @@ def build_limited_filter_expr(pk_list, max_params):
     in_list = []            # Each entry takes up 1 parameter
 
     params_used = 0
+
     for entry in sort_range_list(convert_int_list_to_range_lists(pk_list), descending=True):
         if entry[0] == entry[1] or params_used + 1 >= max_params:  # single item or space for only 1 param
             in_list.append(entry[0])
@@ -136,8 +141,48 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
         except OperationalError:
             max_params = get_max_params_for_db()
             if max_params is not None and max_params < len(pk_list):
-                range_filter_expr = build_limited_filter_expr(pk_list, max_params)
-                result_qs = queryset.filter(range_filter_expr)
+
+
+
+                # TODO - REVIEW
+                """
+                    When Order is required we would need as many order parameters as we would have pks
+                    -> Halfing if
+                    - Ranges can reduce that but then e.g.
+                        (1..5), still needs the order list to be [1, 2, 3, 4, 5] which is a slight optimization
+                        Simplest way is to build up a pk list in order of preserve_order list if in pk_list until the max
+                        - Ranges could be considered as an extended more complicated way
+
+                    !!!!! MOST EFFICIENT WAY
+                        - Create a pk_list in order (based on order list)
+                        - call build_limited_filter_expr
+                            - disable sorting
+                            -> calls convert_int_list_to_range_lists
+                                - disable sorting
+                        
+                        - That way we end up with an expression which includes ranges
+
+                """
+                if preserve_order:
+                    # Only do 1/3 of the items to be able to preserve the order
+                    items_left = int(max_params / 3)
+                    limited_pk_list = []
+
+                    for entry in preserve_order:
+                        if items_left <= 0:
+                            break
+
+                        if entry in pk_list:
+                            limited_pk_list.append(entry)
+                            items_left -= 1
+                    preserve_order = limited_pk_list  # Order preserved for limited pks
+                    result_qs = queryset.filter(pk__in=limited_pk_list)
+
+                    logging.warning('Limiting the Max SQL Parameters to be able to preserve the filter order')
+
+                else:
+                    range_filter_expr = build_limited_filter_expr(pk_list, max_params)
+                    result_qs = queryset.filter(range_filter_expr)
 
                 logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter '
                                 F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
@@ -145,9 +190,6 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
     if preserve_order:
         preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(preserve_order)])
         result_qs = result_qs.order_by(preserved)
-
-        # TODO
-        print(F'#####\n{result_qs.query}\n#####')
 
     return result_qs
 
