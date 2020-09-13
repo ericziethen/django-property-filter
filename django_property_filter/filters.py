@@ -453,6 +453,11 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
 
     supported_lookups = ['exact']
 
+    def __init__(self, *args, **kwargs):
+        """Constructr for PropertyOrderingFilter."""
+        kwargs.setdefault('label', 'Property Ordering')
+        super().__init__(*args, **kwargs)
+
     def filter_pks(self, initial_pk_list, queryset, value):
         """Filter the PropertyOrderingFilter."""
         # Only sort by the first parameter

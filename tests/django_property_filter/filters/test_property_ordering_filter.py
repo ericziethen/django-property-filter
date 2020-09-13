@@ -32,6 +32,11 @@ def test_default_lookup():
     assert my_filter.lookup_expr == 'exact'
 
 
+def test_default_label():
+    my_filter = PropertyOrderingFilter(field_name='fake_field')
+    assert my_filter.label == 'Property Ordering'
+
+
 @pytest.fixture
 def fixture_property_number_filter():
         OrderingFilterModel.objects.create(id=-1, first_name='Bart', last_name='Simpson', username='El Barto', age=10)

@@ -154,7 +154,6 @@ DB_PARAM_LIMITS = [
     ('postgresql', '1.0.0', None),
     ('postgresql', '9.9.9', None),
 ]
-@pytest.mark.debug
 @pytest.mark.parametrize('db_name, db_version, max_params', DB_PARAM_LIMITS)
 def test_get_max_db_param_values(db_name, db_version, max_params):
     with patch.object(connection, 'vendor', db_name), patch.object(sqlite3, 'sqlite_version', db_version):

@@ -510,6 +510,8 @@ class VolumeTestFilterSet(PropertyFilterSet):
 
 
 class MultiFilterTestFilterSet(PropertyFilterSet):
+    number_order = OrderingFilter(fields=('number', 'number'))
+    prop_number_order = PropertyOrderingFilter(fields=('prop_number', 'prop_number'))
 
     class Meta:
         model = models.MultiFilterTestModel
