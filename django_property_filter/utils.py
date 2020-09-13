@@ -133,59 +133,34 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
     # For other DBs we currently don't know so if there is a limit we just let the exception be passed on
 
     max_params = get_max_params_for_db()
-    # No need to try again if we don't know the safe max or we have less items than the safe max in the first place
     if max_params is not None and max_params < len(pk_list):
         try:
             # Evaluate the Result
             result_qs.count()
         except OperationalError:
-            max_params = get_max_params_for_db()
-            if max_params is not None and max_params < len(pk_list):
+            if preserve_order:
+                # Only do 1/3 of the items to be able to preserve the order
+                items_left = int(max_params / 3)
+                limited_pk_list = []
 
+                for entry in preserve_order:
+                    if items_left <= 0:
+                        break
 
+                    if entry in pk_list:
+                        limited_pk_list.append(entry)
+                        items_left -= 1
+                preserve_order = limited_pk_list  # Order preserved for limited pks
+                result_qs = queryset.filter(pk__in=limited_pk_list)
 
-                # TODO - REVIEW
-                """
-                    When Order is required we would need as many order parameters as we would have pks
-                    -> Halfing if
-                    - Ranges can reduce that but then e.g.
-                        (1..5), still needs the order list to be [1, 2, 3, 4, 5] which is a slight optimization
-                        Simplest way is to build up a pk list in order of preserve_order list if in pk_list until the max
-                        - Ranges could be considered as an extended more complicated way
+                logging.warning('Limiting the Max SQL Parameters to be able to preserve the filter order')
 
-                    !!!!! MOST EFFICIENT WAY
-                        - Create a pk_list in order (based on order list)
-                        - call build_limited_filter_expr
-                            - disable sorting
-                            -> calls convert_int_list_to_range_lists
-                                - disable sorting
-                        
-                        - That way we end up with an expression which includes ranges
+            else:
+                range_filter_expr = build_limited_filter_expr(pk_list, max_params)
+                result_qs = queryset.filter(range_filter_expr)
 
-                """
-                if preserve_order:
-                    # Only do 1/3 of the items to be able to preserve the order
-                    items_left = int(max_params / 3)
-                    limited_pk_list = []
-
-                    for entry in preserve_order:
-                        if items_left <= 0:
-                            break
-
-                        if entry in pk_list:
-                            limited_pk_list.append(entry)
-                            items_left -= 1
-                    preserve_order = limited_pk_list  # Order preserved for limited pks
-                    result_qs = queryset.filter(pk__in=limited_pk_list)
-
-                    logging.warning('Limiting the Max SQL Parameters to be able to preserve the filter order')
-
-                else:
-                    range_filter_expr = build_limited_filter_expr(pk_list, max_params)
-                    result_qs = queryset.filter(range_filter_expr)
-
-                logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter '
-                                F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
+            logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter '
+                            F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
 
     if preserve_order:
         preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(preserve_order)])
