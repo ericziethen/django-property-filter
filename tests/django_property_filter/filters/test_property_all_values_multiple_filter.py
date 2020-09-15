@@ -117,14 +117,17 @@ def test_lookup_xpr(fixture_property_all_values_multiple_filter, lookup_xpr, loo
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyAllValuesMultipleFilterSet(PropertyFilterSet):
+        number = AllValuesMultipleFilter(field_name='number', lookup_expr=lookup_xpr, conjoined=conjoined)
         prop_number = PropertyAllValuesMultipleFilter(field_name='prop_number', lookup_expr=lookup_xpr, conjoined=conjoined)
 
         class Meta:
             model = AllValuesMultipleFilterModel
             fields = ['prop_number']
 
-    prop_filter_fs = PropertyAllValuesMultipleFilterSet({'prop_number': lookup_val}, queryset=AllValuesMultipleFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    filter_fs_mixed = AllValuesMultipleFilterSet({'number': lookup_val}, queryset=AllValuesMultipleFilterModel.objects.all())
+    prop_filter_fs_mixed = PropertyAllValuesMultipleFilterSet({'prop_number': lookup_val}, queryset=AllValuesMultipleFilterModel.objects.all())
+    assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
@@ -139,7 +142,6 @@ def test_lookup_xpr(fixture_property_all_values_multiple_filter, lookup_xpr, loo
     # Implicit declaration has default OR so only test that
     if not conjoined:
         assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
-
 
 def test_all_expressions_tested():
     tested_expressions = [x[0] for x in TEST_LOOKUPS]

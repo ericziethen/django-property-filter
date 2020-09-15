@@ -128,14 +128,17 @@ def test_lookup_xpr_date(fixture_property_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateRangeFilterSet(PropertyFilterSet):
+        date = DateRangeFilter(field_name='date', lookup_expr=lookup_xpr)
         prop_date = PropertyDateRangeFilter(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateRangeFilterModel
             fields = ['prop_date']
 
-    prop_filter_fs = PropertyDateRangeFilterSet({'prop_date': lookup_val}, queryset=DateRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    filter_fs_mixed = DateRangeFilterSet({'date': lookup_val}, queryset=DateRangeFilterModel.objects.all())
+    prop_filter_fs_mixed = PropertyDateRangeFilterSet({'prop_date': lookup_val}, queryset=DateRangeFilterModel.objects.all())
+    assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 
 
     # Compare with Implicit Filter using PropertyFilterSet
