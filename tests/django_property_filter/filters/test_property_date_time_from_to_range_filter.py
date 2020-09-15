@@ -72,14 +72,17 @@ def test_lookup_xpr(fixture_property_time_range_filter, lookup_xpr, lookup_val, 
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyDateTimeFromToRangeFilterSet(PropertyFilterSet):
+        date_time = DateTimeFromToRangeFilter(field_name='date_time', lookup_expr=lookup_xpr)
         prop_date_time = PropertyDateTimeFromToRangeFilter(field_name='prop_date_time', lookup_expr=lookup_xpr)
 
         class Meta:
             model = DateTimeFromToRangeFilterModel
             fields = ['prop_date_time']
 
-    prop_filter_fs = PropertyDateTimeFromToRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=DateTimeFromToRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    filter_fs_mixed = DateTimeFromToRangeFilterSet({'date_time_after': lookup_val[0], 'date_time_before': lookup_val[1]}, queryset=DateTimeFromToRangeFilterModel.objects.all())
+    prop_filter_fs_mixed = PropertyDateTimeFromToRangeFilterSet({'prop_date_time_after': lookup_val[0], 'prop_date_time_before': lookup_val[1]}, queryset=DateTimeFromToRangeFilterModel.objects.all())
+    assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):

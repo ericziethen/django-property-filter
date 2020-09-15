@@ -63,14 +63,17 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyBaseInFilterSet(PropertyFilterSet):
+        number = BaseInFilterNumber(field_name='number', lookup_expr=lookup_xpr)
         prop_number = PropertyBaseInFilterNumber(field_name='prop_number', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseInFilterModel
             fields = ['prop_number']
 
-    prop_filter_fs = PropertyBaseInFilterSet({'prop_number': lookup_val}, queryset=BaseInFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    filter_fs_mixed = BaseInFilterSet({'number': lookup_val}, queryset=BaseInFilterModel.objects.all())
+    prop_filter_fs_mixed = PropertyBaseInFilterSet({'prop_number': lookup_val}, queryset=BaseInFilterModel.objects.all())
+    assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):

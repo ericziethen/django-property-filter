@@ -118,6 +118,8 @@ def test_lookup_xpr(fixture_property_typed_multiple_choice_filter, lookup_xpr, l
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyTypedMultipleChoiceFilterSet(PropertyFilterSet):
+        text = TypedMultipleChoiceFilter(
+            field_name='text', lookup_expr=lookup_xpr, conjoined=conjoined, choices=LOOKUP_CHOICES, coerce=int)
         prop_text = PropertyTypedMultipleChoiceFilter(
             field_name='prop_text', lookup_expr=lookup_xpr, conjoined=conjoined, choices=LOOKUP_CHOICES, coerce=int)
 
@@ -125,8 +127,10 @@ def test_lookup_xpr(fixture_property_typed_multiple_choice_filter, lookup_xpr, l
             model = TypedMultipleChoiceFilterModel
             fields = ['prop_text']
 
-    prop_filter_fs = PropertyTypedMultipleChoiceFilterSet({'prop_text': lookup_val}, queryset=TypedMultipleChoiceFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    filter_fs_mixed = TypedMultipleChoiceFilterSet({'text': lookup_val}, queryset=TypedMultipleChoiceFilterModel.objects.all())
+    prop_filter_fs_mixed = PropertyTypedMultipleChoiceFilterSet({'prop_text': lookup_val}, queryset=TypedMultipleChoiceFilterModel.objects.all())
+    assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):

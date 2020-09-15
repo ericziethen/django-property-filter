@@ -53,14 +53,17 @@ def test_lookup_xpr(fixture_property_uuid_filter, lookup_xpr, lookup_val, result
 
     # Compare with Explicit Filter using a PropertyFilterSet
     class PropertyUUIDFilterSet(PropertyFilterSet):
+        uuid = UUIDFilter(field_name='uuid', lookup_expr=lookup_xpr)
         prop_uuid = PropertyUUIDFilter(field_name='prop_uuid', lookup_expr=lookup_xpr)
 
         class Meta:
             model = UUIDFilterModel
             fields = ['prop_uuid']
 
-    prop_filter_fs = PropertyUUIDFilterSet({'prop_uuid': lookup_val}, queryset=UUIDFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    filter_fs_mixed = UUIDFilterSet({'uuid': lookup_val}, queryset=UUIDFilterModel.objects.all())
+    prop_filter_fs_mixed = PropertyUUIDFilterSet({'prop_uuid': lookup_val}, queryset=UUIDFilterModel.objects.all())
+    assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):

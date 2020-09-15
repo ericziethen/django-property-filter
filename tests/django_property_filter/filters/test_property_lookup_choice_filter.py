@@ -110,14 +110,17 @@ def test_lookup_xpr(fixture_property_lookup_choice_filter, lookup_xpr, lookup_va
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyLookupChoiceFilterSet(PropertyFilterSet):
+        number = LookupChoiceFilter(field_name='number')
         prop_number = PropertyLookupChoiceFilter(field_name='prop_number')
 
         class Meta:
             model = LookupChoiceFilterModel
             fields = ['prop_number']
 
-    prop_filter_fs = PropertyLookupChoiceFilterSet({'prop_number': lookup_val, 'prop_number_lookup': lookup_xpr}, queryset=LookupChoiceFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    filter_fs_mixed = LookupChoiceFilterSet({'number': lookup_val, 'number_lookup': lookup_xpr}, queryset=LookupChoiceFilterModel.objects.all())
+    prop_filter_fs_mixed = PropertyLookupChoiceFilterSet({'prop_number': lookup_val, 'prop_number_lookup': lookup_xpr}, queryset=LookupChoiceFilterModel.objects.all())
+    assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):

@@ -66,14 +66,17 @@ def test_lookup_xpr(fixture_property_base_csv_filter, lookup_xpr, lookup_val, re
 
     # Compare with Explicit Filter using a normal PropertyFilterSet
     class PropertyBaseRangeFilterSet(PropertyFilterSet):
+        date = BaseRangeFilterNumber(field_name='date', lookup_expr=lookup_xpr)
         prop_date = PropertyBaseRangeFilterNumber(field_name='prop_date', lookup_expr=lookup_xpr)
 
         class Meta:
             model = BaseRangeFilterModel
             fields = ['prop_date']
 
-    prop_filter_fs = PropertyBaseRangeFilterSet({'prop_date': lookup_val}, queryset=BaseRangeFilterModel.objects.all())
-    assert set(prop_filter_fs.qs) == set(filter_fs.qs)
+    filter_fs_mixed = BaseRangeFilterSet({'date': lookup_val}, queryset=BaseRangeFilterModel.objects.all())
+    prop_filter_fs_mixed = PropertyBaseRangeFilterSet({'prop_date': lookup_val}, queryset=BaseRangeFilterModel.objects.all())
+    assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
+    assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 
     # Compare with Implicit Filter using PropertyFilterSet
     class ImplicitFilterSet(PropertyFilterSet):
