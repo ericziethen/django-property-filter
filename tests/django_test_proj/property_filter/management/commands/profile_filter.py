@@ -21,15 +21,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):  # pylint: disable=too-many-locals,too-many-branches
         self.db_entry_count = 100000
-        # TODO - Revert
-        self.db_entry_count = 2000
-
-
-
-
-
-
-
 
         self.html_base_name_no_ext = options['html_base_name_no_ext']
 
@@ -97,10 +88,12 @@ class Command(BaseCommand):
 
     def run_profiler(self):
         profile_list = [
-            #('number_MultipleChoiceFilter_OR', 'prop_number_PropertyMultipleChoiceFilter_OR', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
+            ('number_NumberFilter', 'prop_number_PropertyNumberFilter', NUMBER_RANGE[0]),
+            ('number_MultipleChoiceFilter_OR', 'prop_number_PropertyMultipleChoiceFilter_OR', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
+            ('number_MultipleChoiceFilter_AND', 'prop_number_PropertyMultipleChoiceFilter_AND', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[0])]),
             #('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
             #('number_AllValuesMultipleFilter_AND', 'prop_number_PropertyAllValuesMultipleFilter_AND', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[0])]),
-            ('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', ('number', 'prop_number')),
+            #('number_OrderingFilter', 'prop_number_PropertyOrderingFilter', ('number', 'prop_number')),
         ]
 
         for filter_name, prop_filter_name, lookup_value in profile_list:
