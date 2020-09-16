@@ -105,8 +105,10 @@ class PropertyBaseFilter(Filter):
         # Filter all values from queryset, get the pk list
         wanted_pks = set()
         for obj in queryset:
-            # TODO
-            #if initial_pk_list is None or obj.pk not in initial_pk_list:
+            # TODO - THIS IS NOT WORKING YET
+            #if initial_pk_list is not None and obj.pk in initial_pk_list:
+            #    continue
+
             property_value = get_value_for_db_field(obj, self.property_fld_name)
             if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                 wanted_pks.add(obj.pk)
