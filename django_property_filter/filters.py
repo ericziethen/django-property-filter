@@ -175,9 +175,10 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
             if not entry and not isinstance(property_value, str):
                 raise ValueError(F'Empty value not allowed for type "{type(property_value)}"')
 
-            if type(entry) != type(property_value):  # pylint: disable=unidiomatic-typecheck
+            property_type = type(property_value)
+            if type(entry) != property_type:  # pylint: disable=unidiomatic-typecheck
                 try:
-                    convert_lookup_value = type(property_value)(entry)
+                    convert_lookup_value = property_type(entry)
                 except (ValueError, TypeError):
                     # Use original if can't convert
                     pass
