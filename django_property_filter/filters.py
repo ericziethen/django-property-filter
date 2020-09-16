@@ -142,9 +142,10 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
         new_lookup_value = lookup_value
         new_property_value = property_value
 
-        if type(lookup_value) != type(property_value):  # pylint: disable=unidiomatic-typecheck
+        property_type = type(property_value)
+        if type(lookup_value) != property_type:  # pylint: disable=unidiomatic-typecheck
             try:
-                convert_lookup_value = type(property_value)(lookup_value)
+                convert_lookup_value = property_type(lookup_value)
             except (ValueError, TypeError):
                 pass
             else:
