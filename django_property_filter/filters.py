@@ -112,7 +112,7 @@ class PropertyBaseFilter(Filter):
 
         # TODO - Check if we need to convert here already or can leave as a set
         # TODO - !!!!! - Do we need to Convert to List at all? Can we use sets?
-        return list(wanted_pks)
+        return wanted_pks
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
@@ -275,7 +275,7 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
                     result_pks = set()
                 result_pks |= filter_result
 
-        return list(result_pks) if result_pks is not None else []
+        return result_pks if result_pks is not None else set()
 
 
 class PropertyNumberFilter(PropertyBaseFilter, NumberFilter):
@@ -479,6 +479,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
             sort_property = sort_property[1:]
 
         # Build a list of pk and value, this might become very large depending on data type
+        # Need to use a list because set will loose order
         value_list = []
         for obj in queryset:
             property_value = get_value_for_db_field(obj, sort_property)
