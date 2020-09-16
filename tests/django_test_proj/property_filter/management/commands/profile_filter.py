@@ -89,7 +89,7 @@ class Command(BaseCommand):
     def run_profiler(self):
         profile_list = [
             #('number_NumberFilter', 'prop_number_PropertyNumberFilter', NUMBER_RANGE[0]),
-            ('number_MultipleChoiceFilter_OR', 'prop_number_PropertyMultipleChoiceFilter_OR', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
+            #('number_MultipleChoiceFilter_OR', 'prop_number_PropertyMultipleChoiceFilter_OR', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[1])]),
             ('number_MultipleChoiceFilter_AND', 'prop_number_PropertyMultipleChoiceFilter_AND', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[0])]),
             #('number_AllValuesFilter', 'prop_number_AllValuesFilter', NUMBER_RANGE[0]),
             #('number_AllValuesMultipleFilter_AND', 'prop_number_PropertyAllValuesMultipleFilter_AND', [str(NUMBER_RANGE[0]), str(NUMBER_RANGE[0])]),

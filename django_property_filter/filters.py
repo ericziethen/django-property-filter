@@ -92,6 +92,9 @@ class PropertyBaseFilter(Filter):
         if value in EMPTY_VALUES:
             return initial_pk_list
 
+
+        # TODO - Should initial_pk_list be an empty set and check by null value???
+
         # Not None but empty List, Nothing to do, No chance for a find
         if initial_pk_list is not None and not initial_pk_list:
             return []
@@ -102,6 +105,8 @@ class PropertyBaseFilter(Filter):
         # Filter all values from queryset, get the pk list
         wanted_pks = set()
         for obj in queryset:
+            # TODO
+            #if initial_pk_list is None or obj.pk not in initial_pk_list:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
             if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                 wanted_pks.add(obj.pk)
@@ -342,10 +347,10 @@ class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):
         """Filed Property to setup default choices."""
         queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
-        value_list = []
+        value_list = set()
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
-            value_list.append(property_value)
+            value_list.add(property_value)
 
         value_list = sorted(value_list, key=lambda x: (x is None, x))
 
@@ -363,12 +368,12 @@ class PropertyAllValuesMultipleFilter(PropertyMultipleChoiceFilter, AllValuesMul
         """Filed Property to setup default choices."""
         queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
-        value_list = []
+        value_list = set()
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
-            value_list.append(property_value)
+            value_list.add(property_value)
 
-        value_list = sorted(set(value_list), key=lambda x: (x is None, x))
+        value_list = sorted(value_list, key=lambda x: (x is None, x))
 
         self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
 
