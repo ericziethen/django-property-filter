@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):  # pylint: disable=too-many-locals,too-many-branches
-        self.db_entry_count = 1000000
+        self.db_entry_count = 600000
 
         self.html_base_name_no_ext = options['html_base_name_no_ext']
 

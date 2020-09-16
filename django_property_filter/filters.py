@@ -96,6 +96,9 @@ class PropertyBaseFilter(Filter):
         if initial_pk_list is not None and not initial_pk_list:
             return []
 
+        # TODO - IF we do any in list checking convert to set, will be quicker, same as in others
+        # TODO - Check other In List checks
+
         # Filter all values from queryset, get the pk list
         wanted_pks = set()
         for obj in queryset:
@@ -107,6 +110,8 @@ class PropertyBaseFilter(Filter):
         if initial_pk_list is not None:  # We have initial pk list, only return joined results
             wanted_pks = wanted_pks & set(initial_pk_list)
 
+        # TODO - Check if we need to convert here already or can leave as a set
+        # TODO - !!!!! - Do we need to Convert to List at all? Can we use sets?
         return list(wanted_pks)
 
     def verify_lookup(self, lookup_expr):
