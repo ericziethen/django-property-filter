@@ -82,7 +82,7 @@ class PropertyBaseFilter(Filter):
         # Filtering is done via filter_pks() via PropertyFilterset, raise Exception if wrongly configured
         raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet instead of Filterset')
 
-    def filter_pks(self, initial_pk_list, queryset, value):
+    def filter_pks(self, initial_pk_list, queryset, value, *, or_pk_list=None):
         """
         Filter the Given Queryset against the given value and return a list of matching Primary Keys.
 
@@ -99,14 +99,20 @@ class PropertyBaseFilter(Filter):
         # Filter all values from queryset, get the pk list
         wanted_pks = set()
         for obj in queryset:
-            # If we have an initial list we must check only those items
+            # If we have an initial pk list (AND condition) we must check only those items
             if initial_pk_list is not None and obj.pk not in initial_pk_list:
+                continue
+
+            # If we have an or_pk_list then those entries we don't need to check anymore and can just add them
+            if or_pk_list is not None and obj.pk in or_pk_list:
+                wanted_pks.add(obj.pk)
                 continue
 
             property_value = get_value_for_db_field(obj, self.property_fld_name)
             if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                 wanted_pks.add(obj.pk)
 
+        # TODO - Do we still need this since we are already handling above?
         # Find Entries in both lists if original provided
         if initial_pk_list is not None:  # We have initial pk list, only return joined results
             wanted_pks = wanted_pks & set(initial_pk_list)
@@ -261,19 +267,22 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
         if not queryset:
             return []
 
-        result_pks = None
+        result_pks = and_list = or_list = None
+
+        if self.conjoined:  # AND
+            and_list = set(initial_pk_list)
+        else:  # OR
+            or_list = None
+
+        # Passing in and_list ad or_list to skipe duplicate tests and avoid &= and |= of sets here
         for sub_value in value:
-            filter_result = set(super().filter_pks(None, queryset, sub_value))
+            filter_result = set(super().filter_pks(and_list, queryset, sub_value, or_pk_list=or_list))
 
             if self.conjoined:  # AND
-                if result_pks is None:
-                    result_pks = set(initial_pk_list)
-                result_pks &= filter_result
+                result_pks = and_list = filter_result
             else:  # OR
-                if result_pks is None:
-                    result_pks = set()
-                result_pks |= filter_result
-
+                result_pks = or_list = filter_result
+    
         return result_pks if result_pks is not None else set()
 
 
