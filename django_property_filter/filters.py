@@ -112,11 +112,6 @@ class PropertyBaseFilter(Filter):
             if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                 wanted_pks.add(obj.pk)
 
-        # TODO - Do we still need this since we are already handling above?
-        # Find Entries in both lists if original provided
-        if initial_pk_list is not None:  # We have initial pk list, only return joined results
-            wanted_pks = wanted_pks & set(initial_pk_list)
-
         return wanted_pks
 
     def verify_lookup(self, lookup_expr):
