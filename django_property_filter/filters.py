@@ -247,16 +247,16 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Look
 
         return lookup_tup_list
 
-    def filter_pks(self, initial_pk_list, queryset, value):
+    def filter_pks(self, initial_pk_list, queryset, value, **kwargs):
         """Perform the custom filtering."""
         self.lookup_expr = value.lookup_expr
-        return super().filter_pks(initial_pk_list, queryset, value.value)
+        return super().filter_pks(initial_pk_list, queryset, value.value, **kwargs)
 
 
 class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
 
-    def filter_pks(self, initial_pk_list, queryset, value):
+    def filter_pks(self, initial_pk_list, queryset, value, **kwargs):  # pylint: disable=unused-argument
         """Filter Multiple Choice Property Values."""
         # Not None but empty List, Nothing to do, No chance for a find
         if not queryset:
@@ -277,7 +277,7 @@ class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Mu
                 result_pks = and_list = filter_result
             else:  # OR
                 result_pks = or_list = filter_result
-    
+
         return result_pks if result_pks is not None else set()
 
 
@@ -468,7 +468,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
         kwargs.setdefault('label', 'Property Ordering')
         super().__init__(*args, **kwargs)
 
-    def filter_pks(self, initial_pk_list, queryset, value):
+    def filter_pks(self, initial_pk_list, queryset, value, **kwargs):  # pylint: disable=unused-argument
         """Filter the PropertyOrderingFilter."""
         # Only sort by the first parameter
         return self.sorted_pk_list_from_property(self.get_ordering_value(value[0]), queryset)
