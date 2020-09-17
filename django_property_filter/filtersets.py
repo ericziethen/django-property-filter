@@ -37,12 +37,13 @@ class PropertyFilterSet(FilterSet):
 
         # Filter By Property Filters
         if property_filter_list:
-            pk_list = list(queryset.values_list('id', flat=True))
+            qs_pk_list = queryset.values_list('pk', flat=True)
+            pk_list = set(qs_pk_list)
 
             # Check if we need to preserve the order from the normal Filter filtering
             preserve_order = None
             if queryset.ordered:
-                preserve_order = pk_list.copy()
+                preserve_order = list(qs_pk_list)
 
             for name, value in property_filter_list:
                 if value not in EMPTY_VALUES:
@@ -52,7 +53,7 @@ class PropertyFilterSet(FilterSet):
                     if self.filters[name].__class__ in PRESERVE_ORDER_FILTERS:
                         preserve_order = pk_list.copy()
 
-            queryset = filter_qs_by_pk_list(queryset, list(pk_list), preserve_order=preserve_order)
+            queryset = filter_qs_by_pk_list(queryset, pk_list, preserve_order=preserve_order)
 
         return queryset
 

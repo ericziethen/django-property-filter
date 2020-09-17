@@ -92,13 +92,13 @@ def build_limited_filter_expr(pk_list, max_params):
 
     # Just go until we used up max_params parameters
     in_range_list = []      # Each entry takes up 2 parameters
-    in_list = []            # Each entry takes up 1 parameter
+    in_list = set()         # Each entry takes up 1 parameter
 
     params_used = 0
 
     for entry in sort_range_list(convert_int_list_to_range_lists(pk_list), descending=True):
         if entry[0] == entry[1] or params_used + 1 >= max_params:  # single item or space for only 1 param
-            in_list.append(entry[0])
+            in_list.add(entry[0])
             params_used += 1
         else:  # Range item and enough space for whole range
             in_range_list.append(Q(pk__range=[entry[0], entry[1]]))
@@ -141,14 +141,14 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
             if preserve_order:
                 # Only do 1/3 of the items to be able to preserve the order
                 items_left = int(max_params / 3)
-                limited_pk_list = []
+                limited_pk_list = set()
 
                 for entry in preserve_order:
                     if items_left <= 0:
                         break
 
                     if entry in pk_list:
-                        limited_pk_list.append(entry)
+                        limited_pk_list.add(entry)
                         items_left -= 1
                 preserve_order = limited_pk_list  # Order preserved for limited pks
                 result_qs = queryset.filter(pk__in=limited_pk_list)

@@ -82,7 +82,7 @@ class PropertyBaseFilter(Filter):
         # Filtering is done via filter_pks() via PropertyFilterset, raise Exception if wrongly configured
         raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet instead of Filterset')
 
-    def filter_pks(self, initial_pk_list, queryset, value):
+    def filter_pks(self, initial_pk_list, queryset, value, *, or_pk_list=None):
         """
         Filter the Given Queryset against the given value and return a list of matching Primary Keys.
 
@@ -99,15 +99,20 @@ class PropertyBaseFilter(Filter):
         # Filter all values from queryset, get the pk list
         wanted_pks = set()
         for obj in queryset:
+            # If we have an initial pk list (AND condition) we must check only those items
+            if initial_pk_list is not None and obj.pk not in initial_pk_list:
+                continue
+
+            # If we have an or_pk_list then those entries we don't need to check anymore and can just add them
+            if or_pk_list is not None and obj.pk in or_pk_list:
+                wanted_pks.add(obj.pk)
+                continue
+
             property_value = get_value_for_db_field(obj, self.property_fld_name)
             if self._compare_lookup_with_qs_entry(self.lookup_expr, value, property_value):
                 wanted_pks.add(obj.pk)
 
-        # Find Entries in both lists if original provided
-        if initial_pk_list is not None:  # We have initial pk list, only return joined results
-            wanted_pks = wanted_pks & set(initial_pk_list)
-
-        return list(wanted_pks)
+        return wanted_pks
 
     def verify_lookup(self, lookup_expr):
         """Check if lookup_expr is supported."""
@@ -142,9 +147,10 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
         new_lookup_value = lookup_value
         new_property_value = property_value
 
-        if type(lookup_value) != type(property_value):  # pylint: disable=unidiomatic-typecheck
+        property_type = type(property_value)
+        if type(lookup_value) != property_type:  # pylint: disable=unidiomatic-typecheck
             try:
-                convert_lookup_value = type(property_value)(lookup_value)
+                convert_lookup_value = property_type(lookup_value)
             except (ValueError, TypeError):
                 pass
             else:
@@ -174,9 +180,10 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
             if not entry and not isinstance(property_value, str):
                 raise ValueError(F'Empty value not allowed for type "{type(property_value)}"')
 
-            if type(entry) != type(property_value):  # pylint: disable=unidiomatic-typecheck
+            property_type = type(property_value)
+            if type(entry) != property_type:  # pylint: disable=unidiomatic-typecheck
                 try:
-                    convert_lookup_value = type(property_value)(entry)
+                    convert_lookup_value = property_type(entry)
                 except (ValueError, TypeError):
                     # Use original if can't convert
                     pass
@@ -240,35 +247,38 @@ class PropertyLookupChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, Look
 
         return lookup_tup_list
 
-    def filter_pks(self, initial_pk_list, queryset, value):
+    def filter_pks(self, initial_pk_list, queryset, value, **kwargs):
         """Perform the custom filtering."""
         self.lookup_expr = value.lookup_expr
-        return super().filter_pks(initial_pk_list, queryset, value.value)
+        return super().filter_pks(initial_pk_list, queryset, value.value, **kwargs)
 
 
 class PropertyMultipleChoiceFilter(ChoiceConvertionMixin, PropertyBaseFilter, MultipleChoiceFilter):
     """Adding Property Support to MultipleChoiceFilter."""
 
-    def filter_pks(self, initial_pk_list, queryset, value):
+    def filter_pks(self, initial_pk_list, queryset, value, **kwargs):  # pylint: disable=unused-argument
         """Filter Multiple Choice Property Values."""
         # Not None but empty List, Nothing to do, No chance for a find
         if not queryset:
             return []
 
-        result_pks = None
+        result_pks = and_list = or_list = None
+
+        if self.conjoined:  # AND
+            and_list = set(initial_pk_list)
+        else:  # OR
+            or_list = None
+
+        # Passing in and_list ad or_list to skipe duplicate tests and avoid &= and |= of sets here
         for sub_value in value:
-            filter_result = set(super().filter_pks(None, queryset, sub_value))
+            filter_result = set(super().filter_pks(and_list, queryset, sub_value, or_pk_list=or_list))
 
             if self.conjoined:  # AND
-                if result_pks is None:
-                    result_pks = set(initial_pk_list)
-                result_pks &= filter_result
+                result_pks = and_list = filter_result
             else:  # OR
-                if result_pks is None:
-                    result_pks = set()
-                result_pks |= filter_result
+                result_pks = or_list = filter_result
 
-        return list(result_pks) if result_pks is not None else []
+        return result_pks if result_pks is not None else set()
 
 
 class PropertyNumberFilter(PropertyBaseFilter, NumberFilter):
@@ -335,10 +345,10 @@ class PropertyAllValuesFilter(PropertyChoiceFilter, AllValuesFilter):
         """Filed Property to setup default choices."""
         queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
-        value_list = []
+        value_list = set()
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
-            value_list.append(property_value)
+            value_list.add(property_value)
 
         value_list = sorted(value_list, key=lambda x: (x is None, x))
 
@@ -356,12 +366,12 @@ class PropertyAllValuesMultipleFilter(PropertyMultipleChoiceFilter, AllValuesMul
         """Filed Property to setup default choices."""
         queryset = self.model._default_manager.distinct()  # pylint: disable=no-member,protected-access
 
-        value_list = []
+        value_list = set()
         for obj in queryset:
             property_value = get_value_for_db_field(obj, self.property_fld_name)
-            value_list.append(property_value)
+            value_list.add(property_value)
 
-        value_list = sorted(set(value_list), key=lambda x: (x is None, x))
+        value_list = sorted(value_list, key=lambda x: (x is None, x))
 
         self.extra['choices'] = [(prop, str(prop)) for prop in value_list]
 
@@ -458,7 +468,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
         kwargs.setdefault('label', 'Property Ordering')
         super().__init__(*args, **kwargs)
 
-    def filter_pks(self, initial_pk_list, queryset, value):
+    def filter_pks(self, initial_pk_list, queryset, value, **kwargs):  # pylint: disable=unused-argument
         """Filter the PropertyOrderingFilter."""
         # Only sort by the first parameter
         return self.sorted_pk_list_from_property(self.get_ordering_value(value[0]), queryset)
@@ -472,6 +482,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
             sort_property = sort_property[1:]
 
         # Build a list of pk and value, this might become very large depending on data type
+        # Need to use a list because set will loose order
         value_list = []
         for obj in queryset:
             property_value = get_value_for_db_field(obj, sort_property)
