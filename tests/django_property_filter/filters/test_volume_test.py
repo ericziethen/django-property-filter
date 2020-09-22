@@ -14,7 +14,7 @@ from property_filter.benchmark_utils import (
     create_test_filtersets, remove_unneeded_filters_from_fs,
 )
 
-from tests.common import is_travis_build
+from tests.common import all_filter_volume_test_enabled
 
 NUMBER_RANGE = range(100)
 TEXT_RANGE = [str(x) for x in range(100)]
@@ -80,7 +80,7 @@ class LargeVolumeTests(TestCase):
 
             BenchmarkModel.objects.bulk_create(bulk_list)
 
-    @pytest.mark.skipif(not is_travis_build(), reason='Large Volume Test only on Travis')
+    @pytest.mark.skipif(not all_filter_volume_test_enabled(), reason='Large Volume Test only on Travis')
     @pytest.mark.filterwarnings('ignore::RuntimeWarning')  # DayTime shows a Runtime Warning, ignore
     def test_large_volume_tests(self):  # Just making sure large filtering causes no issue
         for filter_name, prop_filter_name, lookup_value in SINGLE_FILTER_LOOKUP_LIST:
