@@ -20,8 +20,8 @@ python:
 #  - '3.9-dev'  # Travis currently having some issues with the Dev Version to build
 
 env:
-  - DJANGO_DB=SQLITE
-  - DJANGO_DB=POSTGRES
+  - DJANGO_DB=SQLITE TOX_SKIP_ENV=".*all_filter_volume_test.*"
+  - DJANGO_DB=POSTGRES TOX_SKIP_ENV=".*all_filter_volume_test.*"
 
 jobs:
   include:
