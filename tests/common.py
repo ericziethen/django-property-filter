@@ -58,3 +58,7 @@ def db_is_postgresql():
 
 def is_travis_build():
     return 'TRAVIS_OS_NAME' in os.environ
+
+
+def all_filter_volume_test_enabled():
+    return 'ALL_FILTER_VOLUME_TEST' in os.environ
