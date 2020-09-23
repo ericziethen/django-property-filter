@@ -41,15 +41,16 @@ jobs:
       # Run Package Safety
       - ./dev/check_package_safety.sh
 
-    - name: 'Volume Test - SQLITE'
+    - name: 'Include Volume Tests - SQLITE'
       python: '3.8'
-      env: DJANGO_DB=SQLITE
+      env: 
+        - DJANGO_DB=SQLITE
       services: echo PHASE - "services" (nothing to do)
       script:
         - coverage erase
         - tox -e py38-all_filter_volume_test sqlite;
 
-    - name: 'Volume Test - POSTGRES'
+    - name: 'Include Volume Tests - POSTGRES'
       python: '3.8'
       env: DJANGO_DB=POSTGRES
       script:
