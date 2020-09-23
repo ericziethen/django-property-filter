@@ -13,15 +13,15 @@ branches:
 # Tox is only used for running the tests, the linters only have to run against the latest code
 
 
-#python:
-#  - '3.8'  # Latest Stable Version on Top so Linting and Deployment pick this one
-#  - '3.7'
-#  - '3.6'
+python:
+  - '3.8'  # Latest Stable Version on Top so Linting and Deployment pick this one
+  - '3.7'
+  - '3.6'
 #  - '3.9-dev'  # Travis currently having some issues with the Dev Version to build
 
-#env:
-#  - DJANGO_DB=SQLITE
-#  - DJANGO_DB=POSTGRES
+env:
+  - DJANGO_DB=SQLITE
+  - DJANGO_DB=POSTGRES
 
 jobs:
   include:
@@ -41,13 +41,8 @@ jobs:
       # Run Package Safety
       - ./dev/check_package_safety.sh
 
-    - name: 'Include Volume Tests - SQLITE'
-      python: '3.8'
-      env: 
-        - DJANGO_DB=SQLITE
-        - TOXENV=mylinux-py38-all_filter_volume_test
-
     - name: 'Include Volume Tests - POSTGRES'
+      # Postgres Only, Sqqlite is slower
       python: '3.8'
       env: 
         - DJANGO_DB=POSTGRES
