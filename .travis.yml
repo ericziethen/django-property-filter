@@ -48,14 +48,15 @@ jobs:
       services: echo PHASE - "services" (nothing to do)
       script:
         - coverage erase
-        - tox -e py38-all_filter_volume_test sqlite;
+        - tox -e linux-py38-all_filter_volume_test sqlite;
 
     - name: 'Include Volume Tests - POSTGRES'
       python: '3.8'
-      env: DJANGO_DB=POSTGRES
+      env: DJANGO_DB=POSTGRES TOXENV=linux-py38-all_filter_volume_test
       script:
         - coverage erase
-        - tox -e py38-all_filter_volume_test postgres-travis;
+        - tox postgres-travis;
+        #- tox -e linux-py38-all_filter_volume_test postgres-travis;
 
     - stage: Deploy
       # to test conditions see https://docs.travis-ci.com/user/conditions-testing
