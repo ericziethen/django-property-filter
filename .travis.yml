@@ -43,7 +43,6 @@ jobs:
 
     - name: 'Include Volume Tests - POSTGRES'
       # Postgres Only, Sqqlite is slower
-      python: '3.8'
       env: 
         - DJANGO_DB=POSTGRES
         - TOXENV=mylinux-py38-all_filter_volume_test
