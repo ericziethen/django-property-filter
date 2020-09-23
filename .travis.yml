@@ -11,15 +11,17 @@ branches:
 
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
-python:
-  - '3.8'  # Latest Stable Version on Top so Linting and Deployment pick this one
-  - '3.7'
-  - '3.6'
-  - '3.9-dev'  # Travis currently having some issues with the Dev Version to build
 
-env:
-  - DJANGO_DB=SQLITE
-  - DJANGO_DB=POSTGRES
+
+#python:
+#  - '3.8'  # Latest Stable Version on Top so Linting and Deployment pick this one
+#  - '3.7'
+#  - '3.6'
+#  - '3.9-dev'  # Travis currently having some issues with the Dev Version to build
+
+#env:
+#  - DJANGO_DB=SQLITE
+#  - DJANGO_DB=POSTGRES
 
 jobs:
   include:
@@ -40,12 +42,14 @@ jobs:
       - ./dev/check_package_safety.sh
 
     - name: 'Volume Test - SQLITE'
+      env: DJANGO_DB=SQLITE
       services: echo PHASE - "services" (nothing to do)
       script:
         - coverage erase
         - tox -e py38-all_filter_volume_test sqlite;
 
     - name: 'Volume Test - POSTGRES'
+      env: DJANGO_DB=POSTGRES
       script:
         - coverage erase
         - tox -e py38-all_filter_volume_test postgres-travis;
