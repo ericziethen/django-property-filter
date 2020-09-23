@@ -58,7 +58,7 @@ UUID_RANGE = [
 class LargeVolumeTests(TestCase):
 
     def setUp(self):
-        db_entry_count = 100000
+        db_entry_count = 1000
 
         # Generate Random Data
         bulk_list = []
