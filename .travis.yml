@@ -39,6 +39,17 @@ jobs:
       # Run Package Safety
       - ./dev/check_package_safety.sh
 
+    - name: 'Volume Test - SQLITE'
+      services: echo PHASE - "services" (nothing to do)
+      script:
+        - coverage erase
+        - tox -e py38-all_filter_volume_test sqlite;
+
+    - name: 'Volume Test - POSTGRES'
+      script:
+        - coverage erase
+        - tox -e py38-all_filter_volume_test postgres-travis;
+
     - stage: Deploy
       # to test conditions see https://docs.travis-ci.com/user/conditions-testing
       # Only create a deployment stage for properly tagged branches
