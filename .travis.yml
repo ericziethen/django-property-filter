@@ -25,6 +25,12 @@ env:
 
 jobs:
   include:
+    - name: 'Volume Tests - POSTGRES'
+      # Postgres Only, Sqlite is slower
+      env:
+        - DJANGO_DB=POSTGRES
+        - TOXENV=mylinux-py38-all_filter_volume_test
+
     - name: 'Latest Dev - Linting and Checks'
       services: echo PHASE - "services" (nothing to do)
       install:
@@ -40,12 +46,6 @@ jobs:
 
       # Run Package Safety
       - ./dev/check_package_safety.sh
-
-    - name: 'Include Volume Tests - POSTGRES'
-      # Postgres Only, Sqqlite is slower
-      env: 
-        - DJANGO_DB=POSTGRES
-        - TOXENV=mylinux-py38-all_filter_volume_test
 
     - stage: Deploy
       # to test conditions see https://docs.travis-ci.com/user/conditions-testing
