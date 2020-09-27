@@ -501,8 +501,16 @@ class BenchmarkTestModel(models.Model):
                 F'"{self.iso_date_time}" - "{self.time}" - "{self.duration}" - "{self.uuid}"" ({self.id})')
 
 
-class NumericRangeFilterModel(models.Model):
-    postgres_int_range = IntegerRangeField()
+############### POSTGRESQL Specific Models ###############
+
+class PostgreSQLModel(models.Model):
+    class Meta:
+        abstract = True
+        required_db_vendor = 'postgresql'
+
+
+class NumericRangeFilterModel(PostgreSQLModel):
+    postgres_int_range = IntegerRangeField(blank=True, null=True)
 
     @property
     def prop_postgres_int_range(self):

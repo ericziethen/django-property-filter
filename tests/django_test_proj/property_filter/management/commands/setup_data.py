@@ -1,11 +1,17 @@
 
 import datetime
+import os
+import sys
+
+sys.path.append(os.path.abspath(R'..\..'))
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 from django.utils.timezone import make_aware
+
+from tests.common import db_is_postgresql
 
 from property_filter.models import (
     AllValuesFilterModel,
@@ -30,6 +36,7 @@ from property_filter.models import (
     MultiFilterTestModel,
     MultipleChoiceFilterModel,
     NumberFilterModel,
+    NumericRangeFilterModel,
     OrderingFilterModel,
     RangeFilterModel,
     TimeFilterModel,
@@ -38,6 +45,11 @@ from property_filter.models import (
     TypedMultipleChoiceFilterModel,
     UUIDFilterModel,
 )
+
+try:
+    from psycopg2.extras import NumericRange
+except ImportError:
+    pass
 
 
 class Command(BaseCommand):
@@ -49,6 +61,7 @@ class Command(BaseCommand):
             call_command('flush', verbosity=0, interactive=False)
 
             # Add the Data
+            print('>> Setup Generic Data')
             self.setup_all_values_filter_model()
             self.setup_all_values_multiple_filter_model()
             self.setup_base_csv_filter_model()
@@ -77,6 +90,10 @@ class Command(BaseCommand):
             self.setup_typed_choice_filter_model()
             self.setup_typed_multiple_choice_filter_model()
             self.setup_uuid_filter_model()
+
+            if db_is_postgresql():
+                print('>> Setup Postgresql only Data')
+                self.setup_numeric_range_filter_model()
 
         print('>> Setup Finished')
 
@@ -396,6 +413,18 @@ class Command(BaseCommand):
 
         for num in range(21):
             NumberFilterModel.objects.create(number=num)
+
+    def setup_numeric_range_filter_model(self):
+        print('Setup NumericRangeFilterModel')
+
+        NumericRangeFilterModel.objects.create(id=-1, postgres_int_range=NumericRange(5, 10))
+        NumericRangeFilterModel.objects.create(id=0, postgres_int_range=NumericRange(5, 10))
+        NumericRangeFilterModel.objects.create(id=1, postgres_int_range=NumericRange(5, None))
+        NumericRangeFilterModel.objects.create(id=2, postgres_int_range=NumericRange(None, 10))
+        NumericRangeFilterModel.objects.create(id=3, postgres_int_range=NumericRange(1, 10))
+        NumericRangeFilterModel.objects.create(id=4, postgres_int_range=NumericRange(5, 20))
+        NumericRangeFilterModel.objects.create(id=5, postgres_int_range=NumericRange(1, 20))
+        NumericRangeFilterModel.objects.create(id=6, postgres_int_range=None)
 
     def setup_ordering_filter_model(self):
         print('Setup OrderingFilterModel')
