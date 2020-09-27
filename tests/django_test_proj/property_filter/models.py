@@ -2,7 +2,7 @@ from django.db import models
 
 import django_filters.fields
 
-from django.contrib.postgres import fields as pg_fields
+from django.contrib.postgres.fields import IntegerRangeField
 
 
 # Create your models here.
@@ -499,3 +499,14 @@ class BenchmarkTestModel(models.Model):
     def __str__(self):
         return (F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - "{self.date_time}" - '
                 F'"{self.iso_date_time}" - "{self.time}" - "{self.duration}" - "{self.uuid}"" ({self.id})')
+
+
+class NumericRangeFilterModel(models.Model):
+    postgres_int_range = IntegerRangeField()
+
+    @property
+    def prop_postgres_int_range(self):
+        return self.postgres_int_range
+
+    def __str__(self):
+        return F'{self.postgres_int_range} ({self.id})'
