@@ -27,6 +27,7 @@ from django_filters.filters import (
     LookupChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
+    NumericRangeFilter,
     OrderingFilter,
     RangeFilter,
     TimeFilter,
@@ -503,6 +504,22 @@ class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
 
 class PropertyTypedMultipleChoiceFilter(PropertyMultipleChoiceFilter, TypedMultipleChoiceFilter):
     """Adding Property Support to TypedMultipleChoiceFilter."""
+
+
+##### POSTGRES ONLY FILTERS #####
+
+
+class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
+    """Adding Property Support to UUIDFilter."""
+
+    supported_lookups = [
+        'exact', 'iexact', 'contains', 'icontains', 'gt', 'gte',
+        'lt', 'lte', 'startswith', 'istartswith', 'endswith', 'iendswith',
+        'overlap', 'contains', 'contained_by',
+    ]
+
+
+##### CONSTANTS #####
 
 
 EXPLICIT_ONLY_FILTERS = [

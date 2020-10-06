@@ -28,6 +28,7 @@ from django_filters.filters import (
     ModelMultipleChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
+    NumericRangeFilter,
     OrderingFilter,
     RangeFilter,
     TimeFilter,
@@ -58,6 +59,7 @@ from django_property_filter import (
     PropertyLookupChoiceFilter,
     PropertyMultipleChoiceFilter,
     PropertyNumberFilter,
+    PropertyNumericRangeFilter,
     PropertyOrderingFilter,
     PropertyRangeFilter,
     PropertyTimeFilter,
@@ -373,6 +375,19 @@ class PropertyNumberFilterSet(PropertyFilterSet):
     def __init__(self, *args, **kwargs):
         add_supported_filters(self, NumberFilter, 'number', PropertyNumberFilter.supported_lookups)
         super().__init__(*args, **kwargs)
+
+
+class PropertyNumericRangeFilterSet(PropertyFilterSet):
+
+    class Meta:
+        model = models.NumericRangeFilterModel
+        exclude = ['postgres_int_range']
+        property_fields = [('prop_postgres_int_range', PropertyNumericRangeFilter, PropertyNumericRangeFilter.supported_lookups)]
+
+    def __init__(self, *args, **kwargs):
+        add_supported_filters(self, NumericRangeFilter, 'postgres_int_range', PropertyNumericRangeFilter.supported_lookups)
+        super().__init__(*args, **kwargs)
+
 
 class PropertyOrderingFilterSet(PropertyFilterSet):
 

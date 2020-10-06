@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(R'..\..'))
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.db import transaction
+from django.db import connection, transaction
 from django.utils import timezone
 from django.utils.timezone import make_aware
 
@@ -55,6 +55,7 @@ except ImportError:
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
+        print(F'VENDOR: "{connection.vendor}"')
 
         with transaction.atomic():
             # Clear the Data
