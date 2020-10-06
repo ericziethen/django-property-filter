@@ -513,8 +513,7 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
     """Adding Property Support to UUIDFilter."""
 
     supported_lookups = [
-        'exact', 'iexact', 'contains', 'icontains', 'gt', 'gte',
-        'lt', 'lte', 'startswith', 'istartswith', 'endswith', 'iendswith',
+        'exact', 'contains', 'gt', 'gte', 'lt', 'lte',
         'overlap', 'contains', 'contained_by',
     ]
 
