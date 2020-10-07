@@ -187,8 +187,6 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
 
     # Do the Comparison
     if lookup_expr == 'exact':
-        print('#####', property_value, property_value[0], property_value[1],
-              lookup_value, lookup_value[0], lookup_value[1])
         result = str(property_value) == str(lookup_value)
     elif lookup_expr == 'iexact':
         result = str(property_value).lower() == str(lookup_value).lower()
@@ -218,5 +216,10 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         result = lookup_value.start <= property_value <= lookup_value.stop
     elif lookup_expr == 'in':
         result = property_value in lookup_value
+    elif lookup_expr == 'slice_exact':
+        result = property_value == lookup_value
+
+        print('COMPARING', property_value, lookup_value)
+        print('  ->', result)
 
     return result
