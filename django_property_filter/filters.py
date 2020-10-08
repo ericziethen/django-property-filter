@@ -524,6 +524,8 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
 
         if lookup_expr == 'exact':
             lookup_expr = 'slice_exact'
+        if lookup_expr == 'contains':
+            lookup_expr = 'slice_contains'
 
         return lookup_expr, lookup_value, property_value
 

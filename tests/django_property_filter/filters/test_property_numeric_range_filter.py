@@ -59,12 +59,12 @@ def fixture_property_numeric_range_filter():
 
 TEST_LOOKUPS = [
     ('exact', (5, 10), [-1, 0]),
-    #('contains', (5, 10), [-1, 0, 1, 2, 3, 4, 5]),
-    #('contains', (4, 10), [2, 3, 5]),
-    #('contains', (5, 11), [1, 4, 6]),
-    #('contains', (0, 100), []),
-    #('contains', (5, None), [-1, 0, 1, 4]),
-    #('contains', (None, 10), [-1, 0, 2, 3]),
+    ('contains', (5, 10), [-1, 0, 1, 2, 3, 4, 5]),
+    ('contains', (4, 10), [2, 3, 5]),
+    ('contains', (5, 11), [1, 4, 5]),
+    ('contains', (0, 100), []),
+    ('contains', (5, None), [-1, 0, 1, 4]),
+    ('contains', (None, 10), [-1, 0, 2, 3]),
 
 
 ]
@@ -107,9 +107,10 @@ def test_lookup_xpr(fixture_property_numeric_range_filter, lookup_xpr, lookup_va
             exclude = ['postgres_int_range']
             property_fields = [('prop_postgres_int_range', PropertyNumericRangeFilter, [lookup_xpr])]
 
-    implicit_filter_fs = ImplicitFilterSet({'prop_postgres_int_range__exact_min': lookup_val[0], 'prop_postgres_int_range__exact_max': lookup_val[1]}, queryset=NumericRangeFilterModel.objects.all())
+    implicit_filter_fs = ImplicitFilterSet({F'prop_postgres_int_range__{lookup_xpr}_min': lookup_val[0], F'prop_postgres_int_range__{lookup_xpr}_max': lookup_val[1]}, queryset=NumericRangeFilterModel.objects.all())
 
-    print('>>> FILTERS >>>', implicit_filter_fs.filters)
+    print('>>> PROP >>>', implicit_filter_fs.qs)
+    print('>>> FILT >>>', filter_fs.qs)
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 
