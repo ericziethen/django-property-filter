@@ -228,23 +228,16 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
                 result = ((property_value.start is None or property_value.start <= lookup_value.start) and
                           (property_value.stop is None or property_value.stop >= lookup_value.stop))
     elif lookup_expr == 'slice_contained_by':
-        print('COMPARING', lookup_expr, lookup_value, property_value)
-
         if property_value:
             if lookup_value.start is None:
-                print('AAA')
                 result = property_value.stop <= lookup_value.stop
             elif lookup_value.stop is None:
-                print('BBB')
                 result = property_value.start >= lookup_value.start
             elif property_value.start is None:
-                print('CCC')
                 result = lookup_value.start is None and property_value.stop == lookup_value.stop
             elif property_value.stop is None:
-                print('EEE')
                 result = lookup_value.stop is None and property_value.start == lookup_value.start
             else:
-                print('DDD')
                 result = ((property_value.start >= lookup_value.start) and
                           (property_value.stop <= lookup_value.stop))
  
