@@ -512,10 +512,7 @@ class PropertyTypedMultipleChoiceFilter(PropertyMultipleChoiceFilter, TypedMulti
 class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
     """Adding Property Support to UUIDFilter."""
 
-    supported_lookups = [
-        'exact', 'contains', 'gt', 'gte', 'lt', 'lte',
-        'overlap', 'contains', 'contained_by',
-    ]
+    supported_lookups = ['exact', 'contains', 'contained_by', 'overlap']
 
     def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
 
