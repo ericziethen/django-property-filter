@@ -121,7 +121,7 @@ def test_lookup_xpr(fixture_property_numeric_range_filter, lookup_xpr, lookup_va
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 
-@pytest.mark.debug
+#@pytest.mark.debug
 @pytest.mark.skipif(not db_is_postgresql(), reason='NumericRangeFilter only supported in PostGres')
 def test_all_expressions_tested():
     tested_expressions = [x[0] for x in TEST_LOOKUPS]

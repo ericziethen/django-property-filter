@@ -99,8 +99,8 @@ LOOKUP_SUCCEED = [
     ('slice_contained_by', slice(6, 13), slice(6, 13)),
     ('slice_contained_by', slice(5, 13), slice(6, 13)),
     ('slice_contained_by', slice(6, 14), slice(6, 13)),
-    ('slice_contained_by', slice(6, 13), slice(6, None)),
-    ('slice_contained_by', slice(6, 13), slice(None, 13)),
+    ('slice_contained_by', slice(6, None), slice(6, None)),
+    ('slice_contained_by', slice(None, 13), slice(None, 13)),
     ('slice_contained_by', slice(6, None), slice(6, 13)),
     ('slice_contained_by', slice(None, 13), slice(6, 13)),
 ]
@@ -159,8 +159,8 @@ LOOKUP_FAILED = [
     ('slice_contained_by', slice(5, 12), slice(6, 13)),
     ('slice_contained_by', slice(7, None), slice(6, 13)),
     ('slice_contained_by', slice(None, 12), slice(6, 13)),
-    ('slice_contained_by', slice(6, 14), slice(None, 13)),
-    ('slice_contained_by', slice(5, 13), slice(6, None)),
+    ('slice_contained_by', slice(6, 13), slice(None, 13)),
+    ('slice_contained_by', slice(6, 13), slice(6, None)),
 ]
 @pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_FAILED)

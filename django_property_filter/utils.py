@@ -218,7 +218,7 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         result = property_value in lookup_value
     elif lookup_expr == 'slice_exact':
         result = property_value == lookup_value
-    elif lookup_expr == 'slice_contains':  # TODO - Put in function together with slice_contained_by, call in reverse
+    elif lookup_expr == 'slice_contains':
         if property_value:
             if lookup_value.start is None:
                 result = property_value.stop == lookup_value.stop
@@ -228,16 +228,26 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
                 result = ((property_value.start is None or property_value.start <= lookup_value.start) and
                           (property_value.stop is None or property_value.stop >= lookup_value.stop))
     elif lookup_expr == 'slice_contained_by':
-        if lookup_value:
-            if property_value.start is None:
-                result = lookup_value.stop == property_value.stop
+        print('COMPARING', lookup_expr, lookup_value, property_value)
+
+        if property_value:
+            if lookup_value.start is None:
+                print('AAA')
+                result = property_value.stop <= lookup_value.stop
+            elif lookup_value.stop is None:
+                print('BBB')
+                result = property_value.start >= lookup_value.start
+            elif property_value.start is None:
+                print('CCC')
+                result = lookup_value.start is None and property_value.stop == lookup_value.stop
             elif property_value.stop is None:
-                result = lookup_value.start == property_value.start
+                print('EEE')
+                result = lookup_value.stop is None and property_value.start == lookup_value.start
             else:
-                result = ((lookup_value.start is None or lookup_value.start <= property_value.start) and
-                          (lookup_value.stop is None or lookup_value.stop >= property_value.stop))
-
-
+                print('DDD')
+                result = ((property_value.start >= lookup_value.start) and
+                          (property_value.stop <= lookup_value.stop))
+ 
 
 
     print('COMPARING', lookup_expr, lookup_value, property_value)
