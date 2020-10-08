@@ -89,6 +89,13 @@ LOOKUP_SUCCEED = [
     ('in', [1, 3, 5], 3),
     ('in', [1, 3, 5], 5),
     ('slice_exact', slice(6, 13), slice(6, 13)),
+    ('slice_contains', slice(6, 13), slice(6, 13)),
+    ('slice_contains', slice(6, 13), slice(5, 13)),
+    ('slice_contains', slice(6, 13), slice(6, 14)),
+    ('slice_contains', slice(6, None), slice(6, 13)),
+    ('slice_contains', slice(None, 13), slice(6, 13)),
+    ('slice_contains', slice(6, 13), slice(6, None)),
+    ('slice_contains', slice(6, 13), slice(None, 13)),
 ]
 @pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_SUCCEED)
@@ -133,6 +140,13 @@ LOOKUP_FAILED = [
     ('slice_exact', slice(6, 13), slice(1, 13)),
     ('slice_exact', slice(6, 13), slice(6, 55)),
     ('slice_exact', slice(6, 13), slice(4, 25)),
+    ('slice_contains', slice(6, 13), slice(7, 13)),
+    ('slice_contains', slice(6, 13), slice(6, 12)),
+    ('slice_contains', slice(6, 13), slice(5, 12)),
+    ('slice_contains', slice(6, 13), slice(7, None)),
+    ('slice_contains', slice(6, 13), slice(None, 12)),
+    ('slice_contains', slice(None, 13), slice(6, 14)),
+    ('slice_contains', slice(6, None), slice(5, 13)),
 ]
 @pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_FAILED)
@@ -193,7 +207,7 @@ def test_get_max_db_param_values_user_values_invalid(caplog):
 
 RANGE_TEST_DATA = [
     ([], []),
-    ([1], [(1,1)]),
+    ([1], [(1, 1)]),
     ([1, 2], [(1, 2)]),
     ([2, 1], [(1, 2)]),
     ([1, 3], [(1, 1), (3, 3)]),

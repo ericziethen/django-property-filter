@@ -218,8 +218,13 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         result = property_value in lookup_value
     elif lookup_expr == 'slice_exact':
         result = property_value == lookup_value
-
-        print('COMPARING', property_value, lookup_value)
-        print('  ->', result)
+    elif lookup_expr == 'slice_contains':
+        if lookup_value.start is None:
+            result = property_value.stop == lookup_value.stop
+        elif lookup_value.stop is None:
+            result = property_value.start == lookup_value.start
+        else:
+            result = ((property_value.start is None or property_value.start <= lookup_value.start) and
+                      (property_value.stop is None or property_value.stop >= lookup_value.stop))
 
     return result

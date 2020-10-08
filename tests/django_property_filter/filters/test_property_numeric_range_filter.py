@@ -59,17 +59,14 @@ def fixture_property_numeric_range_filter():
 
 TEST_LOOKUPS = [
     ('exact', (5, 10), [-1, 0]),
+    #('contains', (5, 10), [-1, 0, 1, 2, 3, 4, 5]),
+    #('contains', (4, 10), [2, 3, 5]),
+    #('contains', (5, 11), [1, 4, 6]),
+    #('contains', (0, 100), []),
+    #('contains', (5, None), [-1, 0, 1, 4]),
+    #('contains', (None, 10), [-1, 0, 2, 3]),
 
 
-
-    #('range', (-1, 7), [-1, 0, 1, 2, 3, 4, 5, 6]),
-    #('range', (2, 2), [2, 3, 4]),
-    #('range', (3, 2), []),
-    #('range', (7, 9), [6]),
-    #('range', (8, 9), []),
-    #('range', (2, None), [2, 3, 4, 5, 6]),
-    #('range', (None, 2), [-1, 0, 1, 2, 3, 4]),
-    #('range', (None, None), [-1, 0, 1, 2, 3, 4, 5, 6]),
 ]
 
 @pytest.mark.debug

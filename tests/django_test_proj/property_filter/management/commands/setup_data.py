@@ -425,7 +425,8 @@ class Command(BaseCommand):
         NumericRangeFilterModel.objects.create(id=3, postgres_int_range=NumericRange(1, 10))
         NumericRangeFilterModel.objects.create(id=4, postgres_int_range=NumericRange(5, 20))
         NumericRangeFilterModel.objects.create(id=5, postgres_int_range=NumericRange(1, 20))
-        NumericRangeFilterModel.objects.create(id=6, postgres_int_range=None)
+        NumericRangeFilterModel.objects.create(id=6, postgres_int_range=NumericRange(1, 20))
+        NumericRangeFilterModel.objects.create(id=7, postgres_int_range=None)
 
     def setup_ordering_filter_model(self):
         print('Setup OrderingFilterModel')
