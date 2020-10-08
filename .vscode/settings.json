@@ -25,5 +25,8 @@
 
     "python.linting.mypyEnabled": false,
     "python.envFile": "${workspaceFolder}/.env_vars",
-    "restructuredtext.confPath": "${workspaceFolder}\\docs\\source"
+    "restructuredtext.confPath": "${workspaceFolder}\\docs\\source",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}\\django_property_filter"
+    ]
 }
