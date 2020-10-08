@@ -66,7 +66,14 @@ TEST_LOOKUPS = [
     ('contains', (5, None), [-1, 0, 1, 4]),
     ('contains', (None, 10), [-1, 0, 2, 3]),
 
-
+    #('contained_by', (5, 10), [-1, 0]),
+    #('contained_by', (4, 10), [-1, 0]),
+    #('contained_by', (6, 10), []),
+    #('contained_by', (5, 9), []),
+    #('contained_by', (5, 11), [-1, 0]),
+    #('contained_by', (1, 15), [-1, 0, 3]),
+    #('contained_by', (5, None), [-1, 0, 1, 4]),
+    #('contained_by', (None, 10), [-1, 0, 2, 3]),
 ]
 
 @pytest.mark.debug

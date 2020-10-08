@@ -96,6 +96,13 @@ LOOKUP_SUCCEED = [
     ('slice_contains', slice(None, 13), slice(6, 13)),
     ('slice_contains', slice(6, 13), slice(6, None)),
     ('slice_contains', slice(6, 13), slice(None, 13)),
+    ('slice_contained_by', slice(6, 13), slice(6, 13)),
+    ('slice_contained_by', slice(5, 13), slice(6, 13)),
+    ('slice_contained_by', slice(6, 14), slice(6, 13)),
+    ('slice_contained_by', slice(6, 13), slice(6, None)),
+    ('slice_contained_by', slice(6, 13), slice(None, 13)),
+    ('slice_contained_by', slice(6, None), slice(6, 13)),
+    ('slice_contained_by', slice(None, 13), slice(6, 13)),
 ]
 @pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_SUCCEED)
@@ -147,6 +154,13 @@ LOOKUP_FAILED = [
     ('slice_contains', slice(6, 13), slice(None, 12)),
     ('slice_contains', slice(None, 13), slice(6, 14)),
     ('slice_contains', slice(6, None), slice(5, 13)),
+    ('slice_contained_by', slice(7, 13), slice(6, 13)),
+    ('slice_contained_by', slice(6, 12), slice(6, 13)),
+    ('slice_contained_by', slice(5, 12), slice(6, 13)),
+    ('slice_contained_by', slice(7, None), slice(6, 13)),
+    ('slice_contained_by', slice(None, 12), slice(6, 13)),
+    ('slice_contained_by', slice(6, 14), slice(None, 13)),
+    ('slice_contained_by', slice(5, 13), slice(6, None)),
 ]
 @pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_FAILED)
