@@ -514,10 +514,6 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
 
     supported_lookups = ['exact', 'contains', 'contained_by', 'overlap']
 
-    # TODO - Check additional ones, fully_lt, fully_gt, not_lt, not_gt, adjacent_to, startswith, endswith, isempty
-    # https://github.com/carltongibson/django-filter/issues/343
-
-
 
     def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
 
@@ -531,14 +527,22 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
         if property_value:
             property_value = slice(property_value.lower, property_value.upper)
 
-        if lookup_expr == 'exact':
-            lookup_expr = 'postgres_range_exact'
-        if lookup_expr == 'contains':
-            lookup_expr = 'postgres_range_contains'
-        if lookup_expr == 'contained_by':
-            lookup_expr = 'postgres_range_contained_by'
-        if lookup_expr == 'overlap':
-            lookup_expr = 'postgres_range_overlap'
+        if lookup_value.start is None:
+            lookup_value = lookup_value.stop
+            lookup_expr = 'postgres_range_endwith'
+        elif lookup_value.stop is None:
+            lookup_value = lookup_value.start
+            lookup_expr = 'postgres_range_startwith'
+
+        else:
+            if lookup_expr == 'exact':
+                lookup_expr = 'postgres_range_exact'
+            if lookup_expr == 'contains':
+                lookup_expr = 'postgres_range_contains'
+            if lookup_expr == 'contained_by':
+                lookup_expr = 'postgres_range_contained_by'
+            if lookup_expr == 'overlap':
+                lookup_expr = 'postgres_range_overlap'
 
         return lookup_expr, lookup_value, property_value
 

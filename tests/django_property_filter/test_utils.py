@@ -124,6 +124,10 @@ LOOKUP_SUCCEED = [
     ('postgres_range_overlap', slice(None, 7), slice(None, 10)),
     ('postgres_range_overlap', slice(None, 7), slice(6, None)),
     ('postgres_range_overlap', slice(6, None), slice(None, 7)),
+    ('postgres_range_startwith', 5, slice(5, 7)),
+    ('postgres_range_startwith', 5, slice(5, None)),
+    ('postgres_range_endwith', 5, slice(3, 5)),
+    ('postgres_range_endwith', 5, slice(None, 5)),
 
 
 
@@ -206,6 +210,10 @@ LOOKUP_FAILED = [
     ('postgres_range_overlap', slice(None, 7), slice(7, None)),
     ('postgres_range_overlap', slice(None, 7), slice(8, None)),
     ('postgres_range_overlap', slice(8, None), slice(None, 7)),
+    ('postgres_range_startwith', 5, slice(7, 9)),
+    ('postgres_range_startwith', 5, slice(None, 5)),
+    ('postgres_range_endwith', 5, slice(7, 9)),
+    ('postgres_range_endwith', 5, slice(5, None)),
 ]
 @pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_FAILED)

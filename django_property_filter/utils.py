@@ -256,6 +256,12 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
                 result = property_value.stop is None or property_value.stop > lookup_value.start
             else:
                 result = not (property_value.start >= lookup_value.stop or lookup_value.start >= property_value.stop)
+    elif lookup_expr == 'postgres_range_startwith':
+        if property_value:
+            result = property_value.start == lookup_value
+    elif lookup_expr == 'postgres_range_endwith':
+        if property_value:
+            result = property_value.stop == lookup_value
 
     print('COMPARING', lookup_expr, lookup_value, property_value)
     print('  RESULT: ', result)
