@@ -82,12 +82,12 @@ TEST_LOOKUPS = [
     ('contained_by', (5, None), [-1, 0, 1, 4]),
     ('contained_by', (None, 10), [-1, 0, 2, 3]),
     # For Overlap, start is included, end is excluded
-    #('overlap', (5, 10), [-1, 0, 1, 2, 3, 4, 5]),
-    #('overlap', (5, None), [-1, 0, 1, 4]),  # Django-Filter only Matches the start
-    #('overlap', (None, 10), [-1, 0, 2, 3]),  # Django-Filter only Matches the end
-    #('overlap', (9, 22), [-1, 0, 1, 2, 3, 4, 5]),
-    #('overlap', (10, 22), [1, 4, 5]),
-    #('overlap', (22, 23), []),
+    ('overlap', (5, 10), [-1, 0, 1, 2, 3, 4, 5]),
+    ('overlap', (5, None), [-1, 0, 1, 4]),  # Django-Filter only Matches the start
+    ('overlap', (None, 10), [-1, 0, 2, 3]),  # Django-Filter only Matches the end
+    ('overlap', (9, 22), [-1, 0, 1, 2, 3, 4, 5]),
+    ('overlap', (10, 22), [1, 4, 5]),
+    ('overlap', (22, 23), [1]),
 ]
 
 @pytest.mark.debug

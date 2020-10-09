@@ -128,12 +128,6 @@ LOOKUP_SUCCEED = [
     ('postgres_range_startwith', 5, slice(5, None)),
     ('postgres_range_endwith', 5, slice(3, 5)),
     ('postgres_range_endwith', 5, slice(None, 5)),
-
-
-
-
-
-
 ]
 @pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_SUCCEED)
