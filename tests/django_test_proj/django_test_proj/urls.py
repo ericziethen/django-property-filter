@@ -43,6 +43,7 @@ urlpatterns = [
     path('multi_filter_test/', views.MultiFilterTestView.as_view(), name='multi_filter_test'),
     path('multiple_choice_filter/', views.MultipleChoiceFilterView.as_view(), name='multiple_choice_filter'),
     path('number_filter/', views.NumberFilterView.as_view(), name='number_filter'),
+    path('numeric_range_filter/', views.NumericRangeFilterView.as_view(), name='numeric_range_filter'),
     path('ordering_filter/', views.OrderingFilterView.as_view(), name='ordering_filter'),
     path('range_filter/', views.RangeFilterView.as_view(), name='range_filter'),
     path('time_filter/', views.TimeFilterView.as_view(), name='time_filter'),

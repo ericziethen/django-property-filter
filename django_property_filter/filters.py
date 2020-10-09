@@ -27,6 +27,7 @@ from django_filters.filters import (
     LookupChoiceFilter,
     MultipleChoiceFilter,
     NumberFilter,
+    NumericRangeFilter,
     OrderingFilter,
     RangeFilter,
     TimeFilter,
@@ -173,6 +174,7 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
 
         converted_values = []
 
+        new_lookup_value = lookup_value
         for entry in lookup_value:
             converted_field = entry
 
@@ -503,6 +505,41 @@ class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):
 
 class PropertyTypedMultipleChoiceFilter(PropertyMultipleChoiceFilter, TypedMultipleChoiceFilter):
     """Adding Property Support to TypedMultipleChoiceFilter."""
+
+
+# POSTGRES ONLY FILTERS #
+
+
+class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
+    """Adding Property Support to UUIDFilter."""
+
+    supported_lookups = ['exact', 'contains', 'contained_by', 'overlap']
+
+    def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
+        if property_value:
+            property_value = slice(property_value.lower, property_value.upper)
+
+        if lookup_value.start is None:
+            lookup_value = lookup_value.stop
+            lookup_expr = 'postgres_range_endwith'
+        elif lookup_value.stop is None:
+            lookup_value = lookup_value.start
+            lookup_expr = 'postgres_range_startwith'
+
+        else:
+            if lookup_expr == 'exact':
+                lookup_expr = 'postgres_range_exact'
+            if lookup_expr == 'contains':
+                lookup_expr = 'postgres_range_contains'
+            if lookup_expr == 'contained_by':
+                lookup_expr = 'postgres_range_contained_by'
+            if lookup_expr == 'overlap':
+                lookup_expr = 'postgres_range_overlap'
+
+        return lookup_expr, lookup_value, property_value
+
+
+# CONSTANTS #
 
 
 EXPLICIT_ONLY_FILTERS = [

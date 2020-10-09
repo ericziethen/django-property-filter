@@ -181,7 +181,8 @@ def get_value_for_db_field(obj, field_str):
     return get_attr_val_recursive(obj, field_str.split('__'))
 
 
-def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # pylint: disable=too-many-branches
+def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-statements
+        lookup_expr, lookup_value, property_value):
     """Compare Lookup Expressions."""
     result = False
 
@@ -216,5 +217,50 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         result = lookup_value.start <= property_value <= lookup_value.stop
     elif lookup_expr == 'in':
         result = property_value in lookup_value
+
+    # Postgres Ranges exclude the Upper Boundary for Decimal Types, Might Impact us here
+    elif lookup_expr == 'postgres_range_exact':
+        result = property_value == lookup_value
+    elif lookup_expr == 'postgres_range_contains':
+        if property_value:
+            if lookup_value.start is None:
+                result = property_value.stop == lookup_value.stop
+            elif lookup_value.stop is None:
+                result = property_value.start == lookup_value.start
+            else:
+                result = ((property_value.start is None or property_value.start <= lookup_value.start) and
+                          (property_value.stop is None or property_value.stop >= lookup_value.stop))
+    elif lookup_expr == 'postgres_range_contained_by':
+        if property_value:
+            if lookup_value.start is None:
+                result = property_value.stop <= lookup_value.stop
+            elif lookup_value.stop is None:
+                result = property_value.start >= lookup_value.start
+            elif property_value.start is None:
+                result = lookup_value.start is None and property_value.stop == lookup_value.stop
+            elif property_value.stop is None:
+                result = lookup_value.stop is None and property_value.start == lookup_value.start
+            else:
+                result = ((property_value.start >= lookup_value.start) and
+                          (property_value.stop <= lookup_value.stop))
+    elif lookup_expr == 'postgres_range_overlap':  # start is included, end is excluded
+        # Check if the ranges are not outside of each other instead if defining the actual overlap
+        if property_value:
+            if property_value.start is None:
+                result = lookup_value.start is None or lookup_value.start < property_value.stop
+            elif lookup_value.start is None:
+                result = property_value.start is None or property_value.start < lookup_value.stop
+            elif property_value.stop is None:
+                result = lookup_value.stop is None or lookup_value.stop > property_value.start
+            elif lookup_value.stop is None:
+                result = property_value.stop is None or property_value.stop > lookup_value.start
+            else:
+                result = not (property_value.start >= lookup_value.stop or lookup_value.start >= property_value.stop)
+    elif lookup_expr == 'postgres_range_startwith':
+        if property_value:
+            result = property_value.start == lookup_value
+    elif lookup_expr == 'postgres_range_endwith':
+        if property_value:
+            result = property_value.stop == lookup_value
 
     return result

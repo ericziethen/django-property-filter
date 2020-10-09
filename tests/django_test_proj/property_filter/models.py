@@ -2,7 +2,7 @@ from django.db import models
 
 import django_filters.fields
 
-from django.contrib.postgres import fields as pg_fields
+from django.contrib.postgres.fields import DecimalRangeField, IntegerRangeField
 
 
 # Create your models here.
@@ -499,3 +499,27 @@ class BenchmarkTestModel(models.Model):
     def __str__(self):
         return (F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - "{self.date_time}" - '
                 F'"{self.iso_date_time}" - "{self.time}" - "{self.duration}" - "{self.uuid}"" ({self.id})')
+
+
+############### POSTGRESQL Specific Models ###############
+
+class PostgreSQLModel(models.Model):
+    class Meta:
+        abstract = True
+        required_db_vendor = 'postgresql'
+
+
+class NumericRangeFilterModel(PostgreSQLModel):
+    postgres_int_range = IntegerRangeField(blank=True, null=True)
+    postgres_decimal_range = DecimalRangeField(blank=True, null=True)
+
+    @property
+    def prop_postgres_int_range(self):
+        return self.postgres_int_range
+
+    @property
+    def prop_postgres_decimal_range(self):
+        return self.postgres_decimal_range
+
+    def __str__(self):
+        return F'{self.postgres_int_range} - {self.prop_postgres_decimal_range} ({self.id})'
