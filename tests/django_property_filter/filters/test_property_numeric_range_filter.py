@@ -47,14 +47,22 @@ def test_default_lookup():
 @pytest.fixture
 @pytest.mark.skipif(not db_is_postgresql(), reason='NumericRangeFilter only supported in PostGres')
 def fixture_property_numeric_range_filter():
-    NumericRangeFilterModel.objects.create(id=-1, postgres_int_range=NumericRange(5, 10))
-    NumericRangeFilterModel.objects.create(id=0, postgres_int_range=NumericRange(5, 10))
-    NumericRangeFilterModel.objects.create(id=1, postgres_int_range=NumericRange(5, None))
-    NumericRangeFilterModel.objects.create(id=2, postgres_int_range=NumericRange(None, 10))
-    NumericRangeFilterModel.objects.create(id=3, postgres_int_range=NumericRange(1, 10))
-    NumericRangeFilterModel.objects.create(id=4, postgres_int_range=NumericRange(5, 20))
-    NumericRangeFilterModel.objects.create(id=5, postgres_int_range=NumericRange(1, 20))
-    NumericRangeFilterModel.objects.create(id=6, postgres_int_range=None)
+    NumericRangeFilterModel.objects.create(id=-1,
+        postgres_int_range=NumericRange(5, 10), postgres_decimal_range=NumericRange(5.0, 10.0))
+    NumericRangeFilterModel.objects.create(id=0,
+        postgres_int_range=NumericRange(5, 10), postgres_decimal_range=NumericRange(5.0, 10.0))
+    NumericRangeFilterModel.objects.create(id=1,
+        postgres_int_range=NumericRange(5, None), postgres_decimal_range=NumericRange(5.0, None))
+    NumericRangeFilterModel.objects.create(id=2,
+        postgres_int_range=NumericRange(None, 10), postgres_decimal_range=NumericRange(None, 10.0))
+    NumericRangeFilterModel.objects.create(id=3,
+        postgres_int_range=NumericRange(1, 10), postgres_decimal_range=NumericRange(1.0, 10.0))
+    NumericRangeFilterModel.objects.create(id=4,
+        postgres_int_range=NumericRange(5, 20), postgres_decimal_range=NumericRange(5.0, 20.0))
+    NumericRangeFilterModel.objects.create(id=5,
+        postgres_int_range=NumericRange(1, 20), postgres_decimal_range=NumericRange(1.0, 20.0))
+    NumericRangeFilterModel.objects.create(id=6,
+        postgres_int_range=None, postgres_decimal_range=None)
 
 
 TEST_LOOKUPS = [
@@ -122,7 +130,7 @@ def test_lookup_xpr(fixture_property_numeric_range_filter, lookup_xpr, lookup_va
 
         class Meta:
             model = NumericRangeFilterModel
-            exclude = ['postgres_int_range']
+            exclude = ['postgres_int_range', 'postgres_decimal_range']
             property_fields = [('prop_postgres_int_range', PropertyNumericRangeFilter, [lookup_xpr])]
 
     implicit_filter_fs = ImplicitFilterSet({F'prop_postgres_int_range__{lookup_xpr}_min': lookup_val[0], F'prop_postgres_int_range__{lookup_xpr}_max': lookup_val[1]}, queryset=NumericRangeFilterModel.objects.all())
