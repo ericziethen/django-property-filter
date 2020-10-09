@@ -516,14 +516,6 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
 
 
     def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
-
-
-        # TODO - Add DecimalRangeField to Model, since they don't seem to have the Upper Bound Exclusion
-        # So our Test cases might not be correct in those cases
-
-        # TODO - Need to Take Filter Fallback into Account, fallbacks to startwith and endwith
-
-
         if property_value:
             property_value = slice(property_value.lower, property_value.upper)
 

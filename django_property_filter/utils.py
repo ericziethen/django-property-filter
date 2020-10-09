@@ -263,7 +263,4 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         if property_value:
             result = property_value.stop == lookup_value
 
-    print('COMPARING', lookup_expr, lookup_value, property_value)
-    print('  RESULT: ', result)
-
     return result

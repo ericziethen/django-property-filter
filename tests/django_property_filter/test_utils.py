@@ -129,7 +129,6 @@ LOOKUP_SUCCEED = [
     ('postgres_range_endwith', 5, slice(3, 5)),
     ('postgres_range_endwith', 5, slice(None, 5)),
 ]
-@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_SUCCEED)
 def test_compare_by_lookup_expression_succeed(lookup_xpr, lookup_val, property_value):
     assert compare_by_lookup_expression(lookup_xpr, lookup_val, property_value)
@@ -209,7 +208,6 @@ LOOKUP_FAILED = [
     ('postgres_range_endwith', 5, slice(7, 9)),
     ('postgres_range_endwith', 5, slice(5, None)),
 ]
-@pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_FAILED)
 def test_compare_by_lookup_expression_fail(lookup_xpr, lookup_val, property_value):
     assert not compare_by_lookup_expression(lookup_xpr, lookup_val, property_value)
