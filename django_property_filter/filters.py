@@ -522,22 +522,23 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
     def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
 
 
+        # TODO - Add DecimalRangeField to Model, since they don't seem to have the Upper Bound Exclusion
+        # So our Test cases might not be correct in those cases
+
         # TODO - Need to Take Filter Fallback into Account, fallbacks to startwith and endwith
+
 
         if property_value:
             property_value = slice(property_value.lower, property_value.upper)
 
-
-
-        # TODO - Don't Use Slices, use Tuples (i.e. Ranges), pass tuple in, based on Type reduce the stop value by 1
         if lookup_expr == 'exact':
-            lookup_expr = 'slice_exact'
+            lookup_expr = 'postgres_range_exact'
         if lookup_expr == 'contains':
-            lookup_expr = 'slice_contains'
+            lookup_expr = 'postgres_range_contains'
         if lookup_expr == 'contained_by':
-            lookup_expr = 'slice_contained_by'
+            lookup_expr = 'postgres_range_contained_by'
         if lookup_expr == 'overlap':
-            lookup_expr = 'slice_overlap'
+            lookup_expr = 'postgres_range_overlap'
 
         return lookup_expr, lookup_value, property_value
 

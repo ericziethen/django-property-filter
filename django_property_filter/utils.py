@@ -216,9 +216,9 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         result = lookup_value.start <= property_value <= lookup_value.stop
     elif lookup_expr == 'in':
         result = property_value in lookup_value
-    elif lookup_expr == 'slice_exact':
+    elif lookup_expr == 'postgres_range_exact':
         result = property_value == lookup_value
-    elif lookup_expr == 'slice_contains':
+    elif lookup_expr == 'postgres_range_contains':
         if property_value:
             if lookup_value.start is None:
                 result = property_value.stop == lookup_value.stop
@@ -227,7 +227,7 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
             else:
                 result = ((property_value.start is None or property_value.start <= lookup_value.start) and
                           (property_value.stop is None or property_value.stop >= lookup_value.stop))
-    elif lookup_expr == 'slice_contained_by':
+    elif lookup_expr == 'postgres_range_contained_by':
         if property_value:
             if lookup_value.start is None:
                 result = property_value.stop <= lookup_value.stop
@@ -240,42 +240,19 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
             else:
                 result = ((property_value.start >= lookup_value.start) and
                           (property_value.stop <= lookup_value.stop))
-    elif lookup_expr == 'slice_overlap':  # start is included, end is excluded
+    elif lookup_expr == 'postgres_range_overlap':  # start is included, end is excluded
         # Check if the ranges are not outside of each other instead if defining the actual overlap
         if property_value:
             if property_value.start is None:
-                print('### AAA ###')
                 result = lookup_value.start is None or lookup_value.start < property_value.stop
             elif lookup_value.start is None:
-                print('### BBB ###')
                 result = property_value.start is None or property_value.start < lookup_value.stop
             elif property_value.stop is None:
-                print('### CCC ###')
                 result = lookup_value.stop is None or lookup_value.stop > property_value.start
             elif lookup_value.stop is None:
-                print('### DDD ###')
                 result = property_value.stop is None or property_value.stop > lookup_value.start
             else:
-                print('### XXX ###')
                 result = not (property_value.start >= lookup_value.stop or lookup_value.start >= property_value.stop)
-
-
-        '''
-            OVERLAP IF A(start, end), B(start, end)
-                - 
-
-            NOT OVERLAP IF
-                A.START >= B.END or B.START >= A.END
-
-
-        '''
-
-
-
-
-
-
-
 
     print('COMPARING', lookup_expr, lookup_value, property_value)
     print('  RESULT: ', result)

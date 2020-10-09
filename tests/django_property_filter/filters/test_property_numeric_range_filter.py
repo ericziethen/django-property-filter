@@ -132,10 +132,22 @@ def test_lookup_xpr(fixture_property_numeric_range_filter, lookup_xpr, lookup_va
     assert set(implicit_filter_fs.qs) == set(filter_fs.qs)
 
 
+TEST_LOOKUPS_DECIMAL_RANGE = [
+    # TODO - Just Test Cases with Upper Ranges
+]
+
+
+
 #@pytest.mark.debug
 @pytest.mark.skipif(not db_is_postgresql(), reason='NumericRangeFilter only supported in PostGres')
 def test_all_expressions_tested():
+
+    # Integer Range Testing
     tested_expressions = [x[0] for x in TEST_LOOKUPS]
+    assert sorted(list(set(tested_expressions))) == sorted(PropertyNumericRangeFilter.supported_lookups)
+
+    # Decimal Range Testing
+    tested_expressions = [x[0] for x in TEST_LOOKUPS_DECIMAL_RANGE]
     assert sorted(list(set(tested_expressions))) == sorted(PropertyNumericRangeFilter.supported_lookups)
 
 
