@@ -70,7 +70,7 @@ DJANGO_FILTER_NO_OVERWRITTEN_FUNCTIONS = [
 ]
 @pytest.mark.parametrize('filter_class, compare_class', DJANGO_FILTER_NO_OVERWRITTEN_FUNCTIONS)
 def test_django_filter_no_overwritten_functions(filter_class, compare_class):
-    assert class_functions_diff_dic(filter_class, compare_class, ignore=['field_class']) == {}
+    assert class_functions_diff_dic(filter_class, compare_class, ignore=['field_class', 'get_max_validator']) == {}
 
 
 DJANGO_FILTER_OVERWRITTEN_FUNCTIONS = [
