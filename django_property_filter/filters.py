@@ -174,6 +174,7 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
 
         converted_values = []
 
+        new_lookup_value = lookup_value
         for entry in lookup_value:
             converted_field = entry
 
@@ -506,7 +507,7 @@ class PropertyTypedMultipleChoiceFilter(PropertyMultipleChoiceFilter, TypedMulti
     """Adding Property Support to TypedMultipleChoiceFilter."""
 
 
-##### POSTGRES ONLY FILTERS #####
+# POSTGRES ONLY FILTERS #
 
 
 class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
@@ -538,7 +539,7 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
         return lookup_expr, lookup_value, property_value
 
 
-##### CONSTANTS #####
+# CONSTANTS #
 
 
 EXPLICIT_ONLY_FILTERS = [

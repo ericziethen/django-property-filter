@@ -181,7 +181,8 @@ def get_value_for_db_field(obj, field_str):
     return get_attr_val_recursive(obj, field_str.split('__'))
 
 
-def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # pylint: disable=too-many-branches
+def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-statements
+        lookup_expr, lookup_value, property_value):
     """Compare Lookup Expressions."""
     result = False
 
@@ -216,7 +217,6 @@ def compare_by_lookup_expression(lookup_expr, lookup_value, property_value):  # 
         result = lookup_value.start <= property_value <= lookup_value.stop
     elif lookup_expr == 'in':
         result = property_value in lookup_value
-
 
     # Postgres Ranges exclude the Upper Boundary for Decimal Types, Might Impact us here
     elif lookup_expr == 'postgres_range_exact':
