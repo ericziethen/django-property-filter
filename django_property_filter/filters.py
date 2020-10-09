@@ -514,7 +514,6 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
 
     supported_lookups = ['exact', 'contains', 'contained_by', 'overlap']
 
-
     def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
         if property_value:
             property_value = slice(property_value.lower, property_value.upper)

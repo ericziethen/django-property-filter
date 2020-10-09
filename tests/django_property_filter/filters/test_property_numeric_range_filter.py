@@ -11,7 +11,53 @@ from django_property_filter import PropertyFilterSet, PropertyNumericRangeFilter
 
 from property_filter.models import NumericRangeFilterModel
 
-from tests.common import db_is_postgresql
+from tests.common import db_is_postgresql, db_is_sqlite
+
+
+
+
+'''
+# To keep Coverage at 100% we fake the Postgress Specific function under sqlite only
+# The alternative would be to exclude, but I can't get it to exclude for sqlite only
+# Therefore faking it is better to catch it when we run under postgres
+@pytest.mark.skipif(not db_is_sqlite(), reason='Fake Coverage for Sqlite only')
+def test_fake_postgres_coverage_for_sqlite():
+    my_filter = PropertyNumericRangeFilter(field_name='fake_field', lookup_expr='exact')
+    lookup_values = [slice(1, None), slice(None, 10), slice(1, 5)]
+
+    for lookup_val in lookup_values:
+        for lookup_expr in PropertyNumericRangeFilter.supported_lookups:
+            my_filter._lookup_convertion(lookup_expr, lookup_val, )
+'''
+
+# Run the Convertion Test even under sqlite for code coverage
+class FakePostgreasRange():
+    def __init__(self, lower, upper):
+        self.lower = lower
+        self.upper = upper
+TEST_LOOKUP_CONVERTIONS = [
+    ('exact', slice(1, 1), FakePostgreasRange(1, 1), 'postgres_range_exact', slice(1, 1), slice(1, 1)),
+    ('contains', slice(1, 1), FakePostgreasRange(1, 1), 'postgres_range_contains', slice(1, 1), slice(1, 1)),
+    ('contained_by', slice(1, 1), FakePostgreasRange(1, 1), 'postgres_range_contained_by', slice(1, 1), slice(1, 1)),
+    ('overlap', slice(1, 1), FakePostgreasRange(1, 1), 'postgres_range_overlap', slice(1, 1), slice(1, 1)),
+    ('exact', slice(5, None), FakePostgreasRange(1, 1), 'postgres_range_startwith', 5, slice(1, 1)),
+    ('exact', slice(None, 34), FakePostgreasRange(1, 1), 'postgres_range_endwith', 34, slice(1, 1)),
+]
+@pytest.mark.parametrize(
+    'in_lookup_xpr, in_lookup_val, in_prop_value, out_lookup_xpr, out_lookup_val, out_prop_value',
+    TEST_LOOKUP_CONVERTIONS)
+def test_lookup_convertion(
+        in_lookup_xpr, in_lookup_val, in_prop_value,
+        out_lookup_xpr, out_lookup_val, out_prop_value):
+    my_filter = PropertyNumericRangeFilter(field_name='fake_field', lookup_expr=in_lookup_xpr)
+
+    result_lookup_xpr, result_lookup_val, result_prop_value =\
+        my_filter._lookup_convertion(in_lookup_xpr, in_lookup_val, in_prop_value)
+
+    assert result_lookup_xpr == out_lookup_xpr
+    assert result_lookup_val == out_lookup_val
+    assert result_prop_value == out_prop_value
+
 
 
 @pytest.mark.skipif(not db_is_postgresql(), reason='NumericRangeFilter only supported in PostGres')
