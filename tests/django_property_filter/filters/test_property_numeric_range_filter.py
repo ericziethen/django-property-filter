@@ -109,6 +109,11 @@ def test_lookup_xpr(fixture_property_numeric_range_filter, lookup_xpr, lookup_va
 
     filter_fs_mixed = NumericRangeFilterSet({'postgres_int_range_min': lookup_val[0], 'postgres_int_range_max': lookup_val[1]}, queryset=NumericRangeFilterModel.objects.all())
     prop_filter_fs_mixed = PropertyNumericRangeFilterSet({'prop_postgres_int_range_min': lookup_val[0], 'prop_postgres_int_range_max': lookup_val[1]}, queryset=NumericRangeFilterModel.objects.all())
+
+
+    #print('>>> FILT >>>', filter_fs.qs.query)
+    #print('>>> FILT_MIXED >>>', filter_fs_mixed.qs.query)
+    #print('>>> PROP_MIXED >>>', prop_filter_fs_mixed.qs.query)
     assert set(filter_fs_mixed.qs) == set(filter_fs.qs)
     assert set(prop_filter_fs_mixed.qs) == set(filter_fs.qs)
 

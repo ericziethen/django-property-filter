@@ -118,6 +118,12 @@ LOOKUP_SUCCEED = [
     ('slice_overlap', slice(None, 7), slice(None, 10)),
     ('slice_overlap', slice(None, 7), slice(6, None)),
     ('slice_overlap', slice(6, None), slice(None, 7)),
+
+
+
+
+
+    
 ]
 @pytest.mark.debug
 @pytest.mark.parametrize('lookup_xpr, lookup_val, property_value', LOOKUP_SUCCEED)

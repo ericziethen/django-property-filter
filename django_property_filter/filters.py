@@ -514,17 +514,30 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
 
     supported_lookups = ['exact', 'contains', 'contained_by', 'overlap']
 
+    # TODO - Check additional ones, fully_lt, fully_gt, not_lt, not_gt, adjacent_to, startswith, endswith, isempty
+    # https://github.com/carltongibson/django-filter/issues/343
+
+
+
     def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
+
+
+        # TODO - Need to Take Filter Fallback into Account, fallbacks to startwith and endwith
 
         if property_value:
             property_value = slice(property_value.lower, property_value.upper)
 
+
+
+        # TODO - Don't Use Slices, use Tuples (i.e. Ranges), pass tuple in, based on Type reduce the stop value by 1
         if lookup_expr == 'exact':
             lookup_expr = 'slice_exact'
         if lookup_expr == 'contains':
             lookup_expr = 'slice_contains'
         if lookup_expr == 'contained_by':
             lookup_expr = 'slice_contained_by'
+        if lookup_expr == 'overlap':
+            lookup_expr = 'slice_overlap'
 
         return lookup_expr, lookup_value, property_value
 
