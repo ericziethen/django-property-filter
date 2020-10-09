@@ -381,11 +381,15 @@ class PropertyNumericRangeFilterSet(PropertyFilterSet):
 
     class Meta:
         model = models.NumericRangeFilterModel
-        exclude = ['postgres_int_range']
-        property_fields = [('prop_postgres_int_range', PropertyNumericRangeFilter, PropertyNumericRangeFilter.supported_lookups)]
+        exclude = ['postgres_int_range', 'postgres_decimal_range']
+        property_fields = [
+            ('prop_postgres_int_range', PropertyNumericRangeFilter, PropertyNumericRangeFilter.supported_lookups),
+            ('prop_postgres_decimal_range', PropertyNumericRangeFilter, PropertyNumericRangeFilter.supported_lookups)
+            ]
 
     def __init__(self, *args, **kwargs):
         add_supported_filters(self, NumericRangeFilter, 'postgres_int_range', PropertyNumericRangeFilter.supported_lookups)
+        add_supported_filters(self, NumericRangeFilter, 'postgres_decimal_range', PropertyNumericRangeFilter.supported_lookups)
         super().__init__(*args, **kwargs)
 
 

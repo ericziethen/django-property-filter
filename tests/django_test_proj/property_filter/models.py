@@ -2,7 +2,7 @@ from django.db import models
 
 import django_filters.fields
 
-from django.contrib.postgres.fields import IntegerRangeField
+from django.contrib.postgres.fields import DecimalRangeField, IntegerRangeField
 
 
 # Create your models here.
@@ -511,10 +511,15 @@ class PostgreSQLModel(models.Model):
 
 class NumericRangeFilterModel(PostgreSQLModel):
     postgres_int_range = IntegerRangeField(blank=True, null=True)
+    postgres_decimal_range = DecimalRangeField(blank=True, null=True)
 
     @property
     def prop_postgres_int_range(self):
         return self.postgres_int_range
 
+    @property
+    def prop_postgres_decimal_range(self):
+        return self.postgres_decimal_range
+
     def __str__(self):
-        return F'{self.postgres_int_range} ({self.id})'
+        return F'{self.postgres_int_range} - {self.prop_postgres_decimal_range} ({self.id})'

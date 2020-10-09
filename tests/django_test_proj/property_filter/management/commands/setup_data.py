@@ -418,15 +418,24 @@ class Command(BaseCommand):
     def setup_numeric_range_filter_model(self):
         print('Setup NumericRangeFilterModel')
 
-        NumericRangeFilterModel.objects.create(id=-1, postgres_int_range=NumericRange(5, 10))
-        NumericRangeFilterModel.objects.create(id=0, postgres_int_range=NumericRange(5, 10))
-        NumericRangeFilterModel.objects.create(id=1, postgres_int_range=NumericRange(5, None))
-        NumericRangeFilterModel.objects.create(id=2, postgres_int_range=NumericRange(None, 10))
-        NumericRangeFilterModel.objects.create(id=3, postgres_int_range=NumericRange(1, 10))
-        NumericRangeFilterModel.objects.create(id=4, postgres_int_range=NumericRange(5, 20))
-        NumericRangeFilterModel.objects.create(id=5, postgres_int_range=NumericRange(1, 20))
-        NumericRangeFilterModel.objects.create(id=6, postgres_int_range=NumericRange(1, 20))
-        NumericRangeFilterModel.objects.create(id=7, postgres_int_range=None)
+        NumericRangeFilterModel.objects.create(id=-1,
+            postgres_int_range=NumericRange(5, 10), postgres_decimal_range=NumericRange(5.0, 10.0))
+        NumericRangeFilterModel.objects.create(id=0,
+            postgres_int_range=NumericRange(5, 10), postgres_decimal_range=NumericRange(5.0, 10.0))
+        NumericRangeFilterModel.objects.create(id=1,
+            postgres_int_range=NumericRange(5, None), postgres_decimal_range=NumericRange(5.0, None))
+        NumericRangeFilterModel.objects.create(id=2,
+            postgres_int_range=NumericRange(None, 10), postgres_decimal_range=NumericRange(None, 10.0))
+        NumericRangeFilterModel.objects.create(id=3,
+            postgres_int_range=NumericRange(1, 10), postgres_decimal_range=NumericRange(1.0, 10.0))
+        NumericRangeFilterModel.objects.create(id=4,
+            postgres_int_range=NumericRange(5, 20), postgres_decimal_range=NumericRange(5.0, 20.0))
+        NumericRangeFilterModel.objects.create(id=5,
+            postgres_int_range=NumericRange(1, 20), postgres_decimal_range=NumericRange(1.0, 10.0))
+        NumericRangeFilterModel.objects.create(id=6,
+            postgres_int_range=NumericRange(1, 20), postgres_decimal_range=NumericRange(1.0, 10.0))
+        NumericRangeFilterModel.objects.create(id=7,
+            postgres_int_range=None)
 
     def setup_ordering_filter_model(self):
         print('Setup OrderingFilterModel')
