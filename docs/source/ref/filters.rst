@@ -241,6 +241,13 @@ Used instead of NumberFilter for property filtering.
 
 Supported lookups are 'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith' and 'endswith'
 
+``PropertyNumericRangeFilter``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Used instead of NumericRangeFilter for property filtering (Postgres only).
+
+Supported lookups are 'exact', 'contains', 'contained_by' and 'overlap'
+
 ``PropertyOrderingFilterModel``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
