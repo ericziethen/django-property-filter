@@ -55,6 +55,17 @@ jobs:
       # Run Linter
       - ./dev/run_linters.sh
 
+    - name: 'Check Package Safety (Failure Allowed)'
+      allow_failures: true
+      services: echo PHASE - "services" (nothing to do)
+      install:
+      # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+      - pip install -r requirements.txt
+      - pip list
+      script:
+      # Run Package Safety
+      - ./dev/check_package_safety.sh
+
     - stage: Deploy
       # to test conditions see https://docs.travis-ci.com/user/conditions-testing
       # Only create a deployment stage for properly tagged branches
@@ -79,17 +90,6 @@ jobs:
         on:
           tags: true
           branch: master
-
-  allow_failures:
-    - name: 'Check Package Safety (Failure Allowed)'
-      services: echo PHASE - "services" (nothing to do)
-      install:
-      # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
-      - pip install -r requirements.txt
-      - pip list
-      script:
-      # Run Package Safety
-      - ./dev/check_package_safety.sh
 
 services:
   - postgresql
