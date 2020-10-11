@@ -35,6 +35,8 @@ env:
   - DJANGO_DB=POSTGRES TOX_SKIP_ENV=".*all_filter_volume_test.*"
 
 jobs:
+  allow_failures:
+    - name: 'Check Package Safety (Failure Allowed)'
   include:
     - name: 'Volume Tests - POSTGRES'
       # Postgres Only, Sqlite is slower
@@ -56,7 +58,6 @@ jobs:
       - ./dev/run_linters.sh
 
     - name: 'Check Package Safety (Failure Allowed)'
-      allow_failures: true
       services: echo PHASE - "services" (nothing to do)
       install:
       # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
