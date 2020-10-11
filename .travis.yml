@@ -12,7 +12,6 @@ branches:
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
 
-
 python:
   - '3.8'  # Latest Stable Version on Top so Linting and Deployment pick this one
   - '3.7'
@@ -24,6 +23,8 @@ env:
   - DJANGO_DB=POSTGRES TOX_SKIP_ENV=".*all_filter_volume_test.*"
 
 jobs:
+  allow_failures:
+    - name: 'Check Package Safety (Failure Allowed)'
   include:
     - name: 'Volume Tests - POSTGRES'
       # Postgres Only, Sqlite is slower
@@ -44,6 +45,13 @@ jobs:
       # Run Linter
       - ./dev/run_linters.sh
 
+    - name: 'Check Package Safety (Failure Allowed)'
+      services: echo PHASE - "services" (nothing to do)
+      install:
+      # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+      - pip install -r requirements.txt
+      - pip list
+      script:
       # Run Package Safety
       - ./dev/check_package_safety.sh
 
