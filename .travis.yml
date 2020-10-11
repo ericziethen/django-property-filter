@@ -13,6 +13,17 @@ branches:
 # Tox is only used for running the tests, the linters only have to run against the latest code
 
 
+
+# x 1.) Make Test Script Fail
+# - 2.) Move to Seaparate Stage, see Build is Failing
+# - 3.) Allow Build Stage to Fail but Build OK if others succesfull
+# - 4.) Make Check Script work again
+
+
+
+
+
+
 python:
   - '3.8'  # Latest Stable Version on Top so Linting and Deployment pick this one
   - '3.7'
@@ -44,9 +55,6 @@ jobs:
       # Run Linter
       - ./dev/run_linters.sh
 
-      # Run Package Safety
-      - ./dev/check_package_safety.sh
-
     - stage: Deploy
       # to test conditions see https://docs.travis-ci.com/user/conditions-testing
       # Only create a deployment stage for properly tagged branches
@@ -71,6 +79,17 @@ jobs:
         on:
           tags: true
           branch: master
+
+  allow_failures:
+    - name: 'Check Package Safety (Failure Allowed)'
+      services: echo PHASE - "services" (nothing to do)
+      install:
+      # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+      - pip install -r requirements.txt
+      - pip list
+      script:
+      # Run Package Safety
+      - ./dev/check_package_safety.sh
 
 services:
   - postgresql
