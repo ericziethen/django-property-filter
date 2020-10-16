@@ -11,14 +11,16 @@ Welcome to Django Property Filter's documentation!
    :caption: Contents:
 
    guide/overview
+   guide/how_it_works
    guide/install
    guide/usage
+   guide/limitations
 
 .. toctree::
     :caption: Reference Documentation:
 
-   ref/filters
    ref/filterset
+   ref/filters
 
 .. toctree::
     :caption: Development and Testing:

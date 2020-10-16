@@ -1,0 +1,125 @@
+
+
+!!! CURRENT SECTION TO PROCESS
+
+    - guide/overview
+    - guide/how_it_works
+    - guide/install
+    - guide/usage
+    - guide/limitations
+    - ref/filterset
+    - ref/filters
+    - dev/dev_testing
+
+
+
+### !!! HIGH LEVEL PLANNING !!!
+
+# INDEX
+
+   guide/overview
+    - Purpose of this app (Achieve same functionality ad django-filter but for Model Properties)
+    - Why Needed (property fiels, cannot be queried directly in the database)
+    - Provide Matching Filters with Same behaviour
+    - Inheritance Filters
+    - New Filterset (supports django-filters the same as normal Filterset)
+
+   guide/how_it_works
+    - filter works directly on the queryset, propFilter builds up list of pks matching the prop filters and queries those, result still a queryset
+    - processing done in memory
+
+   guide/install
+    - Pip install
+
+   guide/usage
+    - Eamples (Implicit, Explicit, Filterset, parameters)
+
+   guide/limitations
+    - most but not all expressions supported yet
+    - explain filter in memory, so potentially issues for very large data sets
+    - Document drawbacks of properties, unexpected file types
+    - Document slower, in memory, large set, type convertions might reduce speed
+    - document sqlite limitations, e.g. 999 max params limit, or higher depending on sqlite version...
+    - Mention if any Filters are particular slow, like Using AllValue and AllValueMultipleChoice, document the field property to create a form and mixing filters, slow if large numbers
+    - danger of unsupported, different types
+
+    # PREVIOUS
+
+Limitations
+-----------
+
+        .. warning::
+            Because this app preserved Django Filtersets and filters them agains fields
+            that are not Database fields all filtering happens in memory.
+            Compared with direct sql optimized queries that might be slower and more
+            memory intensive.
+
+        Database Parameter Limits
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+        In theory there is no limit for most databases how many results can be returned
+        from a filter query unless the database implements a limit which will impact how
+        many results django-property-filter can return.
+
+        **sqlite**
+
+        .. warning::
+            Sqlite3 defines SQLITE_MAX_VARIABLE_NUMBER which is a limit for parameters
+            passed to a query.
+
+            Depending on the version this limit might differ.
+            By default from version 3.32.0 onwards have a default of 32766 while
+            versions before this the limit was 999.
+
+            See "Maximum Number Of Host Parameters In A Single SQL Statement" at
+            https://www.sqlite.org/limits.html for further details.
+
+        Django-property-filter will try to return all values if possible, but if not
+        possible it will try to return as many as possible and log a warning message
+        similar to::
+            WARNING:root:Only returning the first 3746 items because of max parameter limitations of Database "sqlite" with version "3.31.1"
+
+        It is possible to set a custom limit via the environment variable
+        "USER_DB_MAX_PARAMS". For example the user uses a custom compiled sqlite
+        version with a different than the default value for SQLITE_MAX_VARIABLE_NUMBER
+        the setting "USER_DB_MAX_PARAMS" to that value will use this value as a
+        fallback rather than default values.
+
+
+
+
+
+
+   ref/filterset
+    - Purpose
+    - Moving
+
+   ref/filters
+    - Table/Matrix
+        - supported Lookup values, highlight the default lookup
+    - Point out Which Filters cannot be declared Implicitly, e.g. ChoiceFilter -> Maybe use a Matrix?
+    - Special Cases...
+    - tips on how to select the correct filter
+
+   dev/dev_testing
+    - Test Project
+    - Test Data
+    - Run Tests
+    - Benchmarking
+
+
+
+
+
+
+
+### TOPIC GROUPED
+
+
+@@@ TODO
+- [ ] Highlight Supported Fields (See django-filter doc for details) - Highlight Supporting same fields
+- [ ] Add limitations also to Readme.MD
+
+@@@ CODE DOCUMENTATION
+- [ ] document mixins in code properly, purpose, Inheritance Structure (Mirroring django filters) ...
+
