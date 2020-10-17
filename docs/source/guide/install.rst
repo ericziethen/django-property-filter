@@ -29,13 +29,13 @@ Then add 'django_property_filter' to your INSTALLED_APPS.
 Requirements
 ------------
 
-Django-filter is tested against all combinations of the supported versions of 
-Python, `Django`__, and `Django Filter`__ below.
+Django-filter is tested against multiple combinations of the supported versions
+of Python, `Django`__, and `Django Filter`__ below.
 
 __ https://www.djangoproject.com/download/
 __ https://pypi.org/project/django-filter/
 
 
-* **Python**: 3.5, 3.6, 3.7, 3.8, 3.9
+* **Python**: 3.6, 3.7, 3.8, 3.9
 * **Django**: 2.2, 3.0, 3.1
-* **Django-filter**: 2.3
+* **Django-filter**: 2.4
