@@ -1,3 +1,4 @@
+.. _filter-reference:
 
 ================
 Filter Reference
