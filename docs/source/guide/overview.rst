@@ -2,6 +2,9 @@
 Overview
 ========
 
+Overview
+--------
+
 Django-property-filter is an application adding filtering by class properties
 functionality to `django <https://www.djangoproject.com/>`_.
 
@@ -19,9 +22,8 @@ filter available in django-filter.
 Django-property-filter will also provide a filterset that can handle filters
 and property filters together.
 
-============
 How it works
-============
+------------
 
 Where django-filter directly applies the filtering to the queryset,
 django-property-filter can't do that because the properties are not database
