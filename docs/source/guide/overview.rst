@@ -18,3 +18,22 @@ filter available in django-filter.
 
 Django-property-filter will also provide a filterset that can handle filters
 and property filters together.
+
+============
+How it works
+============
+
+Where django-filter directly applies the filtering to the queryset,
+django-property-filter can't do that because the properties are not database
+fields.
+To workaround this, all entries are compared in memory against all specified
+filters resulting in a list of matching primary keys.
+This list can then be used to filter the original queryset like this.
+
+.. code-block:: python
+
+    queryset.filter(pk__in=filtered_pk_list)
+
+
+Because of this the actual filtering is happening in memory of the django
+application rather than in sql.

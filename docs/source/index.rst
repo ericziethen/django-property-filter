@@ -11,7 +11,6 @@ Welcome to Django Property Filter's documentation!
    :caption: Contents:
 
    guide/overview
-   guide/how_it_works
    guide/install
    guide/usage
    guide/limitations

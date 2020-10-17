@@ -2,8 +2,8 @@
 
 !!! CURRENT SECTION TO PROCESS
 
-    - guide/overview
-    - guide/how_it_works
+    x guide/overview
+    x   -> how_it_works
     - guide/install
     - guide/usage
     - guide/limitations
