@@ -5,7 +5,7 @@
     x guide/overview
     x   -> how_it_works
     x guide/install
-    - guide/usage
+    x guide/usage
     - guide/limitations
     - ref/filterset
     - ref/filters

@@ -30,9 +30,7 @@ django-property-filter can't do that because the properties are not database
 fields.
 To workaround this, all entries are compared in memory against all specified
 filters resulting in a list of matching primary keys.
-This list can then be used to filter the original queryset like this.
-
-.. code-block:: python
+This list can then be used to filter the original queryset like this::
 
     queryset.filter(pk__in=filtered_pk_list)
 

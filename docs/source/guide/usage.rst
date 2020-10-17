@@ -31,7 +31,7 @@ Our Model::
 
         @property
         def discounted_price(self):
-          return self.price * self.discount_percentage \ 100
+          return self.price * self.discount_percentage / 100
 
 
 Implicit Filter Creation
