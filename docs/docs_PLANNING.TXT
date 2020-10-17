@@ -6,8 +6,8 @@
     x   -> how_it_works
     x guide/install
     x guide/usage
-    - guide/limitations
-    - ref/filterset
+    x guide/limitations
+    x ref/filterset
     - ref/filters
     - dev/dev_testing
 
