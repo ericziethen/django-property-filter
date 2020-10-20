@@ -81,6 +81,8 @@ The "property_fields" is a list of tuples with 3 values.
         of the property will be in all cases
     3.) The list of lookup expressions.
 
+.. _explicit_filter_creation:
+
 Explicit Filter Creation
 ------------------------
 

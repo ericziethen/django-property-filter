@@ -13,9 +13,10 @@ Filter to Property Filter Mapping
 The following tables shows the corresponding Property Filters for Filters from
 django-filters.
 
-.. csv-table:: Filter Mapping
+.. csv-table::
     :header-rows: 1
 
+    "Filter", "Property Filter"
     "AllValuesFilter", "PropertyAllValuesFilter"
     "AllValuesMultipleFilter", "PropertyAllValuesMultipleFilter"
     "BaseCSVFilter", "PropertyBaseCSVFilter"
@@ -54,9 +55,10 @@ Supported Property Filter Expressions
 The following tables shows the supported lookup expressions and hightlights
 the default  one if none is specified.
 
-.. csv-table:: Supported Expressions
+.. csv-table::
     :header-rows: 1
 
+    "Property Filter", "Supported Expressions"
     "PropertyAllValuesFilter", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
     "PropertyAllValuesMultipleFilter", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
     "PropertyBaseCSVFilter", "**in**, range"
@@ -73,11 +75,11 @@ the default  one if none is specified.
     "PropertyDurationFilter", "**exact**, gt, gte, lt, lte"
     "PropertyIsoDateTimeFilter", "**exact**, gt, gte, lt, lte"
     "PropertyIsoDateTimeFromToRangeFilter", "**range**"
-    "PropertyLookupChoiceFilter [3]_", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyLookupChoiceFilter [2]_", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
     "PropertyMultipleChoiceFilter [2]_", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
     "PropertyNumberFilter", "**exact**, contains, gt, gte, lt, lte, startswith, endswith"
     "PropertyNumericRangeFilter [1]_", "**exact**, contains, contained_by, overlap"
-    "PropertyOrderingFilter [4]_", "**exact**"
+    "PropertyOrderingFilter [3]_", "**exact**"
     "PropertyRangeFilter", "**range**"
     "PropertyTimeFilter", "**exact**, gt, gte, lt, lte"
     "PropertyTimeRangeFilter", "**range**"
@@ -86,9 +88,8 @@ the default  one if none is specified.
     "PropertyUUIDFilter", "**exact**"
 
 .. [1] Postgres only
-.. [2] Explicit Creation only, choices need to be passed
-.. [3] Explicit Creation only, choices need to be passed or all available expressions are choices
-.. [4] see `PropertyOrderingFilter`_
+.. [2] Explicit Creation only, choices need to be passed (see :ref:`explicit_filter_creation`)
+.. [3] see `PropertyOrderingFilter`_
 
 .. _base_lookups:
 
@@ -98,23 +99,27 @@ Supported Base Lookup Expressions
 This is a list lookup expressions supported by all Property Filters unless
 excludes specifically.
 
-* 'contained_by'    -> Subset of the given value
-* 'contains'        -> Contains value (case sensitive)
-* 'endswith'        -> Ends with value (case sensitive)
-* 'exact'           -> Matches value exact (case sensitive)
-* 'gt'              -> Greater than
-* 'gte'             -> Greater than or equal
-* 'icontains'       -> Contains value (case insensitive)
-* 'iendswith'       -> Ends with value (case sensitive)
-* 'iexact'          -> Matches value exact (case insensitive)
-* 'in'              -> Matches specified list of values or range 
-* 'isnull'          -> Is null
-* 'istartswith'     -> Starts with value (case sensitive)
-* 'lt'              -> Less than
-* 'lte'             -> Less than or equal
-* 'overlap'         -> Overlapping with the given value
-* 'range'           -> Part of the given range
-* 'startswith'      -> Starts with value (case sensitive)
+.. csv-table::
+    :header-rows: 1
+
+    "Filter Expression", "Purpose"
+    "contained_by", "Subset of the given value"
+    "contains", "Contains value (case sensitive)"
+    "endswith", "Ends with value (case sensitive)"
+    "exact", "Matches value exact (case sensitive)"
+    "gt", "Greater than"
+    "gte", "Greater than or equal"
+    "icontains", "Contains value (case insensitive)"
+    "iendswith", "Ends with value (case sensitive)"
+    "iexact", "Matches value exact (case insensitive)"
+    "in", "Matches specified list of values or range "
+    "isnull", "Is null"
+    "istartswith", "Starts with value (case sensitive)"
+    "lt", "Less than"
+    "lte", "Less than or equal"
+    "overlap", "Overlapping with the given value"
+    "range", "Part of the given range"
+    "startswith", "Starts with value (case sensitive)"
 
 .. warning::
     Sqlite by default uses case insensitive text comparison, so e.g.
@@ -165,7 +170,7 @@ Appendix
 --------
 
 ``PropertyOrderingFilter``
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Because the field parameters are passed as arguments this filter can only be created
 explicitely. For example::
