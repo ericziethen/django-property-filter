@@ -1,3 +1,4 @@
+.. _filter-reference:
 
 ================
 Filter Reference
@@ -5,6 +6,90 @@ Filter Reference
 
 This is a reference document with a list of the filters and their property
 specific arguments specific for property filters.
+
+Filter to Property Filter Mapping
+---------------------------------
+
+The following tables shows the corresponding Property Filters for Filters from
+django-filters.
+
+.. csv-table::
+    :header-rows: 1
+
+    "Filter", "Property Filter"
+    "AllValuesFilter", "PropertyAllValuesFilter"
+    "AllValuesMultipleFilter", "PropertyAllValuesMultipleFilter"
+    "BaseCSVFilter", "PropertyBaseCSVFilter"
+    "BaseInFilter", "PropertyBaseInFilter"
+    "BaseRangeFilter", "PropertyBaseRangeFilter"
+    "BooleanFilter", "PropertyBooleanFilter"
+    "CharFilter", "PropertyCharFilter"
+    "ChoiceFilter", "PropertyChoiceFilter"
+    "DateFilter", "PropertyDateFilter"
+    "DateFromToRangeFilter", "PropertyDateFromToRangeFilter"
+    "DateRangeFilter", "PropertyDateRangeFilter"
+    "DateTimeFilter", "PropertyDateTimeFilter"
+    "DateTimeFromToRangeFilter", "PropertyDateTimeFromToRangeFilter"
+    "DurationFilter", "PropertyDurationFilter"
+    "Filter", "Property Filter"
+    "IsoDateTimeFilter", "PropertyIsoDateTimeFilter"
+    "IsoDateTimeFromToRangeFilter", "PropertyIsoDateTimeFromToRangeFilter"
+    "LookupChoiceFilter", "PropertyLookupChoiceFilter"
+    "ModelChoiceFilter", "N/A (Not needed because filtering foreign key"
+    "ModelMultipleChoiceFilter", "N/A (Not needed because filtering foreign key"
+    "MultipleChoiceFilter", "PropertyMultipleChoiceFilter"
+    "NumberFilter", "PropertyNumberFilter"
+    "NumericRangeFilter", "PropertyNumericRangeFilter"
+    "OrderingFilter", "PropertyOrderingFilter"
+    "RangeFilter", "PropertyRangeFilter"
+    "TimeFilter", "PropertyTimeFilter"
+    "TimeRangeFilter", "PropertyTimeRangeFilter"
+    "TypedChoiceFilter", "PropertyTypedChoiceFilter"
+    "TypedMultipleChoiceFilter", "PropertyTypedMultipleChoiceFilter"
+    "UUIDFilter", "PropertyUUIDFilter"
+
+
+Supported Property Filter Expressions
+-------------------------------------
+
+The following tables shows the supported lookup expressions and hightlights
+the default  one if none is specified.
+
+.. csv-table::
+    :header-rows: 1
+
+    "Property Filter", "Supported Expressions"
+    "PropertyAllValuesFilter", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyAllValuesMultipleFilter", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyBaseCSVFilter", "**in**, range"
+    "PropertyBaseInFilter", "**in**"
+    "PropertyBaseRangeFilter", "**range**"
+    "PropertyBooleanFilter", "**exact**, isnull"
+    "PropertyCharFilter", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyChoiceFilter [2]_", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyDateFilter", "**exact**, gt, gte, lt, lte"
+    "PropertyDateFromToRangeFilter", "**range**"
+    "PropertyDateRangeFilter", "**exact**"
+    "PropertyDateTimeFilter", "**exact**, gt, gte, lt, lte"
+    "PropertyDateTimeFromToRangeFilter", "**range**"
+    "PropertyDurationFilter", "**exact**, gt, gte, lt, lte"
+    "PropertyIsoDateTimeFilter", "**exact**, gt, gte, lt, lte"
+    "PropertyIsoDateTimeFromToRangeFilter", "**range**"
+    "PropertyLookupChoiceFilter [2]_", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyMultipleChoiceFilter [2]_", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyNumberFilter", "**exact**, contains, gt, gte, lt, lte, startswith, endswith"
+    "PropertyNumericRangeFilter [1]_", "**exact**, contains, contained_by, overlap"
+    "PropertyOrderingFilter [3]_", "**exact**"
+    "PropertyRangeFilter", "**range**"
+    "PropertyTimeFilter", "**exact**, gt, gte, lt, lte"
+    "PropertyTimeRangeFilter", "**range**"
+    "PropertyTypedChoiceFilter [2]_", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyTypedMultipleChoiceFilter [2]_", "**exact**, iexact, contains, icontains, gt, gte, lt, lte, startswith, istartswith, endswith, iendswith"
+    "PropertyUUIDFilter", "**exact**"
+
+.. [1] Postgres only
+.. [2] Explicit Creation only, choices need to be passed (see :ref:`explicit_filter_creation`)
+.. [3] see `PropertyOrderingFilter`_
 
 .. _base_lookups:
 
@@ -14,22 +99,31 @@ Supported Base Lookup Expressions
 This is a list lookup expressions supported by all Property Filters unless
 excludes specifically.
 
-* 'exact'           -> Matches value exact (case sensitive)
-* 'iexact'          -> Matches value exact (case insensitive)
-* 'contains'        -> Contains value (case sensitive)
-* 'icontains'       -> Contains value (case insensitive)
-* 'gt'              -> Greater than
-* 'gte'             -> Greater than or equal
-* 'lt'              -> Less than
-* 'lte'             -> Less than or equal
-* 'startswith'      -> Starts with value (case sensitive)
-* 'istartswith'     -> Starts with value (case sensitive)
-* 'endswith'        -> Ends with value (case sensitive)
-* 'iendswith'       -> Ends with value (case sensitive)
+.. csv-table::
+    :header-rows: 1
+
+    "Filter Expression", "Purpose"
+    "contained_by", "Subset of the given value"
+    "contains", "Contains value (case sensitive)"
+    "endswith", "Ends with value (case sensitive)"
+    "exact", "Matches value exact (case sensitive)"
+    "gt", "Greater than"
+    "gte", "Greater than or equal"
+    "icontains", "Contains value (case insensitive)"
+    "iendswith", "Ends with value (case sensitive)"
+    "iexact", "Matches value exact (case insensitive)"
+    "in", "Matches specified list of values or range "
+    "isnull", "Is null"
+    "istartswith", "Starts with value (case sensitive)"
+    "lt", "Less than"
+    "lte", "Less than or equal"
+    "overlap", "Overlapping with the given value"
+    "range", "Part of the given range"
+    "startswith", "Starts with value (case sensitive)"
 
 .. warning::
     Sqlite by default uses case insensitive text comparison, so e.g.
-    'exact' and 'iexact' will giv the same result.
+    'exact' and 'iexact' will give the same result.
     Even if turning on case sensitivity with PRAGMA case_sensitive_like,
     both still result in the same result.
 
@@ -71,189 +165,12 @@ The lookup expression to filter against.
 The default lookup expression when not specified will be 'exact' if the filter supports it.
 Some filters only support 'range' and this will be the default.
 
-Unmapped Filters
-----------------
 
-``ModelChoiceFilter``
-~~~~~~~~~~~~~~~~~~~~~
+Appendix
+--------
 
-Because ModelChoiceFilter works directly on a models foreign keys, there is no
-need for a property filter.
-
-``ModelMultipleChoiceFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Because ModelMultipleChoiceFilter works directly on a models foreign keys, there
-is no need for a property filter.
-
-Property Filter Classes
------------------------
-
-``PropertyAllValuesFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of AllValuesFilter for property filtering.
-
-For supported lookups see :ref:`base_lookups`
-
-``PropertyAllValuesMultipleFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of AllValuesMultipleFilter for property filtering.
-
-For supported lookups see :ref:`base_lookups`
-
-``PropertyBaseCSVFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of BaseCSVFilter for property filtering
-
-Supported lookups are 'in' and 'range'
-
-``PropertyBaseInFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of BaseInFilter for property filtering
-
-Supported lookup is 'in'
-
-``PropertyBaseRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of BaseRangeFilter for property filtering
-
-Supported lookup is 'range'
-
-``PropertyBooleanFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of BooleanFilter for property filtering
-
-Supported lookups are 'exact' and 'isnull'
-
-``PropertyCharFilter``
-~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of CharFilter for property filtering.
-
-For supported lookups see :ref:`base_lookups`
-
-``PropertyChoiceFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of CoiceFilter for property filtering.
-
-For supported lookups see :ref:`base_lookups`
-
-Because the choices are passed as arguments this filter can only be created
-explicitely. For example::
-
-    number = PropertyChoiceFilter(field_name='number', lookup_expr='exact', choices=LOOKUP_CHOICES)
-
-``PropertyDateFilter``
-~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of DateFilter for property filtering
-
-Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
-
-``PropertyDateFromToRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of DateFromToRangeFilter for property filtering
-
-Supported lookup is 'range'
-
-``PropertyDateRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of DateRangeFilter for property filtering
-
-Supported lookup is 'exact'
-
-``PropertyDateTimeFilter``
+``PropertyOrderingFilter``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of DateTimeFilter for property filtering
-
-Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
-
-``PropertyDateTimeFromToRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of DateTimeFromToRangeFilter for property filtering
-
-Supported lookup is 'range'
-
-``PropertyDurationFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of DurationFilter for property filtering
-
-Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
-
-``PropertyIsoDateTimeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of IsoDateTimeFilter for property filtering
-
-Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
-
-``PropertyIsoDateTimeFromToRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of IsoDateTimeFromToRangeFilter for property filtering
-
-Supported lookup is 'range'
-
-``PropertyLookupChoiceFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of LookupChoiceFilter for property filtering.
-
-For supported lookups see :ref:`base_lookups`
-
-Because the lookup choices are passed as arguments this filter can only be
-created explicitely. For example::
-
-    number = PropertyMultipleChoiceFilter(field_name='number', lookup_choices=['exact', 'gt'])
-
-or for all available choices::
-
-    number = PropertyMultipleChoiceFilter(field_name='number')
-
-``PropertyMultipleChoiceFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of MultipleChoiceFilter for property filtering.
-
-For supported lookups see :ref:`base_lookups`
-
-Because the choices are passed as arguments this filter can only be created
-explicitely. For example::
-
-    number = PropertyMultipleChoiceFilter(field_name='number', lookup_expr='exact', choices=LOOKUP_CHOICES)
-
-``PropertyNumberFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of NumberFilter for property filtering.
-
-Supported lookups are 'exact', 'contains', 'gt', 'gte', 'lt', 'lte', 'startswith' and 'endswith'
-
-``PropertyNumericRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of NumericRangeFilter for property filtering (Postgres only).
-
-Supported lookups are 'exact', 'contains', 'contained_by' and 'overlap'
-
-``PropertyOrderingFilterModel``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of OrderingFilterModel for property filtering.
-
-Supported lookups is 'exact'.
 
 Because the field parameters are passed as arguments this filter can only be created
 explicitely. For example::
@@ -268,55 +185,3 @@ explicitely. For example::
 
     Because of the in memory sorting, sorting is only supported by a single 
     property
-
-``PropertyRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of RangeFilter for property filtering
-
-Supported lookup is 'range'
-
-``PropertyTimeFilter``
-~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of TimeFilter for property filtering
-
-Supported lookups are 'exact', 'gt', 'gte', 'lt' and 'lte'
-
-``PropertyTimeRangeFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of TimeRangeFilter for property filtering
-
-Supported lookup is 'range'
-
-``PropertyTypedChoiceFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of TypedChoiceFilter for property filtering.
-
-For supported lookups see :ref:`base_lookups`
-
-Because the choices are passed as arguments this filter can only be created
-explicitely. For example::
-
-    number = PropertyTypedChoiceFilter(field_name='number_str', lookup_expr='exact', choices=NUMBER_LIST, coerce=int)
-
-``PropertyTypedMultipleChoiceFilter``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of TypedMultipleChoiceFilter for property filtering.
-
-For supported lookups see :ref:`base_lookups`
-
-Because the choices are passed as arguments this filter can only be created
-explicitely. For example::
-
-    number = PropertyTypedMultipleChoiceFilter(field_name='number_str', lookup_expr='exact', choices=NUMBER_LIST, coerce=int)
-
-``PropertyUUIDFilter``
-~~~~~~~~~~~~~~~~~~~~~~
-
-Used instead of UUIDFilter for property filtering
-
-Supported lookup is 'exact'

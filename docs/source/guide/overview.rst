@@ -2,42 +2,38 @@
 Overview
 ========
 
-Limitations
------------
+Overview
+--------
 
-.. warning::
-    Because this app preserved Django Filtersets and filters them agains fields
-    that are not Database fields all filtering happens in memory.
-    Compared with direct sql optimized queries that might be slower and more
-    memory intensive.
+Django-property-filter is an application adding filtering by class properties
+functionality to `django <https://www.djangoproject.com/>`_.
 
-Database Parameter Limits
-^^^^^^^^^^^^^^^^^^^^^^^^^
+It is inspired by and an extension of the `django-filter <https://django-filter.readthedocs.io/>`_ application.
+As such the aim is to provide the same functionality django-filter provides for
+database fields but for property fields of django models.
 
-In theory there is no limit for most databases how many results can be returned
-from a filter query unless the database implements a limit which will impact how
-many results django-property-filter can return.
+Because property fields are not part of database tables they cannot be queried
+directly with sql and are therefore not natively supported by django and
+django-filter.
 
-**sqlite**
+The aim for django-property-filter is to provide a property filter for each
+filter available in django-filter.
 
-.. warning::
-    Sqlite3 defines SQLITE_MAX_VARIABLE_NUMBER which is a limit for parameters
-    passed to a query.
+Django-property-filter will also provide a filterset that can handle filters
+and property filters together.
 
-    Depending on the version this limit might differ.
-    By default from version 3.32.0 onwards have a default of 32766 while
-    versions before this the limit was 999.
+How it works
+------------
 
-    See "Maximum Number Of Host Parameters In A Single SQL Statement" at
-    https://www.sqlite.org/limits.html for further details.
+Where django-filter directly applies the filtering to the queryset,
+django-property-filter can't do that because the properties are not database
+fields.
+To workaround this, all entries are compared in memory against all specified
+filters resulting in a list of matching primary keys.
+This list can then be used to filter the original queryset like this::
 
-Django-property-filter will try to return all values if possible, but if not
-possible it will try to return as many as possible and log a warning message
-similar to::
-    WARNING:root:Only returning the first 3746 items because of max parameter limitations of Database "sqlite" with version "3.31.1"
+    queryset.filter(pk__in=filtered_pk_list)
 
-It is possible to set a custom limit via the environment variable
-"USER_DB_MAX_PARAMS". For example the user uses a custom compiled sqlite
-version with a different than the default value for SQLITE_MAX_VARIABLE_NUMBER
-the setting "USER_DB_MAX_PARAMS" to that value will use this value as a
-fallback rather than default values.
+
+Because of this the actual filtering is happening in memory of the django
+application rather than in sql.

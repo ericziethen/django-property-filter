@@ -31,7 +31,7 @@ Our Model::
 
         @property
         def discounted_price(self):
-          return self.price * self.discount_percentage \ 100
+          return self.price * self.discount_percentage / 100
 
 
 Implicit Filter Creation
@@ -80,6 +80,8 @@ The "property_fields" is a list of tuples with 3 values.
         This is necessary since it can't be determined what the return type
         of the property will be in all cases
     3.) The list of lookup expressions.
+
+.. _explicit_filter_creation:
 
 Explicit Filter Creation
 ------------------------

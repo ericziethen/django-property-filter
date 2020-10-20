@@ -13,21 +13,9 @@ Welcome to Django Property Filter's documentation!
    guide/overview
    guide/install
    guide/usage
+   guide/limitations
 
-.. toctree::
-    :caption: Reference Documentation:
-
-   ref/filters
    ref/filterset
-
-.. toctree::
-    :caption: Development and Testing:
+   ref/filters
 
    dev/dev_testing
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
