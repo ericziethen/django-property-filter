@@ -13,10 +13,10 @@ branches:
 # Tox is only used for running the tests, the linters only have to run against the latest code
 
 python:
-  - '3.8'  # Latest Stable Version on Top so Linting and Deployment pick this one
+  - '3.9'  # Latest Stable Version on Top so Linting and Deployment pick this one
+  - '3.8'
   - '3.7'
   - '3.6'
-#  - '3.9-dev'  # Travis currently having some issues with the Dev Version to build
 
 env:
   - DJANGO_DB=SQLITE TOX_SKIP_ENV=".*all_filter_volume_test.*"
@@ -30,7 +30,7 @@ jobs:
       # Postgres Only, Sqlite is slower
       env:
         - DJANGO_DB=POSTGRES
-        - TOXENV=mylinux-py38-all_filter_volume_test
+        - TOXENV=mylinux-py39-all_filter_volume_test
 
     - name: 'Latest Dev - Linting and Checks'
       services: echo PHASE - "services" (nothing to do)
