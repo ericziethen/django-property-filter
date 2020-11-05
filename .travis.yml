@@ -4,10 +4,13 @@ cache: pip
 
 # https://docs.travis-ci.com/user/build-stages/
 
-branches:
-  only:
-  - master                      # master branch
-  - /^[0-9]+\.[0-9]+\.[0-9]+$/  # tagged release branch
+# branches:
+#   only:
+#   - master                      # master branch
+#   - /^[0-9]+\.[0-9]+\.[0-9]+$/  # tagged release branch
+
+# Only build if tagged branch or master branch
+if: (branch = master AND type = pull_request) OR (branch =~ /^[0-9]+\.[0-9]+\.[0-9]+$/)
 
 # Matrix Expansion (python versions and databases to run tox tests against)
 # Tox is only used for running the tests, the linters only have to run against the latest code
