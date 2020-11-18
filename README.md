@@ -168,3 +168,6 @@ This creates a "greater than or equel" filter for the discounted_price property
 * go to "tests\django_test_proj"
 * run "python manage.py runserver"
 
+## Issue Raising ##
+
+Raising bugs, feature requests and questions is possible via the public repository <a href="https://github.com/ericziethen/django-property-filter-issue-reporting" target="_blank">django-property-filter-issue-reporting</a>
