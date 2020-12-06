@@ -43,7 +43,6 @@ jobs:
       - name: Run Linters
         run: ${{ matrix.script_name }}
 
-jobs:
   package_safety_checks:
     strategy:
       matrix:
