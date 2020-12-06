@@ -11,6 +11,38 @@ on:
     - main
 
 jobs:
+  linting:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest"]
+        include:
+            - os: windows-latest
+              script_name: .\dev/run_linters.bat
+            - os: ubuntu-latest
+              script_name: ./dev/run_linters.sh
+    name: Latest Dev Linting
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Setup Env
+        run: |
+          pip --version
+          python --version --version
+          pip list
+          python -m pip install --upgrade pip pipenv
+          pip list
+      - name: Install Dependencies
+        run: |
+          # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+          pip install -r requirements.txt
+          pip list
+      - name: Run Linters
+        run: ${{ matrix.script_name }}
+
+jobs:
   package_safety_checks:
     strategy:
       matrix:
@@ -20,7 +52,7 @@ jobs:
               script_name: .\dev/check_package_safety.bat
             - os: ubuntu-latest
               script_name: ./dev/check_package_safety.sh
-    name: Check Package Safety (Failure Allowed)
+    name: Pkg Safety (Failure Allowed)
     runs-on: "${{ matrix.os }}"
     steps:
       - uses: actions/checkout@v2
