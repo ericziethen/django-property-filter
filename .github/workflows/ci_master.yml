@@ -21,6 +21,7 @@ jobs:
             - os: ubuntu-latest
               script_name: ./dev/run_linters.sh
     name: Latest Dev Linting
+    runs-on: "${{ matrix.os }}"
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
