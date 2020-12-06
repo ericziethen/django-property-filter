@@ -18,8 +18,10 @@ jobs:
         include:
             - os: windows-latest
               script_name: .\dev/run_linters.bat
+              cache_path: ~\AppData\Local\pip\Cache
             - os: ubuntu-latest
               script_name: ./dev/run_linters.sh
+              cache_path: ~/.cache/pip
     name: Latest Dev Linting
     runs-on: "${{ matrix.os }}"
     steps:
@@ -28,6 +30,16 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          # This path is specific to Ubuntu
+          path: ${{ matrix.cache_path }}
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
       - name: Setup Env
         run: |
           pip --version
@@ -50,8 +62,10 @@ jobs:
         include:
             - os: windows-latest
               script_name: .\dev/check_package_safety.bat
+              cache_path: ~\AppData\Local\pip\Cache
             - os: ubuntu-latest
               script_name: ./dev/check_package_safety.sh
+              cache_path: ~/.cache/pip
     name: Pkg Safety (Failure Allowed)
     runs-on: "${{ matrix.os }}"
     steps:
@@ -60,6 +74,16 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          # This path is specific to Ubuntu
+          path: ${{ matrix.cache_path }}
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
       - name: Setup Env
         run: |
           pip --version
