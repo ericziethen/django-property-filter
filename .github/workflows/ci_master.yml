@@ -30,7 +30,7 @@ jobs:
               tox_args: sqlite
             - django-db: POSTGRES
               tox_args: postgres-travis
-    name: Python ${{ matrix.python-version }} - Django DB ${{ matrix.django-db }}
+    name: Python ${{ matrix.python-version }} - DB ${{ matrix.django-db }} - ${{ matrix.os }}
     runs-on: "${{ matrix.os }}"
     steps:
       - uses: actions/checkout@v2
