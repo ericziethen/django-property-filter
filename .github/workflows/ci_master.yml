@@ -21,6 +21,11 @@ jobs:
         os: ["ubuntu-latest"]
         python-version: [3.9]
         django-db: [SQLITE]
+
+
+
+
+        INCLUDE ADDS SPECIFIC JOBS, NOT REALLY WHAT WE WANT FOR ENVIRONMENT VARIABLES, SET THEM IN THE PROPER SECTION BELOW
         include:
             - os: windows-latest
               script_print_envs: set
@@ -42,32 +47,33 @@ jobs:
         run: |
           echo DJANGO_DB: $DJANGO_DB
           echo TOX_SKIP_ENV: $TOX_SKIP_ENV
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Setup Env
-        run: |
-          pip --version
-          python --version --version
-          python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
-          pip list
-          python -m pip install --upgrade pip pipenv
-          pip list
-          ${{ matrix.script_print_envs }}
-      - name: Install Dependencies
-        run: pip install coverage tox-gh-actions
-      - name: Run Tests
-        run: |
-          coverage erase
-          tox ${{ matrix.tox_args }}
-      - name: "Convert coverage"
-        run: "python -m coverage xml"
-      - name: "Upload coverage to Codecov"
-        # Using version https://github.com/codecov/codecov-action/releases/tag/v1.0.15
-        uses: "codecov/codecov-action@239febf655bba88b16ff5dea1d3135ea8663a1f9"
-        with:
-          fail_ci_if_error: true
+          echo script_print_envs: ${{ matrix.script_print_envs }}
+      # - name: Setup Python
+      #   uses: actions/setup-python@v2
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      # - name: Setup Env
+      #   run: |
+      #     pip --version
+      #     python --version --version
+      #     python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
+      #     pip list
+      #     python -m pip install --upgrade pip pipenv
+      #     pip list
+      #     ${{ matrix.script_print_envs }}
+      # - name: Install Dependencies
+      #   run: pip install coverage tox-gh-actions
+      # - name: Run Tests
+      #   run: |
+      #     coverage erase
+      #     tox ${{ matrix.tox_args }}
+      # - name: "Convert coverage"
+      #   run: "python -m coverage xml"
+      # - name: "Upload coverage to Codecov"
+      #   # Using version https://github.com/codecov/codecov-action/releases/tag/v1.0.15
+      #   uses: "codecov/codecov-action@239febf655bba88b16ff5dea1d3135ea8663a1f9"
+      #   with:
+      #     fail_ci_if_error: true
 
   # linting:
   #   strategy:
