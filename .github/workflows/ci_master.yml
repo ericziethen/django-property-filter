@@ -27,12 +27,12 @@ jobs:
 
         #INCLUDE ADDS SPECIFIC JOBS, NOT REALLY WHAT WE WANT FOR ENVIRONMENT VARIABLES, SET THEM IN THE PROPER SECTION BELOW
         include:
-            - os: windows-latest
-              script_print_envs: set
+            # - os: windows-latest
+            #   script_print_envs: set
             - os: ubuntu-latest
               script_print_envs: printenv
-            # - django-db: SQLITE
-            #   tox_args: sqlite
+            - django-db: SQLITE
+              tox_args: sqlite
             # - django-db: POSTGRES
             #   tox_args: postgres-travis
     name: Python ${{ matrix.python-version }} - Django DB ${{ matrix.django-db }}
