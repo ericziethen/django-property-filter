@@ -26,10 +26,10 @@ jobs:
               script_print_envs: set
             - os: ubuntu-latest
               script_print_envs: printenv
-            - django-db: SQLITE
-              tox_args: sqlite
-            - django-db: POSTGRES
-              tox_args: postgres-travis
+            # - django-db: SQLITE
+            #   tox_args: sqlite
+            # - django-db: POSTGRES
+            #   tox_args: postgres-travis
     name: Python ${{ matrix.python-version }} - Django DB ${{ matrix.django-db }}
     runs-on: "${{ matrix.os }}"
     steps:
@@ -69,67 +69,67 @@ jobs:
         with:
           fail_ci_if_error: true
 
-  linting:
-    strategy:
-      matrix:
-        os: ["ubuntu-latest", "windows-latest"]
-        include:
-            - os: windows-latest
-              script_name: .\dev/run_linters.bat
-            - os: ubuntu-latest
-              script_name: ./dev/run_linters.sh
-    name: Latest Dev Linting
-    runs-on: "${{ matrix.os }}"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - name: Setup Env
-        run: |
-          pip --version
-          python --version --version
-          pip list
-          python -m pip install --upgrade pip pipenv
-          pip list
-      - name: Install Dependencies
-        run: |
-          # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
-          pip install -r requirements.txt
-          pip list
-      - name: Run Linters
-        run: ${{ matrix.script_name }}
+  # linting:
+  #   strategy:
+  #     matrix:
+  #       os: ["ubuntu-latest", "windows-latest"]
+  #       include:
+  #           - os: windows-latest
+  #             script_name: .\dev/run_linters.bat
+  #           - os: ubuntu-latest
+  #             script_name: ./dev/run_linters.sh
+  #   name: Latest Dev Linting
+  #   runs-on: "${{ matrix.os }}"
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Setup Python
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.9'
+  #     - name: Setup Env
+  #       run: |
+  #         pip --version
+  #         python --version --version
+  #         pip list
+  #         python -m pip install --upgrade pip pipenv
+  #         pip list
+  #     - name: Install Dependencies
+  #       run: |
+  #         # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+  #         pip install -r requirements.txt
+  #         pip list
+  #     - name: Run Linters
+  #       run: ${{ matrix.script_name }}
 
-  package_safety_checks:
-    strategy:
-      matrix:
-        os: ["ubuntu-latest", "windows-latest"]
-        include:
-            - os: windows-latest
-              script_name: .\dev/check_package_safety.bat
-            - os: ubuntu-latest
-              script_name: ./dev/check_package_safety.sh
-    name: Pkg Safety (Failure Allowed)
-    runs-on: "${{ matrix.os }}"
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-      - name: Setup Env
-        run: |
-          pip --version
-          python --version --version
-          python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
-          pip list
-          python -m pip install --upgrade pip pipenv
-          pip list
-      - name: Install Dependencies
-        run: |
-          # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
-          pip install -r requirements.txt
-          pip list
-      - name: Run Package Safety
-        run: ${{ matrix.script_name }}
+  # package_safety_checks:
+  #   strategy:
+  #     matrix:
+  #       os: ["ubuntu-latest", "windows-latest"]
+  #       include:
+  #           - os: windows-latest
+  #             script_name: .\dev/check_package_safety.bat
+  #           - os: ubuntu-latest
+  #             script_name: ./dev/check_package_safety.sh
+  #   name: Pkg Safety (Failure Allowed)
+  #   runs-on: "${{ matrix.os }}"
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Setup Python
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: '3.9'
+  #     - name: Setup Env
+  #       run: |
+  #         pip --version
+  #         python --version --version
+  #         python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
+  #         pip list
+  #         python -m pip install --upgrade pip pipenv
+  #         pip list
+  #     - name: Install Dependencies
+  #       run: |
+  #         # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+  #         pip install -r requirements.txt
+  #         pip list
+  #     - name: Run Package Safety
+  #       run: ${{ matrix.script_name }}
