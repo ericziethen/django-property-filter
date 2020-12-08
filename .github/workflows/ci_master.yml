@@ -15,26 +15,21 @@ jobs:
   test_matrix:
     strategy:
       matrix:
-        # os: ["ubuntu-latest", "windows-latest"]
+        os: ["ubuntu-latest", "windows-latest"]
         # python-version: [3.9, 3.8, 3.7, 3.6]
-        # django-db: [SQLITE, POSTGRES]
-        os: ["ubuntu-latest"]
         python-version: [3.9]
-        django-db: [SQLITE]
+        django-db: [SQLITE, POSTGRES]
 
-
-
-
-        #INCLUDE ADDS SPECIFIC JOBS, NOT REALLY WHAT WE WANT FOR ENVIRONMENT VARIABLES, SET THEM IN THE PROPER SECTION BELOW
+        # Include will match the expanded matrix, if not it will add a job
         include:
-            # - os: windows-latest
-            #   script_print_envs: set
+            - os: windows-latest
+              script_print_envs: set
             - os: ubuntu-latest
               script_print_envs: printenv
             - django-db: SQLITE
               tox_args: sqlite
-            # - django-db: POSTGRES
-            #   tox_args: postgres-travis
+            - django-db: POSTGRES
+              tox_args: postgres-travis
     name: Python ${{ matrix.python-version }} - Django DB ${{ matrix.django-db }}
     runs-on: "${{ matrix.os }}"
     steps:
@@ -48,6 +43,7 @@ jobs:
           echo DJANGO_DB: $DJANGO_DB
           echo TOX_SKIP_ENV: $TOX_SKIP_ENV
           echo script_print_envs: ${{ matrix.script_print_envs }}
+          echo tox_args: ${{ matrix.tox_args }}
       # - name: Setup Python
       #   uses: actions/setup-python@v2
       #   with:
