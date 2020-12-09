@@ -44,25 +44,25 @@ jobs:
           echo TOX_SKIP_ENV: $TOX_SKIP_ENV
           echo script_print_envs: ${{ matrix.script_print_envs }}
           echo tox_args: ${{ matrix.tox_args }}
-      # - name: Setup Python
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
-      # - name: Setup Env
-      #   run: |
-      #     pip --version
-      #     python --version --version
-      #     python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
-      #     pip list
-      #     python -m pip install --upgrade pip pipenv
-      #     pip list
-      #     ${{ matrix.script_print_envs }}
-      # - name: Install Dependencies
-      #   run: pip install coverage tox-gh-actions
-      # - name: Run Tests
-      #   run: |
-      #     coverage erase
-      #     tox ${{ matrix.tox_args }}
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup Env
+        run: |
+          pip --version
+          python --version --version
+          python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
+          pip list
+          python -m pip install --upgrade pip pipenv
+          pip list
+          ${{ matrix.script_print_envs }}
+      - name: Install Dependencies
+        run: pip install coverage tox-gh-actions
+      - name: Run Tests
+        run: |
+          coverage erase
+          tox ${{ matrix.tox_args }}
       # - name: "Convert coverage"
       #   run: "python -m coverage xml"
       # - name: "Upload coverage to Codecov"
