@@ -24,8 +24,10 @@ jobs:
         include:
             - os: windows-latest
               script_print_envs: set
+              shell: cmd
             - os: ubuntu-latest
               script_print_envs: printenv
+              shell: bash
             - django-db: SQLITE
               tox_args: sqlite
             - django-db: POSTGRES
@@ -44,7 +46,7 @@ jobs:
           echo TOX_SKIP_ENV: $TOX_SKIP_ENV
           echo script_print_envs: ${{ matrix.script_print_envs }}
           echo tox_args: ${{ matrix.tox_args }}
-        shell: cmd
+        shell: ${{ matrix.shell }}
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -58,14 +60,14 @@ jobs:
           python -m pip install --upgrade pip pipenv
           pip list
           ${{ matrix.script_print_envs }}
-        shell: cmd
+        shell: ${{ matrix.shell }}
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
       - name: Run Tests
         run: |
           coverage erase
           tox ${{ matrix.tox_args }}
-        shell: cmd
+        shell: ${{ matrix.shell }}
       # - name: "Convert coverage"
       #   run: "python -m coverage xml"
       # - name: "Upload coverage to Codecov"
@@ -104,7 +106,7 @@ jobs:
   #         pip install -r requirements.txt
   #         pip list
   #     - name: Run Linters
-  #       shell: cmd
+  #       shell: ${{ matrix.shell }}
   #       run: ${{ matrix.script_name }}
 
   # package_safety_checks:
@@ -138,5 +140,5 @@ jobs:
   #         pip install -r requirements.txt
   #         pip list
   #     - name: Run Package Safety
-  #       shell: cmd
+  #       shell: ${{ matrix.shell }}
   #       run: ${{ matrix.script_name }}
