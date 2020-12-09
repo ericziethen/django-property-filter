@@ -24,16 +24,21 @@ jobs:
         include:
             - os: windows-latest
               script_print_envs: set
-              shell: cmd
             - os: ubuntu-latest
               script_print_envs: printenv
-              shell: bash
             - django-db: SQLITE
               tox_args: sqlite
             - django-db: POSTGRES
               tox_args: postgres-travis
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }}
     runs-on: "${{ matrix.os }}"
+    defaults:
+      run:
+        # Github actions doesn't support (at least right now) setting the shell based on environment variables
+        # But setting the shell to bash will use Git-Bash on windows which can run batch scripts ok
+        # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065
+        # https://github.community/t/declaring-a-default-shell-and-environment-variables-across-all-steps-in-a-job-github-actions/16228/2
+        shell: bash
     steps:
       - uses: actions/checkout@v2
       - name: Set Environment Variables
@@ -46,7 +51,6 @@ jobs:
           echo TOX_SKIP_ENV: $TOX_SKIP_ENV
           echo script_print_envs: ${{ matrix.script_print_envs }}
           echo tox_args: ${{ matrix.tox_args }}
-        shell: ${{ matrix.shell }}
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -60,14 +64,12 @@ jobs:
           python -m pip install --upgrade pip pipenv
           pip list
           ${{ matrix.script_print_envs }}
-        shell: ${{ matrix.shell }}
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
       - name: Run Tests
         run: |
           coverage erase
           tox ${{ matrix.tox_args }}
-        shell: ${{ matrix.shell }}
       # - name: "Convert coverage"
       #   run: "python -m coverage xml"
       # - name: "Upload coverage to Codecov"
@@ -106,7 +108,6 @@ jobs:
   #         pip install -r requirements.txt
   #         pip list
   #     - name: Run Linters
-  #       shell: ${{ matrix.shell }}
   #       run: ${{ matrix.script_name }}
 
   # package_safety_checks:
@@ -140,5 +141,4 @@ jobs:
   #         pip install -r requirements.txt
   #         pip list
   #     - name: Run Package Safety
-  #       shell: ${{ matrix.shell }}
   #       run: ${{ matrix.script_name }}
