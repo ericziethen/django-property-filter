@@ -60,6 +60,7 @@ jobs:
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
       - name: Run Tests
+        shell: cmd
         run: |
           coverage erase
           tox ${{ matrix.tox_args }}
@@ -101,6 +102,7 @@ jobs:
   #         pip install -r requirements.txt
   #         pip list
   #     - name: Run Linters
+  #       shell: cmd
   #       run: ${{ matrix.script_name }}
 
   # package_safety_checks:
@@ -134,4 +136,5 @@ jobs:
   #         pip install -r requirements.txt
   #         pip list
   #     - name: Run Package Safety
+  #       shell: cmd
   #       run: ${{ matrix.script_name }}
