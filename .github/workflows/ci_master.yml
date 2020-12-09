@@ -18,7 +18,8 @@ jobs:
         os: ["ubuntu-latest", "windows-latest"]
         # python-version: [3.9, 3.8, 3.7, 3.6]
         python-version: [3.9]
-        django-db: [SQLITE, POSTGRES]
+        # django-db: [SQLITE, POSTGRES]
+        django-db: [SQLITE]
 
         # Include will match the expanded matrix, if not it will add a job
         include:
@@ -28,8 +29,8 @@ jobs:
               script_print_envs: printenv
             - django-db: SQLITE
               tox_args: sqlite
-            - django-db: POSTGRES
-              tox_args: postgres-travis
+            # - django-db: POSTGRES
+            #   tox_args: postgres-travis
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }}
     runs-on: "${{ matrix.os }}"
     defaults:
