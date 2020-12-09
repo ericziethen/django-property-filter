@@ -35,7 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set Environment Variables
-        shell: cmd
         env:
           DJANGO_DB: ${{ matrix.django-db }}
           TOX_SKIP_ENV: ".*all_filter_volume_test.*"
@@ -45,12 +44,12 @@ jobs:
           echo TOX_SKIP_ENV: $TOX_SKIP_ENV
           echo script_print_envs: ${{ matrix.script_print_envs }}
           echo tox_args: ${{ matrix.tox_args }}
+        shell: cmd
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
       - name: Setup Env
-        shell: cmd
         run: |
           pip --version
           python --version --version
@@ -59,13 +58,14 @@ jobs:
           python -m pip install --upgrade pip pipenv
           pip list
           ${{ matrix.script_print_envs }}
+        shell: cmd
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
       - name: Run Tests
-        shell: cmd
         run: |
           coverage erase
           tox ${{ matrix.tox_args }}
+        shell: cmd
       # - name: "Convert coverage"
       #   run: "python -m coverage xml"
       # - name: "Upload coverage to Codecov"
