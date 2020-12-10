@@ -16,14 +16,17 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest", "windows-latest"]
-        # os: ["ubuntu-latest"]
-        # python-version: [3.9, 3.8, 3.7, 3.6]
-        python-version: [3.9]
+        python-version: [3.9, 3.8, 3.7, 3.6]
         # django-db: [SQLITE, POSTGRES]
         django-db: [SQLITE]
+        volume_test: [FALSE]
 
         # Include will match the expanded matrix, if not it will add a job
         include:
+            - python-version: 3.9
+              django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
+              volume_test: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
+              script_print_envs: set
             - os: windows-latest
               script_print_envs: set
             - os: ubuntu-latest
@@ -43,10 +46,8 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v2
-      - name: Set Environment Variables
+      - name: Print Info
         run: |
-          echo ### Print Environement Variables
-          echo 'TOX_SKIP_ENV=${{ env.TOX_SKIP_ENV }}'
           echo ### Print Matrix Variables
           echo 'script_print_envs=${{ matrix.script_print_envs }}'
           echo 'tox_args=${{ matrix.tox_args }}'
@@ -63,6 +64,10 @@ jobs:
           python -m pip install --upgrade pip pipenv
           pip list
           ${{ matrix.script_print_envs }}
+      - name: Check Enable VolumeTest
+        if: ${{ matrix.volume_test != 'FALSE' }}
+        run: |
+          echo "TOXENV=${{ matrix.volume_test }}" >> $GITHUB_ENV
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
       - name: Run Tests
