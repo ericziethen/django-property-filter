@@ -19,7 +19,7 @@ jobs:
         python-version: [3.9, 3.8, 3.7, 3.6]
         # django-db: [SQLITE, POSTGRES]
         django-db: [SQLITE]
-        volume_test: [FALSE]
+        volume_test: ["FALSE"]
 
         # Include will match the expanded matrix, if not it will add a job
         include:
