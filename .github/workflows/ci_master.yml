@@ -23,12 +23,7 @@ jobs:
 
         # Include will match the expanded matrix, if not it will add a job
         include:
-            - os: ubuntu-latest
-              python-version: 3.9
-              django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
-              name_suffix: "- Volume Test"
-              volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
-              script_print_envs: set
+            ### MATCH EXISTING COMBINATIONS ###
             - os: windows-latest
               script_print_envs: set
             - os: ubuntu-latest
@@ -37,6 +32,16 @@ jobs:
               tox_args: sqlite
             # - django-db: POSTGRES
             #   tox_args: postgres-travis
+
+            ### NEW COMBINATIONS ###
+            - os: ubuntu-latest
+              python-version: 3.9
+              django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
+              tox_args: sqlite
+              name_suffix: "- Volume Test"
+              volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
+              script_print_envs: set
+
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
     defaults:
