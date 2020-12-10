@@ -24,8 +24,8 @@ jobs:
 
         # Include will match the expanded matrix, if not it will add a job
         include:
-            - os: windows-latest
-              script_print_envs: set
+            # - os: windows-latest
+            #   script_print_envs: set
             - os: ubuntu-latest
               script_print_envs: printenv
             - django-db: SQLITE
