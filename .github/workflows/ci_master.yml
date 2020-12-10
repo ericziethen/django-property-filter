@@ -15,8 +15,8 @@ jobs:
   test_matrix:
     strategy:
       matrix:
-        # os: ["ubuntu-latest", "windows-latest"]
-        os: ["ubuntu-latest"]
+        os: ["ubuntu-latest", "windows-latest"]
+        # os: ["ubuntu-latest"]
         # python-version: [3.9, 3.8, 3.7, 3.6]
         python-version: [3.9]
         # django-db: [SQLITE, POSTGRES]
@@ -24,8 +24,8 @@ jobs:
 
         # Include will match the expanded matrix, if not it will add a job
         include:
-            # - os: windows-latest
-            #   script_print_envs: set
+            - os: windows-latest
+              script_print_envs: set
             - os: ubuntu-latest
               script_print_envs: printenv
             - django-db: SQLITE
