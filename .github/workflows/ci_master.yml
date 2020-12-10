@@ -78,7 +78,7 @@ jobs:
       - name: Disable VolumeTest
         if: ${{ matrix.volume_test_tox_env == 'NONE' }}
         run: |
-          echo "TOX_SKIP_ENV=.*all_filter_volume_test.* >> $GITHUB_ENV
+          echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
