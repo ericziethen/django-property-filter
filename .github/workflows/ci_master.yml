@@ -44,13 +44,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set Environment Variables
-        env:
-          DJANGO_DB: ${{ matrix.django-db }}
-          TOX_SKIP_ENV: ".*all_filter_volume_test.*"
-          TRAVIS_OS_NAME: LEGACY_TRAVIS_SETTING  # TODO - TO BE CHANGED TO A GENERIC CI NAME
         run: |
           echo ### Print Environement Variables
-          echo 'DJANGO_DB=${{ env.DJANGO_DB }}'
           echo 'TOX_SKIP_ENV=${{ env.TOX_SKIP_ENV }}'
           echo ### Print Matrix Variables
           echo 'script_print_envs=${{ matrix.script_print_envs }}'
@@ -71,6 +66,9 @@ jobs:
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
       - name: Run Tests
+        env:
+          TOX_SKIP_ENV: ".*all_filter_volume_test.*"
+          TRAVIS_OS_NAME: LEGACY_TRAVIS_SETTING  # TODO - TO BE CHANGED TO A GENERIC CI NAME
         run: |
           echo Env Variables before Tox Run 'TOX_SKIP_ENV=${{ env.TOX_SKIP_ENV }}'
           coverage erase
