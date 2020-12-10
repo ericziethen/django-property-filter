@@ -23,7 +23,8 @@ jobs:
 
         # Include will match the expanded matrix, if not it will add a job
         include:
-            - python-version: 3.9
+            - os: ubuntu-latest
+              python-version: 3.9
               django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
               volume_test: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
               script_print_envs: set
