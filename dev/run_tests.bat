@@ -25,6 +25,11 @@ if /I "%1"=="postgres-local" (
     set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
     goto run_tests
 )
+if /I "%1"=="postgres-github-actions" (
+    echo Argument "%1" passed, use postgresql for github actions as db
+    set DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_github_actions
+    goto run_tests
+)
 
 echo No or unexpected Argument "%1" Passed
 goto goto error

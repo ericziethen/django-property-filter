@@ -40,6 +40,10 @@ elif [ "${1,,}" == "postgres-local" ];
 then
     echo 'Argument "$1" passed, use postgresql for local dev as db'
     export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_local
+elif [ "${1,,}" == "postgres-github-actions" ];
+then
+    echo 'Argument "$1" passed, use postgresql for github actions as db'
+    export DJANGO_SETTINGS_MODULE=django_test_proj.settings_postgres_github_actions
 else
     echo No or unexpected Argument "$1" Passed
     exit 1

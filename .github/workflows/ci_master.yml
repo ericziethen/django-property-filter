@@ -57,9 +57,31 @@ jobs:
             - os: ubuntu-latest
               script_print_envs: printenv
             - django-db: POSTGRES
-              tox_args: postgres-travis
+              tox_args: postgres-github-actions
 
 
+
+
+
+
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
 
 
 
@@ -125,16 +147,42 @@ jobs:
         run: |
           echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
 
       - name: Run Tests
         env:
           TRAVIS_OS_NAME: LEGACY_TRAVIS_SETTING  # TODO - TO BE CHANGED TO A GENERIC CI NAME
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: localhost
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
         run: |
           echo Env Variables before Tox Run 'TOX_SKIP_ENV=${{ env.TOX_SKIP_ENV }}'
           coverage erase
           tox ${{ matrix.tox_args }}
+
+
+
+
+
       # - name: "Convert coverage"
       #   run: "python -m coverage xml"
       # - name: "Upload coverage to Codecov"
