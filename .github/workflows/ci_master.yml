@@ -53,8 +53,11 @@ jobs:
         django-db: [POSTGRES]
         volume_test_tox_env: ["NONE"]
 
-
-
+        include:
+            - os: ubuntu-latest
+              script_print_envs: printenv
+            - django-db: POSTGRES
+              tox_args: postgres-travis
 
 
 
