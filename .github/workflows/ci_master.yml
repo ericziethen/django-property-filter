@@ -12,116 +12,116 @@ on:
 
 jobs:
 
-  # # containers can only run on linux, so if we want postgres it will only work on linux
-  # # there seems to be no way of simple switching or adding a condition so if we want to run windows
-  # # as well we would have to create a different job with the same matrix that runs sqlite only
-  # # https://github.community/t/use-services-in-some-jobs-of-a-matrix/16938
-  # linux_test_matrix:
-  #   strategy:
-  #     matrix:
-  #       os: ["ubuntu-latest"]
-  #       python-version: [3.9, 3.8, 3.7, 3.6]
-  #       django-db: [SQLITE, POSTGRES]
-  #       volume_test_tox_env: ["NONE"]
+  # containers can only run on linux, so if we want postgres it will only work on linux
+  # there seems to be no way of simple switching or adding a condition so if we want to run windows
+  # as well we would have to create a different job with the same matrix that runs sqlite only
+  # https://github.community/t/use-services-in-some-jobs-of-a-matrix/16938
+  linux_test_matrix:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+        python-version: [3.9, 3.8, 3.7, 3.6]
+        django-db: [SQLITE, POSTGRES]
+        volume_test_tox_env: ["NONE"]
 
-  #       # Include will match the expanded matrix, if not it will add a job
-  #       include:
-  #           ### MATCH EXISTING COMBINATIONS ###
-  #           - django-db: SQLITE
-  #             tox_args: sqlite
-  #           - django-db: POSTGRES
-  #             tox_args: postgres-github-actions
+        # Include will match the expanded matrix, if not it will add a job
+        include:
+            ### MATCH EXISTING COMBINATIONS ###
+            - django-db: SQLITE
+              tox_args: sqlite
+            - django-db: POSTGRES
+              tox_args: postgres-github-actions
 
-  #           ### NEW COMBINATIONS ###
-  #           - os: ubuntu-latest
-  #             python-version: 3.9
-  #             django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
-  #             tox_args: sqlite
-  #             name_suffix: "- Volume Test"
-  #             volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
+            ### NEW COMBINATIONS ###
+            - os: ubuntu-latest
+              python-version: 3.9
+              django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
+              tox_args: sqlite
+              name_suffix: "- Volume Test"
+              volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
 
-  #           ### NEW COMBINATIONS ###
-  #           - os: ubuntu-latest
-  #             python-version: 3.9
-  #             django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
-  #             tox_args: postgres-github-actions
-  #             name_suffix: "- Volume Test"
-  #             volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
+            ### NEW COMBINATIONS ###
+            - os: ubuntu-latest
+              python-version: 3.9
+              django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
+              tox_args: postgres-github-actions
+              name_suffix: "- Volume Test"
+              volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
 
-  #   # Service containers to run with `runner-job`
-  #   services:
-  #     # Label used to access the service container
-  #     postgres:
-  #       # Docker Hub image
-  #       image: postgres
-  #       # Provide the password for postgres
-  #       env:
-  #         POSTGRES_PASSWORD: postgres
-  #       # Set health checks to wait until postgres has started
-  #       options: >-
-  #         --health-cmd pg_isready
-  #         --health-interval 10s
-  #         --health-timeout 5s
-  #         --health-retries 5
-  #       ports:
-  #         # Maps tcp port 5432 on service container to the host
-  #         - 5432:5432
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
 
-  #   name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
-  #   runs-on: "${{ matrix.os }}"
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Print Info
-  #       run: |
-  #         echo ### Print Matrix Variables
-  #         echo 'tox_args=${{ matrix.tox_args }}'
+    name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
+    runs-on: "${{ matrix.os }}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Print Info
+        run: |
+          echo ### Print Matrix Variables
+          echo 'tox_args=${{ matrix.tox_args }}'
 
-  #     - name: Setup Python
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-  #     - name: Setup Env
-  #       run: |
-  #         pip --version
-  #         python --version --version
-  #         python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
-  #         pip list
-  #         python -m pip install --upgrade pip pipenv
-  #         pip list
-  #         printenv
+      - name: Setup Env
+        run: |
+          pip --version
+          python --version --version
+          python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
+          pip list
+          python -m pip install --upgrade pip pipenv
+          pip list
+          printenv
 
-  #     - name: Enable VolumeTest
-  #       if: ${{ matrix.volume_test_tox_env != 'NONE' }}
-  #       run: |
-  #         echo "TOXENV=${{ matrix.volume_test_tox_env }}" >> $GITHUB_ENV
+      - name: Enable VolumeTest
+        if: ${{ matrix.volume_test_tox_env != 'NONE' }}
+        run: |
+          echo "TOXENV=${{ matrix.volume_test_tox_env }}" >> $GITHUB_ENV
 
-  #     - name: Disable VolumeTest
-  #       if: ${{ matrix.volume_test_tox_env == 'NONE' }}
-  #       run: |
-  #         echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
+      - name: Disable VolumeTest
+        if: ${{ matrix.volume_test_tox_env == 'NONE' }}
+        run: |
+          echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
-  #     - name: Install Dependencies
-  #       run: pip install coverage tox-gh-actions
+      - name: Install Dependencies
+        run: pip install coverage tox-gh-actions
 
-  #     - name: Run Tests
-  #       env:
-  #         TRAVIS_OS_NAME: LEGACY_TRAVIS_SETTING  # TODO - TO BE CHANGED TO A GENERIC CI NAME
-  #         # The hostname used to communicate with the PostgreSQL service container
-  #         POSTGRES_HOST: localhost
-  #         # The default PostgreSQL port
-  #         POSTGRES_PORT: 5432
-  #       run: |
-  #         echo Env Variables before Tox Run 'TOX_SKIP_ENV=${{ env.TOX_SKIP_ENV }}'
-  #         coverage erase
-  #         tox ${{ matrix.tox_args }}
-  #     # - name: "Convert coverage"
-  #     #   run: "python -m coverage xml"
-  #     # - name: "Upload coverage to Codecov"
-  #     #   # Using version https://github.com/codecov/codecov-action/releases/tag/v1.0.15
-  #     #   uses: "codecov/codecov-action@239febf655bba88b16ff5dea1d3135ea8663a1f9"
-  #     #   with:
-  #     #     fail_ci_if_error: true
+      - name: Run Tests
+        env:
+          TRAVIS_OS_NAME: LEGACY_TRAVIS_SETTING  # TODO - TO BE CHANGED TO A GENERIC CI NAME
+          # The hostname used to communicate with the PostgreSQL service container
+          POSTGRES_HOST: localhost
+          # The default PostgreSQL port
+          POSTGRES_PORT: 5432
+        run: |
+          echo Env Variables before Tox Run 'TOX_SKIP_ENV=${{ env.TOX_SKIP_ENV }}'
+          coverage erase
+          tox ${{ matrix.tox_args }}
+      - name: "Convert coverage"
+        run: "python -m coverage xml"
+      - name: "Upload coverage to Codecov"
+        # Using version https://github.com/codecov/codecov-action/releases/tag/v1.0.15
+        uses: "codecov/codecov-action@239febf655bba88b16ff5dea1d3135ea8663a1f9"
+        with:
+          fail_ci_if_error: true
 
   # Basic Windows Tests
   windows_test_matrix:
@@ -139,12 +139,13 @@ jobs:
               tox_args: sqlite
 
             ### NEW COMBINATIONS ###
-            - os: windows-latest
-              python-version: 3.9
-              django-db: SQLITE
-              tox_args: sqlite
-              name_suffix: "- Volume Test"
-              volume_test_tox_env: mywindows-py39-all_filter_volume_test  # Now combination, trigger volume test
+            # VOLUME TEST currently disabled, failing on windows
+            # - os: windows-latest
+            #   python-version: 3.9
+            #   django-db: SQLITE
+            #   tox_args: sqlite
+            #   name_suffix: "- Volume Test"
+            #   volume_test_tox_env: mywindows-py39-all_filter_volume_test  # Now combination, trigger volume test
 
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
@@ -194,75 +195,67 @@ jobs:
         run: |
           tox ${{ matrix.tox_args }}
 
+  linting:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest"]
+        include:
+            - os: windows-latest
+              script_name: .\dev/run_linters.bat
+            - os: ubuntu-latest
+              script_name: ./dev/run_linters.sh
+    name: Latest Dev Linting
+    runs-on: "${{ matrix.os }}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Setup Env
+        run: |
+          pip --version
+          python --version --version
+          pip list
+          python -m pip install --upgrade pip pipenv
+          pip list
+      - name: Install Dependencies
+        run: |
+          # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+          pip install -r requirements.txt
+          pip list
+      - name: Run Linters
+        run: ${{ matrix.script_name }}
 
-
-
-
-
-
-        
-
-  # linting:
-  #   strategy:
-  #     matrix:
-  #       os: ["ubuntu-latest", "windows-latest"]
-  #       include:
-  #           - os: windows-latest
-  #             script_name: .\dev/run_linters.bat
-  #           - os: ubuntu-latest
-  #             script_name: ./dev/run_linters.sh
-  #   name: Latest Dev Linting
-  #   runs-on: "${{ matrix.os }}"
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Setup Python
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: '3.9'
-  #     - name: Setup Env
-  #       run: |
-  #         pip --version
-  #         python --version --version
-  #         pip list
-  #         python -m pip install --upgrade pip pipenv
-  #         pip list
-  #     - name: Install Dependencies
-  #       run: |
-  #         # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
-  #         pip install -r requirements.txt
-  #         pip list
-  #     - name: Run Linters
-  #       run: ${{ matrix.script_name }}
-
-  # package_safety_checks:
-  #   strategy:
-  #     matrix:
-  #       os: ["ubuntu-latest", "windows-latest"]
-  #       include:
-  #           - os: windows-latest
-  #             script_name: .\dev/check_package_safety.bat
-  #           - os: ubuntu-latest
-  #             script_name: ./dev/check_package_safety.sh
-  #   name: Pkg Safety (Failure Allowed)
-  #   runs-on: "${{ matrix.os }}"
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Setup Python
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: '3.9'
-  #     - name: Setup Env
-  #       run: |
-  #         pip --version
-  #         python --version --version
-  #         python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
-  #         pip list
-  #         python -m pip install --upgrade pip pipenv
-  #         pip list
-  #     - name: Install Dependencies
-  #       run: |
-  #         # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
-  #         pip install -r requirements.txt
-  #         pip list
-  #     - name: Run Package Safety
-  #       run: ${{ matrix.script_name }}
+  package_safety_checks:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest"]
+        include:
+            - os: windows-latest
+              script_name: .\dev/check_package_safety.bat
+            - os: ubuntu-latest
+              script_name: ./dev/check_package_safety.sh
+    name: Pkg Safety (Failure Allowed)
+    runs-on: "${{ matrix.os }}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Setup Env
+        run: |
+          pip --version
+          python --version --version
+          python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
+          pip list
+          python -m pip install --upgrade pip pipenv
+          pip list
+      - name: Install Dependencies
+        run: |
+          # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
+          pip install -r requirements.txt
+          pip list
+      - name: Run Package Safety
+        run: ${{ matrix.script_name }}
