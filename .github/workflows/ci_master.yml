@@ -139,7 +139,7 @@ jobs:
               tox_args: sqlite
 
             # ### NEW COMBINATIONS ###
-            # - os: windows-latest"
+            # - os: windows-latest
             #   python-version: 3.9
             #   django-db: SQLITE
             #   tox_args: sqlite
