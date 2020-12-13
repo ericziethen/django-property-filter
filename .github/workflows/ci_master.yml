@@ -40,6 +40,14 @@ jobs:
               name_suffix: "- Volume Test"
               volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
 
+            ### NEW COMBINATIONS ###
+            - os: ubuntu-latest
+              python-version: 3.9
+              django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
+              tox_args: postgres-github-actions
+              name_suffix: "- Volume Test"
+              volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
+
     # Service containers to run with `runner-job`
     services:
       # Label used to access the service container
@@ -122,12 +130,21 @@ jobs:
         os: ["windows-latest"]
         python-version: [3.9, 3.8, 3.7, 3.6]
         django-db: [SQLITE]
+        volume_test_tox_env: ["NONE"]
 
         # Include will match the expanded matrix, if not it will add a job
         include:
             ### MATCH EXISTING COMBINATIONS ###
             - django-db: SQLITE
               tox_args: sqlite
+
+            ### NEW COMBINATIONS ###
+            - os: windows-latest"
+              python-version: 3.9
+              django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
+              tox_args: sqlite
+              name_suffix: "- Volume Test"
+              volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
 
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
@@ -149,6 +166,26 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Setup Env
+        run: |
+          pip --version
+          python --version --version
+          python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
+          pip list
+          python -m pip install --upgrade pip pipenv
+          pip list
+          set
+
+      - name: Enable VolumeTest
+        if: ${{ matrix.volume_test_tox_env != 'NONE' }}
+        run: |
+          echo "TOXENV=${{ matrix.volume_test_tox_env }}" >> $GITHUB_ENV
+
+      - name: Disable VolumeTest
+        if: ${{ matrix.volume_test_tox_env == 'NONE' }}
+        run: |
+          echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: pip install tox-gh-actions
