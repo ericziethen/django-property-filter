@@ -32,32 +32,20 @@ jobs:
             - django-db: POSTGRES
               tox_args: postgres-github-actions
 
+            ### NEW COMBINATIONS ###
+            - os: ubuntu-latest
+              python-version: 3.9
+              django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
+              tox_args: sqlite
+              name_suffix: "- Volume Test"
+              volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
 
-
-
-
-
-
-
-
-
-
-
-
-            # ### NEW COMBINATIONS ###
-            # - os: ubuntu-latest
-            #   python-version: 3.9
-            #   django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
-            #   tox_args: sqlite
-            #   name_suffix: "- Volume Test"
-            #   volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
-
-            # - os: ubuntu-latest
-            #   python-version: 3.9
-            #   django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
-            #   tox_args: postgres-github-actions
-            #   name_suffix: "- Volume Test"
-            #   volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
+            - os: ubuntu-latest
+              python-version: 3.9
+              django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
+              tox_args: postgres-github-actions
+              name_suffix: "- Volume Test"
+              volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
 
     # Service containers to run with `runner-job`
     services:
