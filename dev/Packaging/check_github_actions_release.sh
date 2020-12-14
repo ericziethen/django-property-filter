@@ -17,7 +17,7 @@ else
 fi
 
 # Check the Github Actions Tag matches our Version number
-echo "Trying to Match 'refs/tags/$SETUP_CFG_VERSION' to '$GITHUB_REF'"
+echo "Trying to Match '$SETUP_CFG_VERSION' to '$GITHUB_REF'"
 if [ "refs/tags/$SETUP_CFG_VERSION" != "$GITHUB_REF" ]
 then
     echo "Failed to match Repository Version '$SETUP_CFG_VERSION' to Github Actions Tag '$GITHUB_REF'"
