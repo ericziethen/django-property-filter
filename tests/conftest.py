@@ -6,7 +6,7 @@ from tests.common import is_ci_build
 
 def pytest_collection_modifyitems(items):
     for item in items:
-        skip_ci = item.get_closest_marker('skiptravis')
+        skip_ci = item.get_closest_marker('skipci')
 
         # Don't count in coverage even when running to not be surprised later
         if skip_ci:
