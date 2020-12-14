@@ -12,14 +12,6 @@ pushd "%PROJ_MAIN_DIR%"
 
 rem To see how to loop through multiple Command Line Arguments: https://www.robvanderwoude.com/parameters.php
 
-rem Disable Unwanted tests when run from Travis
-if "%1"=="travis-ci" (
-    rem add testing exclusions for travis
-    rem set PYTEST_ADDOPTS=-m "(not ???)"
-    echo Argument "travis-ci" passed, set "PYTEST_ADDOPTS" env variable
-    goto run_tests
-)
-
 :local_setup
 
 :run_tests

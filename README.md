@@ -12,8 +12,8 @@ It does so by providing sub-classes for Filters and Filtersets to keep existing 
         <td><img src='https://img.shields.io/pypi/v/django-property-filter.svg'></td>
     </tr>
     <tr>
-        <td>Travis CI</td>
-        <td><img src='https://travis-ci.com/ericziethen/django-property-filter.svg?branch=master'></td>
+        <td>Github Action</td>
+        <td><img src='https://github.com/ericziethen/django-property-filter/workflows/CI/badge.svg'></td>
         <td>Coverage</td>
         <td><img src='https://codecov.io/gh/ericziethen/django-property-filter/branch/master/graph/badge.svg'></td>
     </tr>
