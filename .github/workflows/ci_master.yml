@@ -87,7 +87,6 @@ jobs:
           echo ### Print Matrix Variables
           echo 'tox_args=${{ matrix.tox_args }}'
           echo ### Print Environment Variables
-          echo 'GITHUB_REF=${{ GITHUB_REF }}'
           echo 'env.GITHUB_REF=${{ env.GITHUB_REF }}'
 
       - name: Setup Python
