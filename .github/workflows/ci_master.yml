@@ -122,7 +122,8 @@ jobs:
         with:
           fail_ci_if_error: true
 
-  # Basic Windows Tests
+  # Basic Windows Tests because the linux matrix uses postgres with docker container
+  # which is not supported on windows
   windows_test_matrix:
     strategy:
       matrix:
