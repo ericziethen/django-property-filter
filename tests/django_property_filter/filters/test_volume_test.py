@@ -80,7 +80,7 @@ class LargeVolumeTests(TestCase):
 
             BenchmarkModel.objects.bulk_create(bulk_list)
 
-    @pytest.mark.skipif(not all_filter_volume_test_enabled(), reason='Large Volume Test only on Travis')
+    @pytest.mark.skipif(not all_filter_volume_test_enabled(), reason='Large Volume Test only on CI builds')
     @pytest.mark.filterwarnings('ignore::RuntimeWarning')  # DayTime shows a Runtime Warning, ignore
     def test_large_volume_tests(self):  # Just making sure large filtering causes no issue
         for filter_name, prop_filter_name, lookup_value in SINGLE_FILTER_LOOKUP_LIST:

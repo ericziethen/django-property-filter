@@ -56,8 +56,8 @@ def db_is_postgresql():
     return connection.vendor == 'postgresql'
 
 
-def is_travis_build():
-    return 'TRAVIS_OS_NAME' in os.environ
+def is_ci_build():
+    return 'IS_CI_BUILD' in os.environ
 
 
 def all_filter_volume_test_enabled():

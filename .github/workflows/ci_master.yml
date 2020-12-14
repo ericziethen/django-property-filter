@@ -117,7 +117,7 @@ jobs:
 
       - name: Run Tests
         env:
-          TRAVIS_OS_NAME: LEGACY_TRAVIS_SETTING  # TODO - TO BE CHANGED TO A GENERIC CI NAME
+          IS_CI_BUILD: TRUE
           # The hostname used to communicate with the PostgreSQL service container
           POSTGRES_HOST: localhost
           # The default PostgreSQL port
