@@ -193,6 +193,7 @@ jobs:
         run: |
           tox ${{ matrix.tox_args }}
 
+  # Linting job
   linting:
     strategy:
       matrix:
@@ -225,6 +226,7 @@ jobs:
       - name: Run Linters
         run: ${{ matrix.script_name }}
 
+  # Package safety job
   package_safety_checks:
     strategy:
       matrix:
@@ -258,6 +260,7 @@ jobs:
       - name: Run Package Safety
         run: ${{ matrix.script_name }}
 
+  # Deployment job
   deployment:
     if: startsWith(github.ref, 'refs/tags')
     runs-on: ubuntu-latest
