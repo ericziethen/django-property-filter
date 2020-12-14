@@ -86,8 +86,6 @@ jobs:
         run: |
           echo ### Print Matrix Variables
           echo 'tox_args=${{ matrix.tox_args }}'
-          echo ### Print Environment Variables
-          echo 'env.GITHUB_REF=${{ env.GITHUB_REF }}'
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -116,15 +114,6 @@ jobs:
 
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
-
-
-
-      - name: Run Release Check  # TODO - Move to Deploy once verified
-        run: |
-          ./dev/Packaging/check_github_actions_release.sh
-
-
-
 
       - name: Run Tests
         env:
@@ -293,6 +282,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
+      - name: Run Release Check
+        run: |
+          ./dev/Packaging/check_github_actions_release.sh
       - name: Setup Env
         run: |
           pip --version
@@ -312,7 +304,7 @@ jobs:
       - name: Publish distribution 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
-          # password: ${{ secrets.PYPY_PROJ_TOKEN }}
+          password: ${{ secrets.PYPY_PROJ_TOKEN }}
           ### PyPy.Test settings
-          password: ${{ secrets.PYPY_TEST_PROJ_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
+          # password: ${{ secrets.PYPY_TEST_PROJ_TOKEN }}
+          # repository_url: https://test.pypi.org/legacy/
