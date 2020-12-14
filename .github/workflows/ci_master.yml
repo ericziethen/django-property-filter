@@ -10,6 +10,7 @@ on:
 
 jobs:
 
+  # Main testing Matrix
   # containers can only run on linux, so if we want postgres it will only work on linux
   # there seems to be no way of simple switching or adding a condition so if we want to run windows
   # as well we would have to create a different job with the same matrix that runs sqlite only
