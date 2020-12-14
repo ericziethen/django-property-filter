@@ -86,6 +86,8 @@ jobs:
         run: |
           echo ### Print Matrix Variables
           echo 'tox_args=${{ matrix.tox_args }}'
+          echo ### Print Environment Variables
+          echo ${{ env.GITHUB_REF }}'
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -114,6 +116,15 @@ jobs:
 
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
+
+
+
+      - name: Run Release Check  # TODO - Move to Deploy once verified
+        run: |
+          ./dev/Packaging/check_github_actions_release.sh
+
+
+
 
       - name: Run Tests
         env:
