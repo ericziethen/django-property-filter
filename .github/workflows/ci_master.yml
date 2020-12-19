@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI  # Name becomes part of the badge location
 
 on:
   push:
