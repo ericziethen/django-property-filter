@@ -6,6 +6,7 @@ import sqlite3
 
 from functools import reduce
 from operator import or_
+from distutils.util import strtobool
 
 from django.db import connection
 from django.db.models import Case, When, Q
@@ -264,3 +265,12 @@ def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-
             result = property_value.stop == lookup_value
 
     return result
+
+
+def convert_value_to_type(target_type, value):
+    """Convert the given value to the given type, return the value if can't convert."""
+
+    if (target_type == bool) and (isinstance(value, str)):
+        return bool(strtobool(value))
+
+    return target_type(value)

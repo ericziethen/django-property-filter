@@ -40,6 +40,7 @@ from django_filters.filters import (
 from django_property_filter.constants import EMPTY_VALUES
 from django_property_filter.utils import (
     compare_by_lookup_expression,
+    convert_value_to_type,
     get_value_for_db_field,
 )
 
@@ -151,7 +152,7 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
         property_type = type(property_value)
         if type(lookup_value) != property_type:  # pylint: disable=unidiomatic-typecheck
             try:
-                convert_lookup_value = property_type(lookup_value)
+                convert_lookup_value = convert_value_to_type(property_type, lookup_value)
             except (ValueError, TypeError):
                 pass
             else:

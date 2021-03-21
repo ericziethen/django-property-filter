@@ -52,9 +52,6 @@ TEST_LOOKUPS = [
     ('is_true_TypedMultipleChoiceFilter',   'prop_is_true_PropertyTypedMultipleChoiceFilter',   'exact', [True], [-1, 2, 3]),
     ('is_true_TypedMultipleChoiceFilter',   'prop_is_true_PropertyTypedMultipleChoiceFilter',   'exact', [False], [0, 1]),
 ]
-
-@pytest.mark.debug
-
 @pytest.mark.parametrize('filter_to_test, prop_filter_to_test, lookup_xpr, lookup_val, result_list', TEST_LOOKUPS)
 @pytest.mark.django_db
 def test_lookup_xpr(fixture_boolean_filter_model, filter_to_test, prop_filter_to_test, lookup_xpr, lookup_val, result_list):
