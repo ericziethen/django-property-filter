@@ -542,3 +542,34 @@ class MultiFilterTestFilterSet(PropertyFilterSet):
             ('prop_date', PropertyDateFilter, ['exact']),
             ('prop_date_time', PropertyDateTimeFilter, ['exact']),
             ]
+
+
+class MiscBooleanChoiceFiltersFilterSet(PropertyFilterSet):
+    LOOKUP_CHOICES = [
+        (True, 'Yes'),
+        # (True, 'True'),
+        # (True, 'GiveMeYes'),
+        (False, 'No'),
+        # (False, 'False'),
+        # (False, 'GiveMeNo'),
+    ]
+
+    is_true_ChoiceFilter = ChoiceFilter(field_name='is_true', lookup_expr='exact', choices=LOOKUP_CHOICES)
+    is_true_MultipleChoiceFilter = MultipleChoiceFilter(field_name='is_true', lookup_expr='exact', conjoined=False, choices=LOOKUP_CHOICES)
+    is_true_AllValuesFilter = AllValuesFilter(field_name='is_true', lookup_expr='exact')
+    is_true_AllValuesMultipleFilter = AllValuesMultipleFilter(field_name='is_true', lookup_expr='exact', conjoined=False)
+    # Typed Choice Filter might not have a blank option, skip
+    #is_true_TypedChoiceFilter = TypedChoiceFilter(field_name='is_true', lookup_expr='exact', choices=LOOKUP_CHOICES, coerce=str)
+    is_true_TypedMultipleChoiceFilter = TypedMultipleChoiceFilter(field_name='is_true', lookup_expr='exact', conjoined=False, choices=LOOKUP_CHOICES, coerce=str)
+
+    prop_is_true_PropertyChoiceFilter = PropertyChoiceFilter(field_name='prop_is_true', lookup_expr='exact', choices=LOOKUP_CHOICES)
+    prop_is_true_PropertyMultipleChoiceFilter = PropertyMultipleChoiceFilter(field_name='prop_is_true', lookup_expr='exact', conjoined=False, choices=LOOKUP_CHOICES)
+    prop_is_true_PropertyAllValuesFilter = PropertyAllValuesFilter(field_name='prop_is_true', lookup_expr='exact')
+    prop_is_true_PropertyAllValuesMultipleFilter = PropertyAllValuesMultipleFilter(field_name='prop_is_true', lookup_expr='exact', conjoined=False)
+    # Typed Choice Filter might not have a blank option, skip
+    #prop_is_true_PropertyTypedChoiceFilter = PropertyTypedChoiceFilter(field_name='prop_is_true', lookup_expr='exact', choices=LOOKUP_CHOICES, coerce=str)
+    prop_is_true_PropertyTypedMultipleChoiceFilter = PropertyTypedMultipleChoiceFilter(field_name='prop_is_true', lookup_expr='exact', conjoined=False, choices=LOOKUP_CHOICES, coerce=str)
+
+    class Meta:
+        model = models.BooleanFilterModel
+        exclude = ['is_true']

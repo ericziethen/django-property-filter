@@ -228,3 +228,9 @@ class MultiFilterTestView(FilterView):
     model = MultiFilterTestModel
     template_name = 'generic_filter_filter_first.html'
     filterset_class = filters.MultiFilterTestFilterSet
+
+
+class MiscBooleanChoiceFiltersView(FilterView):
+    model = BooleanFilterModel
+    template_name = 'generic_filter_filter_first.html'
+    filterset_class = filters.MiscBooleanChoiceFiltersFilterSet
