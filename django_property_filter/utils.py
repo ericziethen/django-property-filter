@@ -269,7 +269,6 @@ def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-
 
 def convert_value_to_type(target_type, value):
     """Convert the given value to the given type, return the value if can't convert."""
-
     if (target_type == bool) and (isinstance(value, str)):
         return bool(strtobool(value))
 
