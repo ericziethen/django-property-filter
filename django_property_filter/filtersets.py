@@ -30,7 +30,8 @@ class PropertyFilterSet(FilterSet):
             if isinstance(self.filters[name], PropertyBaseFilter):
                 property_filter_list.append((name, value))
             else:
-                logger.debug(F'Filtering value "{value}" with Filter: "{self.filters[name].__dict__}"')
+                logger.debug(F'Filtering value "{value}" with Filter: "{self.filters[name].__class__.__name__}", '
+                             F'DATA: "{self.filters[name].__dict__}"')
                 queryset = self.filters[name].filter(queryset, value)
                 assert isinstance(  # Assert taken from parent function #nosec
                     queryset, models.QuerySet), \
@@ -49,7 +50,8 @@ class PropertyFilterSet(FilterSet):
 
             for name, value in property_filter_list:
                 if value not in EMPTY_VALUES:
-                    logger.debug(F'Filtering pk_list against value "{value}" with Property Filter: "{self.filters[name].__dict__}"')
+                    logger.debug(F'Filtering pk_list against value "{value}" with Property Filter: '
+                                 F'"{self.filters[name].__class__.__name__}", DATA: "{self.filters[name].__dict__}"')
                     pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
 
                     # If we need to preserve order keep track of the latest order list
