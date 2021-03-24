@@ -48,11 +48,14 @@ class PropertyFilterSet(FilterSet):
             if queryset.ordered:
                 preserve_order = list(qs_pk_list)
 
+            logger.debug(F'pk_list after normal Filter Filtering {pk_list}')
+
             for name, value in property_filter_list:
                 if value not in EMPTY_VALUES:
                     logger.debug(F'Filtering pk_list against value "{value}" with Property Filter: '
                                  F'"{self.filters[name].__class__.__name__}", DATA: "{self.filters[name].__dict__}"')
                     pk_list = self.filters[name].filter_pks(pk_list, queryset, value)
+                    logger.debug(F'>>> Resulting pk_list {pk_list}')
 
                     # If we need to preserve order keep track of the latest order list
                     if self.filters[name].__class__ in PRESERVE_ORDER_FILTERS:
