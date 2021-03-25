@@ -123,3 +123,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {'format': '%(asctime)s - %(filename)s:%(funcName)s():'
+                                '%(lineno)i: %(levelname)s - %(message)s',
+                    'datefmt': '%Y-%m-%d %H:%M:%S'},
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'default',
+            'filename': 'test.log',
+            'maxBytes': 52428800,
+            'backupCount': 1
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        # 'handlers': ['console', 'file'],
+        'level': 'DEBUG',
+    },
+}

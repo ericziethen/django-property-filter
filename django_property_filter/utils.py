@@ -54,7 +54,7 @@ def convert_int_list_to_range_lists(int_list, *, sort_list=True):
 
 
 def get_max_params_for_db():
-    """Get the allowed number of maximum parameters for the database used, ot None if no limit."""
+    """Get the allowed number of maximum parameters for the database used, or None if no limit."""
     max_params = None
 
     if 'USER_DB_MAX_PARAMS' in os.environ:
@@ -263,6 +263,9 @@ def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-
     elif lookup_expr == 'postgres_range_endwith':
         if property_value:
             result = property_value.stop == lookup_value
+
+    logging.debug(F'property value: "{property_value}", expr: "{lookup_expr}", value: '
+                  F'"{lookup_value}" ({type(lookup_value)}) ({type(property_value)}), result: "{result}"')
 
     return result
 
