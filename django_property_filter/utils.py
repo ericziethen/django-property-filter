@@ -54,7 +54,7 @@ def convert_int_list_to_range_lists(int_list, *, sort_list=True):
 
 
 def get_max_params_for_db():
-    """Get the allowed number of maximum parameters for the database used, ot None if no limit."""
+    """Get the allowed number of maximum parameters for the database used, or None if no limit."""
     max_params = None
 
     if 'USER_DB_MAX_PARAMS' in os.environ:
