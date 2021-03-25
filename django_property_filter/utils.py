@@ -65,13 +65,7 @@ def get_max_params_for_db():
             logging.error(F'Invalid Environment Variable "USER_DB_MAX_PARAMS", int expected but got "{user_limit}".')
 
     if max_params is None and get_db_vendor() == 'sqlite':
-        # Bit of a hack but should work for sqlite rather than using a dependancy like "packaging" package
-        major, minor, _ = get_db_version().split('.')
-        # Limit was increased from version 3.32.0 onwards
-        if (int(major) > 3) or (int(major) == 3 and int(minor) >= 32):
-            max_params = 32766
-        else:
-            max_params = 999
+        max_params = 999
 
     return max_params
 
@@ -161,7 +155,7 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
                 result_qs = queryset.filter(range_filter_expr)
 
             logging.warning(F'Only returning the first {result_qs.count()} items because of max parameter '
-                            F'limitations of Database "{get_db_vendor()}" with version "{get_db_version()}"')
+                            F'limitations of Database "{get_db_vendor()}"')
 
     if preserve_order:
         preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(preserve_order)])

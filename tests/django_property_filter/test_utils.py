@@ -229,7 +229,7 @@ class TestGetDbVendorVersion(TestCase):
 
 DB_PARAM_LIMITS = [
     ('sqlite', '3.31.1', 999),
-    ('sqlite', '3.32.0', 32766),
+    ('sqlite', '3.32.0', 999),
     ('postgresql', '1.0.0', None),
     ('postgresql', '9.9.9', None),
 ]
@@ -260,7 +260,7 @@ def test_get_max_db_param_values_user_values_invalid(caplog):
          patch.object(sqlite3, 'sqlite_version', '3.32.0'),\
          caplog.at_level(logging.ERROR):
 
-        assert get_max_params_for_db() == 32766
+        assert get_max_params_for_db() == 999
         assert F'Invalid Environment Variable "USER_DB_MAX_PARAMS", int expected but got "not int invalid".' in caplog.text
 
 
