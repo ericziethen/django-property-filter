@@ -58,13 +58,15 @@ UUID_RANGE = [
 class LargeVolumeTests(TestCase):
 
     def setUp(self):
-        db_entry_count = 150000
+        db_entry_count = 100000
+
+        batch_size = 999  # Max for Sqlite3
+        batch_list = []
 
         # Generate Random Data
-        bulk_list = []
         with transaction.atomic():
-            for _ in range(1, db_entry_count + 1):
-                bulk_list.append(
+            for count, _ in enumerate(range(1, db_entry_count + 1)):
+                batch_list.append(
                     BenchmarkModel(
                         number=random.choice(NUMBER_RANGE),
                         text=random.choice(TEXT_RANGE),
@@ -78,7 +80,14 @@ class LargeVolumeTests(TestCase):
                     )
                 )
 
-            BenchmarkModel.objects.bulk_create(bulk_list)
+                if (count % batch_size) == 0:
+                    print('CREATE')
+                    BenchmarkModel.objects.bulk_create(batch_list)
+                    batch_list.clear()
+
+            if batch_list:
+                print('CREATE Leftovers')
+                BenchmarkModel.objects.bulk_create(batch_list)
 
     @pytest.mark.skipif(not all_filter_volume_test_enabled(), reason='Large Volume Test only on CI builds')
     @pytest.mark.filterwarnings('ignore::RuntimeWarning')  # DayTime shows a Runtime Warning, ignore

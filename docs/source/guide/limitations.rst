@@ -38,17 +38,24 @@ Database limitations
         Sqlite3 defines SQLITE_MAX_VARIABLE_NUMBER which is a limit for parameters
         passed to a query.
 
-        Depending on the version this limit might differ.
-        By default from version 3.32.0 onwards have a default of 32766 while
-        versions before this the limit was 999.
-
         See "Maximum Number Of Host Parameters In A Single SQL Statement" at
         https://www.sqlite.org/limits.html for further details.
 
+        Depending on the version this limit might differ.
+        By default from version 3.32.0 onwards, sqlite should have a default of 32766 while
+        versions before this the limit was 999.
+        A different limit can also be set at compile time and python is compiling their own sqlite version.
+
+        For example Python 3.9.1 comes with sqlite version 3.33.0 and the 999 max parameter limitation still exists
+
+    Because of the way django-property-filter queries the database (i.e. with a prefilterd list of primary keys),
+    the number of sql parameters needed might exceed the set limit.
+
     Django-property-filter will try to return all values if possible, but if not
-    possible it will try to return as many as possible and log a warning message
+    possible it will try to return as many as possible limiting the sql parameters to not more than 999
+    and log a warning message
     similar to::
-        WARNING:root:Only returning the first 3746 items because of max parameter limitations of Database "sqlite" with version "3.31.1"
+        WARNING:root:Only returning the first 3746 items because of max parameter limitations of Database "sqlite"
 
     It is possible to set a custom limit via the environment variable
     "USER_DB_MAX_PARAMS". For example the user uses a custom compiled sqlite

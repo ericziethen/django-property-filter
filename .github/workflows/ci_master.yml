@@ -139,13 +139,12 @@ jobs:
               tox_args: sqlite
 
             ### NEW COMBINATIONS ###
-            # VOLUME TEST currently disabled, failing on windows
-            # - os: windows-latest
-            #   python-version: 3.9
-            #   django-db: SQLITE
-            #   tox_args: sqlite
-            #   name_suffix: "- Volume Test"
-            #   volume_test_tox_env: mywindows-py39-all_filter_volume_test  # Now combination, trigger volume test
+            - os: windows-latest
+              python-version: 3.9
+              django-db: SQLITE
+              tox_args: sqlite
+              name_suffix: "- Volume Test"
+              volume_test_tox_env: mywindows-py39-all_filter_volume_test  # Now combination, trigger volume test
 
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
