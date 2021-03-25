@@ -134,6 +134,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'default',
         },
@@ -142,13 +143,13 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'default',
             'filename': 'test.log',
-            'maxBytes': 5242880,
+            'maxBytes': 52428800,
             'backupCount': 1
         }
     },
     'root': {
         'handlers': ['console'],
-        # 'handlers': [file'],
+        # 'handlers': ['console', 'file'],
         'level': 'DEBUG',
     },
 }

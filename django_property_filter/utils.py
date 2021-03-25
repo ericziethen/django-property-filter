@@ -264,7 +264,8 @@ def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-
         if property_value:
             result = property_value.stop == lookup_value
 
-    logging.debug(F'property value: "{property_value}", expr: "{lookup_expr}", value: "{lookup_value}" ({type(lookup_value)}) ({type(property_value)}), result: "{result}"')
+    logging.debug(F'property value: "{property_value}", expr: "{lookup_expr}", value: '
+                  F'"{lookup_value}" ({type(lookup_value)}) ({type(property_value)}), result: "{result}"')
 
     return result
 
