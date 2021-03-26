@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Changed
+- Limit the number of max sql parameters used for sqlite to 999 [#177]
 - Fixed various Filters using user defined choices not working correctly with Boolean choices [#185]
 
 ### Removed

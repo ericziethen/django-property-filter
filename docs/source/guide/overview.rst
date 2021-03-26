@@ -5,21 +5,27 @@ Overview
 Overview
 --------
 
-Django-property-filter is an application adding filtering by class properties
-functionality to `django <https://www.djangoproject.com/>`_.
+Django-property-filter provides an extenstion to `django-filter <https://django-filter.readthedocs.io/>`_.
+It extend's django-filter's classes to provide additional support for filtering
+`django <https://www.djangoproject.com/>`_ models by properties.
 
-It is inspired by and an extension of the `django-filter <https://django-filter.readthedocs.io/>`_ application.
-As such the aim is to provide the same functionality django-filter provides for
-database fields but for property fields of django models.
+The aim is to provide identical (where possible) functionality for properties
+as django-filter does for database fields.
+For this the new classes directly inherit their django-filter counterpart's
+features and the setup and configuration is aimed to be the same.
+
+This means that the `django-filter documentation <https://django-filter.readthedocs.io/en/master/>`_
+can be applied to django-property-filter as well.
+
+For example django-filter uses a class NumberFilter and django-property-filter
+extends it and creates PropertyNumberFilter supporting the same functionality
+and additional the possibility to filter properties as well.
 
 Because property fields are not part of database tables they cannot be queried
 directly with sql and are therefore not natively supported by django and
 django-filter.
 
-The aim for django-property-filter is to provide a property filter for each
-filter available in django-filter.
-
-Django-property-filter will also provide a filterset that can handle filters
+Django-property-filter also provides a filterset that can handle filters
 and property filters together.
 
 How it works
