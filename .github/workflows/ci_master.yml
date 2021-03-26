@@ -252,6 +252,7 @@ jobs:
           python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
           pip list
           python -m pip install --upgrade pip pipenv
+          pip install wheel
           pip list
       - name: Install Dependencies
         run: |
