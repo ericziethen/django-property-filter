@@ -222,7 +222,7 @@ jobs:
       - name: Install Dependencies
         run: |
           # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
-          pip install -r requirements.txt
+          pip install -r requirements-dev-testing.txt
           pip list
       - name: Run Linters
         run: ${{ matrix.script_name }}
@@ -257,7 +257,7 @@ jobs:
       - name: Install Dependencies
         run: |
           # don't use the '--upgrade' to not upgrade pinned requirements with generic ones
-          pip install -r requirements.txt
+          pip install -r requirements-dev-testing.txt
           pip list
       - name: Run Package Safety
         run: ${{ matrix.script_name }}

@@ -1,0 +1,4 @@
+
+# Django-filter, will automatically install Django as well,
+# by only installing filter, we will get the same version as the end user
+django-filter

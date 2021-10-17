@@ -35,8 +35,8 @@ class PropertyFilterSet(FilterSet):
                 queryset = self.filters[name].filter(queryset, value)
                 assert isinstance(  # Assert taken from parent function #nosec
                     queryset, models.QuerySet), \
-                    "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
-                    % (type(self).__name__, name, type(queryset).__name__)
+                    F'''Expected '{type(self).__name__}.{name}' to return a QuerySet,''' +\
+                    F''' but got a {type(queryset).__name__} instead.'''
 
         # Filter By Property Filters
         if property_filter_list:
