@@ -40,8 +40,8 @@ For more details and examples check the [documentation](https://django-property-
 ## Requirements
 
 * Python: 3.6, 3.7, 3.8, 3.9
-* Django: 2.2, 3.0, 3.1
-* Django-filter: 2.3+
+* Django: 2.2, 3.1, 3.2, 4.0
+* Django-filter: 21.1+
 
 ## Limitations
 
