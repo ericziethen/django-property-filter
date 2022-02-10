@@ -14,7 +14,7 @@ codecov==2.1.12
 colorama==0.4.4
 coverage==6.0.2
 distlib==0.3.3
-Django==3.2.8
+Django==3.2.12
 django-filter==21.1
 docutils==0.17.1
 dparse==0.5.1
