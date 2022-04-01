@@ -6,7 +6,6 @@ import sqlite3
 
 from functools import reduce
 from operator import or_
-from distutils.util import strtobool
 
 from django.db import connection
 from django.db.models import Case, When, Q
@@ -262,6 +261,22 @@ def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-
                   F'"{lookup_value}" ({type(lookup_value)}) ({type(property_value)}), result: "{result}"')
 
     return result
+
+
+def strtobool(val):  # Taken from python directly, as suggested in PEP 632 – Deprecate distutils module
+    """Convert a string representation of truth to true (1) or false (0).
+
+    True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
+    are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
+    'val' is anything else.
+    """
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return 1
+    if val in ('n', 'no', 'f', 'false', 'off', '0'):
+        return 0
+
+    raise ValueError(F"invalid truth value {val}")
 
 
 def convert_value_to_type(target_type, value):
