@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest"]
-        python-version: [3.10, 3.9, 3.8, 3.7, 3.6]
+        python-version: ['3.10', '3.9', '3.8', '3.7', '3.6']
         django-db: [SQLITE, POSTGRES]
         volume_test_tox_env: ["NONE"]
 
@@ -34,14 +34,14 @@ jobs:
 
             ### NEW COMBINATIONS ###
             - os: ubuntu-latest
-              python-version: 3.10
+              python-version: '3.10'
               django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
               tox_args: sqlite
               name_suffix: "- Volume Test"
               volume_test_tox_env: mylinux-py39-all_filter_volume_test  # Now combination, trigger volume test
 
             - os: ubuntu-latest
-              python-version: 3.10
+              python-version: '3.10'
               django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
               tox_args: postgres-github-actions
               name_suffix: "- Volume Test"
@@ -127,7 +127,7 @@ jobs:
     strategy:
       matrix:
         os: ["windows-latest"]
-        python-version: [3.10, 3.9, 3.8, 3.7, 3.6]
+        python-version: ['3.10', '3.9', '3.8', '3.7', '3.6']
         django-db: [SQLITE]
         volume_test_tox_env: ["NONE"]
 
@@ -139,7 +139,7 @@ jobs:
 
             ### NEW COMBINATIONS ###
             - os: windows-latest
-              python-version: 3.10
+              python-version: '3.10'
               django-db: SQLITE
               tox_args: sqlite
               name_suffix: "- Volume Test"
