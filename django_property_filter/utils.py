@@ -273,10 +273,10 @@ def strtobool(val):  # Taken from python directly, as suggested in PEP 632 – D
     val = val.lower()
     if val in ('y', 'yes', 't', 'true', 'on', '1'):
         return 1
-    elif val in ('n', 'no', 'f', 'false', 'off', '0'):
+    if val in ('n', 'no', 'f', 'false', 'off', '0'):
         return 0
-    else:
-        raise ValueError(F"invalid truth value {val}")
+
+    raise ValueError(F"invalid truth value {val}")
 
 
 def convert_value_to_type(target_type, value):
