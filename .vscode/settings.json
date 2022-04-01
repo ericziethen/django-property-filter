@@ -28,5 +28,6 @@
     "restructuredtext.confPath": "${workspaceFolder}\\docs\\source",
     "python.analysis.extraPaths": [
         "${workspaceFolder}\\django_property_filter"
-    ]
+    ],
+    "esbonio.sphinx.confDir": ""
 }
