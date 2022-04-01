@@ -22,6 +22,7 @@ from django_property_filter.utils import (
     get_max_params_for_db,
     get_value_for_db_field,
     sort_range_list,
+    strtobool,
 )
 
 from property_filter.models import (
@@ -469,3 +470,7 @@ class VolumeTestQsFilteringByPkList(TestCase):
             set(result_qs.values_list('pk', flat=True)),
             set(Delivery.objects.all().values_list('pk', flat=True)),
         )
+
+def test_strtobool_invalid_value():
+    with pytest.raises(ValueError):
+        strtobool("10")
