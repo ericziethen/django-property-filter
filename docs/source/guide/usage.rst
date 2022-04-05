@@ -62,6 +62,18 @@ This will create 4 Filters
     2.) A "greater than" and an "exact" filter for the "book_count" property
         of the related Model "series".
 
+The order in which the property filters are applied are in the same order as
+they are defined. In the above filter will be in order of::
+    1.) discounted_price: lt
+    2.) discounted_price: exact
+    3.) series.book_count: gt
+    4.) series.book_count: exact
+
+This can be usefull to speed up the filtering by property filters if filters
+are defined first that are likely to filter a large number of values.
+E.g. a boolean field might be filtering an average of half the values, while a
+field representing a name will likely filter fewer.
+
 Since PropertyFilterSet is and extension to django-filter's Filterset which
 requires either the Meta attribute "fields" or "exclude" to be set we excluded
 the "price" field. If we had instead used::
@@ -91,10 +103,22 @@ It is also possible to create Filters explicitely::
     from django_property_filter import PropertyNumberFilter, PropertyFilterSet
 
     class BookFilterSet(PropertyFilterSet):
-        prop_number = PropertyNumberFilter(field_name='discounted_price', lookup_expr='gte')
+        prop_number_gte = PropertyNumberFilter(field_name='discounted_price', lookup_expr='gte')
+        prop_number_lt = PropertyNumberFilter(field_name='discounted_price', lookup_expr='lt')
 
         class Meta:
             model = NumberClass
-            fields = ['prop_number']
+            fields = ['prop_number_gte', 'prop_number_lt']
 
-This creates a "greater than or equel" filter for the discounted_price property
+This creates a "greater than or equel" and a "less than" filter for the
+discounted_price property.
+
+The order in which the property filters are applied are in the same order as
+they are defined. In the above filter will be in order of::
+    1.) prop_number_gte
+    2.) prop_number_lt
+
+This can be usefull to speed up the filtering by property filters if filters
+are defined first that are likely to filter a large number of values.
+E.g. a boolean field might be filtering an average of half the values, while a
+field representing a name will likely filter fewer.
