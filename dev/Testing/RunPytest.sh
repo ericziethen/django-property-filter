@@ -20,6 +20,11 @@ export PYTHONPATH=$PYTHONPATH:$PACKAGE_ROOT:$DJANGO_TEST_PROJ_ROOT
 
 echo PYTHONPATH: "$PYTHONPATH"
 
+# Make sure the databases are created
+pushd "$DJANGO_TEST_PROJ_ROOT"
+python manage.py makemigrations
+popd
+
 # Test directories are specified in Pytest.ini
 pytest --cov="$PACKAGE_ROOT" $ENV_PYTEST_EXTRA_ARGS
 return_code=$?
