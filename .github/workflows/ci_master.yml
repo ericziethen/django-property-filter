@@ -22,8 +22,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest"]
-        # python-version: ['3.10', '3.9', '3.8', '3.7', '3.6']
-        python-version: ['3.10']
+        python-version: ['3.10', '3.9', '3.8', '3.7', '3.6']
         django-db: [SQLITE, POSTGRES]
 
         # Include will match the expanded matrix, if not it will add a job
@@ -37,21 +36,21 @@ jobs:
               tox_skip_env: .*sqlite.*|.*all_filter_volume_test.*
 
             ### NEW COMBINATIONS ###
-            # - os: ubuntu-latest
-            #   python-version: '3.10'
-            #   django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
-            #   tox_args: sqlite
-            #   name_suffix: "- Volume Test"
-            #   tox_env: mylinux-py310-all_filter_volume_test-sqlite
-            #   tox_skip_env: NONE
+            - os: ubuntu-latest
+              python-version: '3.10'
+              django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
+              tox_args: sqlite
+              name_suffix: "- Volume Test"
+              tox_env: mylinux-py310-all_filter_volume_test-sqlite
+              tox_skip_env: NONE
 
-            # - os: ubuntu-latest
-            #   python-version: '3.10'
-            #   django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
-            #   tox_args: postgres-github-actions
-            #   name_suffix: "- Volume Test"
-            #   tox_env: mylinux-py310-all_filter_volume_test-postgres
-            #   tox_skip_env: NONE
+            - os: ubuntu-latest
+              python-version: '3.10'
+              django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
+              tox_args: postgres-github-actions
+              name_suffix: "- Volume Test"
+              tox_env: mylinux-py310-all_filter_volume_test-postgres
+              tox_skip_env: NONE
 
     # Service containers to run with `runner-job`
     services:
@@ -120,22 +119,13 @@ jobs:
           POSTGRES_PORT: 5432
         run: |
           coverage erase
-          tox ${{ matrix.tox_args }} --parallel
-
-
-
-
-
-
-
-
-
-      # - name: "Convert coverage"
-      #   run: "python -m coverage xml"
-      # - name: "Upload coverage to Codecov"
-      #   uses: "codecov/codecov-action@v2"
-      #   with:
-      #     fail_ci_if_error: true
+          tox ${{ matrix.tox_args }}
+      - name: "Convert coverage"
+        run: "python -m coverage xml"
+      - name: "Upload coverage to Codecov"
+        uses: "codecov/codecov-action@v2"
+        with:
+          fail_ci_if_error: true
 
   # Basic Windows Tests because the linux matrix uses postgres with docker container
   # which is not supported on windows
@@ -143,8 +133,7 @@ jobs:
     strategy:
       matrix:
         os: ["windows-latest"]
-        # python-version: ['3.10', '3.9', '3.8', '3.7', '3.6']
-        python-version: ['3.10']
+        python-version: ['3.10', '3.9', '3.8', '3.7', '3.6']
         django-db: [SQLITE]
 
         # Include will match the expanded matrix, if not it will add a job
@@ -155,13 +144,13 @@ jobs:
               tox_skip_env: .*postgres.*|.*all_filter_volume_test.*
 
             ### NEW COMBINATIONS ###
-            # - os: windows-latest
-            #   python-version: '3.10'
-            #   django-db: SQLITE
-            #   tox_args: sqlite
-            #   name_suffix: "- Volume Test"
-            #   tox_env: mywindows-py310-all_filter_volume_test-sqlite
-            #   tox_skip_env: NONE
+            - os: windows-latest
+              python-version: '3.10'
+              django-db: SQLITE
+              tox_args: sqlite
+              name_suffix: "- Volume Test"
+              tox_env: mywindows-py310-all_filter_volume_test-sqlite
+              tox_skip_env: NONE
 
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
@@ -209,7 +198,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          tox ${{ matrix.tox_args }} --parallel
+          tox ${{ matrix.tox_args }}
 
   # Linting job
   linting:
