@@ -66,6 +66,8 @@ coverage.xml
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+# Don't check in Migrations for the test project, needs recreation depending if using sqlite or postgres
+tests/django_test_proj/property_filter/migrations/*.py
 
 # Flask stuff:
 instance/
