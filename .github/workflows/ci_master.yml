@@ -45,7 +45,7 @@ jobs:
               name_suffix: "- Volume Test"
               # volume_test_tox_env: mylinux-py310-all_filter_volume_test  # Now combination, trigger volume test
               tox_env: mylinux-py310-all_filter_volume_test-sqlite
-              tox_skip_env:
+              tox_skip_env: NONE
 
             - os: ubuntu-latest
               python-version: '3.10'
@@ -54,7 +54,7 @@ jobs:
               name_suffix: "- Volume Test"
               # volume_test_tox_env: mylinux-py310-all_filter_volume_test  # Now combination, trigger volume test
               tox_env: mylinux-py310-all_filter_volume_test-postgres
-              tox_skip_env:
+              tox_skip_env: NONE
 
     # Service containers to run with `runner-job`
     services:
@@ -109,9 +109,14 @@ jobs:
       #   run: |
       #     echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
-      - name: Set Tox Env Variables
+      - name: Set Tox Skip Env Variable
+        if: ${{ matrix.tox_env != 'NONE' }}
         run: |
           echo "TOXENV=${{ matrix.tox_env }}" >> $GITHUB_ENV
+
+      - name: Set Tox Skip Env Variable
+        if: ${{ matrix.tox_skip_env != 'NONE' }}
+        run: |
           echo "TOX_SKIP_ENV=${{ matrix.tox_skip_env }}" >> $GITHUB_ENV
 
       - name: Install Dependencies
@@ -204,9 +209,14 @@ jobs:
       #   run: |
       #     echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
-      - name: Set Tox Env Variables
+      - name: Set Tox Skip Env Variable
+        if: ${{ matrix.tox_env != 'NONE' }}
         run: |
           echo "TOXENV=${{ matrix.tox_env }}" >> $GITHUB_ENV
+
+      - name: Set Tox Skip Env Variable
+        if: ${{ matrix.tox_skip_env != 'NONE' }}
+        run: |
           echo "TOX_SKIP_ENV=${{ matrix.tox_skip_env }}" >> $GITHUB_ENV
 
       - name: Install Dependencies
