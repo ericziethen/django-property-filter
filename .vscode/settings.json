@@ -25,9 +25,8 @@
 
     "python.linting.mypyEnabled": false,
     "python.envFile": "${workspaceFolder}/.env_vars",
-    "restructuredtext.confPath": "${workspaceFolder}\\docs\\source",
     "python.analysis.extraPaths": [
         "${workspaceFolder}\\django_property_filter"
     ],
-    "esbonio.sphinx.confDir": ""
+    "esbonio.sphinx.confDir": "${workspaceFolder}\\docs\\source",
 }
