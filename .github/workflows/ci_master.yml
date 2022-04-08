@@ -109,14 +109,16 @@ jobs:
       #   run: |
       #     echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
-      - name: Set Tox Skip Env Variable
+      - name: Set Tox Env Variable
         if: ${{ matrix.tox_env != 'NONE' }}
         run: |
+          echo matrix.tox_env = "${{ matrix.tox_env }}"
           echo "TOXENV=${{ matrix.tox_env }}" >> $GITHUB_ENV
 
       - name: Set Tox Skip Env Variable
         if: ${{ matrix.tox_skip_env != 'NONE' }}
         run: |
+          echo matrix.tox_skip_env = "${{ matrix.tox_skip_env }}"
           echo "TOX_SKIP_ENV=${{ matrix.tox_skip_env }}" >> $GITHUB_ENV
 
       - name: Install Dependencies
@@ -130,15 +132,19 @@ jobs:
           # The default PostgreSQL port
           POSTGRES_PORT: 5432
         run: |
-          # echo Env Variables before Tox Run 'TOX_SKIP_ENV=${{ env.TOX_SKIP_ENV }}'
           coverage erase
           tox ${{ matrix.tox_args }}
-      - name: "Convert coverage"
-        run: "python -m coverage xml"
-      - name: "Upload coverage to Codecov"
-        uses: "codecov/codecov-action@v2"
-        with:
-          fail_ci_if_error: true
+
+
+
+
+
+      # - name: "Convert coverage"
+      #   run: "python -m coverage xml"
+      # - name: "Upload coverage to Codecov"
+      #   uses: "codecov/codecov-action@v2"
+      #   with:
+      #     fail_ci_if_error: true
 
   # Basic Windows Tests because the linux matrix uses postgres with docker container
   # which is not supported on windows
@@ -166,7 +172,7 @@ jobs:
               name_suffix: "- Volume Test"
               # volume_test_tox_env: mywindows-py310-all_filter_volume_test  # Now combination, trigger volume test
               tox_env: mywindows-py310-all_filter_volume_test-sqlite
-              tox_skip_env:
+              tox_skip_env: NONE
 
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
