@@ -4,6 +4,8 @@ on:
   push:
     tags:
     - '[0-9]+.[0-9]+.[0-9]+'
+    branches:
+    - feature/run-sqlite-tests-without-psycopg2-installed
   pull_request:
     branches:
     - master
@@ -22,15 +24,17 @@ jobs:
         os: ["ubuntu-latest"]
         python-version: ['3.10', '3.9', '3.8', '3.7', '3.6']
         django-db: [SQLITE, POSTGRES]
-        volume_test_tox_env: ["NONE"]
+        # volume_test_tox_env: ["NONE"]
 
         # Include will match the expanded matrix, if not it will add a job
         include:
             ### MATCH EXISTING COMBINATIONS ###
             - django-db: SQLITE
               tox_args: sqlite
+              env: TOX_SKIP_ENV=.*postgres.*|.*all_filter_volume_test.*
             - django-db: POSTGRES
               tox_args: postgres-github-actions
+              env: TOX_SKIP_ENV=.*sqlite.*|.*all_filter_volume_test.*
 
             ### NEW COMBINATIONS ###
             - os: ubuntu-latest
@@ -38,14 +42,16 @@ jobs:
               django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
               tox_args: sqlite
               name_suffix: "- Volume Test"
-              volume_test_tox_env: mylinux-py310-all_filter_volume_test  # Now combination, trigger volume test
+              # volume_test_tox_env: mylinux-py310-all_filter_volume_test  # Now combination, trigger volume test
+              env: TOXENV=mylinux-py310-all_filter_volume_test-sqlite
 
             - os: ubuntu-latest
               python-version: '3.10'
               django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
               tox_args: postgres-github-actions
               name_suffix: "- Volume Test"
-              volume_test_tox_env: mylinux-py310-all_filter_volume_test  # Now combination, trigger volume test
+              # volume_test_tox_env: mylinux-py310-all_filter_volume_test  # Now combination, trigger volume test
+              env: TOXENV=mylinux-py310-all_filter_volume_test-postgres
 
     # Service containers to run with `runner-job`
     services:
@@ -90,15 +96,15 @@ jobs:
           pip list
           printenv
 
-      - name: Enable VolumeTest
-        if: ${{ matrix.volume_test_tox_env != 'NONE' }}
-        run: |
-          echo "TOXENV=${{ matrix.volume_test_tox_env }}" >> $GITHUB_ENV
+      # - name: Enable VolumeTest
+      #   if: ${{ matrix.volume_test_tox_env != 'NONE' }}
+      #   run: |
+      #     echo "TOXENV=${{ matrix.volume_test_tox_env }}" >> $GITHUB_ENV
 
-      - name: Disable VolumeTest
-        if: ${{ matrix.volume_test_tox_env == 'NONE' }}
-        run: |
-          echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
+      # - name: Disable VolumeTest
+      #   if: ${{ matrix.volume_test_tox_env == 'NONE' }}
+      #   run: |
+      #     echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: pip install coverage tox-gh-actions
@@ -129,13 +135,14 @@ jobs:
         os: ["windows-latest"]
         python-version: ['3.10', '3.9', '3.8', '3.7', '3.6']
         django-db: [SQLITE]
-        volume_test_tox_env: ["NONE"]
+        # volume_test_tox_env: ["NONE"]
 
         # Include will match the expanded matrix, if not it will add a job
         include:
             ### MATCH EXISTING COMBINATIONS ###
             - django-db: SQLITE
               tox_args: sqlite
+              env: TOX_SKIP_ENV=.*postgres.*|.*all_filter_volume_test.*
 
             ### NEW COMBINATIONS ###
             - os: windows-latest
@@ -143,7 +150,8 @@ jobs:
               django-db: SQLITE
               tox_args: sqlite
               name_suffix: "- Volume Test"
-              volume_test_tox_env: mywindows-py310-all_filter_volume_test  # Now combination, trigger volume test
+              # volume_test_tox_env: mywindows-py310-all_filter_volume_test  # Now combination, trigger volume test
+              env: TOXENV=mywindows-py310-all_filter_volume_test-sqlite
 
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
@@ -176,15 +184,15 @@ jobs:
           pip list
           set
 
-      - name: Enable VolumeTest
-        if: ${{ matrix.volume_test_tox_env != 'NONE' }}
-        run: |
-          echo "TOXENV=${{ matrix.volume_test_tox_env }}" >> $GITHUB_ENV
+      # - name: Enable VolumeTest
+      #   if: ${{ matrix.volume_test_tox_env != 'NONE' }}
+      #   run: |
+      #     echo "TOXENV=${{ matrix.volume_test_tox_env }}" >> $GITHUB_ENV
 
-      - name: Disable VolumeTest
-        if: ${{ matrix.volume_test_tox_env == 'NONE' }}
-        run: |
-          echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
+      # - name: Disable VolumeTest
+      #   if: ${{ matrix.volume_test_tox_env == 'NONE' }}
+      #   run: |
+      #     echo "TOX_SKIP_ENV=.*all_filter_volume_test.*" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: pip install tox-gh-actions
