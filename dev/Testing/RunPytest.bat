@@ -13,6 +13,10 @@ pushd "%PROJ_MAIN_DIR%"
 rem To see how to loop through multiple Command Line Arguments: https://www.robvanderwoude.com/parameters.php
 
 :local_setup
+rem Make sure the databases are created
+pushd tests\django_test_proj
+python manage.py makemigrations
+popd
 
 :run_tests
 pytest --cov="%PACKAGE_ROOT%" %ENV_PYTEST_EXTRA_ARGS%

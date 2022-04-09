@@ -193,6 +193,9 @@ field representing a name will likely filter fewer.
 # Run the Django Test Project to see the filters in action
 
 * go to "tests\django_test_proj"
+* run "python manage.py makemigrations"
+* run "python manage.py migrate"
+* run "python manage.py setup_data"
 * run "python manage.py runserver"
 
 ## Issue Raising ##

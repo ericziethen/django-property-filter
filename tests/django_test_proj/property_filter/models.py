@@ -2,8 +2,10 @@ from django.db import models
 
 import django_filters.fields
 
-from django.contrib.postgres.fields import DecimalRangeField, IntegerRangeField
-
+try:
+    from django.contrib.postgres.fields import DecimalRangeField, IntegerRangeField
+except ImportError:
+    pass
 
 # Create your models here.
 class Delivery(models.Model):
@@ -510,8 +512,11 @@ class PostgreSQLModel(models.Model):
 
 
 class NumericRangeFilterModel(PostgreSQLModel):
-    postgres_int_range = IntegerRangeField(blank=True, null=True)
-    postgres_decimal_range = DecimalRangeField(blank=True, null=True)
+    try:
+        postgres_int_range = IntegerRangeField(blank=True, null=True)
+        postgres_decimal_range = DecimalRangeField(blank=True, null=True)
+    except NameError:
+        pass
 
     @property
     def prop_postgres_int_range(self):
