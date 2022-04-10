@@ -7,6 +7,12 @@ Filter Reference
 This is a reference document with a list of the filters and their property
 specific arguments specific for property filters.
 
+Since the Property Filter are extending 1-to-1 functionality of Filters from
+django-filters, this page will only list new functionality introduced.
+For further documentation for each filter see the
+`django-filter documentation <https://django-filter.readthedocs.io/en/master/>`_
+
+
 Filter to Property Filter Mapping
 ---------------------------------
 
