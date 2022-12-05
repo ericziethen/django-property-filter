@@ -121,7 +121,7 @@ class PropertyBaseFilter(Filter):
         if lookup_expr not in self.supported_lookups:
             raise ValueError(F'Lookup "{lookup_expr}" not supported"')
 
-    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
+    def _compare_lookup_with_qs_entry(self, lookup_expr, lookup_value, property_value):
         """Compare the lookup value with the property value."""
         result = False
 
@@ -137,7 +137,7 @@ class PropertyBaseFilter(Filter):
 
         return result
 
-    def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
+    def _lookup_convertion(self, lookup_expr, lookup_value, property_value):
         return lookup_expr, lookup_value, property_value
 
 
@@ -296,7 +296,7 @@ class PropertyRangeFilter(PropertyBaseFilter, RangeFilter):
 
     supported_lookups = ['range']
 
-    def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
+    def _lookup_convertion(self, lookup_expr, lookup_value, property_value):
 
         if lookup_expr == 'range':
             if lookup_value.start is None:
@@ -476,7 +476,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
         # Only sort by the first parameter
         return self.sorted_pk_list_from_property(self.get_ordering_value(value[0]), queryset)
 
-    def sorted_pk_list_from_property(self, sort_property, queryset):  # pylint: disable=no-self-use
+    def sorted_pk_list_from_property(self, sort_property, queryset):
         """Sorting the primary key list of the given queryset based on the given property."""
         # Identify the sort order
         descending = False
@@ -516,7 +516,7 @@ class PropertyNumericRangeFilter(PropertyBaseFilter, NumericRangeFilter):
 
     supported_lookups = ['exact', 'contains', 'contained_by', 'overlap']
 
-    def _lookup_convertion(self, lookup_expr, lookup_value, property_value):  # pylint: disable=no-self-use
+    def _lookup_convertion(self, lookup_expr, lookup_value, property_value):
         if property_value:
             property_value = slice(property_value.lower, property_value.upper)
 
