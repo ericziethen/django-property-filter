@@ -32,7 +32,7 @@ if /I "%1"=="postgres-github-actions" (
 )
 
 echo No or unexpected Argument "%1" Passed
-goto goto error
+goto error
 
 :run_tests
 echo DJANGO_SETTINGS_MODULE: '%DJANGO_SETTINGS_MODULE%'

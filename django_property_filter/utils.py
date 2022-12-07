@@ -47,7 +47,7 @@ def convert_int_list_to_range_lists(int_list, *, sort_list=True):
             range_list.append([num, num])
 
     # Convert to a list of tuples, could do with list of lists but not really any real overhead
-    range_list = [(x[0], x[1]) for x in range_list]
+    range_list = [(elem[0], elem[1]) for elem in range_list]
 
     return range_list
 
