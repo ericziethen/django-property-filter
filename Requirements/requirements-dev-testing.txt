@@ -16,7 +16,7 @@ psycopg2
 pytest
 pytest-cov
 pytest-django
-safety
+pip-audit
 tox
 
 # Documentation
