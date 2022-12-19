@@ -2,7 +2,7 @@
 import os
 import sys
 
-sys.path.append(os.path.abspath(R'..\..'))
+sys.path.append(os.path.abspath(os.path.join('..', '..')))
 
 from django_filters.widgets import CSVWidget
 
