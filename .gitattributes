@@ -1,2 +1,3 @@
 requirements.txt                        diff
 requirements-dev-testing.txt            diff
+*.sh                                    text eol=lf

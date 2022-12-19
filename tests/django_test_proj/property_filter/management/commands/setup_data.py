@@ -3,7 +3,7 @@ import datetime
 import os
 import sys
 
-sys.path.append(os.path.abspath(R'..\..'))
+sys.path.append(os.path.abspath(os.path.join('..', '..')))
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand

@@ -7,21 +7,24 @@ DJANGO_TEST_PROJ_ROOT=tests/django_test_proj
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PROJ_MAIN_DIR=$SCRIPT_PATH/../..
 pushd "$PROJ_MAIN_DIR"
-
+echo PWD: $PWD
 echo SCRIPT_PATH: $SCRIPT_PATH
 echo PROJ_MAIN_DIR: $PROJ_MAIN_DIR
 echo PACKAGE_ROOT: $PACKAGE_ROOT
 echo DJANGO_TEST_PROJ_ROOT: $DJANGO_TEST_PROJ_ROOT
+
+echo PYTHONPATH before: "$PYTHONPATH"
 
 export PYTHONPATH=$PYTHONPATH:$PACKAGE_ROOT:$DJANGO_TEST_PROJ_ROOT
 
 # Can use to overwrite pytest.ini
 # set PYTEST_ADDOPTS=""
 
-echo PYTHONPATH: "$PYTHONPATH"
+echo PYTHONPATH after: "$PYTHONPATH"
 
 # Make sure the databases are created
 pushd "$DJANGO_TEST_PROJ_ROOT"
+echo PWD: $PWD
 python manage.py makemigrations
 popd
 
