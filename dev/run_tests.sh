@@ -10,7 +10,7 @@ run_tester () {
     local tester_script=$2
 
     echo "### TESTING START - '$tester_script' ###"
-    $tester_script
+    "$tester_script"
     local return_code=$?
 
     if [[ $return_code -eq  0 ]];
