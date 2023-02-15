@@ -17,7 +17,7 @@ coverage==6.5.0
 cyclonedx-python-lib==3.1.1
 dill==0.3.6
 distlib==0.3.6
-Django==4.1.4
+Django==4.1.7
 django-filter==22.1
 docutils==0.17.1
 filelock==3.8.2
