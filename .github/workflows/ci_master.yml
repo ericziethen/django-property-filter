@@ -201,7 +201,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          tox ${{ matrix.tox_args }}
+          tox -- ${{ matrix.tox_args }}
 
   # Linting job
   linting:
