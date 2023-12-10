@@ -40,7 +40,7 @@ jobs:
               django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
               tox_args: sqlite
               name_suffix: "- Volume Test"
-              tox_env: mylinux-py311-all_filter_volume_test-sqlite
+              tox_env: mylinux-py312-all_filter_volume_test-sqlite
               tox_skip_env: NONE
               fake-volume-test-arg: linux_vol_test
 
@@ -49,7 +49,7 @@ jobs:
               django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
               tox_args: postgres-github-actions
               name_suffix: "- Volume Test"
-              tox_env: mylinux-py311-all_filter_volume_test-postgres
+              tox_env: mylinux-py312-all_filter_volume_test-postgres
               tox_skip_env: NONE
               fake-volume-test-arg: win_vol_test
 
@@ -151,7 +151,7 @@ jobs:
               django-db: SQLITE
               tox_args: sqlite
               name_suffix: "- Volume Test"
-              tox_env: mywindows-py311-all_filter_volume_test-sqlite
+              tox_env: mywindows-py312-all_filter_volume_test-sqlite
               tox_skip_env: NONE
               fake-volume-test-arg: win_vol_test
 
