@@ -120,7 +120,7 @@ jobs:
           POSTGRES_PORT: 5432
         run: |
           coverage erase
-          tox ${{ matrix.tox_args }}
+          tox -- ${{ matrix.tox_args }}
       - name: "Convert coverage"
         run: "python -m coverage xml"
       - name: "Upload coverage to Codecov"
