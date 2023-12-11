@@ -150,7 +150,7 @@ class ChoiceConvertionMixin():  # pylint: disable=too-few-public-methods
         new_property_value = property_value
 
         property_type = type(property_value)
-        if type(lookup_value) != property_type:  # pylint: disable=unidiomatic-typecheck
+        if type(lookup_value) is not property_type:  # pylint: disable=unidiomatic-typecheck
             try:
                 convert_lookup_value = convert_value_to_type(property_type, lookup_value)
             except (ValueError, TypeError):
@@ -184,7 +184,7 @@ class PropertyBaseCSVFilter(PropertyBaseFilter, BaseCSVFilter):
                 raise ValueError(F'Empty value not allowed for type "{type(property_value)}"')
 
             property_type = type(property_value)
-            if type(entry) != property_type:  # pylint: disable=unidiomatic-typecheck
+            if type(entry) is not property_type:  # pylint: disable=unidiomatic-typecheck
                 try:
                     convert_lookup_value = property_type(entry)
                 except (ValueError, TypeError):

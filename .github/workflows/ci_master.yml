@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest"]
-        python-version: ['3.11', '3.10', '3.9', '3.8', '3.7']
+        python-version: ['3.12','3.11', '3.10', '3.9', '3.8', '3.7']
         django-db: [SQLITE, POSTGRES]
         fake-volume-test-arg: ["NONE"]  # Using this enables us to add new combinations that match a matrix jobs configuration without replacing it because it doesn't match this attribute
 
@@ -36,20 +36,20 @@ jobs:
 
             ### NEW COMBINATIONS ###
             - os: ubuntu-latest
-              python-version: '3.11'
+              python-version: '3.12'
               django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
               tox_args: sqlite
               name_suffix: "- Volume Test"
-              tox_env: mylinux-py311-all_filter_volume_test-sqlite
+              tox_env: mylinux-py312-all_filter_volume_test-sqlite
               tox_skip_env: NONE
               fake-volume-test-arg: linux_vol_test
 
             - os: ubuntu-latest
-              python-version: '3.11'
+              python-version: '3.12'
               django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
               tox_args: postgres-github-actions
               name_suffix: "- Volume Test"
-              tox_env: mylinux-py311-all_filter_volume_test-postgres
+              tox_env: mylinux-py312-all_filter_volume_test-postgres
               tox_skip_env: NONE
               fake-volume-test-arg: win_vol_test
 
@@ -120,7 +120,7 @@ jobs:
           POSTGRES_PORT: 5432
         run: |
           coverage erase
-          tox ${{ matrix.tox_args }}
+          tox -- ${{ matrix.tox_args }}
       - name: "Convert coverage"
         run: "python -m coverage xml"
       - name: "Upload coverage to Codecov"
@@ -134,7 +134,7 @@ jobs:
     strategy:
       matrix:
         os: ["windows-latest"]
-        python-version: ['3.11', '3.10', '3.9', '3.8', '3.7']
+        python-version: ['3.12','3.11', '3.10', '3.9', '3.8', '3.7']
         django-db: [SQLITE]
         fake-volume-test-arg: ["NONE"]  # Using this enables us to add new combinations that match a matrix jobs configuration without replacing it because it doesn't match this attribute
 
@@ -147,11 +147,11 @@ jobs:
 
             ### NEW COMBINATIONS ###
             - os: windows-latest
-              python-version: '3.11'
+              python-version: '3.12'
               django-db: SQLITE
               tox_args: sqlite
               name_suffix: "- Volume Test"
-              tox_env: mywindows-py311-all_filter_volume_test-sqlite
+              tox_env: mywindows-py312-all_filter_volume_test-sqlite
               tox_skip_env: NONE
               fake-volume-test-arg: win_vol_test
 
@@ -201,7 +201,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          tox ${{ matrix.tox_args }}
+          tox -- ${{ matrix.tox_args }}
 
   # Linting job
   linting:
@@ -220,7 +220,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Setup Env
         run: |
           pip --version
@@ -253,7 +253,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Setup Env
         run: |
           pip --version
@@ -282,7 +282,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - name: Run Release Check
         run: |
           ./dev/Packaging/check_github_actions_release.sh
