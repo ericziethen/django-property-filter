@@ -1,5 +1,4 @@
 {
-    "python.pythonPath": ".venv\\Scripts\\python.exe",
     "python.autoComplete.extraPaths": [
         "${workspaceFolder}\\django_property_filter"
     ],
@@ -12,21 +11,15 @@
     "editor.rulers": [79],
     "editor.renderWhitespace": "all",
 
-    "python.linting.enabled": true,
-
-    "python.linting.pylintEnabled": true,
-
-    "python.linting.pycodestyleEnabled": true,
-    "python.linting.pycodestylePath": "pycodestyle",
-
-    "python.linting.pydocstyleEnabled": true,
-
-    "python.linting.banditEnabled": true,
-
-    "python.linting.mypyEnabled": false,
     "python.envFile": "${workspaceFolder}/.env_vars",
     "python.analysis.extraPaths": [
         "${workspaceFolder}\\django_property_filter"
     ],
     "esbonio.sphinx.confDir": "${workspaceFolder}\\docs\\source",
+
+    "pylint.importStrategy": "fromEnvironment",
+    "pylint.args": [
+        "--rcfile=${workspaceFolder}\\\\.pylintrc"
+    ],
+
 }
