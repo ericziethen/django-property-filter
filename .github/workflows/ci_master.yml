@@ -75,7 +75,7 @@ jobs:
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Print Info
         run: |
           echo ### Print Matrix Variables
@@ -166,7 +166,7 @@ jobs:
         # https://github.community/t/declaring-a-default-shell-and-environment-variables-across-all-steps-in-a-job-github-actions/16228/2
         shell: bash
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Print Info
         run: |
           echo ### Print Matrix Variables
@@ -217,7 +217,7 @@ jobs:
     name: Latest Dev Linting
     runs-on: "${{ matrix.os }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -250,7 +250,7 @@ jobs:
     name: Pkg Safety (Failure Allowed)
     runs-on: "${{ matrix.os }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -279,7 +279,7 @@ jobs:
     needs: [linux_test_matrix, windows_test_matrix, linting]
     name: Deployment
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
