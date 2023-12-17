@@ -75,14 +75,14 @@ jobs:
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Print Info
         run: |
           echo ### Print Matrix Variables
           echo 'tox_args=${{ matrix.tox_args }}'
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -166,14 +166,14 @@ jobs:
         # https://github.community/t/declaring-a-default-shell-and-environment-variables-across-all-steps-in-a-job-github-actions/16228/2
         shell: bash
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Print Info
         run: |
           echo ### Print Matrix Variables
           echo 'tox_args=${{ matrix.tox_args }}'
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -217,9 +217,9 @@ jobs:
     name: Latest Dev Linting
     runs-on: "${{ matrix.os }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Setup Env
@@ -250,9 +250,9 @@ jobs:
     name: Pkg Safety (Failure Allowed)
     runs-on: "${{ matrix.os }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Setup Env
@@ -279,9 +279,9 @@ jobs:
     needs: [linux_test_matrix, windows_test_matrix, linting]
     name: Deployment
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Run Release Check
