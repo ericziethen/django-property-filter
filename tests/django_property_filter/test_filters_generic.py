@@ -13,9 +13,9 @@ from property_filter.models import (
 )
 
 from django_filters import FilterSet
-from django_filters.filters import NumberFilter
+from django_filters.filters import NumberFilter, OrderingFilter
 
-from django_property_filter import PropertyNumberFilter
+from django_property_filter import PropertyFilterSet, PropertyNumberFilter, PropertyOrderingFilter
 
 
 def test_label_set():
@@ -116,6 +116,7 @@ class RelatedModelFilterTests(TestCase):
             two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
 
 
+    @pytest.mark.debug
     def test_filter_related_object_find_numbers(self):
         # Setup django_filter for comparison
         class NumberFilterSet(FilterSet):
@@ -139,6 +140,7 @@ class RelatedModelFilterTests(TestCase):
         assert set(filter_pk_list) == set(prop_filter_pk_list)
 
 
+    @pytest.mark.debug
     def test_filter_related_object_find_numbers_2_levels(self):
         # Setup django_filter for comparison
         class NumberFilterSet(FilterSet):
@@ -157,6 +159,29 @@ class RelatedModelFilterTests(TestCase):
         # Setup Property Filter
         my_prop_filter = PropertyNumberFilter(field_name='two_level_multi_filter__extra__prop_number', lookup_expr='exact')
         prop_filter_pk_list = my_prop_filter.filter_pks(None, RelatedMultiFilterTestModel.objects.all(), 5)
+
+        # Test Property Filter result
+        assert set(filter_pk_list) == set(prop_filter_pk_list)
+
+    @pytest.mark.debug
+    def test_filter_related_object_ordering_filter(self):
+        # Setup django_filter for comparison
+        class NumberOrderingFilterSet(FilterSet):
+            number_order = OrderingFilter(fields=('multi_filter__number', 'multi_filter__number'))
+
+            class Meta:
+                model = RelatedMultiFilterTestModel
+                fields = ['multi_filter__number']
+
+        filter_fs = NumberOrderingFilterSet({'multi_filter__number': 'exact'}, queryset=RelatedMultiFilterTestModel.objects.all())
+        filter_pk_list = filter_fs.qs.values_list('id', flat=True)
+
+        # Test filter result
+        assert set(filter_pk_list) == set([1, 2, 3, 4])
+
+        # Setup Property Filter
+        my_prop_filter = PropertyOrderingFilter(fields=('multi_filter__prop_number', 'multi_filter__prop_number'))
+        prop_filter_pk_list = my_prop_filter.filter_pks(None, RelatedMultiFilterTestModel.objects.all(), ['multi_filter__prop_number'])
 
         # Test Property Filter result
         assert set(filter_pk_list) == set(prop_filter_pk_list)
