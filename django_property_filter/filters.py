@@ -472,14 +472,6 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
         super().__init__(*args, **kwargs)
 
     def filter_pks(self, initial_pk_list, queryset, value, **kwargs):  # pylint: disable=unused-argument
-
-
-
-        # TODO
-        print('filter_pks()', initial_pk_list, queryset, value, **kwargs)
-
-
-
         """Filter the PropertyOrderingFilter."""
         # Only sort by the first parameter
         return self.sorted_pk_list_from_property(self.get_ordering_value(value[0]), queryset)
@@ -499,13 +491,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
             property_value = get_value_for_db_field(obj, sort_property)
             value_list.append((obj.pk, property_value))
 
-        # Sort the list of tuples
-
-        # TODO
-            print('value_list', value_list)
-
-
-        
+        # Sort the list of tuples, sort values could be None
         value_list = sorted(value_list, key=lambda x: (x[1] is not None, x[1]), reverse=descending)
 
         # Get a list of sorted primary keys

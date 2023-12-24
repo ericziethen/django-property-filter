@@ -166,43 +166,11 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
 def get_value_for_db_field(obj, field_str):
     """Lookup a model field or property."""
     def get_attr_val_recursive(obj, sub_list):
-        print(F'get_attr_val_recursive() - obj: "{obj}"')
-        print(F'        -> sub_list: "{sub_list}"')
-        if hasattr(obj, '__dict__'):
-            print(F'        -> {obj.__dict__}')
-        print(F'        -> hasattr {sub_list[0]} -> {hasattr(obj, sub_list[0])}')
-
-
-        '''
-            If object has the next attribute in redirect list
-
-
-            else
-                raise (AttributeError)
-        '''
-
-
-
-        # ERIC START
-
         if obj is None:
             return None
         found_value = getattr(obj, sub_list[0])
         if len(sub_list) == 1:
             return found_value
-        # ERIC END
-
-
-        # try:
-        #     found_value = getattr(obj, sub_list[0])
-        # except (AttributeError):
-        #     found_value = None
-        # if len(sub_list) == 1:
-        #     return found_value
-
-
-
-
 
         return get_attr_val_recursive(found_value, sub_list[1:])
 

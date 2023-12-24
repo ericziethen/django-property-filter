@@ -54,15 +54,12 @@ class GetAttributeTests(TestCase):
         self.assertEqual(get_value_for_db_field(self.prod1, 'del_line__delivery__address'), 'My Home')
         self.assertEqual(get_value_for_db_field(self.prod1, 'del_line__delivery__prop_address'), 'My Home')
 
-    @pytest.mark.debug
     def test_get_attribute_invalid_object(self):
         self.assertRaises(AttributeError, get_value_for_db_field, 'None', 'id')
 
-    @pytest.mark.debug
     def test_get_attribute_invalid_field(self):
         self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'invalid_field')
 
-    @pytest.mark.debug
     def test_get_attribute_invalid_related_field(self):
         self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'del_line__delivery__invalid_field')
 

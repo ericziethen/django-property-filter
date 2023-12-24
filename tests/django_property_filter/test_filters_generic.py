@@ -115,8 +115,6 @@ class RelatedModelFilterTests(TestCase):
             multi_filter=MultiFilterTestModel.objects.get(id=2),
             two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
 
-
-    @pytest.mark.debug
     def test_filter_related_object_find_numbers(self):
         # Setup django_filter for comparison
         class NumberFilterSet(FilterSet):
@@ -139,8 +137,6 @@ class RelatedModelFilterTests(TestCase):
         # Test Property Filter result
         assert set(filter_pk_list) == set(prop_filter_pk_list)
 
-
-    @pytest.mark.debug
     def test_filter_related_object_find_numbers_2_levels(self):
         # Setup django_filter for comparison
         class NumberFilterSet(FilterSet):
@@ -163,7 +159,6 @@ class RelatedModelFilterTests(TestCase):
         # Test Property Filter result
         assert set(filter_pk_list) == set(prop_filter_pk_list)
 
-    @pytest.mark.debug
     def test_filter_related_object_ordering_filter(self):
         # Setup django_filter for comparison
         class NumberOrderingFilterSet(FilterSet):
