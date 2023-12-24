@@ -451,6 +451,23 @@ class MultiFilterTestModel(models.Model):
         return F'{self.number} - "{self.text}" - "{self.is_true}" - "{self.date}" - "{self.date_time}" - ({self.id})'
 
 
+class RelatedMultiFilterTestModel(models.Model):
+    multi_filter = models.ForeignKey(
+            MultiFilterTestModel,
+            null=True,
+            blank=True,
+            on_delete=models.CASCADE,
+            related_name='filter_collection',
+        )
+
+    @property
+    def prop_multi_filter(self):
+        return self.multi_filter
+
+    def __str__(self):
+        return F'{self.multi_filter} - ({self.id})'
+
+
 class BenchmarkTestModel(models.Model):
     date = models.DateField(null=True)
     date_time = models.DateTimeField(null=True)

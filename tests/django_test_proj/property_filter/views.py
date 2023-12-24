@@ -25,6 +25,7 @@ from property_filter.models import (
     ModelChoiceFilterModel,
     ModelChoiceFilterRelatedModel,
     MultiFilterTestModel,
+    RelatedMultiFilterTestModel,
     MultipleChoiceFilterModel,
     NumberFilterModel,
     NumericRangeFilterModel,
@@ -228,6 +229,12 @@ class MultiFilterTestView(FilterView):
     model = MultiFilterTestModel
     template_name = 'generic_filter_filter_first.html'
     filterset_class = filters.MultiFilterTestFilterSet
+
+
+class RelatedMultiFilterTestView(FilterView):
+    model = RelatedMultiFilterTestModel
+    template_name = 'generic_filter_filter_first.html'
+    filterset_class = filters.RelatedMultiFilterTestFilterSet
 
 
 class MiscBooleanChoiceFiltersView(FilterView):

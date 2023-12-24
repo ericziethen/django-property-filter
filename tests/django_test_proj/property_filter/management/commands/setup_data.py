@@ -39,6 +39,7 @@ from property_filter.models import (
     NumericRangeFilterModel,
     OrderingFilterModel,
     RangeFilterModel,
+    RelatedMultiFilterTestModel,
     TimeFilterModel,
     TimeRangeFilterModel,
     TypedChoiceFilterModel,
@@ -82,6 +83,7 @@ class Command(BaseCommand):
             self.setup_lookup_choice_filter_model()
             self.setup_model_choice_filter_model()
             self.setup_multi_filter_test_model()
+            self.setup_related_multi_filter_test_model()
             self.setup_multiple_choice_filter_model()
             self.setup_number_filter_model()
             self.setup_ordering_filter_model()
@@ -393,6 +395,19 @@ class Command(BaseCommand):
             id=6, number=5, text='Five', is_true=True,
             date=datetime.date(2018, 2, 1),
             date_time=datetime.datetime(2066, 3, 2, 12, tzinfo=tz))  # Different DateTime
+
+    def setup_related_multi_filter_test_model(self):
+        print('Setup RelatedMultiFilterTestModel')
+
+        RelatedMultiFilterTestModel.objects.create(
+            id=1, multi_filter=MultiFilterTestModel.objects.get(id=1))
+        RelatedMultiFilterTestModel.objects.create(
+            id=2, multi_filter=None)
+        RelatedMultiFilterTestModel.objects.create(
+            id=3, multi_filter=None)
+        RelatedMultiFilterTestModel.objects.create(
+            id=4, multi_filter=MultiFilterTestModel.objects.get(id=4))
+
 
     def setup_multiple_choice_filter_model(self):
         print('Setup MultipleChoiceFilterModel')
