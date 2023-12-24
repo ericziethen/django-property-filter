@@ -491,8 +491,8 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
             property_value = get_value_for_db_field(obj, sort_property)
             value_list.append((obj.pk, property_value))
 
-        # Sort the list of tuples
-        value_list = sorted(value_list, key=lambda x: x[1], reverse=descending)
+        # Sort the list of tuples, sort values could be None
+        value_list = sorted(value_list, key=lambda x: (x[1] is not None, x[1]), reverse=descending)
 
         # Get a list of sorted primary keys
         value_list = [entry[0] for entry in value_list]

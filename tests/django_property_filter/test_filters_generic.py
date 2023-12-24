@@ -1,14 +1,21 @@
 
+import datetime
 import logging
 
 import pytest
 
 from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
+from django.utils import timezone
 
-from django_property_filter import PropertyNumberFilter
+from property_filter.models import (
+    NumberFilterModel, MultiFilterTestModel, RelatedMultiFilterTestModel, RelatedMultiFilterExtraLevelTestModel
+)
 
-from property_filter.models import NumberFilterModel
+from django_filters import FilterSet
+from django_filters.filters import NumberFilter, OrderingFilter
+
+from django_property_filter import PropertyFilterSet, PropertyNumberFilter, PropertyOrderingFilter
 
 
 def test_label_set():
@@ -71,3 +78,105 @@ class FilterFunctionalityTests(TestCase):
         pk_list = my_filter.filter_pks(initial_pk_list, NumberFilterModel.objects.all(), None)
 
         assert set(pk_list) == set([1, 5, 9])
+
+
+class RelatedModelFilterTests(TestCase):
+    def setUp(self):
+        tz = timezone.get_default_timezone()
+
+        MultiFilterTestModel.objects.create(
+            id=1, number=5, text='Five', is_true=True,
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
+
+        MultiFilterTestModel.objects.create(
+            id=2, number=5, text='Five', is_true=True,
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
+
+        MultiFilterTestModel.objects.create(
+            id=3, number=1, text='One', is_true=True,
+            date=datetime.date(2018, 2, 1),
+            date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
+
+        RelatedMultiFilterExtraLevelTestModel.objects.create(
+            id=1, extra=MultiFilterTestModel.objects.get(id=1))
+
+        RelatedMultiFilterTestModel.objects.create(
+            id=1,
+            multi_filter=MultiFilterTestModel.objects.get(id=1),
+            two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
+        RelatedMultiFilterTestModel.objects.create(
+            id=2, multi_filter=None)
+        RelatedMultiFilterTestModel.objects.create(
+            id=3, multi_filter=None)
+        RelatedMultiFilterTestModel.objects.create(
+            id=4,
+            multi_filter=MultiFilterTestModel.objects.get(id=2),
+            two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
+
+    def test_filter_related_object_find_numbers(self):
+        # Setup django_filter for comparison
+        class NumberFilterSet(FilterSet):
+            number = NumberFilter(field_name='multi_filter__number', lookup_expr='exact')
+
+            class Meta:
+                model = RelatedMultiFilterTestModel
+                fields = ['multi_filter__number']
+
+        filter_fs = NumberFilterSet({'multi_filter__number': 5}, queryset=RelatedMultiFilterTestModel.objects.all())
+        filter_pk_list = filter_fs.qs.values_list('id', flat=True)
+
+        # Test filter result
+        assert set(filter_pk_list) == set([1, 4])
+
+        # Setup Property Filter
+        my_prop_filter = PropertyNumberFilter(field_name='multi_filter__prop_number', lookup_expr='exact')
+        prop_filter_pk_list = my_prop_filter.filter_pks(None, RelatedMultiFilterTestModel.objects.all(), 5)
+
+        # Test Property Filter result
+        assert set(filter_pk_list) == set(prop_filter_pk_list)
+
+    def test_filter_related_object_find_numbers_2_levels(self):
+        # Setup django_filter for comparison
+        class NumberFilterSet(FilterSet):
+            number = NumberFilter(field_name='two_level_multi_filter__extra__number', lookup_expr='exact')
+
+            class Meta:
+                model = RelatedMultiFilterTestModel
+                fields = ['two_level_multi_filter__extra__number']
+
+        filter_fs = NumberFilterSet({'two_level_multi_filter__extra__number': 5}, queryset=RelatedMultiFilterTestModel.objects.all())
+        filter_pk_list = filter_fs.qs.values_list('id', flat=True)
+
+        # Test filter result
+        assert set(filter_pk_list) == set([1, 4])
+
+        # Setup Property Filter
+        my_prop_filter = PropertyNumberFilter(field_name='two_level_multi_filter__extra__prop_number', lookup_expr='exact')
+        prop_filter_pk_list = my_prop_filter.filter_pks(None, RelatedMultiFilterTestModel.objects.all(), 5)
+
+        # Test Property Filter result
+        assert set(filter_pk_list) == set(prop_filter_pk_list)
+
+    def test_filter_related_object_ordering_filter(self):
+        # Setup django_filter for comparison
+        class NumberOrderingFilterSet(FilterSet):
+            number_order = OrderingFilter(fields=('multi_filter__number', 'multi_filter__number'))
+
+            class Meta:
+                model = RelatedMultiFilterTestModel
+                fields = ['multi_filter__number']
+
+        filter_fs = NumberOrderingFilterSet({'multi_filter__number': 'exact'}, queryset=RelatedMultiFilterTestModel.objects.all())
+        filter_pk_list = filter_fs.qs.values_list('id', flat=True)
+
+        # Test filter result
+        assert set(filter_pk_list) == set([1, 2, 3, 4])
+
+        # Setup Property Filter
+        my_prop_filter = PropertyOrderingFilter(fields=('multi_filter__prop_number', 'multi_filter__prop_number'))
+        prop_filter_pk_list = my_prop_filter.filter_pks(None, RelatedMultiFilterTestModel.objects.all(), ['multi_filter__prop_number'])
+
+        # Test Property Filter result
+        assert set(filter_pk_list) == set(prop_filter_pk_list)

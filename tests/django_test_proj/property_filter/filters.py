@@ -544,6 +544,20 @@ class MultiFilterTestFilterSet(PropertyFilterSet):
             ]
 
 
+class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
+    number_order = OrderingFilter(fields=('multi_filter__number', 'multi_filter__number'))
+    prop_number_order = PropertyOrderingFilter(fields=('multi_filter__prop_number', 'multi_filter__prop_number'))
+
+    class Meta:
+        model = models.RelatedMultiFilterTestModel
+        # fields = ['multi_filter__number', 'two_level_multi_filter__extra__number']
+        fields = ['multi_filter__number', 'two_level_multi_filter__extra__number']
+        property_fields = [
+            ('multi_filter__prop_number', PropertyNumberFilter, ['exact',]),
+            ('two_level_multi_filter__extra__prop_number', PropertyNumberFilter, ['exact',]),
+        ]
+
+
 class MiscBooleanChoiceFiltersFilterSet(PropertyFilterSet):
     LOOKUP_CHOICES = [
         (True, 'Yes'),
