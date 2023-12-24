@@ -550,6 +550,7 @@ class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
 
     class Meta:
         model = models.RelatedMultiFilterTestModel
+        # fields = ['multi_filter__number', 'two_level_multi_filter__extra__number']
         fields = ['multi_filter__number', 'two_level_multi_filter__extra__number']
         property_fields = [
             ('multi_filter__prop_number', PropertyNumberFilter, ['exact',]),
