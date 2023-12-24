@@ -550,19 +550,11 @@ class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
 
     class Meta:
         model = models.RelatedMultiFilterTestModel
-        fields = ['multi_filter__number']
+        fields = ['multi_filter__number', 'two_level_multi_filter__extra__number']
         property_fields = [
             ('multi_filter__prop_number', PropertyNumberFilter, ['exact',]),
+            ('two_level_multi_filter__extra__prop_number', PropertyNumberFilter, ['exact',]),
         ]
-
-        # fields = ['multi_filter__number', 'multi_filter__text', 'multi_filter__is_true', 'multi_filter__date', 'multi_filter__date_time']
-        # property_fields = [
-        #     ('multi_filter__prop_number', PropertyNumberFilter, ['exact',]),
-        #     ('multi_filter__prop_text', PropertyCharFilter, ['exact']),
-        #     ('multi_filter__prop_is_true', PropertyBooleanFilter, ['exact']),
-        #     ('multi_filter__prop_date', PropertyDateFilter, ['exact']),
-        #     ('multi_filter__prop_date_time', PropertyDateTimeFilter, ['exact']),
-        #     ]
 
 
 class MiscBooleanChoiceFiltersFilterSet(PropertyFilterSet):

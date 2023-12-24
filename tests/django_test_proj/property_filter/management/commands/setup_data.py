@@ -39,6 +39,7 @@ from property_filter.models import (
     NumericRangeFilterModel,
     OrderingFilterModel,
     RangeFilterModel,
+    RelatedMultiFilterExtraLevelTestModel,
     RelatedMultiFilterTestModel,
     TimeFilterModel,
     TimeRangeFilterModel,
@@ -83,6 +84,7 @@ class Command(BaseCommand):
             self.setup_lookup_choice_filter_model()
             self.setup_model_choice_filter_model()
             self.setup_multi_filter_test_model()
+            self.setup_related_multi_filter_extra_level_test_model()
             self.setup_related_multi_filter_test_model()
             self.setup_multiple_choice_filter_model()
             self.setup_number_filter_model()
@@ -396,18 +398,31 @@ class Command(BaseCommand):
             date=datetime.date(2018, 2, 1),
             date_time=datetime.datetime(2066, 3, 2, 12, tzinfo=tz))  # Different DateTime
 
+    def setup_related_multi_filter_extra_level_test_model(self):
+        print('Setup RelatedMultiFilterExtraLevelTestModel')
+
+        RelatedMultiFilterExtraLevelTestModel.objects.create(
+            id=1, extra=MultiFilterTestModel.objects.get(id=1))
+
     def setup_related_multi_filter_test_model(self):
         print('Setup RelatedMultiFilterTestModel')
 
         RelatedMultiFilterTestModel.objects.create(
-            id=1, multi_filter=MultiFilterTestModel.objects.get(id=1))
+            id=1,
+            multi_filter=MultiFilterTestModel.objects.get(id=1),
+            two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
         RelatedMultiFilterTestModel.objects.create(
-            id=2, multi_filter=None)
+            id=2,
+            multi_filter=None,
+            two_level_multi_filter=None)
         RelatedMultiFilterTestModel.objects.create(
-            id=3, multi_filter=None)
+            id=3,
+            multi_filter=None,
+            two_level_multi_filter=None)
         RelatedMultiFilterTestModel.objects.create(
-            id=4, multi_filter=MultiFilterTestModel.objects.get(id=4))
-
+            id=4,
+            multi_filter=MultiFilterTestModel.objects.get(id=4),
+            two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
 
     def setup_multiple_choice_filter_model(self):
         print('Setup MultipleChoiceFilterModel')
