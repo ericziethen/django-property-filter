@@ -8,7 +8,9 @@ from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 from django.utils import timezone
 
-from property_filter.models import NumberFilterModel, MultiFilterTestModel, RelatedMultiFilterTestModel
+from property_filter.models import (
+    NumberFilterModel, MultiFilterTestModel, RelatedMultiFilterTestModel, RelatedMultiFilterExtraLevelTestModel
+)
 
 from django_filters import FilterSet
 from django_filters.filters import NumberFilter
@@ -97,14 +99,21 @@ class RelatedModelFilterTests(TestCase):
             date=datetime.date(2018, 2, 1),
             date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
 
+        RelatedMultiFilterExtraLevelTestModel.objects.create(
+            id=1, extra=MultiFilterTestModel.objects.get(id=1))
+
         RelatedMultiFilterTestModel.objects.create(
-            id=1, multi_filter=MultiFilterTestModel.objects.get(id=1))
+            id=1,
+            multi_filter=MultiFilterTestModel.objects.get(id=1),
+            two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
         RelatedMultiFilterTestModel.objects.create(
             id=2, multi_filter=None)
         RelatedMultiFilterTestModel.objects.create(
             id=3, multi_filter=None)
         RelatedMultiFilterTestModel.objects.create(
-            id=4, multi_filter=MultiFilterTestModel.objects.get(id=2))
+            id=4,
+            multi_filter=MultiFilterTestModel.objects.get(id=2),
+            two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
 
 
     def test_filter_related_object_find_numbers(self):
@@ -124,6 +133,29 @@ class RelatedModelFilterTests(TestCase):
 
         # Setup Property Filter
         my_prop_filter = PropertyNumberFilter(field_name='multi_filter__prop_number', lookup_expr='exact')
+        prop_filter_pk_list = my_prop_filter.filter_pks(None, RelatedMultiFilterTestModel.objects.all(), 5)
+
+        # Test Property Filter result
+        assert set(filter_pk_list) == set(prop_filter_pk_list)
+
+
+    def test_filter_related_object_find_numbers_2_levels(self):
+        # Setup django_filter for comparison
+        class NumberFilterSet(FilterSet):
+            number = NumberFilter(field_name='two_level_multi_filter__extra__number', lookup_expr='exact')
+
+            class Meta:
+                model = RelatedMultiFilterTestModel
+                fields = ['two_level_multi_filter__extra__number']
+
+        filter_fs = NumberFilterSet({'two_level_multi_filter__extra__number': 5}, queryset=RelatedMultiFilterTestModel.objects.all())
+        filter_pk_list = filter_fs.qs.values_list('id', flat=True)
+
+        # Test filter result
+        assert set(filter_pk_list) == set([1, 4])
+
+        # Setup Property Filter
+        my_prop_filter = PropertyNumberFilter(field_name='two_level_multi_filter__extra__prop_number', lookup_expr='exact')
         prop_filter_pk_list = my_prop_filter.filter_pks(None, RelatedMultiFilterTestModel.objects.all(), 5)
 
         # Test Property Filter result
