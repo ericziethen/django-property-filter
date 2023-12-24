@@ -166,15 +166,15 @@ def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
 def get_value_for_db_field(obj, field_str):
     """Lookup a model field or property."""
     def get_attr_val_recursive(obj, sub_list):
+
+        try:
+            found_value = getattr(obj, sub_list[0])
+        except (AttributeError):
+            found_value = None
         if len(sub_list) == 1:
-            try:
-                found_value = getattr(obj, sub_list[0])
-            except (AttributeError):
-                found_value = None
             return found_value
 
-        new_object = getattr(obj, sub_list[0])
-        return get_attr_val_recursive(new_object, sub_list[1:])
+        return get_attr_val_recursive(found_value, sub_list[1:])
 
     return get_attr_val_recursive(obj, field_str.split('__'))
 
