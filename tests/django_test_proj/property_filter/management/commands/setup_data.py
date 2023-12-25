@@ -386,7 +386,7 @@ class Command(BaseCommand):
             date=datetime.date(2018, 2, 1),
             date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
         MultiFilterTestModel.objects.create(
-            id=4, number=5, text='Five', is_true=False,  # Different is_true
+            id=4, number=4, text='Four', is_true=False,  # Different is_true
             date=datetime.date(2018, 2, 1),
             date_time=datetime.datetime(2019, 3, 2, 12, tzinfo=tz))
         MultiFilterTestModel.objects.create(
@@ -403,6 +403,9 @@ class Command(BaseCommand):
 
         RelatedMultiFilterExtraLevelTestModel.objects.create(
             id=1, extra=MultiFilterTestModel.objects.get(id=1))
+
+        RelatedMultiFilterExtraLevelTestModel.objects.create(
+            id=2)
 
     def setup_related_multi_filter_test_model(self):
         print('Setup RelatedMultiFilterTestModel')
@@ -423,6 +426,11 @@ class Command(BaseCommand):
             id=4,
             multi_filter=MultiFilterTestModel.objects.get(id=4),
             two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=1))
+
+        RelatedMultiFilterTestModel.objects.create(
+            id=5,
+            multi_filter=MultiFilterTestModel.objects.get(id=4),
+            two_level_multi_filter=RelatedMultiFilterExtraLevelTestModel.objects.get(id=2))
 
     def setup_multiple_choice_filter_model(self):
         print('Setup MultipleChoiceFilterModel')

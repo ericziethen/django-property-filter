@@ -545,8 +545,34 @@ class MultiFilterTestFilterSet(PropertyFilterSet):
 
 
 class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
+    # OrderingFilter
     number_order = OrderingFilter(fields=('multi_filter__number', 'multi_filter__number'))
     prop_number_order = PropertyOrderingFilter(fields=('multi_filter__prop_number', 'multi_filter__prop_number'))
+
+    number_order_2_level = OrderingFilter(fields=('two_level_multi_filter__extra__number', 'two_level_multi_filter__extra__number'))
+    prop_number_order_2_level = PropertyOrderingFilter(fields=('two_level_multi_filter__extra__prop_number', 'two_level_multi_filter__extra__prop_number'))
+
+    # MultipleChoiceFilter
+    number_contains_and = MultipleChoiceFilter(field_name='multi_filter__number', lookup_expr='contains', label='Number Contains <AND>', conjoined=True, choices=[])
+    prop_number_contains_and = PropertyMultipleChoiceFilter(field_name='multi_filter__prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True, choices=[])
+
+    number_contains_or = MultipleChoiceFilter(field_name='multi_filter__number', lookup_expr='contains', label='Number Contains <OR>', conjoined=False, choices=[])
+    prop_number_contains_or = PropertyMultipleChoiceFilter(field_name='multi_filter__prop_number', lookup_expr='contains', label='Prop Number Contains <OR>', conjoined=False, choices=[])
+
+    number_contains_and_2_level = MultipleChoiceFilter(field_name='two_level_multi_filter__extra__number', lookup_expr='contains', label='Number Contains <AND>, 2 Level', conjoined=True, choices=[])
+    prop_number_contains_and_2_level = PropertyMultipleChoiceFilter(field_name='two_level_multi_filter__extra__prop_number', lookup_expr='contains', label='Prop Number Contains <AND>, 2 Level', conjoined=True, choices=[])
+
+    number_contains_or_2_level = MultipleChoiceFilter(field_name='two_level_multi_filter__extra__number', lookup_expr='contains', label='Number Contains <OR>, 2 Level', conjoined=False, choices=[])
+    prop_number_contains_or_2_level = PropertyMultipleChoiceFilter(field_name='two_level_multi_filter__extra__prop_number', lookup_expr='contains', label='Prop Number Contains <OR>, 2 Level', conjoined=False, choices=[])
+
+    # LookupChoiceFilter
+    lookup_choices = [(lookup, lookup) for lookup in PropertyLookupChoiceFilter.supported_lookups]
+    lookup_number = LookupChoiceFilter(field_name='multi_filter__number', lookup_choices=lookup_choices)
+    lookup_prop_number = PropertyLookupChoiceFilter(field_name='multi_filter__prop_number', lookup_choices=lookup_choices)
+
+    lookup_number_2_level = LookupChoiceFilter(field_name='two_level_multi_filter__extra__number', lookup_choices=lookup_choices)
+    lookup_prop_number_2_level = PropertyLookupChoiceFilter(field_name='two_level_multi_filter__extra__prop_number', lookup_choices=lookup_choices)
+
 
     class Meta:
         model = models.RelatedMultiFilterTestModel
@@ -557,6 +583,18 @@ class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
             ('two_level_multi_filter__extra__prop_number', PropertyNumberFilter, ['exact',]),
         ]
 
+    def __init__(self, *args, **kwargs):
+        choices = [(num, F'Number: {num}') for num in models.MultiFilterTestModel.objects.values_list('number', flat=True).distinct()]
+        self.base_filters['number_contains_and'].extra['choices'] = choices
+        self.base_filters['prop_number_contains_and'].extra['choices'] = choices
+        self.base_filters['number_contains_or'].extra['choices'] = choices
+        self.base_filters['prop_number_contains_or'].extra['choices'] = choices
+        self.base_filters['number_contains_and_2_level'].extra['choices'] = choices
+        self.base_filters['prop_number_contains_and_2_level'].extra['choices'] = choices
+        self.base_filters['number_contains_or_2_level'].extra['choices'] = choices
+        self.base_filters['prop_number_contains_or_2_level'].extra['choices'] = choices
+
+        super().__init__(*args, **kwargs)
 
 class MiscBooleanChoiceFiltersFilterSet(PropertyFilterSet):
     LOOKUP_CHOICES = [

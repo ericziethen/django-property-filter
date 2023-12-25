@@ -21,5 +21,8 @@
     "pylint.args": [
         "--rcfile=${workspaceFolder}\\\\.pylintrc"
     ],
+    "pylint.ignorePatterns": [
+        "**/django_test_proj/**/*.py"
+    ],
 
 }

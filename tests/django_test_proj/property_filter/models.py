@@ -20,7 +20,7 @@ class Delivery(models.Model):
 class DeliveryLine(models.Model):
 
     line_no = models.PositiveIntegerField()
-    delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE, related_name='delivery_lines')
+    delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE, related_name='delivery_lines', blank=True, null=True)
 
     @property
     def prop_line_no(self):
@@ -31,7 +31,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=32)
     price = models.DecimalField(decimal_places=2, max_digits=10)
-    del_line = models.ForeignKey(DeliveryLine, on_delete=models.CASCADE, related_name='products')
+    del_line = models.ForeignKey(DeliveryLine, on_delete=models.CASCADE, related_name='products', blank=True, null=True)
 
     @property
     def prop_name(self):

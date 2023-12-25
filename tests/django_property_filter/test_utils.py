@@ -29,7 +29,8 @@ from property_filter.models import (
     Delivery,
     DeliveryLine,
     Product,
-    DoubleIntModel,
+    RelatedMultiFilterExtraLevelTestModel,
+    RelatedMultiFilterTestModel,
 )
 
 from tests.common import db_is_sqlite, db_is_postgresql
@@ -41,6 +42,11 @@ class GetAttributeTests(TestCase):
         self.delivery1 = Delivery.objects.create(address='My Home')
         self.line1 = DeliveryLine.objects.create(line_no=1, delivery=self.delivery1)
         self.prod1 = Product.objects.create(name='Sun Rice', price='20.0', del_line=self.line1)
+
+        self.prod_no_del_line = Product.objects.create(id=100, name='Prod, No Del Line', price='20.0')
+        del_line_no_delivery = DeliveryLine.objects.create(id=100, line_no=1)
+        self.prod_del_line_no_delivery = Product.objects.create(name='Prod, Del Line, No Delivery', price='20.0', del_line=del_line_no_delivery)
+
 
     def test_get_attribute_1_level(self):
         self.assertEqual(get_value_for_db_field(self.prod1, 'name'), 'Sun Rice')
@@ -62,6 +68,15 @@ class GetAttributeTests(TestCase):
 
     def test_get_attribute_invalid_related_field(self):
         self.assertRaises(AttributeError, get_value_for_db_field, self.prod1, 'del_line__delivery__invalid_field')
+
+    def test_get_attribute_foreign_key_value_null(self):
+        # obj__x, x is null
+        self.assertEqual(get_value_for_db_field(self.prod_no_del_line, 'del_line__delivery__address'), None)
+
+    def test_get_attribute_foreign_key_intermediate_null(self):
+        # have obj__x__y, x is null
+        self.assertEqual(get_value_for_db_field(self.prod_del_line_no_delivery, 'del_line__delivery__address'), None)
+
 
 
 LOOKUP_SUCCEED = [
@@ -89,10 +104,6 @@ LOOKUP_SUCCEED = [
     ('in', [1, 3, 5], 1),
     ('in', [1, 3, 5], 3),
     ('in', [1, 3, 5], 5),
-
-
-
-
 
 
     ('postgres_range_exact', slice(6, 13), slice(6, 13)),
@@ -292,8 +303,6 @@ def test_range_data_convertion_unsorted(input_list, expected_result_list):
     result_list = convert_int_list_to_range_lists(input_list, sort_list=False)
 
     assert result_list == expected_result_list
-
-
 
 
 def test_large_number_range_convertion():
