@@ -548,6 +548,10 @@ class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
     number_order = OrderingFilter(fields=('multi_filter__number', 'multi_filter__number'))
     prop_number_order = PropertyOrderingFilter(fields=('multi_filter__prop_number', 'multi_filter__prop_number'))
 
+    number_contains_and = MultipleChoiceFilter(field_name='multi_filter__number', lookup_expr='contains', label='Number Contains <AND>', conjoined=True, choices=[])
+    prop_number_contains_and = PropertyMultipleChoiceFilter(field_name='multi_filter__prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True, choices=[])
+
+
     class Meta:
         model = models.RelatedMultiFilterTestModel
         # fields = ['multi_filter__number', 'two_level_multi_filter__extra__number']
@@ -557,6 +561,12 @@ class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
             ('two_level_multi_filter__extra__prop_number', PropertyNumberFilter, ['exact',]),
         ]
 
+    def __init__(self, *args, **kwargs):
+        choices = [(num, F'Number: {num}') for num in models.MultiFilterTestModel.objects.values_list('number', flat=True).distinct()]
+        self.base_filters['number_contains_and'].extra['choices'] = choices
+        self.base_filters['prop_number_contains_and'].extra['choices'] = choices
+
+        super().__init__(*args, **kwargs)
 
 class MiscBooleanChoiceFiltersFilterSet(PropertyFilterSet):
     LOOKUP_CHOICES = [
