@@ -551,6 +551,9 @@ class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
     number_contains_and = MultipleChoiceFilter(field_name='multi_filter__number', lookup_expr='contains', label='Number Contains <AND>', conjoined=True, choices=[])
     prop_number_contains_and = PropertyMultipleChoiceFilter(field_name='multi_filter__prop_number', lookup_expr='contains', label='Prop Number Contains <AND>', conjoined=True, choices=[])
 
+    number_contains_or = MultipleChoiceFilter(field_name='multi_filter__number', lookup_expr='contains', label='Number Contains <OR>', conjoined=False, choices=[])
+    prop_number_contains_or = PropertyMultipleChoiceFilter(field_name='multi_filter__prop_number', lookup_expr='contains', label='Prop Number Contains <OR>', conjoined=False, choices=[])
+
 
     class Meta:
         model = models.RelatedMultiFilterTestModel
@@ -565,6 +568,8 @@ class RelatedMultiFilterTestFilterSet(PropertyFilterSet):
         choices = [(num, F'Number: {num}') for num in models.MultiFilterTestModel.objects.values_list('number', flat=True).distinct()]
         self.base_filters['number_contains_and'].extra['choices'] = choices
         self.base_filters['prop_number_contains_and'].extra['choices'] = choices
+        self.base_filters['number_contains_or'].extra['choices'] = choices
+        self.base_filters['prop_number_contains_or'].extra['choices'] = choices
 
         super().__init__(*args, **kwargs)
 
