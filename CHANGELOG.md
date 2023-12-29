@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0]
+### Added
+- N/A
+
+### Changed
+- Add support for Python 3.12 and Django 5 [#246]
+- Fix crashig when related fields are Null [#255] [#256]
+
+### Removed
+- Testing Support for django-filter older than the latest, currently 23.5 [#246]
+
+
 ## [1.1.2]
 ### Added
 - N/A
@@ -16,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add docker support to locally test with Postgres [#233]
 
 ### Removed
-- Add support for Python 3.6 and Django 2.2 and 3.1 [#226]
+- Support for Python 3.6 and Django 2.2 and 3.1 [#226]
 
 ## [1.1.1]
 ### Added
