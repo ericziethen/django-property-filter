@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix crashig when related fields are Null [#255] [#256]
 
 ### Removed
-- N/A
+- Testing Support for django-filter older than the latest, currently 23.5 [#246]
 
 
 ## [1.1.2]
