@@ -16,7 +16,7 @@ cyclonedx-python-lib==4.2.3
 defusedxml==0.7.1
 dill==0.3.7
 distlib==0.3.7
-Django==5.0
+Django==5.0.3
 django-filter==23.5
 docutils==0.20.1
 filelock==3.13.1
