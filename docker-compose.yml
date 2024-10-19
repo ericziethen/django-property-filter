@@ -1,0 +1,25 @@
+# https://geshan.com.np/blog/2021/12/docker-postgres/
+
+services:
+  db:
+    # image: postgres:14.1-alpine
+    image: postgres:16.4
+    build: .
+    # restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    # volumes:
+    #   - db:/var/lib/postgresql/data
+    healthcheck:
+      #test: ['CMD-SHELL', 'pg_isready']
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+# volumes:
+#   db:
+#     driver: local
