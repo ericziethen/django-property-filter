@@ -7,6 +7,7 @@ setlocal
 
 set SCRIPT_DIR=%~dp0
 
+call .\dev\clean_test_proj.bat
 "%SCRIPT_DIR%run_tests.bat" sqlite
 
 endlocal

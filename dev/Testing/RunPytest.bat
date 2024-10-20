@@ -13,8 +13,6 @@ pushd "%PROJ_MAIN_DIR%"
 rem To see how to loop through multiple Command Line Arguments: https://www.robvanderwoude.com/parameters.php
 
 :local_setup
-
-call .\dev\clean_test_proj.bat
 rem Make sure the databases are created
 pushd tests\django_test_proj
 python manage.py makemigrations
