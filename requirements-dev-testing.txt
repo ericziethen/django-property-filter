@@ -57,7 +57,7 @@ psycopg-binary==3.2.3
 psycopg-pool==3.2.3
 psycopg2==2.9.9
 py-serializable==0.11.1
-pycodestyle==2.11.1
+pycodestyle==2.12.1
 pydocstyle==6.3.0
 Pygments==2.17.2
 pyinstrument==4.6.1
