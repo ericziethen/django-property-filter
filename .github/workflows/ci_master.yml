@@ -15,6 +15,7 @@ jobs:
     runs-on: windows-latest
     name: DEV ENVIRONMENT CHECKS
     steps:
+      - uses: actions/checkout@v4
       - name: Run Dev Environment Check
         shell: cmd
         run: |
