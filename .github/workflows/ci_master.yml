@@ -19,7 +19,7 @@ jobs:
         shell: cmd
         run: |
           echo Directory - %CD%
-          call "/dev/check_dev_environment.bat"
+          call "dev/check_dev_environment.bat"
 
   # Main testing Matrix
   # containers can only run on linux, so if we want postgres it will only work on linux
