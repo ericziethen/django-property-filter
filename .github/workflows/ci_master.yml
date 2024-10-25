@@ -17,8 +17,7 @@ jobs:
     steps:
       - name: Run Dev Environment Check
         run: |
-          echo ### Run Dev Environment Checks
-          dir
+          shell: cmd
           .\dev/check_dev_environment.bat
 
   # Main testing Matrix
