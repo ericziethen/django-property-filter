@@ -1,24 +1,25 @@
-version: "3"
-services:
-  tests:
-    container_name: django_property_filter_test
-    build:
-      context: .
-    working_dir: /project
-    volumes:
-      - .:/project
-    depends_on:
-      - postgresqldb
-    command: sh -c /project/dev/run_tests_postgresql_local.sh
+# https://geshan.com.np/blog/2021/12/docker-postgres/
 
-  postgresqldb:
-    container_name: djangp_property_filter_postgresqldb
-    image: postgres
-    restart: always
+services:
+  db:
+    # image: postgres:14.1-alpine
+    image: postgres:16.4
+    build: .
+    # restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    # volumes:
+    #   - db:/var/lib/postgresql/data
     healthcheck:
-      test: [“CMD-SHELL”, “pg_isready”]
+      #test: ['CMD-SHELL', 'pg_isready']
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
       interval: 1s
       timeout: 5s
       retries: 10
-    ports:
-      - '5432:5432'
+
+# volumes:
+#   db:
+#     driver: local

@@ -2,4 +2,5 @@
 
 echo ##### Calling: "%~nx0" (%0)
 
-docker compose up
+docker-compose down --volumes
+docker-compose up --remove-orphans --renew-anon-volumes

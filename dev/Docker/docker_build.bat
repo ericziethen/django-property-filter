@@ -2,4 +2,4 @@
 
 echo ##### Calling: "%~nx0" (%0)
 
-docker compose build
+docker-compose build --no-cache

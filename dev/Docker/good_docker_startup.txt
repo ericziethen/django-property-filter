@@ -1,0 +1,183 @@
+[+] Running 2/2
+ ✔ Network django-property-filter_default  Created                                                                                                                                     0.1s 
+ ✔ Container django-property-filter-db-1   Created                                                                                                                                     0.1s 
+Attaching to db-1
+db-1  | The files belonging to this database system will be owned by user "postgres".
+db-1  | This user must also own the server process.
+db-1  | 
+db-1  | The database cluster will be initialized with locale "en_US.utf8".
+db-1  | The default database encoding has accordingly been set to "UTF8".
+db-1  | The default text search configuration will be set to "english".
+db-1  | 
+db-1  | Data page checksums are disabled.
+db-1  | 
+db-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+db-1  | creating subdirectories ... ok
+db-1  | selecting dynamic shared memory implementation ... posix
+db-1  | selecting default max_connections ... 100
+db-1  | selecting default shared_buffers ... 128MB
+db-1  | selecting default time zone ... Etc/UTC
+db-1  | creating configuration files ... ok
+db-1  | running bootstrap script ... ok
+db-1  | performing post-bootstrap initialization ... ok
+db-1  | syncing data to disk ... ok
+db-1  | 
+db-1  | 
+db-1  | Success. You can now start the database server using:
+db-1  | 
+db-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+db-1  | 
+db-1  | initdb: warning: enabling "trust" authentication for local connections
+db-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+db-1  | waiting for server to start....2024-10-19 05:17:48.511 UTC [48] LOG:  starting PostgreSQL 16.4 (Debian 16.4-1.pgdg120+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 
+12.2.0, 64-bit
+db-1  | 2024-10-19 05:17:48.516 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2024-10-19 05:17:48.530 UTC [51] LOG:  database system was shut down at 2024-10-19 05:17:47 UTC
+db-1  | 2024-10-19 05:17:48.541 UTC [48] LOG:  database system is ready to accept connections
+db-1  |  done
+db-1  | server started
+db-1  | 
+db-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+db-1  | 
+db-1  | waiting for server to shut down...2024-10-19 05:17:48.632 UTC [48] LOG:  received fast shutdown request
+db-1  | .2024-10-19 05:17:48.638 UTC [48] LOG:  aborting any active transactions
+db-1  | 2024-10-19 05:17:48.641 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+db-1  | 2024-10-19 05:17:48.643 UTC [49] LOG:  shutting down
+db-1  | 2024-10-19 05:17:48.646 UTC [49] LOG:  checkpoint starting: shutdown immediate
+db-1  | 2024-10-19 05:17:48.673 UTC [49] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.003 s, total=0.030 s; sync files=2, longest=0.002 s, average=0.002 s; distance=0 kB, estimate=0 kB; lsn=0/14EA2C8, redo lsn=0/14EA2C8
+db-1  | 2024-10-19 05:17:48.679 UTC [48] LOG:  database system is shut down
+db-1  |  done
+db-1  | server stopped
+db-1  | 
+db-1  | PostgreSQL init process complete; ready for start up.
+db-1  | 
+db-1  | 2024-10-19 05:17:48.777 UTC [1] LOG:  starting PostgreSQL 16.4 (Debian 16.4-1.pgdg120+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+db-1  | 2024-10-19 05:17:48.777 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2024-10-19 05:17:48.797 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2024-10-19 05:17:48.819 UTC [1] LOG:  database system is ready to accept connections
+db-1  | 2024-10-19 05:19:18.806 UTC [60] LOG:  checkpoint starting: immediate force wait
+db-1  | 2024-10-19 05:19:18.908 UTC [60] LOG:  checkpoint complete: wrote 47 buffers (0.3%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.050 s, sync=0.012 s, total=0.103 s; sync files=14, longest=0.005 s, average=0.001 s; distance=13828 kB, estimate=13828 kB; lsn=0/228D680, redo lsn=0/226B3C0
+Gracefully stopping... (press Ctrl+C again to force)
+[+] Stopping 1/1
+ ✔ Container django-property-filter-db-1  Stopped                      
+ 
+ 
+ 
+ ########################################################################################################################################################################################################
+ 
+ 
+ [+] Running 15/1
+ ✔ db Pulled                                                                                                                                                                          40.9s 
+[+] Running 2/2
+ ✔ Network django-property-filter_default  Created                                                                                                                                     0.1s 
+ ✔ Container django-property-filter-db-1   Created                                                                                                                                     2.1s 
+Attaching to db-1
+db-1  | The files belonging to this database system will be owned by user "postgres".
+db-1  | This user must also own the server process.
+db-1  | 
+db-1  | The database cluster will be initialized with locale "en_US.utf8".
+db-1  | The default database encoding has accordingly been set to "UTF8".
+db-1  | The default text search configuration will be set to "english".
+db-1  | 
+db-1  | Data page checksums are disabled.
+db-1  | 
+db-1  | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+db-1  | creating subdirectories ... ok
+db-1  | selecting dynamic shared memory implementation ... posix
+db-1  | selecting default max_connections ... 100
+db-1  | selecting default shared_buffers ... 128MB
+db-1  | selecting default time zone ... Etc/UTC
+db-1  | creating configuration files ... ok
+db-1  | running bootstrap script ... ok
+db-1  | performing post-bootstrap initialization ... ok
+db-1  | syncing data to disk ... ok
+db-1  | 
+db-1  | 
+db-1  | Success. You can now start the database server using:
+db-1  | 
+db-1  |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+db-1  | 
+db-1  | initdb: warning: enabling "trust" authentication for local connections
+db-1  | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+db-1  | waiting for server to start....2024-10-19 23:36:02.630 UTC [63] LOG:  starting PostgreSQL 16.4 (Debian 16.4-1.pgdg120+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 
+12.2.0, 64-bit
+db-1  | 2024-10-19 23:36:02.653 UTC [63] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2024-10-19 23:36:02.670 UTC [66] LOG:  database system was shut down at 2024-10-19 23:36:01 UTC
+db-1  | 2024-10-19 23:36:02.690 UTC [63] LOG:  database system is ready to accept connections
+db-1  |  done
+db-1  | server started
+db-1  | 
+db-1  | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+db-1  | 
+db-1  | 2024-10-19 23:36:02.825 UTC [63] LOG:  received fast shutdown request
+db-1  | waiting for server to shut down....2024-10-19 23:36:02.834 UTC [63] LOG:  aborting any active transactions
+db-1  | 2024-10-19 23:36:02.836 UTC [63] LOG:  background worker "logical replication launcher" (PID 69) exited with exit code 1
+db-1  | 2024-10-19 23:36:02.838 UTC [64] LOG:  shutting down
+db-1  | 2024-10-19 23:36:02.844 UTC [64] LOG:  checkpoint starting: shutdown immediate
+db-1  | 2024-10-19 23:36:02.887 UTC [64] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.018 s, sync=0.008 s, total=0.050 s; sync files=2, longest=0.005 s, average=0.004 s; distance=0 kB, estimate=0 kB; lsn=0/14EA2C8, redo lsn=0/14EA2C8
+db-1  | 2024-10-19 23:36:02.893 UTC [63] LOG:  database system is shut down
+db-1  |  done
+db-1  | server stopped
+db-1  | 
+db-1  | PostgreSQL init process complete; ready for start up.
+db-1  | 
+db-1  | 2024-10-19 23:36:02.981 UTC [1] LOG:  starting PostgreSQL 16.4 (Debian 16.4-1.pgdg120+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+db-1  | 2024-10-19 23:36:02.981 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2024-10-19 23:36:02.981 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1  | 2024-10-19 23:36:02.993 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2024-10-19 23:36:03.012 UTC [77] LOG:  database system was shut down at 2024-10-19 23:36:02 UTC
+db-1  | 2024-10-19 23:36:03.022 UTC [1] LOG:  database system is ready to accept connections
+db-1  | 2024-10-19 23:36:03.215 UTC [87] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:04.412 UTC [95] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:05.578 UTC [103] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:06.732 UTC [111] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:07.871 UTC [119] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:09.084 UTC [127] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:10.235 UTC [135] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:11.384 UTC [143] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:12.551 UTC [151] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:13.642 UTC [160] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:14.756 UTC [168] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:15.859 UTC [176] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:16.945 UTC [184] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:18.051 UTC [192] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:19.224 UTC [200] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:20.371 UTC [208] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:21.476 UTC [216] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:22.621 UTC [224] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:23.787 UTC [232] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:24.964 UTC [241] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:26.109 UTC [249] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:27.264 UTC [257] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:28.432 UTC [265] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:29.589 UTC [273] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:30.729 UTC [281] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:31.882 UTC [289] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:33.029 UTC [297] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:34.171 UTC [306] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:35.302 UTC [314] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:36.508 UTC [322] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:37.607 UTC [330] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:38.695 UTC [339] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:39.783 UTC [348] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:40.873 UTC [356] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:41.960 UTC [365] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:43.053 UTC [373] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:44.159 UTC [381] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:45.254 UTC [390] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:46.358 UTC [398] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:47.448 UTC [406] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:48.545 UTC [414] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:49.651 UTC [423] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:50.747 UTC [431] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:51.853 UTC [439] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:52.946 UTC [447] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:54.075 UTC [455] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:55.194 UTC [463] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:56.280 UTC [471] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:57.365 UTC [480] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:58.457 UTC [488] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:36:59.542 UTC [496] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:37:00.637 UTC [504] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:37:01.732 UTC [512] FATAL:  role "root" does not exist
+db-1  | 2024-10-19 23:37:02.835 UTC [520] FATAL:  role "root" does not exist                                                                                                                0.6s 

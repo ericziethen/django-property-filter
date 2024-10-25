@@ -10,6 +10,18 @@ on:
     - main
 
 jobs:
+  # Check basic dev environment conditions
+  dev_environment_checks:
+    runs-on: windows-latest
+    name: DEV ENVIRONMENT CHECKS
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Dev Environment Check
+        shell: cmd
+        run: |
+          echo Directory - %CD%
+          dir
+          call "dev/check_dev_environment.bat"
 
   # Main testing Matrix
   # containers can only run on linux, so if we want postgres it will only work on linux
@@ -20,7 +32,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest"]
-        python-version: ['3.12','3.11', '3.10', '3.9', '3.8', '3.7']
+        python-version: ['3.12','3.11', '3.10', '3.9', '3.8']
         django-db: [SQLITE, POSTGRES]
         fake-volume-test-arg: ["NONE"]  # Using this enables us to add new combinations that match a matrix jobs configuration without replacing it because it doesn't match this attribute
 
@@ -74,6 +86,7 @@ jobs:
 
     name: Py ${{ matrix.python-version }}, ${{ matrix.django-db }}, ${{ matrix.os }} ${{ matrix.name_suffix }}
     runs-on: "${{ matrix.os }}"
+    needs: dev_environment_checks
     steps:
       - uses: actions/checkout@v4
       - name: Print Info
@@ -135,7 +148,7 @@ jobs:
     strategy:
       matrix:
         os: ["windows-latest"]
-        python-version: ['3.12','3.11', '3.10', '3.9', '3.8', '3.7']
+        python-version: ['3.12','3.11', '3.10', '3.9', '3.8']
         django-db: [SQLITE]
         fake-volume-test-arg: ["NONE"]  # Using this enables us to add new combinations that match a matrix jobs configuration without replacing it because it doesn't match this attribute
 
@@ -165,6 +178,7 @@ jobs:
         # https://github.community/t/using-matrix-to-specify-shell-is-it-possible/17065
         # https://github.community/t/declaring-a-default-shell-and-environment-variables-across-all-steps-in-a-job-github-actions/16228/2
         shell: bash
+    needs: dev_environment_checks
     steps:
       - uses: actions/checkout@v4
       - name: Print Info
@@ -216,6 +230,7 @@ jobs:
               script_name: ./dev/run_linters.sh
     name: Latest Dev Linting
     runs-on: "${{ matrix.os }}"
+    needs: dev_environment_checks
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
@@ -249,6 +264,7 @@ jobs:
               script_name: ./dev/check_package_safety.sh
     name: Pkg Safety (Failure Allowed)
     runs-on: "${{ matrix.os }}"
+    needs: dev_environment_checks
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
