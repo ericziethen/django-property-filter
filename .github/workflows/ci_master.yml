@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Run Dev Environment Check
         run: |
-          .\dev\check_dev_environment.bat
+          .\dev/check_dev_environment.bat
 
   # Main testing Matrix
   # containers can only run on linux, so if we want postgres it will only work on linux
