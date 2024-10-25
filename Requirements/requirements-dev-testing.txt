@@ -6,7 +6,7 @@
 # Linters for Development
 bandit
 pycodestyle
-pydocstyle
+pydocstyle # !!! Discontinued in favou of ruff (https://github.com/PyCQA/pydocstyle/pull/658)
 pylint
 mypy
 
