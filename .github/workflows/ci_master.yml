@@ -19,6 +19,7 @@ jobs:
         shell: cmd
         run: |
           echo Directory - %CD%
+          dir
           call "dev/check_dev_environment.bat"
 
   # Main testing Matrix
