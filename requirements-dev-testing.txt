@@ -1,6 +1,6 @@
 alabaster==0.7.13
 asgiref==3.7.2
-astroid==3.0.1
+astroid==3.3.5
 Babel==2.13.1
 bandit==1.7.10
 boolean.py==4.0
@@ -61,7 +61,7 @@ pycodestyle==2.12.1
 pydocstyle==6.3.0
 Pygments==2.17.2
 pyinstrument==4.6.1
-pylint==3.0.2
+pylint==3.3.1
 pyparsing==3.1.1
 pyproject-api==1.6.1
 pytest==7.4.3
