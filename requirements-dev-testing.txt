@@ -1,5 +1,5 @@
 alabaster==0.7.13
-asgiref==3.7.2
+asgiref==3.8.1
 astroid==3.3.5
 Babel==2.13.1
 bandit==1.7.10
@@ -16,8 +16,8 @@ cyclonedx-python-lib==4.2.3
 defusedxml==0.7.1
 dill==0.3.7
 distlib==0.3.7
-Django==5.0
-django-filter==23.5
+Django==5.1.2
+django-filter==24.3
 docutils==0.20.1
 filelock==3.13.1
 gitdb==4.0.11
