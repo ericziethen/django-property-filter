@@ -1,7 +1,7 @@
 
 # Django
-# django
-# django-filter
+django
+django-filter
 
 # Linters for Development
 bandit
