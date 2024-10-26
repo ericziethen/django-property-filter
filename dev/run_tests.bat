@@ -66,7 +66,7 @@ if %return_code% gtr 0 (
 ) else (
     echo   No Issues
 )
-echo ### TESTS END - '%TESTER_SCRIPT%' ###
+echo ### TESTS END - '%TESTER_SCRIPT%' called from Calling: "%~nx0" (%0) (%DJANGO_SETTINGS_MODULE%%) ###
 echo[
 goto:eof
 : #######################################
