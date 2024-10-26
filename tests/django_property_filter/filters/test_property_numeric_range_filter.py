@@ -80,7 +80,6 @@ def test_default_lookup():
 
 
 @pytest.fixture
-@pytest.mark.skipif(not db_is_postgresql(), reason='NumericRangeFilter only supported in PostGres')
 def fixture_property_numeric_range_filter():
     NumericRangeFilterModel.objects.create(id=-1,
         postgres_int_range=NumericRange(5, 10), postgres_decimal_range=NumericRange(5.0, 10.0))
