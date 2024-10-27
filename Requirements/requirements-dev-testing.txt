@@ -12,7 +12,7 @@ mypy
 
 # Testing tools
 codecov # !!! DISCONTINUED in favour of "codecov-cli" (https://about.codecov.io/blog/message-regarding-the-pypi-package/)
-psycopg2
+psycopg[binary,pool]
 pytest
 pytest-cov
 pytest-django
