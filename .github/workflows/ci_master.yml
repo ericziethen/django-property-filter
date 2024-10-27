@@ -265,6 +265,7 @@ jobs:
     name: Pkg Safety (Failure Allowed)
     runs-on: "${{ matrix.os }}"
     needs: dev_environment_checks
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python

@@ -52,7 +52,9 @@ pip_audit==2.6.1
 pkginfo==1.9.6
 platformdirs==4.1.0
 pluggy==1.5.0
-psycopg2==2.9.10
+psycopg==3.2.3
+psycopg-binary==3.2.3
+psycopg-pool==3.2.3
 py-serializable==0.11.1
 pycodestyle==2.12.1
 pydocstyle==6.3.0

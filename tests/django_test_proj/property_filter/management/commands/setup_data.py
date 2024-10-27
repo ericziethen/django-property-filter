@@ -49,7 +49,7 @@ from property_filter.models import (
 )
 
 try:
-    from psycopg2.extras import NumericRange
+    from django.db.backends.postgresql.psycopg_any import NumericRange
 except ImportError:
     pass
 
