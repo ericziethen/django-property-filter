@@ -5,7 +5,7 @@ echo ##### Calling: "%~nx0" (%0)
 setlocal enabledelayedexpansion
 
 set PROJ_MAIN_DIR=%~dp0..
-set REQUIREMENTS_FILE=%PROJ_MAIN_DIR%\requirements-dev-testing.txt
+set REQUIREMENTS_FILE=%PROJ_MAIN_DIR%\requirements.txt
 set TEMP_FILE_PATH=%TEMP%\tem_django_property_filter_dev_check.txt
 set TOX_FILE=%PROJ_MAIN_DIR%\tox.ini
 
