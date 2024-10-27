@@ -8,6 +8,9 @@ on:
     branches:
     - master
     - main
+  workflow_dispatch:
+    # Example Text Field Inputs
+    #  access by ${{ github.event.inputs.version }}
 
 jobs:
   # Check basic dev environment conditions
@@ -32,7 +35,7 @@ jobs:
     strategy:
       matrix:
         os: ["ubuntu-latest"]
-        python-version: ['3.12','3.11', '3.10', '3.9', '3.8']
+        python-version: ['3.13','3.12','3.11', '3.10', '3.9', '3.8']
         django-db: [SQLITE, POSTGRES]
         fake-volume-test-arg: ["NONE"]  # Using this enables us to add new combinations that match a matrix jobs configuration without replacing it because it doesn't match this attribute
 
@@ -48,20 +51,20 @@ jobs:
 
             ### NEW COMBINATIONS ###
             - os: ubuntu-latest
-              python-version: '3.12'
+              python-version: '3.13'
               django-db: SQLITE  # Maybe Use Postgres if Faster, or Both
               tox_args: sqlite
               name_suffix: "- Volume Test"
-              tox_env: mylinux-py312-all_filter_volume_test-sqlite
+              tox_env: mylinux-py313-all_filter_volume_test-sqlite
               tox_skip_env: NONE
               fake-volume-test-arg: linux_vol_test
 
             - os: ubuntu-latest
-              python-version: '3.12'
+              python-version: '3.13'
               django-db: POSTGRES  # Maybe Use Postgres if Faster, or Both
               tox_args: postgres-github-actions
               name_suffix: "- Volume Test"
-              tox_env: mylinux-py312-all_filter_volume_test-postgres
+              tox_env: mylinux-py313-all_filter_volume_test-postgres
               tox_skip_env: NONE
               fake-volume-test-arg: win_vol_test
 
@@ -148,7 +151,7 @@ jobs:
     strategy:
       matrix:
         os: ["windows-latest"]
-        python-version: ['3.12','3.11', '3.10', '3.9', '3.8']
+        python-version: ['3.13','3.12','3.11', '3.10', '3.9', '3.8']
         django-db: [SQLITE]
         fake-volume-test-arg: ["NONE"]  # Using this enables us to add new combinations that match a matrix jobs configuration without replacing it because it doesn't match this attribute
 
@@ -161,11 +164,11 @@ jobs:
 
             ### NEW COMBINATIONS ###
             - os: windows-latest
-              python-version: '3.12'
+              python-version: '3.13'
               django-db: SQLITE
               tox_args: sqlite
               name_suffix: "- Volume Test"
-              tox_env: mywindows-py312-all_filter_volume_test-sqlite
+              tox_env: mywindows-py313-all_filter_volume_test-sqlite
               tox_skip_env: NONE
               fake-volume-test-arg: win_vol_test
 
@@ -236,7 +239,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
       - name: Setup Env
         run: |
           pip --version
@@ -271,7 +274,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
       - name: Setup Env
         run: |
           pip --version
@@ -300,7 +303,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.13'
       - name: Run Release Check
         run: |
           ./dev/Packaging/check_github_actions_release.sh
