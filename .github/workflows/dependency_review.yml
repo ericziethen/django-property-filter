@@ -1,7 +1,9 @@
 # https://github.com/marketplace/actions/dependency-review
 
 name: 'Dependency Review'
-on: [pull_request]
+on: 
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,4 +15,4 @@ jobs:
       - name: 'Checkout Repository'
         uses: actions/checkout@v4
       - name: 'Dependency Review'
-        uses: actions/dependency-review-action@v3
+        uses: actions/dependency-review-action@v4
