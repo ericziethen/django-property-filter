@@ -1,0 +1,40 @@
+name: CI  # Name becomes part of the badge location
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+
+  # Deployment job
+  deployment:
+    runs-on: ubuntu-latest
+    name: TestPyPiDeployment
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Setup Env
+        run: |
+          pip --version
+          python --version --version
+          pip list
+          python -m pip install --upgrade pip pipenv
+          pip install wheel twine
+          pip list
+      - name: Create Wheel
+        run: |
+          ./dev/Packaging/create_wheel.sh
+          echo Command: 'dir dist/*'
+          dir dist/*
+      - name: Check Wheel
+        run: |
+          ./dev/Packaging/check_wheels.sh
+      - name: Publish distribution 📦 to Test PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          ### PyPy.Test settings
+          password: ${{ secrets.PYPY_TEST_PROJ_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
