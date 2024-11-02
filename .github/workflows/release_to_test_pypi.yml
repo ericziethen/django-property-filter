@@ -41,7 +41,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           ### PyPy.Test settings
-          repository_url: https://test.pypi.org/legacy/
+          repository-url: https://test.pypi.org/legacy/
           # Temp workaround since attestations are on by default as of gh-action-pypi-publish v1.11.0
           # https://github.com/pypa/gh-action-pypi-publish/issues/283
           attestations: false
