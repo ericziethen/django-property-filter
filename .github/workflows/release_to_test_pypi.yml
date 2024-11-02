@@ -1,4 +1,4 @@
-name: CI  # Name becomes part of the badge location
+name: 'Release to Test PyPi' # Name becomes part of the badge location
 
 on:
   workflow_dispatch:
