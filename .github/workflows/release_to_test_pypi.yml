@@ -10,6 +10,11 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     name: TestPyPiDeployment
+    # Specifying a GitHub environment is optional, but strongly encouraged
+    environment: release
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
@@ -33,8 +38,11 @@ jobs:
         run: |
           ./dev/Packaging/check_wheels.sh
       - name: Publish distribution 📦 to Test PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           ### PyPy.Test settings
-          password: ${{ secrets.PYPY_TEST_PROJ_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
+          repository-url: https://test.pypi.org/legacy/
+          # Temp workaround since attestations are on by default as of gh-action-pypi-publish v1.11.0
+          # https://github.com/pypa/gh-action-pypi-publish/issues/283
+          # attestations: false
+          verbose: true
