@@ -282,7 +282,7 @@ jobs:
           python -c "import sqlite3; print('sqlite3 Version on Python:', sqlite3.sqlite_version)"
           pip list
           python -m pip install --upgrade pip pipenv
-          pip install wheel
+          pip install build
           pip list
       - name: Install Dependencies
         run: |
@@ -313,7 +313,7 @@ jobs:
           python --version --version
           pip list
           python -m pip install --upgrade pip pipenv
-          pip install wheel twine
+          pip install build twine
           pip list
       - name: Create Wheel
         run: |

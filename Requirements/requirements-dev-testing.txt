@@ -25,7 +25,7 @@ sphinx-rtd-theme
 
 # Packaging
 twine
-wheel
+build
 
 # Misc
 pandas

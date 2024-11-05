@@ -27,7 +27,7 @@ jobs:
           python --version --version
           pip list
           python -m pip install --upgrade pip pipenv
-          pip install wheel twine
+          pip install build twine
           pip list
       - name: Create Wheel
         run: |
