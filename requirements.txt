@@ -10,7 +10,6 @@ cachetools==5.5.0
 certifi==2024.8.30
 chardet==5.2.0
 charset-normalizer==3.4.0
-codecov==2.1.13
 colorama==0.4.6
 coverage==7.6.4
 cyclonedx-python-lib==7.6.2

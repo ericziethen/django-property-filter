@@ -11,7 +11,6 @@ pylint
 mypy
 
 # Testing tools
-codecov # !!! DISCONTINUED in favour of "codecov-cli" (https://about.codecov.io/blog/message-regarding-the-pypi-package/)
 psycopg[binary,pool]
 pytest
 pytest-cov
