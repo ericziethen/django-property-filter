@@ -8,6 +8,7 @@ bandit
 pycodestyle
 pydocstyle # !!! DISCONTINUED in favour of "ruff" (https://github.com/PyCQA/pydocstyle/pull/658)
 pylint
+ruff
 mypy
 
 # Testing tools

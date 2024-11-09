@@ -1,0 +1,20 @@
+
+# https://docs.astral.sh/ruff/rules/
+select = [
+    # CONVENTION
+    "C",
+    # pydocstyle
+    "D", 
+    # ERROR
+    "E",
+    # REFACTOR
+    "R",
+    # WARNING
+    "W",
+]
+
+# Allow lines to be as long as 120.
+line-length = 120
+
+# D212 - multi-line-summary-first-line
+#ignore = ["D212"]

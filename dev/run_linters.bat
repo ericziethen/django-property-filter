@@ -18,6 +18,7 @@ rem call:run_linter "MyPy"          "%LINTER_DIR%\RunMyPy.bat"
 call:run_linter "Pycodestyle"   "%LINTER_DIR%\RunPycodestyle.bat"
 call:run_linter "Pydocstyle"    "%LINTER_DIR%\RunPydocstyle.bat"
 call:run_linter "Pylint"        "%LINTER_DIR%\RunPylint.bat"
+call:run_linter "Pylint"        "%LINTER_DIR%\RunRuff.bat"
 echo ### Linting finished ###
 
 if defined ERROR_FOUND (
