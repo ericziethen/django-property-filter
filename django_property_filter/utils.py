@@ -278,7 +278,7 @@ def strtobool(val):  # Taken from python directly, as suggested in PEP 632 – D
 
 def convert_value_to_type(target_type, value):
     """Convert the given value to the given type, return the value if can't convert."""
-    if (target_type == bool) and (isinstance(value, str)):
+    if (target_type is bool) and (isinstance(value, str)):
         return bool(strtobool(value))
 
     return target_type(value)
