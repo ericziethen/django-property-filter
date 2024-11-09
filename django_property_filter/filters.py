@@ -494,9 +494,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
         value_list = sorted(value_list, key=lambda x: (x[1] is not None, x[1]), reverse=descending)
 
         # Get a list of sorted primary keys
-        value_list = [entry[0] for entry in value_list]
-
-        return value_list
+        return [entry[0] for entry in value_list]
 
 
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):

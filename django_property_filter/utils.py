@@ -46,9 +46,7 @@ def convert_int_list_to_range_lists(int_list, *, sort_list=True):
             range_list.append([num, num])
 
     # Convert to a list of tuples, could do with list of lists but not really any real overhead
-    range_list = [(elem[0], elem[1]) for elem in range_list]
-
-    return range_list
+    return [(elem[0], elem[1]) for elem in range_list]
 
 
 def get_max_params_for_db():
@@ -104,9 +102,7 @@ def build_limited_filter_expr(pk_list, max_params):
     in_range_list.append(Q(pk__in=in_list))
 
     # Create the Filter Expression
-    range_filter_expr = reduce(or_, in_range_list, Q())
-
-    return range_filter_expr
+    return reduce(or_, in_range_list, Q())
 
 
 def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
