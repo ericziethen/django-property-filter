@@ -85,8 +85,7 @@ class PropertyBaseFilter(Filter):
         raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet instead of Filterset')
 
     def filter_pks(self, initial_pk_list, queryset, value, *, or_pk_list=None):
-        """
-        Filter the Given Queryset against the given value and return a list of matching Primary Keys.
+        """Filter the Given Queryset against the given value and return a list of matching Primary Keys.
 
         if initial_pk_list is not None only those Primary Keys will be considered
         """
@@ -495,9 +494,7 @@ class PropertyOrderingFilter(  # pylint: disable=too-many-ancestors
         value_list = sorted(value_list, key=lambda x: (x[1] is not None, x[1]), reverse=descending)
 
         # Get a list of sorted primary keys
-        value_list = [entry[0] for entry in value_list]
-
-        return value_list
+        return [entry[0] for entry in value_list]
 
 
 class PropertyTimeRangeFilter(PropertyRangeFilter, TimeRangeFilter):

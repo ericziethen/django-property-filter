@@ -6,12 +6,11 @@ django-filter
 # Linters for Development
 bandit
 pycodestyle
-pydocstyle # !!! DISCONTINUED in favour of "ruff" (https://github.com/PyCQA/pydocstyle/pull/658)
 pylint
+ruff
 mypy
 
 # Testing tools
-codecov # !!! DISCONTINUED in favour of "codecov-cli" (https://about.codecov.io/blog/message-regarding-the-pypi-package/)
 psycopg[binary,pool]
 pytest
 pytest-cov

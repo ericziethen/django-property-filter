@@ -25,8 +25,7 @@ def get_db_version():
 
 
 def convert_int_list_to_range_lists(int_list, *, sort_list=True):
-    """
-    Convert a list of numbers to ranges and returns a list of tuples representing the ranges.
+    """Convert a list of numbers to ranges and returns a list of tuples representing the ranges.
 
     Single numbers will be represented as (3, 3), while ranges will be (4, 8)
     """
@@ -47,9 +46,7 @@ def convert_int_list_to_range_lists(int_list, *, sort_list=True):
             range_list.append([num, num])
 
     # Convert to a list of tuples, could do with list of lists but not really any real overhead
-    range_list = [(elem[0], elem[1]) for elem in range_list]
-
-    return range_list
+    return [(elem[0], elem[1]) for elem in range_list]
 
 
 def get_max_params_for_db():
@@ -105,9 +102,7 @@ def build_limited_filter_expr(pk_list, max_params):
     in_range_list.append(Q(pk__in=in_list))
 
     # Create the Filter Expression
-    range_filter_expr = reduce(or_, in_range_list, Q())
-
-    return range_filter_expr
+    return reduce(or_, in_range_list, Q())
 
 
 def filter_qs_by_pk_list(queryset, pk_list, *, preserve_order=None):
@@ -177,7 +172,7 @@ def get_value_for_db_field(obj, field_str):
     return get_attr_val_recursive(obj, field_str.split('__'))
 
 
-def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-statements
+def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-statements, # noqa C901
         lookup_expr, lookup_value, property_value):
     """Compare Lookup Expressions."""
     result = False
@@ -283,7 +278,7 @@ def strtobool(val):  # Taken from python directly, as suggested in PEP 632 – D
 
 def convert_value_to_type(target_type, value):
     """Convert the given value to the given type, return the value if can't convert."""
-    if (target_type == bool) and (isinstance(value, str)):
+    if (target_type is bool) and (isinstance(value, str)):
         return bool(strtobool(value))
 
     return target_type(value)
