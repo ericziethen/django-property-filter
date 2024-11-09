@@ -172,7 +172,7 @@ def get_value_for_db_field(obj, field_str):
     return get_attr_val_recursive(obj, field_str.split('__'))
 
 
-def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-statements
+def compare_by_lookup_expression(  # pylint: disable=too-many-branches,too-many-statements, # noqa C901
         lookup_expr, lookup_value, property_value):
     """Compare Lookup Expressions."""
     result = False
