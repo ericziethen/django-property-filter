@@ -15,6 +15,3 @@ select = [
 
 # Allow lines to be as long as 120.
 line-length = 120
-
-# D212 - multi-line-summary-first-line
-#ignore = ["D212"]

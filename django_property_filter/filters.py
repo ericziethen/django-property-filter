@@ -85,8 +85,7 @@ class PropertyBaseFilter(Filter):
         raise ImproperlyConfigured('Invalid call to filter(), make sure to use PropertyFilterSet instead of Filterset')
 
     def filter_pks(self, initial_pk_list, queryset, value, *, or_pk_list=None):
-        """ 
-        Filter the Given Queryset against the given value and return a list of matching Primary Keys.
+        """Filter the Given Queryset against the given value and return a list of matching Primary Keys.
 
         if initial_pk_list is not None only those Primary Keys will be considered
         """

@@ -25,8 +25,7 @@ def get_db_version():
 
 
 def convert_int_list_to_range_lists(int_list, *, sort_list=True):
-    """
-    Convert a list of numbers to ranges and returns a list of tuples representing the ranges.
+    """Convert a list of numbers to ranges and returns a list of tuples representing the ranges.
 
     Single numbers will be represented as (3, 3), while ranges will be (4, 8)
     """
