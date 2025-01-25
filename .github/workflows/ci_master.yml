@@ -324,7 +324,7 @@ jobs:
         run: |
           ./dev/Packaging/check_wheels.sh
       - name: Publish distribution 📦 to Test PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPY_PROJ_TOKEN }}
           ### PyPy.Test settings
