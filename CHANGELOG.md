@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0]
+### Added
+- Add support for Python 3.13 [#272]
+- Add support for Django 5.1 [#292]
+
+### Changed
+- Remove test files to be included into the distribution package [#301]
+
+### Removed
+- Dropped support for Python 3.7 [#292]
+- Dropped support for Django 3.2, 4.0, 4.1 [#292]
+
+
 ## [1.2.0]
 ### Added
 - N/A
