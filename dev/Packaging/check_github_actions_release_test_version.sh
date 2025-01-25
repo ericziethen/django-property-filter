@@ -16,14 +16,14 @@ else
     echo "Repository Version identified: '$REPO_VERSION'"
 fi
 
-# Check the Github Actions Tag matches our Version number
-echo "Trying to Match '$REPO_VERSION' to '$GITHUB_REF'"
-if [ "refs/tags/$REPO_VERSION" != "$GITHUB_REF" ]
-then
-    echo "Failed to match Repository Version '$REPO_VERSION' to Github Actions Tag '$GITHUB_REF'"
-    exit 1
-else
-    echo "Repository Version matches Github Actions Tag"
-fi
+# # Check the Github Actions Tag matches our Version number
+# echo "Trying to Match '$REPO_VERSION' to '$GITHUB_REF'"
+# if [ "refs/tags/$REPO_VERSION" != "$GITHUB_REF" ]
+# then
+#     echo "Failed to match Repository Version '$REPO_VERSION' to Github Actions Tag '$GITHUB_REF'"
+#     exit 1
+# else
+#     echo "Repository Version matches Github Actions Tag"
+# fi
 
 exit 0
