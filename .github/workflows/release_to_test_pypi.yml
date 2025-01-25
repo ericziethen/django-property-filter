@@ -23,7 +23,7 @@ jobs:
           python-version: '3.13'
       - name: Run Release Check
         run: |
-          ./dev/Packaging/check_github_actions_release.sh
+          ./dev/Packaging/check_github_actions_release_test_version.sh
       - name: Setup Env
         run: |
           pip --version
