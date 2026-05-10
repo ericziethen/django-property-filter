@@ -18,7 +18,7 @@ jobs:
     runs-on: windows-latest
     name: DEV ENVIRONMENT CHECKS
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run Dev Environment Check
         shell: cmd
         run: |
@@ -91,7 +91,7 @@ jobs:
     runs-on: "${{ matrix.os }}"
     needs: dev_environment_checks
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Print Info
         run: |
           echo ### Print Matrix Variables
@@ -183,7 +183,7 @@ jobs:
         shell: bash
     needs: dev_environment_checks
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Print Info
         run: |
           echo ### Print Matrix Variables
@@ -235,7 +235,7 @@ jobs:
     runs-on: "${{ matrix.os }}"
     needs: dev_environment_checks
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -270,7 +270,7 @@ jobs:
     needs: dev_environment_checks
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -299,7 +299,7 @@ jobs:
     needs: [linux_test_matrix, windows_test_matrix, linting]
     name: Deployment
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
