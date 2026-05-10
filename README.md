@@ -39,9 +39,9 @@ For more details and examples check the [documentation](https://django-property-
 
 ## Requirements
 
-* Python: 3.8, 3.9, 3.10, 3.11, 3.12, 3.13
-* Django: 4.2, 5.0, 5.1
-* Django-filter: 23.5+
+* Python: 3.10, 3.11, 3.12, 3.13, 3.14
+* Django: 5.2, 6.0+
+* Django-filter: 24.1+
 
 ## Limitations
 
