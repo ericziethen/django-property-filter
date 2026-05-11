@@ -18,10 +18,6 @@ pytest-django
 pip-audit
 tox
 
-# Documentation
-sphinx
-sphinx-rtd-theme
-
 # Packaging
 twine
 build
