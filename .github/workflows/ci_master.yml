@@ -18,7 +18,7 @@ jobs:
     runs-on: windows-latest
     name: DEV ENVIRONMENT CHECKS
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run Dev Environment Check
         shell: cmd
         run: |
@@ -91,14 +91,14 @@ jobs:
     runs-on: "${{ matrix.os }}"
     needs: dev_environment_checks
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Print Info
         run: |
           echo ### Print Matrix Variables
           echo 'tox_args=${{ matrix.tox_args }}'
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -140,7 +140,7 @@ jobs:
       - name: "Convert coverage"
         run: "python -m coverage xml"
       - name: "Upload coverage to Codecov"
-        uses: "codecov/codecov-action@v4"
+        uses: "codecov/codecov-action@v6"
         with:
           token: ${{secrets.CODECOV_TOKEN}} # not currently required for public repos <=v3, but decreases chances of failiure (https://community.codecov.com/t/upload-issues-unable-to-locate-build-via-github-actions-api/3954)
           fail_ci_if_error: true
@@ -183,14 +183,14 @@ jobs:
         shell: bash
     needs: dev_environment_checks
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Print Info
         run: |
           echo ### Print Matrix Variables
           echo 'tox_args=${{ matrix.tox_args }}'
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -235,9 +235,9 @@ jobs:
     runs-on: "${{ matrix.os }}"
     needs: dev_environment_checks
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.14'
       - name: Setup Env
@@ -270,9 +270,9 @@ jobs:
     needs: dev_environment_checks
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.14'
       - name: Setup Env
@@ -299,9 +299,9 @@ jobs:
     needs: [linux_test_matrix, windows_test_matrix, linting]
     name: Deployment
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.14'
       - name: Run Release Check
