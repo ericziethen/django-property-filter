@@ -4,6 +4,10 @@
 # Required
 version: 2
 
+python:
+  install:
+    - requirements: Requirements/requirements-docs.txt
+
 # Set the OS, Python version and other tools you might need
 build:
   os: ubuntu-24.04
