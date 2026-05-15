@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0]
+### Added
+- Add support for Python 3.14 [#310]
+- Add support for Django 6.0 [#311]
+- Add support for Django-Filter 25.1, 25.2 [#311]
+
+### Changed
+- N/A
+
+### Removed
+- Dropped support for Python 3.8, 3.9 [#311]
+- Dropped support for Django 4.2, 5.0, 5.1 [#311]
+- Dropped support for Django-Filter 23.5 [#311]
+
+
 ## [1.3.0]
 ### Added
 - Add support for Python 3.13 [#272]
